@@ -6,7 +6,7 @@
       </q-timeline-entry>
       <q-timeline-entry v-for="(entry, index) in news" :key="index" :subtitle="entry.author">
         <template v-slot:title>
-           <a :href="entry.link">{{entry.title}}</a>
+           <a :href="entry.link" target="_blank">{{entry.title}}</a>
         </template>
         <div class="row justify-center">
           <div class="col" style="max-width: 300px; min-width: 200px">
@@ -14,7 +14,7 @@
           </div>
           <div class="col" style="padding-left: 6px; min-width: 300px">
             {{entry.content}}
-            <p><a :href="entry.link">Read more...</a></p>
+            <p><a :href="entry.link" target="_blank">Read more...</a></p>
           </div>
         </div>
       </q-timeline-entry>
