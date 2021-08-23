@@ -18,7 +18,7 @@
         </div>
 
         <q-toolbar-title class="layout__toolbar-title text-center">
-          Chaos Archives
+          <router-link to="/">Chaos Archives</router-link>
         </q-toolbar-title>
 
         <div class="layout__filler text-right">
@@ -121,6 +121,15 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer elevated>
+      <q-toolbar>
+        <div class="layout__filler text-body2 text-center">
+          Final Fantasy XIV is © 2010&ndash;2021 Square Enix Holdings Co., Ltd. All rights reserved.<br />
+          All text and images on this site are © 2021 by their respective owners.
+        </div>
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 
@@ -155,6 +164,7 @@ export default class MainLayout extends Vue {
     { label: 'My content', to: '' },
     { label: 'My friendlist', to: '' },
     { label: 'My mailbox', to: '' },
+    { label: 'Switch character', to: '' },
   ];
 
   readonly createContentLinks = [
@@ -199,6 +209,15 @@ export default class MainLayout extends Vue {
   .layout__toolbar-title {
     flex-basis: inherit;
     flex-grow: 0;
+  }
+
+  .layout__toolbar-title a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  .layout__toolbar-title a:hover {
+    color: #e8e8e8;
   }
 
   .layout__create-content-list {
