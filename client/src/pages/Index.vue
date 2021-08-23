@@ -91,7 +91,10 @@
       <q-markup-table dense>
         <tbody class="index__table">
           <tr v-for="(adventure, index) in noticeboard" :key="index">
-            <td>{{adventure.title}}<br/><small style="color: #888">{{adventure.author}}</small></td>
+            <td>
+              <div>{{adventure.title}}</div>
+              <div style="margin-top: -8px"><small style="color: #888">{{adventure.author}}</small></div>
+            </td>
             <td>{{adventure.location}}</td>
             <td>{{adventure.date}}</td>
           </tr>
