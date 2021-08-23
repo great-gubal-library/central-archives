@@ -6,14 +6,15 @@
   "author": "Maia Everett <maia@everett.one>",
   "private": true,
   "scripts": {
+    "start": "quasar dev",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@quasar/extras": "^1.0.0",
+    "@quasar/extras": "^1.10.11",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "quasar": "^2.0.0",
+    "quasar": "^2.0.4",
     "vue-class-component": "^8.0.0-rc.1",
     "vuex": "^4.0.1"
   },
