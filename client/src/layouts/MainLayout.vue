@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fff">
+  <q-layout view="hHh LpR fff">
     <q-header elevated>
       <q-toolbar>
         <div class="layout__filler">
@@ -53,6 +53,7 @@
       bordered
       side="left"
       :class="DRAWER_BG"
+      :width="DRAWER_WIDTH"
     >
       
       <q-list dense>
@@ -98,6 +99,7 @@
       bordered
       side="right"
       :class="DRAWER_BG"
+      :width="DRAWER_WIDTH"
     >
       <q-list>
         <q-item-label header>
@@ -119,7 +121,9 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <div class="layout__page-container">
+        <router-view />
+        </div>
     </q-page-container>
 
     <q-footer elevated>
@@ -142,6 +146,7 @@ import { Vue, Options } from 'vue-class-component'
 })
 export default class MainLayout extends Vue {
   readonly DRAWER_BG = 'bg-brown-1';
+  readonly DRAWER_WIDTH = 250;
 
   readonly navbarLinks = [
     { label: 'About', to: '' },
@@ -214,6 +219,7 @@ export default class MainLayout extends Vue {
   .layout__toolbar-title a {
     color: inherit;
     text-decoration: inherit;
+	  border-bottom: none;
   }
 
   .layout__toolbar-title a:hover {
@@ -222,5 +228,10 @@ export default class MainLayout extends Vue {
 
   .layout__create-content-list {
     padding-left: 12px;
+  }
+
+  .layout__page-container {
+    max-width: 768px;
+    margin: auto;
   }
 </style>
