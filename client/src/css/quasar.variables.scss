@@ -12,7 +12,7 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary   : #1976D2;
+$primary   : #795548;
 $secondary : #26A69A;
 $accent    : #9C27B0;
 
@@ -23,4 +23,5 @@ $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
 
-$body1:     (size: 16px)
+$body-font-size   : 16px;
+$tooltip-fontsize : 14px;

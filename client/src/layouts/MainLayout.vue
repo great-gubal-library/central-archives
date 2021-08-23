@@ -7,10 +7,12 @@
           dense
           round
           icon="menu"
+          tooltip="Menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
-        />
-
+        >
+          <q-tooltip>Menu</q-tooltip>
+        </q-btn>
         <div class="layout__filler"></div>
 
         <q-toolbar-title class="layout__toolbar-title text-center">
@@ -37,7 +39,9 @@
             </q-list>
           </q-btn-dropdown>
         </div>
-        <q-btn dense flat round icon="event" @click="toggleRightDrawer" />
+        <q-btn dense flat round icon="event" @click="toggleRightDrawer">
+          <q-tooltip>Events</q-tooltip>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -46,7 +50,7 @@
       show-if-above
       bordered
       side="left"
-      class="bg-grey-1"
+      :class="DRAWER_BG"
     >
       <q-list>
         <q-item-label
@@ -63,7 +67,7 @@
       show-if-above
       bordered
       side="right"
-      class="bg-grey-1"
+      :class="DRAWER_BG"
     >
       <q-list>
         <q-item-label
@@ -89,14 +93,17 @@ import { Vue, Options } from 'vue-class-component'
   components: { }
 })
 export default class MainLayout extends Vue {
-  leftDrawerOpen = false;
-  rightDrawerOpen = false;
-  navbarLinks = [
+  readonly DRAWER_BG = 'bg-brown-1';
+
+  readonly navbarLinks = [
     { label: 'About', to: '' },
     { label: 'Terms', to: '' },
     { label: 'FAQ', to: '' },
     { label: 'Contact', to: '' },
   ];
+
+  leftDrawerOpen = false;
+  rightDrawerOpen = false;  
 
   toggleLeftDrawer () {
     this.leftDrawerOpen = !this.leftDrawerOpen
