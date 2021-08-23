@@ -76,7 +76,7 @@
             <q-item-label>{{link.label}}</q-item-label>
           </q-item-section>
         </q-item>
-        <q-expansion-item dense label="Create content">
+        <q-expansion-item dense label="Create content" header-class="text-bold">
           <q-list class="bg-brown-2 layout__create-content-list" dense>
             <q-item v-for="link in createContentLinks" clickable v-ripple :key="link.label" :to="link.to">
               <q-item-section>
@@ -115,6 +115,17 @@
         <q-item clickable v-ripple>
           <q-item-section>
             <q-item-label>Event archive</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator />
+      </q-list>
+      <q-list dense>
+        <q-item-label header>
+          Friend activity
+        </q-item-label>
+        <q-item v-for="event in friendActivity" clickable v-ripple :key="event.title">
+          <q-item-section>
+            <q-item-label>{{event.title}}</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -185,7 +196,16 @@ export default class MainLayout extends Vue {
     { title: 'Market Night', date: '24 August 2021' },
     { title: 'Eorzea Grand Prix', date: '25 August 2021' },
     { title: 'The Daily Moogle Open Doors', date: '26 August 2021' },
-  ]
+  ];
+
+  readonly friendActivity = [
+    { title: 'Dungeon Crawlin\' Fools' },
+    { title: 'No Cure for the Paladin Blues' },
+    { title: 'War and XPs' },
+    { title: 'Don\'t Split the Party' },
+    { title: 'Blood Runs in the Family' },
+    { title: 'Utterly Dwarfed' },
+  ];
 
   leftDrawerOpen = false;
   rightDrawerOpen = false;  
@@ -231,7 +251,8 @@ export default class MainLayout extends Vue {
   }
 
   .layout__page-container {
-    max-width: 768px;
+    max-width: 800px;
+    padding: 16px;
     margin: auto;
   }
 </style>
