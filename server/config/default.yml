@@ -1,0 +1,16 @@
+server:
+  lobbyPort: 8111
+  gameserverPort: 8112
+
+db:
+  type: 'postgres'
+  host: 'postgres'
+  port: 5432
+  database: 'uno'
+  username: 'postgres'
+  password: 'postgres'
+  synchronize: false
+
+auth:
+  jwtSecret: 'secret'
+  jwtExpiry: '30d'

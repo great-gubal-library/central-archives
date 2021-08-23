@@ -1,0 +1,39 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/chaosarchives/src",
+  "monorepo": true,
+  "root": "apps/chaosarchives",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/chaosarchives/tsconfig.app.json"
+  },
+  "projects": {
+    "chaosarchives": {
+      "type": "application",
+      "root": "apps/chaosarchives",
+      "entryFile": "main",
+      "sourceRoot": "apps/chaosarchives/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/chaosarchives/tsconfig.app.json"
+      }
+    },
+    "configuration": {
+      "type": "library",
+      "root": "libs/configuration",
+      "entryFile": "index",
+      "sourceRoot": "libs/configuration/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/configuration/tsconfig.lib.json"
+      }
+    },
+    "entity": {
+      "type": "library",
+      "root": "libs/entity",
+      "entryFile": "index",
+      "sourceRoot": "libs/entity/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/entity/tsconfig.lib.json"
+      }
+    }
+  }
+}
