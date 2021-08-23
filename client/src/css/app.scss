@@ -1,4 +1,11 @@
 // app global css in SCSS form
+body {
+	font-family: Alegreya Sans, sans-serif;;
+	font-size: 16px;
+}
+
 .q-toolbar__title {
+	font-family: Alegreya Sans SC, sans-serif;
+	font-weight: bold;
 	text-align: center;
 }
