@@ -50,16 +50,18 @@
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      bordered
+      dark
       side="left"
       :class="DRAWER_BG"
       :width="DRAWER_WIDTH"
     >
       
-      <q-list dense>
-        <q-item-label header>
-          <q-input label="Search" />
-        </q-item-label>
+      <q-list dense dark>
+        <q-item>
+          <q-item-section>
+            <q-input dark label="Search" />
+          </q-item-section>
+        </q-item>
         <q-item-label header>
           Chaos Archives
         </q-item-label>
@@ -77,7 +79,7 @@
           </q-item-section>
         </q-item>
         <q-expansion-item dense label="Create content" header-class="text-bold">
-          <q-list class="bg-brown-2 layout__create-content-list" dense>
+          <q-list class="layout__create-content-list" dense>
             <q-item v-for="link in createContentLinks" clickable v-ripple :key="link.label" :to="link.to">
               <q-item-section>
                 <q-item-label>{{link.label}}</q-item-label>
@@ -96,12 +98,12 @@
     <q-drawer
       v-model="rightDrawerOpen"
       show-if-above
-      bordered
+      dark
       side="right"
       :class="DRAWER_BG"
       :width="DRAWER_WIDTH"
     >
-      <q-list>
+      <q-list dark>
         <q-item-label header>
           Events
         </q-item-label>
@@ -119,7 +121,7 @@
         </q-item>
         <q-separator />
       </q-list>
-      <q-list dense>
+      <q-list dense dark>
         <q-item-label header>
           Friend activity
         </q-item-label>
@@ -156,7 +158,7 @@ import { Vue, Options } from 'vue-class-component'
   components: { }
 })
 export default class MainLayout extends Vue {
-  readonly DRAWER_BG = 'bg-brown-1';
+  readonly DRAWER_BG = 'layout__drawer';
   readonly DRAWER_WIDTH = 250;
 
   readonly navbarLinks = [
@@ -220,7 +222,7 @@ export default class MainLayout extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
   .layout__filler {
     flex-basis: 0;
     flex-grow: 1;
@@ -246,13 +248,39 @@ export default class MainLayout extends Vue {
     color: #e8e8e8;
   }
 
+  .q-header {
+    background: rgba(#006ead, 0.8);
+  }
+
+  .q-drawer {
+    background: rgba(#016097, 0.4);
+  }
+
+  @media screen and (max-width: 1023px) {
+   .q-drawer {
+      background: #006ead;
+    } 
+  }
+
+  .q-drawer .q-item__label--header {
+    font-family: Michroma, sans-serif;
+    font-weight: bold;
+  }
+
+  .q-toolbar__title {
+    font-family: Michroma, sans-serif;
+    font-weight: bold;
+  }
+
   .layout__create-content-list {
     padding-left: 12px;
+    background: #016097;
   }
 
   .layout__page-container {
     max-width: 800px;
     padding: 16px;
     margin: auto;
+    background: rgba(white, 0.9);
   }
 </style>
