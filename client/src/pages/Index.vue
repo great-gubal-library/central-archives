@@ -2,13 +2,13 @@
   <q-page>
     <news-timeline />
     <section>
-      <h5 style="margin: 1rem">Latest adventures</h5>
+      <h5 style="margin: 1rem">Latest stories</h5>
       <q-markup-table dense>
         <tbody class="index__table">
-          <tr v-for="(adventure, index) in adventures" :key="index">
-            <td>{{adventure.title}}</td>
-            <td>{{adventure.author}}</td>
-            <td>{{adventure.date}}</td>
+          <tr v-for="(story, index) in stories" :key="index">
+            <td>{{story.title}}</td>
+            <td>{{story.author}}</td>
+            <td>{{story.date}}</td>
           </tr>
         </tbody>
       </q-markup-table>
@@ -174,7 +174,7 @@ import NewsTimeline from 'components/mainpage/NewsTimeline.vue'
   }
 })
 export default class PageIndex extends Vue {
-  readonly adventures = [
+  readonly stories = [
     { title: 'Lurkers in the Grotto', author: 'Vielle Janlenoux', date: '1 hour ago' },
     { title: 'Dressed to Call', author: 'Vielle Janlenoux', date: '2 hours ago' },
     { title: 'On to Summerford', author: 'Vielle Janlenoux', date: '3 hours ago' },
