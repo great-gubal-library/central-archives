@@ -226,6 +226,7 @@ export default class MainLayout extends Vue {
   .layout__filler {
     flex-basis: 0;
     flex-grow: 1;
+    white-space: nowrap;
   }
 
   .layout__char-name {
