@@ -1,15 +1,18 @@
 server:
-  lobbyPort: 8111
-  gameserverPort: 8112
+  port: 8111
 
 db:
   type: 'postgres'
   host: 'postgres'
   port: 5432
-  database: 'uno'
+  database: 'chaosarchives'
   username: 'postgres'
   password: 'postgres'
   synchronize: false
+
+redis:
+  host: 'localhost'
+  port: 6379
 
 auth:
   jwtSecret: 'secret'

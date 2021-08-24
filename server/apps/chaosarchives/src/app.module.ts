@@ -1,4 +1,5 @@
-import { dbConfiguration } from '@app/configuration';
+import { dbConfiguration, redisConfiguration } from '@app/configuration';
+import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -8,6 +9,7 @@ import { NewsModule } from './news/news.module';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({ useFactory: () => dbConfiguration }),
+    RedisModule.forRootAsync({ useFactory: () => ({ config: redisConfiguration }) }),
     NewsModule,
   ],
   controllers: [AppController],
