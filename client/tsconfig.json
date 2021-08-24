@@ -21,7 +21,8 @@
       "layouts/*": ["src/layouts/*"],
       "pages/*": ["src/pages/*"],
       "assets/*": ["src/assets/*"],
-      "boot/*": ["src/boot/*"]
+      "boot/*": ["src/boot/*"],
+      "@server/*": ["../server/apps/chaosarchives/src/*"],
     },
     // Forces quasar typings to be included, even if they aren't referenced directly
     // Removing this would break `quasar/wrappers` imports if `quasar`

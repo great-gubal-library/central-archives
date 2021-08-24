@@ -25,31 +25,14 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component'
+import { NewsEntry } from '@server/news/dto/NewsEntry'
 
 export default class NewsTimeline extends Vue {
-  readonly news = [
-    {
-      title: 'Travelers Be Warned, Coerthas Unsafe!',
-      author: 'Kiyo Obinata',
-      content: 'Lately the Coerthan lands held in the grip of perpetual winter have quite possibly become home to something more ominous than the biting cold. Indeed there are rumors that some lands in the Western Highlands might even be cursed!',
-      image: 'https://crescentmoonpublishing.com/wp-content/uploads/2021/08/2021-08-18_21-30-33-156_Fairy-Gameplay.png',
-      link: 'https://crescentmoonpublishing.com/travelers-be-warned-coerthas-unsafe/'
-    },
-    {
-      title: 'Letters to the Editor',
-      author: 'Jonahson Jameson',
-      content: 'Editor Jonahson Jameson answers questions from our dear readers!',
-      image: 'https://crescentmoonpublishing.com/wp-content/uploads/jet-engine-forms/24/2021/08/2021-04-29_20-12-29-921_Fairy_Gameplay.png',
-      link: 'https://crescentmoonpublishing.com/letters-to-the-editor-2/'
-    },
-    {
-      title: 'All things… Wes?',
-      author: 'Wes, the Butterfly Man',
-      content: 'The Butterfly Man answers two requests from our readers, including some questions about himself.',
-      image: 'https://crescentmoonpublishing.com/wp-content/uploads/jet-engine-forms/18/2021/08/ffxiv_26062021_222206_967.png',
-      link: 'https://crescentmoonpublishing.com/letters-to-the-editor-2/'
-    }
-  ];
+  news: NewsEntry[] = [];
+
+  async created() {
+    this.news = (await this.$api.get<NewsEntry[]>('news')).data;
+  }
 }
 </script>
 
