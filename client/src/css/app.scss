@@ -1,6 +1,6 @@
 // app global css in SCSS form
 body {
-	font-family: Alegreya Sans, sans-serif;
+	font-family: $body-font;
 	background-color: #006ead;
 	background-image: url(assets/bg.jpg);
 	background-size: cover;
@@ -31,15 +31,4 @@ a {
 
 .q-timeline {
 	margin-top: 0;
-}
-
-.q-timeline__heading-title {
-  text-align: center;
-	font-size: 2.5rem;
-}
-
-.q-timeline__title a {
-	text-decoration: none;
-	border-bottom: none;
-	color: inherit;
 }

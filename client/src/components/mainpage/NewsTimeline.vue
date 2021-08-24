@@ -1,11 +1,14 @@
 <template>
   <q-timeline>
       <q-timeline-entry heading>
-        News by The Daily Moogle
+        <div class="news-timeline__header">
+          <a class="news-timeline__link" href="https://crescentmoonpublishing.com/the-daily-moogle/" target="_blank">News by The Daily Moogle</a>
+          <div class="news-timeline__blurb">Kindly provided by <a class="news-timeline__link" href="https://crescentmoonpublishing.com/" target="_blank">Crescent Moon Publishing</a> — a Final Fantasy XIV fansite, by players, for players!</div>
+        </div>
       </q-timeline-entry>
       <q-timeline-entry v-for="(entry, index) in news" :key="index" :subtitle="entry.author">
         <template v-slot:title>
-           <a :href="entry.link" target="_blank">{{entry.title}}</a>
+           <a class="news-timeline__link" :href="entry.link" target="_blank">{{entry.title}}</a>
         </template>
         <div class="row justify-center">
           <div class="col" style="max-width: 300px; min-width: 200px">
@@ -49,3 +52,25 @@ export default class NewsTimeline extends Vue {
   ];
 }
 </script>
+
+<style lang="scss">
+.news-timeline__header {
+  text-align: center;
+	font-size: 2.5rem;
+}
+
+.news-timeline__link {
+  color: $blue-grey-8;
+  text-decoration: inherit;
+  border: inherit;
+}
+
+.news-timeline__blurb {
+  font-family: $body-font;
+  font-size: $body-font-size;
+}
+
+.news-timeline__link:hover {
+  color: $blue-grey-6;
+}
+</style>
