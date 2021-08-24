@@ -125,7 +125,7 @@
       </div>
     </section>
     <section>
-      <h5 style="margin: 1rem">New snapshots</h5>
+      <h5 style="margin: 1rem">New screenshots</h5>
       <div class="row">
         <div class="col index__image-wrapper">
           <q-responsive :ratio="1/1">
