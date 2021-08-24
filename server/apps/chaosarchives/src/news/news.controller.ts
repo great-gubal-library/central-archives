@@ -8,6 +8,6 @@ export class NewsController {
 
 	@Get('/')
 	async getNews(): Promise<NewsEntry[]> {
-		return [];
+		return this.newsService.getNews();
 	}
 }
