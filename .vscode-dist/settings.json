@@ -1,0 +1,8 @@
+{
+	"javascript.validate.enable": false,
+	"eslint.workingDirectories": [
+		{ "directory": "client", "changeProcessCWD": true },
+		{ "directory": "server", "changeProcessCWD": true }
+	],
+	"editor.tabSize": 2
+}
