@@ -1,0 +1,8 @@
+.git*
+dist
+node_modules
+config/local.yml
+Dockerfile
+docker-compose*
+ci_cd
+build*

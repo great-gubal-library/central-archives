@@ -11,7 +11,7 @@ db:
   synchronize: false
 
 redis:
-  host: 'localhost'
+  host: 'redis'
   port: 6379
 
 auth:
