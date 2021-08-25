@@ -10,4 +10,9 @@ COPY . .
 
 RUN nest build chaosarchives
 
+# Switch to unprivileged user
+RUN deluser --remove-home node \
+  && addgroup -S node -g 1000 \
+  && adduser -S -G node -u 1000 node
+USER node
 CMD ["node", "dist/apps/chaosarchives/main.js"]
