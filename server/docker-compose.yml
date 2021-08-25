@@ -1,6 +1,16 @@
 version: '3.1'
 
 services:
+  redis:
+    image: redis:6-alpine
+    restart: always
+    volumes:
+      - ./volumes/redis:/data:rw,z
+    ports:
+      - '16379:6379'
+    expose:
+      - 6379
+
   postgres:
     image: postgres:13-alpine
     restart: always
