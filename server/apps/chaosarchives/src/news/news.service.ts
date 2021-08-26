@@ -7,6 +7,10 @@ import { NewsEntry } from './dto/NewsEntry';
 export class NewsService {
 	private readonly NEWS_SITE = 'https://crescentmoonpublishing.com/the-daily-moogle/';
 
+	private readonly CACHE_DURATION_SEC = 5 * 60;
+
+	private readonly IMAGE_REGEX = /background-image:url\("(http[^"]*)"\)/;
+
 	constructor(
 		@InjectRedis()
 		private readonly redisService: Redis,
@@ -22,21 +26,18 @@ export class NewsService {
 
 		// Not cached - fetch and cache
 		const news = await this.fetchNews();
-		this.redisService.set('news', JSON.stringify(news), 'ex', 5 * 60); // Intentionally no await
+		this.redisService.set('news', JSON.stringify(news), 'ex', this.CACHE_DURATION_SEC); // Intentionally no await
 		return news;
 	}
 
 	private async fetchNews(): Promise<NewsEntry[]> {
 		const response = await this.httpService.get<string>(this.NEWS_SITE).toPromise();
 		const doc = parse(response.data);
-		const newsElement = doc.querySelector('.grid-col-desk-2');
-		const newsItems = newsElement.querySelectorAll('.jet-listing-grid__item');
-
-		const imageRegex = /background-image:url\("(http[^"]*)"\)/;
+		const newsItems = doc.querySelectorAll('.grid-col-desk-2 .jet-listing-grid__item');
 
 		return newsItems.slice(0, 3).map(item => {
 			const style = item.querySelector("style").textContent;
-			const imageMatch = style.match(imageRegex);
+			const imageMatch = style.match(this.IMAGE_REGEX);
 			const titleLink = item.querySelector('.elementor-heading-title a');
 			const authorLink = item.querySelector('.jet-listing-dynamic-field__content a');
 			const content = item.querySelector('.elementor-text-editor');
