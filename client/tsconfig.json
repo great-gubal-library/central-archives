@@ -31,6 +31,10 @@
     //  into `@quasar/app` which is imported by `quasar` typings
     "types": ["quasar"]
   },
+  "include": [
+    "src/**/*",
+    "../server/apps/chaosarchives/src/shared/**/*"
+  ],
   // Needed to avoid files copied into 'dist' folder (eg. a `.d.ts` file inside `src-ssr` folder)
   // to be evaluated by TS when their original files has been updated
   "exclude": ["/dist", ".quasar", "node_modules"]

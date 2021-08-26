@@ -9,6 +9,7 @@
 /* eslint-env node */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = configure(function (ctx) {
   return {
@@ -73,8 +74,9 @@ module.exports = configure(function (ctx) {
 
       // https://v2.quasar.dev/quasar-cli/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpack (/* chain */) {
-        //
+      chainWebpack (chain) {
+        // Needed for client codebase to pick up @server dependencies
+        chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
       },
     },
 
@@ -126,8 +128,8 @@ module.exports = configure(function (ctx) {
       maxAge: 1000 * 60 * 60 * 24 * 30,
         // Tell browser when a file from the server should expire from cache (in ms)
 
-      chainWebpackWebserver (/* chain */) {
-        //
+      chainWebpackWebserver (chain) {
+        chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
       },
 
       middlewares: [
