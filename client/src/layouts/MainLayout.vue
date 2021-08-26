@@ -103,24 +103,7 @@
       :class="DRAWER_BG"
       :width="DRAWER_WIDTH"
     >
-      <q-list dark>
-        <q-item-label header>
-          Events
-        </q-item-label>
-        <q-item v-for="event in events" clickable v-ripple :key="event.title">
-          <q-item-section>
-            <q-item-label>{{event.title}}</q-item-label>
-            <q-item-label caption>{{event.date}}</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-separator />
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-item-label>Event archive</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-separator />
-      </q-list>
+      <event-list />
       <q-list dense dark>
         <q-item-label header>
           Friend activity
@@ -153,9 +136,12 @@
 <script lang="ts">
 
 import { Vue, Options } from 'vue-class-component'
+import EventList from '../components/eventbar/EventList.vue'
 
 @Options({
-  components: { }
+  components: {
+    EventList
+  }
 })
 export default class MainLayout extends Vue {
   readonly DRAWER_BG = 'layout__drawer';

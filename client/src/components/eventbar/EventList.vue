@@ -1,0 +1,67 @@
+<template>
+    <q-list dark>
+        <q-item-label header> Events </q-item-label>
+        <q-item
+            v-for="event in events"
+            clickable
+            v-ripple
+            :key="event.title"
+            tag="a"
+            target="_blank"
+            class="event-list__link"
+            :href="event.link"
+        >
+            <q-item-section>
+                <q-item-label
+                    >{{ event.name }} — {{ event.location }}</q-item-label
+                >
+                <q-item-label caption>
+                    {{ formatDateServer(event.date) }}
+                    <q-tooltip>{{ formatDateLocal(event.date) }}</q-tooltip>
+                </q-item-label>
+            </q-item-section>
+        </q-item>
+        <q-separator />
+        <q-item clickable v-ripple>
+            <q-item-section>
+                <q-item-label>Event archive</q-item-label>
+            </q-item-section>
+        </q-item>
+        <q-separator />
+    </q-list>
+</template>
+
+<script lang="ts">
+import { Vue } from 'vue-class-component'
+import { EventInfo } from '@server/events/dto/EventInfo'
+import { DateTime, DateTimeFormatOptions } from 'luxon'
+
+const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = {
+  dateStyle: 'long',
+  timeStyle: 'short',
+};
+
+export default class EventList extends Vue {
+  events: EventInfo[] = [];
+
+  async created() {
+    this.events = (await this.$api.get<EventInfo[]>('events')).data;
+  }
+
+  formatDateServer(date: number) {
+    return DateTime.fromMillis(date).toLocaleString(Object.assign({
+      timeZone: 'UTC'
+    }, BASIC_DATE_FORMAT_OPTIONS)) + ' ST';
+  }
+
+  formatDateLocal(date: number) {
+    return DateTime.fromMillis(date).toLocaleString(BASIC_DATE_FORMAT_OPTIONS) + ' LT';
+  }
+}
+</script>
+
+<style lang="scss">
+.event-list__link {
+    border: none;
+}
+</style>

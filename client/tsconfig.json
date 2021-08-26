@@ -13,6 +13,7 @@
     "strict": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
+    "lib": [ "es2020" ],
     // Quasar-defined webpack aliases
     "paths": {
       "src/*": ["src/*"],
