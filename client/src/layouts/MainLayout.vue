@@ -21,7 +21,7 @@
           <router-link to="/">Chaos Archives</router-link>
         </q-toolbar-title>
 
-        <div class="layout__filler text-right">
+        <div class="layout__filler justify-end">
           <q-btn-group flat class="gt-sm">
             <q-btn v-for="link in navbarLinks" stretch flat :key="link.label" :label="link.label" :to="link.to" />
           </q-btn-group>
@@ -124,7 +124,7 @@
 
     <q-footer elevated>
       <q-toolbar>
-        <div class="layout__filler text-body2 text-center">
+        <div class="layout__filler text-body2 justify-center text-center">
           Final Fantasy XIV is © 2010&ndash;2021 Square Enix Holdings Co., Ltd. All rights reserved.<br />
           All text and images on this site are © 2021 by their respective owners.
         </div>
@@ -212,7 +212,8 @@ export default class MainLayout extends Vue {
   .layout__filler {
     flex-basis: 0;
     flex-grow: 1;
-    white-space: nowrap;
+    display: flex;
+    flex-wrap: nowrap;
   }
 
   .layout__char-name {
