@@ -2,6 +2,7 @@ import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { HttpService, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
+import SharedConstants from '../shared/SharedConstants';
 import { EventInfo } from './dto/EventInfo';
 
 @Injectable()
@@ -9,8 +10,6 @@ export class EventsService {
 	private readonly EVENTS_SITE = 'https://crescentmoonpublishing.com/events/';
 
 	private readonly CACHE_DURATION_SEC = 5 * 60;
-
-	private readonly SERVER_TIMEZONE = 'UTC';
 
 	private readonly DATE_TIME_FORMAT = 'LLLL dd, yyyy h:mma';
 
@@ -44,7 +43,7 @@ export class EventsService {
 			const dateString = `${fields[0].textContent} ${fields[1].textContent}`;
 			const date = DateTime.fromFormat(dateString, this.DATE_TIME_FORMAT, {
 				locale: 'en',
-				zone: this.SERVER_TIMEZONE,
+				zone: SharedConstants.FFXIV_SERVER_TIMEZONE,
 			});
 
 			return {

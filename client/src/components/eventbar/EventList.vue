@@ -35,6 +35,7 @@
 import { Vue } from 'vue-class-component'
 import { EventInfo } from '@server/events/dto/EventInfo'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
+import SharedConstants from '@server/shared/SharedConstants'
 
 const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = {
   dateStyle: 'long',
@@ -50,7 +51,7 @@ export default class EventList extends Vue {
 
   formatDateServer(date: number) {
     return DateTime.fromMillis(date).toLocaleString(Object.assign({
-      timeZone: 'UTC'
+      timeZone: SharedConstants.FFXIV_SERVER_TIMEZONE
     }, BASIC_DATE_FORMAT_OPTIONS)) + ' ST';
   }
 
