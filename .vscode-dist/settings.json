@@ -4,5 +4,6 @@
 		{ "directory": "client", "changeProcessCWD": true },
 		{ "directory": "server", "changeProcessCWD": true }
 	],
-	"editor.tabSize": 2
+	"editor.tabSize": 2,
+	"vetur.format.options.tabSize": 2
 }
