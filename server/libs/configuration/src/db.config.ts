@@ -1,6 +1,6 @@
-import config from 'config';
+import { Character, Server, User } from '@app/entity';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { UserEntity } from '@app/entity';
+import config from 'config';
 import { DbConfigInterface } from './interfaces/db-config.interface';
 
 const dbConfig = config.get<DbConfigInterface>('db');
@@ -13,7 +13,9 @@ export const dbConfiguration: TypeOrmModuleOptions = {
   database: dbConfig.database,
   logging: true,
   entities: [
-    UserEntity
+    Character,
+    Server,
+    User,
   ],
   synchronize: dbConfig.synchronize,
   keepConnectionAlive: true,
