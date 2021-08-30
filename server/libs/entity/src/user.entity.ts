@@ -25,9 +25,13 @@ export class User extends BasicEntity {
   })
   role: Role | null;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   verifiedAt: Date;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   verificationCode: string;
 }
