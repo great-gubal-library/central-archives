@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { EventsModule } from './events/events.module';
     RedisModule.forRootAsync({ useFactory: () => ({ config: redisConfiguration }) }),
     NewsModule,
     EventsModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
