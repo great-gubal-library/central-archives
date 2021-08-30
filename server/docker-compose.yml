@@ -11,27 +11,27 @@ services:
     expose:
       - 6379
 
-  postgres:
-    image: postgres:13-alpine
+  mariadb:
+    image: mariadb:10.6
     restart: always
     volumes:
-      - ./volumes/postgres:/var/lib/postgresql:rw,z
+      - ./volumes/mariadb:/var/lib/mysql:rw,z
     expose:
-      - 5432
+      - 3306
     ports:
-      - '15432:5432'
+      - '13306:3306'
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_EXTERNAL_PORT=15432
-      - POSTGRES_DB=chaosarchives
+      - MARIADB_RANDOM_ROOT_PASSWORD=yes
+      - MARIADB_USER=mariadb
+      - MARIADB_PASSWORD=mariadb
+      - MARIADB_DATABASE=chaosarchives
 
   chaosarchives:
     build: ./
     image: chaosarchives
     restart: always
     links:
-      - postgres
+      - mariadb
       - redis
     environment:
       - NODE_ENV=${NODE_ENV:-production}

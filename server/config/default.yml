@@ -2,12 +2,12 @@ server:
   port: 8111
 
 db:
-  type: 'postgres'
-  host: 'postgres'
-  port: 5432
+  type: 'mariadb'
+  host: 'mariadb'
+  port: 3306
   database: 'chaosarchives'
-  username: 'postgres'
-  password: 'postgres'
+  username: 'mariadb'
+  password: 'mariadb'
   synchronize: false
 
 redis:
