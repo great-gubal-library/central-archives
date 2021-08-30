@@ -7,6 +7,9 @@
     "webpack": true,
     "tsConfigPath": "apps/chaosarchives/tsconfig.app.json"
   },
+  "generateOptions": {
+    "spec": false
+  },
   "projects": {
     "chaosarchives": {
       "type": "application",
