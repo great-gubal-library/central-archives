@@ -31,7 +31,8 @@ export class User extends BasicEntity {
   verifiedAt: Date;
 
   @Column({
+    type: 'text',
     nullable: true
   })
-  verificationCode: string;
+  verificationCode!: string|null;
 }

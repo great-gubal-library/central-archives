@@ -1,3 +1,4 @@
+import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { Body, Controller, Post } from '@nestjs/common';
 import XIVAPI from '@xivapi/js';
@@ -18,7 +19,11 @@ export class UserController {
   @Post('signup')
   async signUp(@Body() signupData: UserSignUpDto): Promise<void> {
     const user = await this.userService.signUp(signupData);
-		// this.connection.transaction(em => this.userService.withTransaction(em).signUp(signupData));
-    await this.userService.sendVerificationMail(user);
+		await this.userService.sendVerificationMail(user);
+  }
+
+  @Post('confirm-email')
+  async confirmEmail(@Body() confirmEmailData: UserConfirmEmailDto): Promise<void> {
+    await this.userService.confirmEmail(confirmEmailData.code);
   }
 }
