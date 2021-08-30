@@ -45,13 +45,13 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component';
-import { NewsEntry } from '@shared/dto/news/NewsEntry';
+import { NewsDto } from '@shared/dto/news/news.dto';
 
 export default class NewsTimeline extends Vue {
-  news: NewsEntry[] = [];
+  news: NewsDto[] = [];
 
   async created() {
-    this.news = (await this.$api.get<NewsEntry[]>('news')).data;
+    this.news = (await this.$api.get<NewsDto[]>('news')).data;
   }
 }
 </script>

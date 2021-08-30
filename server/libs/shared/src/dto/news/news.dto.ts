@@ -1,4 +1,4 @@
-export interface NewsEntry {
+export interface NewsDto {
 	title: string,
 	author: string,
 	content: string,

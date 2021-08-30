@@ -1,7 +1,7 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { HttpService, Injectable } from '@nestjs/common';
 import parse from 'node-html-parser';
-import { NewsEntry } from '@app/shared/dto/news/NewsEntry';
+import { NewsDto } from '@app/shared/dto/news/news.dto';
 
 @Injectable()
 export class NewsService {
@@ -17,7 +17,7 @@ export class NewsService {
 		private httpService: HttpService,
 	) { }
 
-	async getNews(): Promise<NewsEntry[]> {
+	async getNews(): Promise<NewsDto[]> {
 		const cachedNews = await this.redisService.get('news');
 
 		if (cachedNews) {
@@ -30,7 +30,7 @@ export class NewsService {
 		return news;
 	}
 
-	private async fetchNews(): Promise<NewsEntry[]> {
+	private async fetchNews(): Promise<NewsDto[]> {
 		const response = await this.httpService.get<string>(this.NEWS_SITE).toPromise();
 		const doc = parse(response.data);
 		const newsItems = doc.querySelectorAll('.grid-col-desk-2 .jet-listing-grid__item');

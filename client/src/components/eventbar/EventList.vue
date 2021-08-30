@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component';
-import { EventInfo } from '@shared/dto/events/EventInfo';
+import { EventDto } from '@shared/dto/events/event.dto';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
 import SharedConstants from '@shared/SharedConstants';
 
@@ -41,7 +41,7 @@ const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = {
 };
 
 export default class EventList extends Vue {
-  events: EventInfo[] = [];
+  events: EventDto[] = [];
 
   async created() {
     const today = DateTime.now()
@@ -49,7 +49,7 @@ export default class EventList extends Vue {
       .startOf('day');
 
     // Show only events from today and later
-    this.events = (await this.$api.get<EventInfo[]>('events')).data.filter(
+    this.events = (await this.$api.get<EventDto[]>('events')).data.filter(
       (event) =>
         DateTime.fromMillis(event.date)
           .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)

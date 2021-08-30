@@ -3,7 +3,7 @@ import { HttpService, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 import SharedConstants from '@app/shared/SharedConstants';
-import { EventInfo } from '@app/shared/dto/events/EventInfo';
+import { EventDto } from '@app/shared/dto/events/event.dto';
 
 @Injectable()
 export class EventsService {
@@ -19,7 +19,7 @@ export class EventsService {
 		private httpService: HttpService,
 	) { }
 
-	async getEvents(): Promise<EventInfo[]> {
+	async getEvents(): Promise<EventDto[]> {
 		const cachedEvents = await this.redisService.get('events');
 
 		if (cachedEvents) {
@@ -32,7 +32,7 @@ export class EventsService {
 		return events;
 	}
 
-	private async fetchEvents(): Promise<EventInfo[]> {
+	private async fetchEvents(): Promise<EventDto[]> {
 		const response = await this.httpService.get<string>(this.EVENTS_SITE).toPromise();
 		const doc = parse(response.data);
 		const eventsItems = doc.querySelectorAll('.grid-col-desk-1 .jet-listing-grid__item');
