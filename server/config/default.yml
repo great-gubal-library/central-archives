@@ -1,5 +1,6 @@
 server:
   port: 8111
+  frontendRoot: 'http://localhost:8080'
 
 db:
   type: 'mariadb'
@@ -13,6 +14,14 @@ db:
 redis:
   host: 'redis'
   port: 6379
+
+mail:
+  host: 'smtp.example.com'
+  port: 25
+  secure: true
+  username: 'user'
+  password: 'password'
+  from: 'Chaos Archives <chaosarchives@localhost>'
 
 auth:
   jwtSecret: 'secret'

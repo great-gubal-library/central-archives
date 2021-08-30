@@ -5,7 +5,9 @@
   "root": "apps/chaosarchives",
   "compilerOptions": {
     "webpack": true,
-    "tsConfigPath": "apps/chaosarchives/tsconfig.app.json"
+    "tsConfigPath": "apps/chaosarchives/tsconfig.app.json",
+    "assets": ["templates/**"],
+    "watchAssets": true
   },
   "generateOptions": {
     "spec": false

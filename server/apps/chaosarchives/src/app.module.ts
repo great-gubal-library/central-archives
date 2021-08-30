@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
 import { UserModule } from './user/user.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from './user/user.module';
     NewsModule,
     EventsModule,
     UserModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

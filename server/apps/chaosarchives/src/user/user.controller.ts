@@ -6,14 +6,19 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-	private xiv: XIVAPI;
+  private xiv: XIVAPI;
 
-	constructor(private userService: UserService, private connection: Connection) {
-		this.xiv = new XIVAPI();
-	}
+  constructor(
+    private userService: UserService,
+    private connection: Connection,
+  ) {
+    this.xiv = new XIVAPI();
+  }
 
-	@Post('signup')
-	async signUp(@Body() signupData: UserSignUpDto): Promise<void> {
-		const user = await this.connection.transaction(em => this.userService.withTransaction(em).signUp(signupData));
-	}
+  @Post('signup')
+  async signUp(@Body() signupData: UserSignUpDto): Promise<void> {
+    const user = await this.userService.signUp(signupData);
+		// this.connection.transaction(em => this.userService.withTransaction(em).signUp(signupData));
+    await this.userService.sendVerificationMail(user);
+  }
 }
