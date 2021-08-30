@@ -24,6 +24,7 @@
       "assets/*": ["src/assets/*"],
       "boot/*": ["src/boot/*"],
       "@shared/*": ["../server/libs/shared/src/*"],
+      "@xivapi/js": ["../server/types/xivapi.d.ts"]
     },
     // Forces quasar typings to be included, even if they aren't referenced directly
     // Removing this would break `quasar/wrappers` imports if `quasar`
