@@ -2,8 +2,8 @@ import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { HttpService, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
-import SharedConstants from '../shared/SharedConstants';
-import { EventInfo } from './dto/EventInfo';
+import SharedConstants from '@app/shared/SharedConstants';
+import { EventInfo } from '@app/shared/dto/events/EventInfo';
 
 @Injectable()
 export class EventsService {

@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { EventInfo } from './dto/EventInfo';
+import { EventInfo } from '@app/shared/dto/events/EventInfo';
 import { EventsService } from './events.service';
 
 @Controller('events')

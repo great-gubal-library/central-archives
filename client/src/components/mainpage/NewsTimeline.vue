@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component';
-import { NewsEntry } from '@server/news/dto/NewsEntry';
+import { NewsEntry } from '@shared/dto/news/NewsEntry';
 
 export default class NewsTimeline extends Vue {
   news: NewsEntry[] = [];

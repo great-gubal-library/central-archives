@@ -26,6 +26,12 @@
       ],
       "@app/entity/*": [
         "libs/entity/src/*"
+      ],
+      "@app/shared": [
+        "libs/shared/src"
+      ],
+      "@app/shared/*": [
+        "libs/shared/src/*"
       ]
     }
   }

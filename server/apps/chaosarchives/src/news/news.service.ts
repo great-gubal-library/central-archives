@@ -1,7 +1,7 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { HttpService, Injectable } from '@nestjs/common';
 import parse from 'node-html-parser';
-import { NewsEntry } from './dto/NewsEntry';
+import { NewsEntry } from '@app/shared/dto/news/NewsEntry';
 
 @Injectable()
 export class NewsService {

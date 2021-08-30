@@ -1,11 +1,6 @@
+import { Role } from '@app/shared/enums/role.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
-
-export enum Role {
-  USER = 'user',
-  MODERATOR = 'moderator',
-  ADMIN = 'admin'
-}
 
 @Entity()
 export class User extends BasicEntity {

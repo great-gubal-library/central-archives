@@ -23,7 +23,7 @@
       "pages/*": ["src/pages/*"],
       "assets/*": ["src/assets/*"],
       "boot/*": ["src/boot/*"],
-      "@server/*": ["../server/apps/chaosarchives/src/*"],
+      "@shared/*": ["../server/libs/shared/src/*"],
     },
     // Forces quasar typings to be included, even if they aren't referenced directly
     // Removing this would break `quasar/wrappers` imports if `quasar`
@@ -33,7 +33,7 @@
   },
   "include": [
     "src/**/*",
-    "../server/apps/chaosarchives/src/shared/**/*"
+    "../server/libs/shared/src/**/*"
   ],
   // Needed to avoid files copied into 'dist' folder (eg. a `.d.ts` file inside `src-ssr` folder)
   // to be evaluated by TS when their original files has been updated

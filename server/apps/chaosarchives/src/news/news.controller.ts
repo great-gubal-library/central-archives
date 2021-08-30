@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { NewsEntry } from './dto/NewsEntry';
+import { NewsEntry } from '@app/shared/dto/news/NewsEntry';
 import { NewsService } from './news.service';
 
 @Controller('news')

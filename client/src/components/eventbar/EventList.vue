@@ -31,9 +31,9 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component';
-import { EventInfo } from '@server/events/dto/EventInfo';
+import { EventInfo } from '@shared/dto/events/EventInfo';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
-import SharedConstants from '@server/shared/SharedConstants';
+import SharedConstants from '@shared/SharedConstants';
 
 const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = {
   dateStyle: 'long',
