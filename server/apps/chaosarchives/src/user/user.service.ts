@@ -140,7 +140,7 @@ export class UserService {
       const characterData = await xivapi.character.get(verifyData.lodestoneId);
 
       if (!characterData) {
-        throw new HttpException("Character deleted", HttpStatus.GONE);
+        throw new HttpException('Character deleted', HttpStatus.GONE);
       }
 
       if (!characterData.Character.Bio.includes(character.verificationCode)) {
