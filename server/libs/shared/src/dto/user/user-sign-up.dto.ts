@@ -5,6 +5,10 @@ export class UserSignUpDto {
 
 	confirmPassword: string;
 
+	characterName: string;
+
+	server: string;
+
 	constructor(properties?: Readonly<UserSignUpDto>) {
 		if (properties) {
 			Object.assign(this, properties);

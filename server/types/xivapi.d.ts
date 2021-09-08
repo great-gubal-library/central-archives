@@ -23,7 +23,7 @@ declare module '@xivapi/js' {
     Server: string;
   }
 
-  interface CharacterData {
+  interface CharacterInfo {
     Character: {
       Avatar: string;
       DC: string;
@@ -38,8 +38,8 @@ declare module '@xivapi/js' {
     character: {
       get(
         lodestoneId: number,
-        options: { extended: 0 | 1 },
-      ): Promise<CharacterData>;
+        options?: { extended: 0 | 1 },
+      ): Promise<CharacterInfo>;
       search(
         name: string,
         options?: { server: string },
