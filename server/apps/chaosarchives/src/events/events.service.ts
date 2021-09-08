@@ -92,7 +92,7 @@ export class EventsService {
 		const now = Date.now();
 
 		return (result.filter(event => event !== null) as EventDto[])
-			.filter(event => event.date >= now)
+			.filter(event => event.date >= now && !event.name.includes('OOC'))
 			.sort((e1, e2) => utils.compareNumbers(e1.date, e2.date))
 			.slice(0, this.MAX_RESULTS);
 	}
