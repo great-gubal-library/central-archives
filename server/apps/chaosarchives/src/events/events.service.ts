@@ -1,17 +1,22 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { HttpService, Injectable } from '@nestjs/common';
+import { HttpService, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 import SharedConstants from '@app/shared/SharedConstants';
 import { EventDto } from '@app/shared/dto/events/event.dto';
+import utils from '../util/utils';
 
 @Injectable()
 export class EventsService {
+	private readonly log = new Logger(EventsService.name);
+
 	private readonly EVENTS_SITE = 'https://crescentmoonpublishing.com/events/';
 
 	private readonly CACHE_DURATION_SEC = 5 * 60;
 
-	private readonly DATE_TIME_FORMAT = 'LLLL d, yyyy h:mma';
+	private readonly MAX_RESULTS = 10;
+
+	private readonly DATE_TIME_FORMAT = 'd LLLL yyyy h:mm a';
 
 	constructor(
 		@InjectRedis()
@@ -35,31 +40,60 @@ export class EventsService {
 	private async fetchEvents(): Promise<EventDto[]> {
 		const response = await this.httpService.get<string>(this.EVENTS_SITE).toPromise();
 		const doc = parse(response.data);
-		const eventsItems = doc.querySelectorAll('.grid-col-desk-1 .jet-listing-grid__item');
-		const result: EventDto[] = [];
 
-		for (const item of eventsItems) {
-			const nameLink = item.querySelector('a');
-			const fields = item.querySelectorAll('.jet-listing-dynamic-field__content');
-			const dateString = `${fields[0].textContent} ${fields[1].textContent}`;
-			const date = DateTime.fromFormat(dateString, this.DATE_TIME_FORMAT, {
-				locale: 'en',
-				zone: SharedConstants.FFXIV_SERVER_TIMEZONE,
-			});
+		// Sidebar events are unreliable, so we query the calendar instead
+		const eventLinks = doc.querySelectorAll('.jet-listing-calendar .jet-calendar-week__day.has-events .jet-listing-dynamic-link__link');
 
-			if (!date.isValid) {
-				// Theoretically the date can fail to parse, but we strive to avoid this possibility
-				continue;
+		// Query linked pages in parallel
+		const result: (EventDto|null)[] = await Promise.all(eventLinks.map(async link => {
+			const name = link.querySelector('span').textContent;
+			const href = link.getAttribute('href');
+
+			if (!name || !href) {
+				return null;
 			}
 
-			result.push({
-				name: nameLink.querySelector('span').textContent || '',
-				location: fields[2].textContent || '',
-				link: nameLink.getAttribute('href') || '',
-				date: date.toMillis(),
-			});
-		}
+			try {
+				const linkedPage = await this.httpService.get<string>(href).toPromise();
+				const linkedDoc = parse(linkedPage.data);
+				const dateField = linkedDoc.querySelector('i.fa-calendar + div');
+				const timeField = linkedDoc.querySelector('i.fa-clock + div');
+				
+				if (!dateField || !timeField) {
+					return null;
+				}
 
-		return result;
+				const dateString = dateField.textContent.trim();
+				const timeString = timeField.textContent.trim();
+				const date = DateTime.fromFormat(`${dateString} ${timeString}`, this.DATE_TIME_FORMAT, {
+					locale: 'en',
+					zone: SharedConstants.FFXIV_SERVER_TIMEZONE,
+				});
+
+				if (!date.isValid) {
+					return null;
+				}
+
+				const locationLinks = linkedDoc.querySelectorAll('.grid-col-desk-2 .elementor-heading-title a');
+				const location = locationLinks.map(a => a.textContent.trim()).join(', ');
+
+				return {
+					name,
+					location,
+					link: href,
+					date: date.toMillis(),
+				};
+			} catch (e) {
+				this.log.error(e);
+				return null;
+			}
+		}));
+		
+		const now = Date.now();
+
+		return (result.filter(event => event !== null) as EventDto[])
+			.filter(event => event.date >= now)
+			.sort((e1, e2) => utils.compareNumbers(e1.date, e2.date))
+			.slice(0, this.MAX_RESULTS);
 	}
 }
