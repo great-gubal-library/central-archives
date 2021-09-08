@@ -1,4 +1,4 @@
-import { Role } from "@app/shared/enums/role.enum";
+import { Role } from "../../enums/role.enum";
 
 export interface SessionDto {
 	id: number,

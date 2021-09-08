@@ -15,12 +15,10 @@ import { MailService } from '../mail/mail.service';
 import { generateVerificationCode } from '../util/verification-code';
 
 @Injectable()
-export class UserService /* extends TransactionFor<UserService> */ {
+export class UserService {
   constructor(
     private connection: Connection,
     @InjectRepository(User) private userRepo: Repository<User>,
-    @InjectRepository(User) private characterRepo: Repository<Character>,
-    @InjectRepository(User) private serverRepo: Repository<Server>,
     private mailService: MailService,
   ) {}
 
