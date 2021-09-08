@@ -26,6 +26,7 @@ declare module '@xivapi/js' {
   interface CharacterInfo {
     Character: {
       Avatar: string;
+      Bio: string;
       DC: string;
       ID: number;
       Name: string;

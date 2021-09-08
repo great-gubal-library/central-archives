@@ -3,6 +3,7 @@ import { Character, Server, User } from '@app/entity';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
+import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import { Role } from '@app/shared/enums/role.enum';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -115,5 +116,41 @@ export class UserService {
 
   toSession(userInfo: UserInfo): SessionDto {
     return userInfo;
+  }
+
+  async verifyCharacter(user: UserInfo, verifyData: VerifyCharacterDto): Promise<void> {
+    await this.connection.transaction(async em => {
+      const characterRepo = em.getRepository(Character);
+      const character = await characterRepo.findOne({
+        lodestoneId: verifyData.lodestoneId,
+        user: {
+          id: user.id
+        }
+      });
+
+      if (!character) {
+        throw new HttpException('No such character belongs to you', HttpStatus.BAD_REQUEST);
+      }
+
+      if (!character.verificationCode) {
+        throw new HttpException('Already verified', HttpStatus.BAD_REQUEST);
+      }
+
+      const xivapi = new XIVAPI();
+      const characterData = await xivapi.character.get(verifyData.lodestoneId);
+
+      if (!characterData) {
+        throw new HttpException("Character deleted", HttpStatus.GONE);
+      }
+
+      if (!characterData.Character.Bio.includes(character.verificationCode)) {
+        throw new HttpException('Verification string not found in character profile', HttpStatus.NOT_FOUND);
+      }
+
+      // Passed all checks - character verified!
+      character.verificationCode = null;
+      character.verifiedAt = new Date();
+      await characterRepo.save(character);
+    });
   }
 }

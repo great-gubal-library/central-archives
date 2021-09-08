@@ -26,8 +26,16 @@ export class Character extends BasicEntity {
   })
   race: Race;
 
-  @Column()
-  verificationCode: string;
+  @Column({
+    nullable: true
+  })
+  verifiedAt: Date;
+
+  @Column({
+    type: 'text',
+    nullable: true
+  })
+  verificationCode: string | null;
 
   @ManyToOne(() => Server, {
     nullable: false,
