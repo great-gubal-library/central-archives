@@ -12,7 +12,7 @@
       :href="event.link"
     >
       <q-item-section>
-        <q-item-label>{{ event.name }} — {{ event.location }}</q-item-label>
+        <q-item-label>{{ event.name }}<template v-if="event.location"> — {{ event.location }}</template></q-item-label>
         <q-item-label caption>
           {{ formatDateServer(event.date) }}
           <q-tooltip>{{ formatDateLocal(event.date) }}</q-tooltip>
