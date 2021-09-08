@@ -1,15 +1,20 @@
-import { SessionDto } from '@app/shared/dto/user/session.dto';
+import { LoginDto } from '@app/shared/dto/user/login.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
-import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from '../auth/current-user.decorator';
+import { TokenService } from '../auth/token.service';
+import { UserInfo } from '../auth/user-info';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private tokenService: TokenService,
+  ) {}
 
   @Post('signup')
   async signUp(
@@ -27,9 +32,10 @@ export class UserController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(): Promise<SessionDto> {
+  async login(@CurrentUser() user: UserInfo): Promise<LoginDto> {
     return {
-      role: Role.USER
+      accessToken: this.tokenService.createAccessToken(user.id),
+      session: this.userService.toSession(user),
     };
   }
 }

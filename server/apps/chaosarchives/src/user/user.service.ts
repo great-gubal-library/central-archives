@@ -1,5 +1,6 @@
 import { serverConfiguration } from '@app/configuration';
 import { Character, Server, User } from '@app/entity';
+import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
@@ -9,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
 import bcrypt from 'bcrypt';
 import { Connection, Repository } from 'typeorm';
+import { UserInfo } from '../auth/user-info';
 import { MailService } from '../mail/mail.service';
 import { generateVerificationCode } from '../util/verification-code';
 
@@ -111,5 +113,9 @@ export class UserService /* extends TransactionFor<UserService> */ {
     user.verificationCode = null;
     user.verifiedAt = new Date();
     await this.userRepo.save(user);
+  }
+
+  toSession(userInfo: UserInfo): SessionDto {
+    return userInfo;
   }
 }
