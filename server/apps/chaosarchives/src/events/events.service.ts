@@ -11,7 +11,7 @@ export class EventsService {
 
 	private readonly CACHE_DURATION_SEC = 5 * 60;
 
-	private readonly DATE_TIME_FORMAT = 'LLLL dd, yyyy h:mma';
+	private readonly DATE_TIME_FORMAT = 'LLLL d, yyyy h:mma';
 
 	constructor(
 		@InjectRedis()
