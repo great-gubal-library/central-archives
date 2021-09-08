@@ -36,8 +36,9 @@ export class EventsService {
 		const response = await this.httpService.get<string>(this.EVENTS_SITE).toPromise();
 		const doc = parse(response.data);
 		const eventsItems = doc.querySelectorAll('.grid-col-desk-1 .jet-listing-grid__item');
+		const result: EventDto[] = [];
 
-		return eventsItems.map(item => {
+		for (const item of eventsItems) {
 			const nameLink = item.querySelector('a');
 			const fields = item.querySelectorAll('.jet-listing-dynamic-field__content');
 			const dateString = `${fields[0].textContent} ${fields[1].textContent}`;
@@ -46,12 +47,19 @@ export class EventsService {
 				zone: SharedConstants.FFXIV_SERVER_TIMEZONE,
 			});
 
-			return {
+			if (!date.isValid) {
+				// Theoretically the date can fail to parse, but we strive to avoid this possibility
+				continue;
+			}
+
+			result.push({
 				name: nameLink.querySelector('span').textContent || '',
 				location: fields[2].textContent || '',
 				link: nameLink.getAttribute('href') || '',
 				date: date.toMillis(),
-			}
-		});
+			});
+		}
+
+		return result;
 	}
 }
