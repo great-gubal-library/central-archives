@@ -148,14 +148,14 @@ export default class MainLayout extends Vue {
   readonly DRAWER_WIDTH = 250;
 
   readonly navbarLinks = [
-    { label: 'About', to: '' },
-    { label: 'Terms', to: '' },
-    { label: 'FAQ', to: '' },
+    { label: 'About', to: '/about' },
+    { label: 'Rules', to: '/rules' },
+    // { label: 'FAQ', to: '' },
     { label: 'Contact', to: '' },
   ];
 
   readonly siteLinks = [
-    { label: 'About', to: '' },
+    { label: 'About', to: '/about' },
     { label: 'People', to: '' },
     { label: 'Free Companies', to: '' },
     { label: 'Noticeboard', to: '' },
@@ -252,6 +252,11 @@ export default class MainLayout extends Vue {
 
   .q-drawer .q-item__label--header {
     font-family: Michroma, sans-serif;
+    font-weight: bold;
+  }
+
+  .q-drawer .q-item.q-router-link--active, .q-drawer .q-item--active {
+    color: #c0c0c0;
     font-weight: bold;
   }
 
