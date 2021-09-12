@@ -71,6 +71,8 @@ export default class NewsTimeline extends Vue {
 .news-timeline__blurb {
   font-family: $body-font;
   font-size: $body-font-size;
+  font-weight: normal;
+  line-height: 1.4;
 }
 
 .news-timeline__link:hover {
