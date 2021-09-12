@@ -42,12 +42,12 @@ export class EventsService {
 		const doc = parse(response.data);
 
 		// Sidebar events are unreliable, so we query the calendar instead
-		const eventLinks = doc.querySelectorAll('.jet-listing-calendar .jet-calendar-week__day.has-events .jet-listing-dynamic-link__link');
+		const calendarItems = doc.querySelectorAll('.jet-listing-calendar .jet-calendar-week__day.has-events .jet-engine-listing-overlay-wrap');
 
 		// Query linked pages in parallel
-		const result: (EventDto|null)[] = await Promise.all(eventLinks.map(async link => {
-			const name = link.querySelector('span').textContent;
-			const href = link.getAttribute('href');
+		const result: (EventDto|null)[] = await Promise.all(calendarItems.map(async calendarItem => {
+			const name = calendarItem.querySelector('.jet-listing-dynamic-field__content').textContent;
+			const href = calendarItem.getAttribute('data-url');
 
 			if (!name || !href) {
 				return null;
