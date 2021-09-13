@@ -12,10 +12,10 @@
             aria-label="Menu"
             @click="toggleLeftDrawer"
           >
-            <!--<span class="gt-sm layout__char-name">Vielle</span>-->
+            <span v-if="$store.state.user" class="gt-sm layout__char-name">{{ $store.getters.characterShortName }}</span>
             <q-tooltip>Menu</q-tooltip>
           </q-btn>
-          <q-btn-group flat class="gt-sm">
+          <q-btn-group v-if="!$store.state.user" flat class="gt-sm">
             <q-btn flat label="Sign up" to="/signup" />
             <q-btn flat label="Log in" to="/login" />
           </q-btn-group>
@@ -74,43 +74,47 @@
             <q-item-label>{{link.label}}</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item-label header>
-          User
-        </q-item-label>
-        <q-item clickable v-ripple to="/signup">
-          <q-item-section>
-            <q-item-label>Sign up</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable v-ripple to="/login">
-          <q-item-section>
-            <q-item-label>Log in</q-item-label>
-          </q-item-section>
-        </q-item>
-        <!--
-        <q-item-label header>
-          Vielle Janlenoux
-        </q-item-label>
-        <q-item v-for="link in userLinks" clickable v-ripple :key="link.label" :to="link.to">
-          <q-item-section>
-            <q-item-label>{{link.label}}</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-expansion-item dense label="Create content" header-class="text-bold">
-          <q-list class="layout__create-content-list" dense>
-            <q-item v-for="link in createContentLinks" clickable v-ripple :key="link.label" :to="link.to">
-              <q-item-section>
-                <q-item-label>{{link.label}}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
-         <q-item clickable v-ripple>
-          <q-item-section>
-            <q-item-label>Log out</q-item-label>
-          </q-item-section>
-        </q-item>
-        -->
+        <template v-if="!$store.state.user">
+          <q-item-label header>
+            User
+          </q-item-label>
+          <q-item clickable v-ripple to="/signup">
+            <q-item-section>
+              <q-item-label>Sign up</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-ripple to="/login">
+            <q-item-section>
+              <q-item-label>Log in</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
+        <template v-else>
+          <q-item-label header>
+            {{ $store.state.user.character.name }}
+          </q-item-label>
+          <!--
+          <q-item v-for="link in userLinks" clickable v-ripple :key="link.label" :to="link.to">
+            <q-item-section>
+              <q-item-label>{{link.label}}</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-expansion-item dense label="Create content" header-class="text-bold">
+            <q-list class="layout__create-content-list" dense>
+              <q-item v-for="link in createContentLinks" clickable v-ripple :key="link.label" :to="link.to">
+                <q-item-section>
+                  <q-item-label>{{link.label}}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
+          -->
+          <q-item clickable v-ripple @click="logOut">
+            <q-item-section>
+              <q-item-label>Log out</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
       </q-list>
     </q-drawer>
 
@@ -223,6 +227,15 @@ export default class MainLayout extends Vue {
 
   toggleRightDrawer () {
     this.rightDrawerOpen = !this.rightDrawerOpen
+  }
+
+  logOut() {
+    this.$store.commit('setUser', null);
+    this.$api.setAccessToken(null);
+    this.$q.notify({
+      message: 'You have been logged out.'
+    });
+    void this.$router.push('/');
   }
 }
 </script>

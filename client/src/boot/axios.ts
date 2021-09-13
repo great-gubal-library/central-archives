@@ -1,6 +1,8 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 import API from 'src/util/api';
+import errors from 'src/util/errors';
+import { StateInterface } from 'src/store';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -9,14 +11,19 @@ declare module '@vue/runtime-core' {
   }
 }
 
-export default boot(({ app }) => {
-  // for use inside Vue files (Options API) through this.$axios and this.$api
-
+export default boot(async ({ app, store }) => {
   app.config.globalProperties.$axios = axios;
-  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
-  //       so you won't necessarily have to import axios in each vue file
 
-  app.config.globalProperties.$api = new API();
-  // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
-  //       so you can easily perform requests against your app's API
+  const api = new API();
+  app.config.globalProperties.$api = api;
+
+  if (api.hasAccessToken()) {
+    try {
+      const session = await api.getSession();
+      store.commit('setUser', session);
+      console.log('user', (store.state as StateInterface).user);
+    } catch (e) {
+      console.log(errors.getMessage(e));
+    }
+  }
 });

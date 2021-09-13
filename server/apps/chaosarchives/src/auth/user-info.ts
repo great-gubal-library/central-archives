@@ -5,6 +5,12 @@ export class UserInfo {
 
 	readonly role: Role;
 
+	readonly character: {
+		id: number;
+		lodestoneId: number;
+		name: string;
+	};
+
 	constructor(properties: Readonly<UserInfo>) {
 		if (properties) {
 			Object.assign(this, properties);

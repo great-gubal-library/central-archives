@@ -187,7 +187,7 @@ export default class PageSignUp extends Vue {
     this.loading = true;
 
     try {
-      await this.$api.signUp({
+      const result = await this.$api.signUp({
         email: this.email,
         password: this.password,
         confirmPassword: this.confirmPassword,
@@ -195,10 +195,15 @@ export default class PageSignUp extends Vue {
         server: this.character.server
       });
 
+      this.$api.setAccessToken(result.accessToken);
+      this.$store.commit('setUser', result.session);
+
       this.$q.notify({
         message: 'Registration successful! Please check your inbox to confirm your email address.',
         type: 'positive'
       });
+
+      void this.$router.replace('/');
     } catch (e) {
       this.$q.notify({
         message: errors.getMessage(e),

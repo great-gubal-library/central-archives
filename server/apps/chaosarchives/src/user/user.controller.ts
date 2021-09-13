@@ -8,7 +8,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { TokenService } from '../auth/token.service';
+import { PublicAuthService } from '../auth/public-auth.service';
 import { UserInfo } from '../auth/user-info';
 import { UserService } from './user.service';
 
@@ -16,14 +16,22 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(
     private userService: UserService,
-    private tokenService: TokenService,
+    private publicAuthService: PublicAuthService,
   ) {}
 
   @Post('signup')
   async signUp(
     @Body() signupData: UserSignUpDto,
   ): Promise<UserSignUpResponseDto> {
-    return this.userService.signUp(signupData);
+    const { userId, characterVerificationCode } = await this.userService.signUp(signupData);
+    const accessToken = this.publicAuthService.createAccessToken(userId);
+    const userInfo = await this.publicAuthService.getUserInfo(userId);
+
+    return {
+      characterVerificationCode,
+      accessToken,
+      session: this.userService.toSession(userInfo)
+    }
   }
 
   @Post('confirm-email')
@@ -37,7 +45,7 @@ export class UserController {
   @Post('login')
   async login(@CurrentUser() user: UserInfo): Promise<LoginResponseDto> {
     return {
-      accessToken: this.tokenService.createAccessToken(user.id),
+      accessToken: this.publicAuthService.createAccessToken(user.id),
       session: this.userService.toSession(user),
     };
   }

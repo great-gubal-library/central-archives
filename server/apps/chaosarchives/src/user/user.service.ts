@@ -1,7 +1,6 @@
 import { serverConfiguration } from '@app/configuration';
 import { Character, Server, User } from '@app/entity';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
-import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
@@ -24,7 +23,7 @@ export class UserService {
     private mailService: MailService,
   ) {}
 
-  async signUp(signupData: UserSignUpDto): Promise<UserSignUpResponseDto> {
+  async signUp(signupData: UserSignUpDto): Promise<{ userId: number, characterVerificationCode: string }> {
     try {
       const { userEntity, characterEntity } = await this.connection.transaction(
         async (em) => {
@@ -72,9 +71,7 @@ export class UserService {
       );
 
       this.sendVerificationMail(userEntity, characterEntity.name); // no await
-      return {
-        characterVerificationCode: characterEntity.verificationCode,
-      };
+      return { userId: userEntity.id, characterVerificationCode: characterEntity.verificationCode };
     } catch (e) {
       if (db.isQueryFailedError(e)) {
         if (e.code === 'ER_DUP_ENTRY') {

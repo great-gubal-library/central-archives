@@ -1,3 +1,4 @@
+import { SessionDto } from '@app/shared/dto/user/session.dto'
 import { store } from 'quasar/wrappers'
 import { InjectionKey } from 'vue'
 import {
@@ -22,7 +23,7 @@ export interface StateInterface {
   // Define your own store structure, using submodules if needed
   // example: ExampleStateInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  example: unknown
+  user: SessionDto | null
 }
 
 // provide typings for `this.$store`
@@ -39,6 +40,18 @@ export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
       // example
+    },
+
+    mutations: {
+      setUser(state, user: SessionDto) {
+        state.user = user;
+      }
+    },
+
+    getters: {
+      characterShortName(state) {
+        return state.user ? state.user.character.name.split(' ')[0] : null;
+      }
     },
 
     // enable strict mode (adds overhead!)

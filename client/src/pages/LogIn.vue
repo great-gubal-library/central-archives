@@ -57,7 +57,7 @@ export default class PageLogIn extends Vue {
     this.loading = true;
 
     try {
-      await this.$api.logIn({
+      const result = await this.$api.logIn({
         email: this.email,
         password: this.password,
       });
@@ -67,6 +67,8 @@ export default class PageLogIn extends Vue {
         type: 'positive'
       });
 
+      this.$api.setAccessToken(result.accessToken);
+      this.$store.commit('setUser', result.session);
       void this.$router.replace('/');
     } catch (e) {
       this.$q.notify({

@@ -1,4 +1,4 @@
-import { User } from '@app/entity';
+import { Character, User } from '@app/entity';
 import { Role } from '@app/shared/enums/role.enum';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -14,6 +14,7 @@ export class AuthService {
 
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
+    @InjectRepository(Character) private characterRepo: Repository<Character>,
     private jwtService: JwtService,
     @InjectRedis()
     private readonly redisService: Redis,
@@ -52,9 +53,21 @@ export class AuthService {
   }
 
   private async getAndCacheUserInfo(user: User): Promise<UserInfo> {
+    const character = await this.characterRepo.findOne({ user });
+
+    if (!character) {
+      // Shouldn't happen
+      throw new UnauthorizedException();
+    }
+
     const result = new UserInfo({
       id: user.id,
       role: user.role as Role,
+      character: {
+        id: character.id,
+        lodestoneId: character.lodestoneId,
+        name: character.name,
+      }
     });
 
     this.redisService.set(
