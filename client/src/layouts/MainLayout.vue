@@ -17,6 +17,7 @@
           </q-btn>
           <q-btn-group flat class="gt-sm">
             <q-btn flat label="Sign up" to="/signup" />
+            <q-btn flat label="Log in" to="" />
           </q-btn-group>
         </div>
 
@@ -74,6 +75,20 @@
           </q-item-section>
         </q-item>
         <q-item-label header>
+          User
+        </q-item-label>
+        <q-item clickable v-ripple to="/signup">
+          <q-item-section>
+            <q-item-label>Sign up</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple>
+          <q-item-section>
+            <q-item-label>Log in</q-item-label>
+          </q-item-section>
+        </q-item>
+        <!--
+        <q-item-label header>
           Vielle Janlenoux
         </q-item-label>
         <q-item v-for="link in userLinks" clickable v-ripple :key="link.label" :to="link.to">
@@ -95,6 +110,7 @@
             <q-item-label>Log out</q-item-label>
           </q-item-section>
         </q-item>
+        -->
       </q-list>
     </q-drawer>
 
