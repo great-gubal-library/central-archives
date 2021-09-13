@@ -180,6 +180,7 @@ export default class PageSignUp extends Vue {
   clearCharacter() {
     this.character.name = '';
     this.character.server = '';
+    this.character.avatar = '';
   }
 
   async onSubmit() {
