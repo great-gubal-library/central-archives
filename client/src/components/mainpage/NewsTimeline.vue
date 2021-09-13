@@ -1,23 +1,23 @@
 <template>
   <q-timeline>
-    <q-timeline-entry heading>
-      <div class="news-timeline__header">
+    <q-timeline-entry heading tag="div">
+      <h2 class="news-timeline__header">
         <a
           class="news-timeline__link"
           href="https://crescentmoonpublishing.com/the-daily-moogle/"
           target="_blank"
           >News by The Daily Moogle</a
         >
-        <div class="news-timeline__blurb">
-          Kindly provided by
-          <a
-            class="news-timeline__link"
-            href="https://crescentmoonpublishing.com/"
-            target="_blank"
-            >Crescent Moon Publishing</a
-          >
-          — a Final Fantasy XIV fansite, by players, for players!
-        </div>
+      </h2>
+      <div class="news-timeline__blurb">
+        Kindly provided by
+        <a
+          class="news-timeline__link"
+          href="https://crescentmoonpublishing.com/"
+          target="_blank"
+          >Crescent Moon Publishing</a
+        >
+        — a Final Fantasy XIV fansite, by players, for players!
       </div>
     </q-timeline-entry>
     <q-timeline-entry
@@ -58,8 +58,7 @@ export default class NewsTimeline extends Vue {
 
 <style lang="scss">
 .news-timeline__header {
-  text-align: center;
-  font-size: 2.5rem;
+  margin-bottom: 0;
 }
 
 .news-timeline__link {
@@ -69,10 +68,7 @@ export default class NewsTimeline extends Vue {
 }
 
 .news-timeline__blurb {
-  font-family: $body-font;
-  font-size: $body-font-size;
-  font-weight: normal;
-  line-height: 1.4;
+  text-align: center;
 }
 
 .news-timeline__link:hover {
