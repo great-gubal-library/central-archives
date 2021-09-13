@@ -31,14 +31,14 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component';
-import { EventDto } from '@shared/dto/events/event.dto';
+import { EventDto } from '@app/shared/dto/events/event.dto';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
-import SharedConstants from '@shared/SharedConstants';
+import SharedConstants from '@app/shared/SharedConstants';
 
-const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = {
+const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = Object.freeze({
   dateStyle: 'long',
   timeStyle: 'short',
-};
+});
 
 export default class EventList extends Vue {
   events: EventDto[] = [];
@@ -49,7 +49,7 @@ export default class EventList extends Vue {
       .startOf('day');
 
     // Show only events from today and later
-    this.events = (await this.$api.get<EventDto[]>('events')).data.filter(
+    this.events = (await this.$api.getEvents()).filter(
       (event) =>
         DateTime.fromMillis(event.date)
           .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
