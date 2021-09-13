@@ -260,6 +260,10 @@ export default class MainLayout extends Vue {
     font-weight: bold;
   }
 
+  .q-drawer .q-list a {
+    border-bottom: none;
+  }
+
   .q-toolbar__title {
     font-family: Michroma, sans-serif;
     font-weight: bold;
