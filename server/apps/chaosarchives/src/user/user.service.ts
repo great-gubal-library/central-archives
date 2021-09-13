@@ -30,7 +30,7 @@ export class UserService {
           const user = await em.getRepository(User).save({
             email: signupData.email,
             passwordHash: await bcrypt.hash(signupData.password, 10),
-            role: Role.USER,
+            role: Role.UNVERIFIED,
             verificationCode: generateVerificationCode(),
           });
 

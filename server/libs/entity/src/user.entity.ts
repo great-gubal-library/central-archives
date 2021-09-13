@@ -21,6 +21,7 @@ export class User extends BasicEntity {
   @Column({
     type: 'enum',
     enum: Role,
+    default: Role.UNVERIFIED,
     nullable: false,
   })
   role: Role | null;
