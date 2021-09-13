@@ -29,6 +29,11 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/SignUp.vue') }],
   },
 
+  {
+    path: '/confirm-email/:verificationToken',
+    component: () => import('pages/ConfirmEmail.vue'),
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {
