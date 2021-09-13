@@ -63,6 +63,7 @@ export class UserService {
             race,
             server,
             user,
+            avatar: characterInfo.Character.Avatar,
             verificationCode: generateVerificationCode(),
           });
 

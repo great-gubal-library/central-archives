@@ -27,6 +27,11 @@ export class Character extends BasicEntity {
   race: Race;
 
   @Column({
+    nullable: false,
+  })
+  avatar: string;
+
+  @Column({
     nullable: true
   })
   verifiedAt: Date;
