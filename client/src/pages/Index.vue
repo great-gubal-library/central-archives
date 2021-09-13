@@ -214,7 +214,7 @@ export default class PageIndex extends Vue {
 }
 
 tbody.index__table td {
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 .index__image-wrapper {
