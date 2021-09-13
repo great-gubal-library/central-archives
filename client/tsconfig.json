@@ -24,8 +24,7 @@
       "pages/*": ["src/pages/*"],
       "assets/*": ["src/assets/*"],
       "boot/*": ["src/boot/*"],
-      "@app/shared/*": ["../server/libs/shared/src/*"],
-      "@xivapi/js": ["../server/types/xivapi.d.ts"]
+      "@app/shared/*": ["../server/libs/shared/src/*"]
     },
     // Forces quasar typings to be included, even if they aren't referenced directly
     // Removing this would break `quasar/wrappers` imports if `quasar`
@@ -35,7 +34,8 @@
   },
   "include": [
     "src/**/*",
-    "../server/libs/shared/src/**/*"
+    "../server/libs/shared/src/**/*",
+    "../server/types/xivapi.d.ts"
   ],
   // Needed to avoid files copied into 'dist' folder (eg. a `.d.ts` file inside `src-ssr` folder)
   // to be evaluated by TS when their original files has been updated

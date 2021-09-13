@@ -7,6 +7,8 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Index.vue') }],
   },
 
+  // Top navigation links
+
   {
     path: '/about',
     component: () => import('layouts/MainLayout.vue'),
@@ -17,6 +19,14 @@ const routes: RouteRecordRaw[] = [
     path: '/rules',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Rules.vue') }],
+  },
+
+  // User actions
+
+  {
+    path: '/signup',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/SignUp.vue') }],
   },
 
   // Always leave this as last one,

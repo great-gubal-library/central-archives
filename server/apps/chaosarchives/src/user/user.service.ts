@@ -10,9 +10,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
 import bcrypt from 'bcrypt';
-import { Connection, Repository } from 'typeorm';
+import { Connection, QueryFailedError, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 import { MailService } from '../mail/mail.service';
+import db from '../util/db';
 import { generateVerificationCode } from '../util/verification-code';
 
 @Injectable()
@@ -24,56 +25,67 @@ export class UserService {
   ) {}
 
   async signUp(signupData: UserSignUpDto): Promise<UserSignUpResponseDto> {
-    const { userEntity, characterEntity } = await this.connection.transaction(
-      async (em) => {
-        const user = await em.getRepository(User).save({
-          email: signupData.email,
-          passwordHash: await bcrypt.hash(signupData.password, 10),
-          role: Role.USER,
-          verificationCode: generateVerificationCode(),
-        });
+    try {
+      const { userEntity, characterEntity } = await this.connection.transaction(
+        async (em) => {
+          const user = await em.getRepository(User).save({
+            email: signupData.email,
+            passwordHash: await bcrypt.hash(signupData.password, 10),
+            role: Role.USER,
+            verificationCode: generateVerificationCode(),
+          });
 
-        const server = await em.getRepository(Server).findOne({
-          name: signupData.server,
-        });
+          const server = await em.getRepository(Server).findOne({
+            name: signupData.server,
+          });
 
-        if (!server) {
-          throw new HttpException('Invalid server', HttpStatus.BAD_REQUEST);
+          if (!server) {
+            throw new HttpException('Invalid server', HttpStatus.BAD_REQUEST);
+          }
+
+          const characterInfo = await this.getLodestoneCharacter(
+            signupData.characterName,
+            server.name,
+          );
+
+          if (!characterInfo) {
+            throw new HttpException('Invalid character', HttpStatus.BAD_REQUEST);
+          }
+
+          const race = getRaceById(characterInfo.Character.Race);
+
+          if (!race) {
+            throw new HttpException('Invalid race', HttpStatus.BAD_REQUEST);
+          }
+
+          const character = await em.getRepository(Character).save({
+            lodestoneId: characterInfo.Character.ID,
+            name: characterInfo.Character.Name,
+            race,
+            server,
+            user,
+            verificationCode: generateVerificationCode(),
+          });
+
+          return { userEntity: user, characterEntity: character };
+        },
+      );
+
+      this.sendVerificationMail(userEntity, characterEntity.name); // no await
+      return {
+        characterVerificationCode: characterEntity.verificationCode,
+      };
+    } catch (e) {
+      if (db.isQueryFailedError(e)) {
+        if (e.code === 'ER_DUP_ENTRY') {
+          throw new HttpException('This email or character has already been used', HttpStatus.CONFLICT);
         }
-
-        const characterInfo = await this.getLodestoneCharacter(
-          signupData.characterName,
-          server.name,
-        );
-
-        if (!characterInfo) {
-          throw new HttpException('Invalid character', HttpStatus.BAD_REQUEST);
-        }
-
-        const race = getRaceById(characterInfo.Character.Race);
-
-        if (!race) {
-          throw new HttpException('Invalid race', HttpStatus.BAD_REQUEST);
-        }
-
-        const character = await em.getRepository(Character).save({
-          lodestoneId: characterInfo.Character.ID,
-          name: characterInfo.Character.Name,
-          race,
-          server,
-          user,
-          verificationCode: generateVerificationCode(),
-        });
-
-        return { userEntity: user, characterEntity: character };
-      },
-    );
-
-    this.sendVerificationMail(userEntity, characterEntity.name); // no await
-    return {
-      characterVerificationCode: characterEntity.verificationCode,
-    };
-  }
+      }
+      
+      // default
+      throw e;
+    }
+}
 
   private async getLodestoneCharacter(
     name: string,

@@ -12,9 +12,12 @@
             aria-label="Menu"
             @click="toggleLeftDrawer"
           >
-            <span class="gt-sm layout__char-name">Vielle</span>
+            <!--<span class="gt-sm layout__char-name">Vielle</span>-->
             <q-tooltip>Menu</q-tooltip>
           </q-btn>
+          <q-btn-group flat class="gt-sm">
+            <q-btn flat label="Sign up" to="/signup" />
+          </q-btn-group>
         </div>
 
         <q-toolbar-title class="layout__toolbar-title text-center">

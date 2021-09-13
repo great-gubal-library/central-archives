@@ -39,7 +39,7 @@ declare module '@xivapi/js' {
     character: {
       get(
         lodestoneId: number,
-        options?: { extended: 0 | 1 },
+        options?: { extended: number },
       ): Promise<CharacterInfo>;
       search(
         name: string,
