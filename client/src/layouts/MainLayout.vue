@@ -17,7 +17,7 @@
           </q-btn>
           <q-btn-group flat class="gt-sm">
             <q-btn flat label="Sign up" to="/signup" />
-            <q-btn flat label="Log in" to="" />
+            <q-btn flat label="Log in" to="/login" />
           </q-btn-group>
         </div>
 
@@ -82,7 +82,7 @@
             <q-item-label>Sign up</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item clickable v-ripple>
+        <q-item clickable v-ripple to="/login">
           <q-item-section>
             <q-item-label>Log in</q-item-label>
           </q-item-section>

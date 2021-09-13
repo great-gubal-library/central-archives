@@ -1,6 +1,6 @@
 import { SessionDto } from './session.dto';
 
-export interface LoginDto {
+export interface LoginResponseDto {
   accessToken: string;
   session: SessionDto;
 }

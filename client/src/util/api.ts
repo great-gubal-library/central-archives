@@ -1,8 +1,10 @@
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
+import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
+import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
+import { UserLogInDto } from '@app/shared/dto/user/user-log-in.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
-import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import axios from 'axios';
 
 export default class API {
@@ -22,5 +24,9 @@ export default class API {
 
   async confirmEmail(confirmData: UserConfirmEmailDto): Promise<void> {
     await this.axios.post<UserSignUpResponseDto>('user/confirm-email', confirmData);
+  }
+
+  async logIn(loginData: UserLogInDto): Promise<LoginResponseDto> {
+    return (await this.axios.post<LoginResponseDto>('user/login', loginData)).data;
   }
 }

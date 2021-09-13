@@ -1,4 +1,4 @@
-import { LoginDto } from '@app/shared/dto/user/login.dto';
+import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
@@ -35,7 +35,7 @@ export class UserController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@CurrentUser() user: UserInfo): Promise<LoginDto> {
+  async login(@CurrentUser() user: UserInfo): Promise<LoginResponseDto> {
     return {
       accessToken: this.tokenService.createAccessToken(user.id),
       session: this.userService.toSession(user),

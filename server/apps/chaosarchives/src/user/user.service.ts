@@ -10,7 +10,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
 import bcrypt from 'bcrypt';
-import { Connection, QueryFailedError, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 import { MailService } from '../mail/mail.service';
 import db from '../util/db';
