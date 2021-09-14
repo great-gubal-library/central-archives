@@ -3,6 +3,7 @@ import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
+import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -54,6 +55,12 @@ export class UserController {
   @Get('session')
   async getSession(@CurrentUser() user: UserInfo): Promise<SessionDto> {
     return this.userService.toSession(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('verification-status')
+  async getVerificationStatus(@CurrentUser() user: UserInfo): Promise<VerificationStatusDto> {
+    return this.userService.getVerificationStatus(user);
   }
 
   @UseGuards(JwtAuthGuard)

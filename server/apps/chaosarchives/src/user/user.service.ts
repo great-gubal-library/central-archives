@@ -2,24 +2,26 @@ import { serverConfiguration } from '@app/configuration';
 import { Character, Server, User } from '@app/entity';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
+import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import { Role } from '@app/shared/enums/role.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
 import { Connection, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
-import { MailService } from '../mail/mail.service';
 import db from '../common/db';
 import { generateVerificationCode, hashPassword } from '../common/security';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private connection: Connection,
     @InjectRepository(User) private userRepo: Repository<User>,
+    @InjectRepository(Character) private characterRepo: Repository<Character>,
     private mailService: MailService,
   ) {}
 
@@ -133,6 +135,30 @@ export class UserService {
 
   toSession(userInfo: UserInfo): SessionDto {
     return userInfo;
+  }
+
+  async getVerificationStatus(user: UserInfo): Promise<VerificationStatusDto> {
+    const userData = await this.userRepo.findOne(user.id, {
+      select: [ 'id', 'verifiedAt' ],
+    });
+
+    if (!userData) {
+      throw new BadRequestException();
+    }
+
+    const characterData = await this.characterRepo.findOne(user.character.id, {
+      select: [ 'verificationCode', 'verifiedAt' ],
+    });
+
+    if (!characterData) {
+      throw new BadRequestException();
+    }
+
+    return {
+      emailVerified: userData.verifiedAt !== null,
+      characterVerified: characterData.verifiedAt !== null,
+      characterVerificationCode: characterData.verificationCode
+    };
   }
 
   async verifyCharacter(
