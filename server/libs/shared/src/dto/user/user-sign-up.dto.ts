@@ -1,15 +1,29 @@
+import SharedConstants from '@app/shared/SharedConstants';
+import { Match } from '@app/shared/validation/match.decorator';
+import { IsEmail, IsNumber, IsString, Min, MinLength } from 'class-validator';
+
 export class UserSignUpDto {
-	email: string;
+  @IsString()
+  @IsEmail()
+  readonly email: string;
 
-	password: string;
+  @IsString()
+  @MinLength(SharedConstants.PASSWORD_MIN_LENGTH)
+  readonly password: string;
 
-	confirmPassword: string;
+  @IsString()
+  @Match('password', {
+		message: 'passwords must match',
+	})
+  readonly confirmPassword: string;
 
-	lodestoneId: number;
+  @IsNumber({ maxDecimalPlaces: 0 })
+  @Min(0)
+  readonly lodestoneId: number;
 
-	constructor(properties?: Readonly<UserSignUpDto>) {
-		if (properties) {
-			Object.assign(this, properties);
-		}
-	}
+  constructor(properties?: Readonly<UserSignUpDto>) {
+    if (properties) {
+      Object.assign(this, properties);
+    }
+  }
 }
