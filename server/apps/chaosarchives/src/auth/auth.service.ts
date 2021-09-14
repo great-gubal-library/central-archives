@@ -24,7 +24,7 @@ export class AuthService {
     const user = await this.userRepo.findOne({ email: username });
 
     if (!user || !(await checkPassword(password, user.passwordHash))) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     return this.getAndCacheUserInfo(user);
