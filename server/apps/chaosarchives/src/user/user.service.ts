@@ -5,6 +5,7 @@ import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import { Role } from '@app/shared/enums/role.enum';
+import SharedConstants from '@app/shared/SharedConstants';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
@@ -23,7 +24,9 @@ export class UserService {
     private mailService: MailService,
   ) {}
 
-  async signUp(signupData: UserSignUpDto): Promise<{ userId: number, characterVerificationCode: string }> {
+  async signUp(
+    signupData: UserSignUpDto,
+  ): Promise<{ userId: number; characterVerificationCode: string }> {
     try {
       const { userEntity, characterEntity } = await this.connection.transaction(
         async (em) => {
@@ -34,21 +37,30 @@ export class UserService {
             verificationCode: generateVerificationCode(),
           });
 
+          const characterInfo = await this.getLodestoneCharacter(
+            signupData.lodestoneId,
+          );
+
+          if (!characterInfo) {
+            throw new HttpException(
+              'Invalid character',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+
+          if (characterInfo.Character.DC !== SharedConstants.DATACENTER) {
+            throw new HttpException(
+              'This character is from the wrong datacenter',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+
           const server = await em.getRepository(Server).findOne({
-            name: signupData.server,
+            name: characterInfo.Character.Server,
           });
 
           if (!server) {
             throw new HttpException('Invalid server', HttpStatus.BAD_REQUEST);
-          }
-
-          const characterInfo = await this.getLodestoneCharacter(
-            signupData.characterName,
-            server.name,
-          );
-
-          if (!characterInfo) {
-            throw new HttpException('Invalid character', HttpStatus.BAD_REQUEST);
           }
 
           const race = getRaceById(characterInfo.Character.Race);
@@ -72,34 +84,30 @@ export class UserService {
       );
 
       this.sendVerificationMail(userEntity, characterEntity.name); // no await
-      return { userId: userEntity.id, characterVerificationCode: characterEntity.verificationCode };
+      return {
+        userId: userEntity.id,
+        characterVerificationCode: characterEntity.verificationCode,
+      };
     } catch (e) {
       if (db.isQueryFailedError(e)) {
         if (e.code === 'ER_DUP_ENTRY') {
-          throw new HttpException('This email or character has already been used', HttpStatus.CONFLICT);
+          throw new HttpException(
+            'This email or character has already been used',
+            HttpStatus.CONFLICT,
+          );
         }
       }
-      
+
       // default
       throw e;
     }
-}
+  }
 
   private async getLodestoneCharacter(
-    name: string,
-    server: string,
+    lodestoneId: number,
   ): Promise<CharacterInfo | null> {
     const xivapi = new XIVAPI();
-    const searchResults = await xivapi.character.search(name, { server });
-    const character = searchResults.Results.find(
-      (result) => result.Name.toLowerCase() === name.toLowerCase(),
-    );
-
-    if (!character) {
-      return null;
-    }
-
-    return xivapi.character.get(character.ID);
+    return xivapi.character.get(lodestoneId);
   }
 
   private async sendVerificationMail(user: User, name: string): Promise<void> {
@@ -128,33 +136,43 @@ export class UserService {
     return userInfo;
   }
 
-  async verifyCharacter(user: UserInfo, verifyData: VerifyCharacterDto): Promise<void> {
-    await this.connection.transaction(async em => {
+  async verifyCharacter(
+    user: UserInfo,
+    verifyData: VerifyCharacterDto,
+  ): Promise<void> {
+    await this.connection.transaction(async (em) => {
       const characterRepo = em.getRepository(Character);
       const character = await characterRepo.findOne({
         lodestoneId: verifyData.lodestoneId,
         user: {
-          id: user.id
-        }
+          id: user.id,
+        },
       });
 
       if (!character) {
-        throw new HttpException('No such character belongs to you', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'No such character belongs to you',
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       if (!character.verificationCode) {
         throw new HttpException('Already verified', HttpStatus.BAD_REQUEST);
       }
 
-      const xivapi = new XIVAPI();
-      const characterData = await xivapi.character.get(verifyData.lodestoneId);
+      const characterData = await this.getLodestoneCharacter(
+        verifyData.lodestoneId,
+      );
 
       if (!characterData) {
         throw new HttpException('Character deleted', HttpStatus.GONE);
       }
 
       if (!characterData.Character.Bio.includes(character.verificationCode)) {
-        throw new HttpException('Verification string not found in character profile', HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          'Verification string not found in character profile',
+          HttpStatus.NOT_FOUND,
+        );
       }
 
       // Passed all checks - character verified!

@@ -115,6 +115,7 @@ interface Character {
 	name: string;
 	server: string;
   avatar: string;
+  lodestoneId: number;
 }
 
 // Datacenter name in parentheses: (Chaos)
@@ -132,6 +133,7 @@ export default class PageSignUp extends Vue {
 		name: '',
 		server: '',
     avatar: '',
+    lodestoneId: -1,
 	};
 	private characterOptions: Character[] = [];
   private characterOptionsSearchString = '';
@@ -162,6 +164,7 @@ export default class PageSignUp extends Vue {
         name: result.Name,
         server: result.Server.split(/\s/)[0], // remove datacenter suffix
         avatar: result.Avatar,
+        lodestoneId: result.ID,
       }));
       
       update();
@@ -181,6 +184,7 @@ export default class PageSignUp extends Vue {
     this.character.name = '';
     this.character.server = '';
     this.character.avatar = '';
+    this.character.lodestoneId = -1;
   }
 
   async onSubmit() {
@@ -191,8 +195,7 @@ export default class PageSignUp extends Vue {
         email: this.email,
         password: this.password,
         confirmPassword: this.confirmPassword,
-        characterName: this.character.name,
-        server: this.character.server
+        lodestoneId: this.character.lodestoneId,
       });
 
       this.$api.setAccessToken(result.accessToken);

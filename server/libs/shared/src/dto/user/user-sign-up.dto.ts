@@ -5,9 +5,7 @@ export class UserSignUpDto {
 
 	confirmPassword: string;
 
-	characterName: string;
-
-	server: string;
+	lodestoneId: number;
 
 	constructor(properties?: Readonly<UserSignUpDto>) {
 		if (properties) {
