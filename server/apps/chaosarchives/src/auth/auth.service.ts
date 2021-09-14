@@ -2,7 +2,6 @@ import { Character, User } from '@app/entity';
 import { Role } from '@app/shared/enums/role.enum';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { checkPassword } from '../common/security';
@@ -13,9 +12,9 @@ export class AuthService {
   private readonly USER_INFO_CACHE_SEC = 86400;
 
   constructor(
-    @InjectRepository(User) private userRepo: Repository<User>,
-    @InjectRepository(Character) private characterRepo: Repository<Character>,
-    private jwtService: JwtService,
+    @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectRepository(Character)
+    private readonly characterRepo: Repository<Character>,
     @InjectRedis()
     private readonly redisService: Redis,
   ) {}
@@ -28,12 +27,6 @@ export class AuthService {
     }
 
     return this.getAndCacheUserInfo(user);
-  }
-
-  createAccessToken(userId: number): string {
-    return this.jwtService.sign({
-      sub: userId,
-    });
   }
 
   async getUserInfo(userId: number): Promise<UserInfo> {
@@ -67,7 +60,7 @@ export class AuthService {
         id: character.id,
         lodestoneId: character.lodestoneId,
         name: character.name,
-      }
+      },
     });
 
     this.redisService.set(
