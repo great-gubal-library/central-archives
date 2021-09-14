@@ -7,7 +7,7 @@ import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import { Role } from '@app/shared/enums/role.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
 import { Connection, Repository } from 'typeorm';
@@ -107,8 +107,20 @@ export class UserService {
   private async getLodestoneCharacter(
     lodestoneId: number,
   ): Promise<CharacterInfo | null> {
-    const xivapi = new XIVAPI();
-    return xivapi.character.get(lodestoneId);
+    try {
+      const xivapi = new XIVAPI();
+      return await xivapi.character.get(lodestoneId);
+    } catch (e) {
+      // eslint-disable-next-line prefer-destructuring
+      const statusCode: number|undefined = (e as any).statusCode;
+      
+      if (statusCode === HttpStatus.NOT_FOUND) {
+        // Character not found on Lodestone
+        return null;
+      } 
+
+      throw new ServiceUnavailableException('Unable to check character on Lodestone');      
+    }
   }
 
   private async sendVerificationMail(user: User, name: string): Promise<void> {
