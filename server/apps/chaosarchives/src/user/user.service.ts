@@ -9,12 +9,11 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
-import bcrypt from 'bcrypt';
 import { Connection, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 import { MailService } from '../mail/mail.service';
 import db from '../common/db';
-import { generateVerificationCode } from '../common/verification-code';
+import { generateVerificationCode, hashPassword } from '../common/security';
 
 @Injectable()
 export class UserService {
@@ -32,7 +31,7 @@ export class UserService {
         async (em) => {
           const user = await em.getRepository(User).save({
             email: signupData.email,
-            passwordHash: await bcrypt.hash(signupData.password, 10),
+            passwordHash: await hashPassword(signupData.password),
             role: Role.UNVERIFIED,
             verificationCode: generateVerificationCode(),
           });

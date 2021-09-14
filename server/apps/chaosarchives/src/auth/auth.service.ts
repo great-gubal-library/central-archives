@@ -4,8 +4,8 @@ import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
+import { checkPassword } from '../common/security';
 import { UserInfo } from './user-info';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class AuthService {
   async validateUser(username: string, password: string): Promise<UserInfo> {
     const user = await this.userRepo.findOne({ email: username });
 
-    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+    if (!user || !(await checkPassword(password, user.passwordHash))) {
       throw new UnauthorizedException();
     }
 
