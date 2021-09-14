@@ -109,7 +109,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import minXIVAPI from 'src/util/xivapi-min';
 import rules from 'src/markdown/rules.md';
 import { Vue } from 'vue-class-component';
-import errors from 'src/util/errors';
+import errors from '@app/shared/errors';
 
 interface Character {
 	name: string;

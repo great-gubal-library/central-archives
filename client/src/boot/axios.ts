@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 import API from 'src/util/api';
-import errors from 'src/util/errors';
+import errors from '@app/shared/errors';
 import { StateInterface } from 'src/store';
 
 declare module '@vue/runtime-core' {

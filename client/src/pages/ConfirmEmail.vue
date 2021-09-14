@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component'
-import errors from 'src/util/errors';
+import errors from '@app/shared/errors';
 
 export default class PageConfirmEmail extends Vue {
 	async mounted() {

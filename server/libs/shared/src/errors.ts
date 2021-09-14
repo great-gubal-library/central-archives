@@ -10,7 +10,7 @@ const errors = {
 		if (e instanceof Error) {
 			const axiosError = e as AxiosError;
 
-			if (axiosError.response && Math.trunc(axiosError.response.status / 100) == 4) {
+			if (axiosError.response && Math.trunc(axiosError.response.status / 100) === 4) {
 				// Client error, try to extract message
 				const errorBody = axiosError.response.data as ServerError;
 
@@ -23,6 +23,18 @@ const errors = {
 		}
 		
 		return '';
+	},
+
+	getStatusCode(e: unknown): number {
+		if (e instanceof Error) {
+			const axiosError = e as AxiosError;
+
+			if (axiosError.response) {
+				return axiosError.response.status;
+			}
+		}
+		
+		return -1;
 	}
 };
 

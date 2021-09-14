@@ -89,7 +89,8 @@
                 </template>
               </q-input>
             </li>
-						<li>Save your changes.</li>
+						<li>Click Confirm to preview your changes.</li>
+            <li><strong>Click Confirm again</strong> to save your changes.</li>
           </ol>
 					<p>This page should update automatically when it detects the code in your character profile.</p>
         </template>
@@ -101,7 +102,7 @@
 <script lang="ts">
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { copyToClipboard } from 'quasar';
-import minXIVAPI from 'src/util/xivapi-min';
+import errors from '@app/shared/errors';
 import { Vue } from 'vue-class-component';
 
 const REFRESH_INTERVAL = 5000;
@@ -150,16 +151,13 @@ export default class PageVerify extends Vue {
 				return;
 			}
 
-			const characterData = await minXIVAPI.character.get(lodestoneId);
-
-			if (characterData.Character.Bio.includes(verificationCode)) {
-				// Notify the server that the verification code is present in the character profile
-				await this.$api.verifyCharacter({ lodestoneId });
-				// Refresh immediately
-				this.verificationStatus = await this.$api.getVerificationStatus();
-			}
+			await this.$api.verifyCharacter({ lodestoneId });
+			// If we get here, this means character verification succeeded.
+			this.verificationStatus = await this.$api.getVerificationStatus();
 		} catch (e) {
-			console.log(e);
+      if (errors.getStatusCode(e) !== 404) {
+        console.log(e);
+      }
 		}
 	}
 

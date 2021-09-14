@@ -6,10 +6,12 @@ import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import { Role } from '@app/shared/enums/role.enum';
+import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
-import { BadRequestException, ConflictException, GoneException, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, ConflictException, GoneException, HttpService, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
+import parse from 'node-html-parser';
 import { Connection, EntityManager, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 import db from '../common/db';
@@ -23,6 +25,7 @@ export class UserService {
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     private mailService: MailService,
+    private httpService: HttpService,
   ) {}
 
   async signUp(
@@ -188,7 +191,7 @@ export class UserService {
         throw new BadRequestException('Already verified');
       }
 
-      const characterData = await this.getLodestoneCharacter(
+      const characterData = await this.parseLodestoneProfile(
         verifyData.lodestoneId,
       );
 
@@ -196,7 +199,7 @@ export class UserService {
         throw new GoneException('Character deleted');
       }
 
-      if (!characterData.Character.Bio.includes(character.verificationCode)) {
+      if (!characterData.includes(character.verificationCode)) {
         throw new NotFoundException('Verification string not found in character profile');
       }
 
@@ -214,6 +217,28 @@ export class UserService {
 
       await this.updatePostVerifyRole(em, userEntity);
     });
+  }
+
+  private async parseLodestoneProfile(lodestoneId: number): Promise<string> {
+    try {
+      // We're parsing Lodestone directly in this case because XIVAPI caches the result.
+      const url = `https://eu.finalfantasyxiv.com/lodestone/character/${lodestoneId}/`;
+      const page = (await this.httpService.get<string>(url).toPromise()).data;
+      const doc = parse(page);
+      const profileField = doc.querySelector('.character__selfintroduction');
+
+      if (!profileField) {
+        throw new ServiceUnavailableException('Lodestone page structure seems to have changed');
+      }
+
+      return profileField.textContent;
+    } catch (e) {
+      if (errors.getStatusCode(e) === HttpStatus.NOT_FOUND) {
+        throw new GoneException('Character not found on Lodestone');
+      }
+
+      throw new ServiceUnavailableException('Unable to check character on Lodestone');
+    }
   }
 
   private async updatePostVerifyRole(em: EntityManager, user: User) {
