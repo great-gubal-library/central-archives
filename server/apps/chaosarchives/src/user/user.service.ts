@@ -110,7 +110,7 @@ export class UserService {
         return null;
       } 
 
-      throw new ServiceUnavailableException('Unable to check character on Lodestone');      
+      throw new ServiceUnavailableException('Unable to check character on Lodestone');
     }
   }
 
