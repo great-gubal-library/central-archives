@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 import SharedConstants from '@app/shared/SharedConstants';
 import { EventDto } from '@app/shared/dto/events/event.dto';
-import utils from '../util/utils';
+import utils from '../common/utils';
 
 @Injectable()
 export class EventsService {

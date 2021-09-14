@@ -13,8 +13,8 @@ import bcrypt from 'bcrypt';
 import { Connection, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 import { MailService } from '../mail/mail.service';
-import db from '../util/db';
-import { generateVerificationCode } from '../util/verification-code';
+import db from '../common/db';
+import { generateVerificationCode } from '../common/verification-code';
 
 @Injectable()
 export class UserService {
