@@ -7,7 +7,7 @@ import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import { Role } from '@app/shared/enums/role.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { BadRequestException, HttpException, HttpStatus, Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, ConflictException, GoneException, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
 import { Connection, Repository } from 'typeorm';
@@ -43,17 +43,11 @@ export class UserService {
           );
 
           if (!characterInfo) {
-            throw new HttpException(
-              'Invalid character',
-              HttpStatus.BAD_REQUEST,
-            );
+            throw new BadRequestException('Invalid character');
           }
 
           if (characterInfo.Character.DC !== SharedConstants.DATACENTER) {
-            throw new HttpException(
-              'This character is from the wrong datacenter',
-              HttpStatus.BAD_REQUEST,
-            );
+            throw new BadRequestException('This character is from the wrong datacenter');
           }
 
           const server = await em.getRepository(Server).findOne({
@@ -61,13 +55,13 @@ export class UserService {
           });
 
           if (!server) {
-            throw new HttpException('Invalid server', HttpStatus.BAD_REQUEST);
+            throw new BadRequestException('Invalid server');
           }
 
           const race = getRaceById(characterInfo.Character.Race);
 
           if (!race) {
-            throw new HttpException('Invalid race', HttpStatus.BAD_REQUEST);
+            throw new BadRequestException('Invalid race');
           }
 
           const character = await em.getRepository(Character).save({
@@ -92,10 +86,7 @@ export class UserService {
     } catch (e) {
       if (db.isQueryFailedError(e)) {
         if (e.code === 'ER_DUP_ENTRY') {
-          throw new HttpException(
-            'This email or character has already been used',
-            HttpStatus.CONFLICT,
-          );
+          throw new ConflictException('This email or character has already been used');
         }
       }
 
@@ -134,10 +125,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new HttpException(
-        'Invalid verification code',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException('Invalid verification code');
     }
 
     user.verificationCode = null;
@@ -187,14 +175,11 @@ export class UserService {
       });
 
       if (!character) {
-        throw new HttpException(
-          'No such character belongs to you',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('No such character belongs to you');
       }
 
       if (!character.verificationCode) {
-        throw new HttpException('Already verified', HttpStatus.BAD_REQUEST);
+        throw new BadRequestException('Already verified');
       }
 
       const characterData = await this.getLodestoneCharacter(
@@ -202,14 +187,11 @@ export class UserService {
       );
 
       if (!characterData) {
-        throw new HttpException('Character deleted', HttpStatus.GONE);
+        throw new GoneException('Character deleted');
       }
 
       if (!characterData.Character.Bio.includes(character.verificationCode)) {
-        throw new HttpException(
-          'Verification string not found in character profile',
-          HttpStatus.NOT_FOUND,
-        );
+        throw new NotFoundException('Verification string not found in character profile');
       }
 
       // Passed all checks - character verified!
