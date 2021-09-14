@@ -206,11 +206,11 @@ export default class PageIndex extends Vue {
 
 <style lang="scss">
 .index__table {
-  background: $brown-1;
+  background: $blue-1;
 }
 
 .index__table tr:nth-child(even) {
-  background: rgba($brown-2, 0.5);
+  background: rgba($blue-2, 0.4);
 }
 
 tbody.index__table td {
