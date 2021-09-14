@@ -1,4 +1,4 @@
-import { CharacterSearchEntry, PagedResult } from '@xivapi/js';
+import { CharacterInfo, CharacterSearchEntry, PagedResult } from '@xivapi/js';
 import axios from 'axios';
 
 const XIVAPI_ROOT = 'https://xivapi.com';
@@ -21,6 +21,12 @@ const minXIVAPI = {
 				params
 			})).data;
 		},
+
+		async get(id: number, options?: { extended: 0|1 }): Promise<CharacterInfo> {
+			return (await axios.get<CharacterInfo>(`${XIVAPI_ROOT}/character/${id}`, {
+				params: options
+			})).data;
+		}
   },
 };
 

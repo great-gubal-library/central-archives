@@ -40,6 +40,12 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/LogIn.vue') }],
   },
 
+  {
+    path: '/verify',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Verify.vue') }],
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {

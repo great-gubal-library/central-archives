@@ -109,6 +109,11 @@
             </q-list>
           </q-expansion-item>
           -->
+          <q-item v-if="$store.state.user.role === 'unverified'" clickable v-ripple to="/verify">
+            <q-item-section>
+              <q-item-label>Account verification</q-item-label>
+            </q-item-section>
+          </q-item>
           <q-item clickable v-ripple @click="logOut">
             <q-item-section>
               <q-item-label>Log out</q-item-label>

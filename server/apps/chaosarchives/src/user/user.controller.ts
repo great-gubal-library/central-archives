@@ -39,7 +39,8 @@ export class UserController {
   async confirmEmail(
     @Body() confirmEmailData: UserConfirmEmailDto,
   ): Promise<void> {
-    await this.userService.confirmEmail(confirmEmailData.code);
+    const userId = await this.userService.confirmEmail(confirmEmailData.code);
+    await this.publicAuthService.notifyUserChanged(userId);
   }
 
   @UseGuards(AuthGuard('local'))
@@ -67,5 +68,6 @@ export class UserController {
   @Post('verify-character')
   async verifyCharacter(@CurrentUser() user: UserInfo, @Body() verifyData: VerifyCharacterDto): Promise<void> {
     await this.userService.verifyCharacter(user, verifyData);
+    await this.publicAuthService.notifyUserChanged(user.id);
   }
 }

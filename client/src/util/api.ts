@@ -1,11 +1,13 @@
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
+import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import { UserLogInDto } from '@app/shared/dto/user/user-log-in.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
-import { SessionDto } from 'app/../server/libs/shared/src/dto/user/session.dto';
+import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
+import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import axios from 'axios';
 import { LocalStorage } from 'quasar';
 
@@ -52,11 +54,36 @@ export default class API {
   }
 
   async getSession(): Promise<SessionDto> {
+    // TODO: Refactor
     if (!this.accessToken) {
       throw new Error();
     }
 
     return (await this.axios.get<SessionDto>('user/session', {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      }
+    })).data;
+  }
+
+  async getVerificationStatus(): Promise<VerificationStatusDto> {
+    if (!this.accessToken) {
+      throw new Error();
+    }
+
+    return (await this.axios.get<VerificationStatusDto>('user/verification-status', {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      }
+    })).data;
+  }
+
+  async verifyCharacter(characterData: VerifyCharacterDto): Promise<void> {
+    if (!this.accessToken) {
+      throw new Error();
+    }
+
+    return (await this.axios.post<void>('user/verify-character', characterData, {
       headers: {
         Authorization: `Bearer ${this.accessToken}`
       }

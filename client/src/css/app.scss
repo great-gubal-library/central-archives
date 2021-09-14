@@ -33,6 +33,11 @@ h2 {
 	margin-bottom: 24px;
 }
 
+h5 {
+	margin-top: 0.6em;
+	margin-bottom: 0.6em;
+}
+
 h6 {
 	margin-top: 0.6em;
 	margin-bottom: 0.6em;
@@ -46,6 +51,10 @@ a {
 	text-decoration: none;
 	border-bottom: 1px dotted;
 	color: $indigo-8;
+}
+
+ol li {
+	margin-bottom: 6px;
 }
 
 .q-timeline {

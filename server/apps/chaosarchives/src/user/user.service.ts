@@ -10,7 +10,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, GoneException, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
-import { Connection, Repository } from 'typeorm';
+import { Connection, EntityManager, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 import db from '../common/db';
 import { generateVerificationCode, hashPassword } from '../common/security';
@@ -119,18 +119,23 @@ export class UserService {
     await this.mailService.sendUserVerificationMail(user.email, name, link);
   }
 
-  async confirmEmail(verificationCode: string): Promise<void> {
-    const user = await this.userRepo.findOne({
-      verificationCode,
+  async confirmEmail(verificationCode: string): Promise<number> {
+    return this.connection.transaction(async (em) => {
+      const userRepo = em.getRepository(User);
+      const user = await userRepo.findOne({
+        verificationCode,
+      });
+
+      if (!user) {
+        throw new NotFoundException('Invalid verification code');
+      }
+
+      user.verificationCode = null;
+      user.verifiedAt = new Date();
+      await userRepo.save(user);
+      await this.updatePostVerifyRole(em, user);
+      return user.id;
     });
-
-    if (!user) {
-      throw new NotFoundException('Invalid verification code');
-    }
-
-    user.verificationCode = null;
-    user.verifiedAt = new Date();
-    await this.userRepo.save(user);
   }
 
   toSession(userInfo: UserInfo): SessionDto {
@@ -139,7 +144,7 @@ export class UserService {
 
   async getVerificationStatus(user: UserInfo): Promise<VerificationStatusDto> {
     const userData = await this.userRepo.findOne(user.id, {
-      select: [ 'id', 'verifiedAt' ],
+      select: [ 'email', 'verifiedAt' ],
     });
 
     if (!userData) {
@@ -155,6 +160,7 @@ export class UserService {
     }
 
     return {
+      email: userData.email,
       emailVerified: userData.verifiedAt !== null,
       characterVerified: characterData.verifiedAt !== null,
       characterVerificationCode: characterData.verificationCode
@@ -198,6 +204,37 @@ export class UserService {
       character.verificationCode = null;
       character.verifiedAt = new Date();
       await characterRepo.save(character);
+
+      const userRepo = em.getRepository(User);
+      const userEntity = await userRepo.findOne(user.id);
+
+      if (!userEntity) {
+        throw new GoneException();
+      }
+
+      await this.updatePostVerifyRole(em, userEntity);
     });
+  }
+
+  private async updatePostVerifyRole(em: EntityManager, user: User) {
+    if (user.role !== Role.UNVERIFIED || user.verifiedAt === null) {
+      return;
+    }
+
+    const character = await em.getRepository(Character).findOne({
+      where: {
+        user: {
+          id: user.id
+        }
+      }
+    });
+
+    if (!character || character.verifiedAt === null) {
+      return;
+    }
+
+    const savedUser = user;
+    savedUser.role = Role.USER;
+    await this.userRepo.save(savedUser);
   }
 }

@@ -71,4 +71,12 @@ export class AuthService {
     );
     return result;
   }
+
+  async notifyUserChanged(userId: number): Promise<void> {
+    try {
+		  await this.redisService.del(`user_${userId}`);
+    } catch (e) {
+      // Do nothing
+    }
+	}
 }

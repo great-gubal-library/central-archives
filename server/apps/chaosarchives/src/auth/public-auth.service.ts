@@ -19,4 +19,8 @@ export class PublicAuthService {
 	getUserInfo(userId: number): Promise<UserInfo> {
 		return this.authService.getUserInfo(userId);
 	}
+
+	async notifyUserChanged(userId: number): Promise<void> {
+		await this.authService.notifyUserChanged(userId);
+	}
 }
