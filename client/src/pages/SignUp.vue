@@ -65,7 +65,7 @@
             @filter="onCharacterFilter"
             @update:model-value="onCharacterSelected"
             :rules="[
-              $rules.required('You must select a character.'),
+              val => !!val && !!val.server || 'You must select a character.',
             ]"
           >
             <template v-slot:prepend>
