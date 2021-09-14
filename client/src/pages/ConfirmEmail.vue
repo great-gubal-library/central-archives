@@ -13,7 +13,7 @@ export default class PageConfirmEmail extends Vue {
 		const verificationToken = this.$route.params.verificationToken as string;
 
 		if (!verificationToken) {
-			this.showIndex();
+			void this.$router.replace('/');
 			return;
 		}
 
@@ -34,12 +34,8 @@ export default class PageConfirmEmail extends Vue {
 			});
 		} finally {
 			this.$q.loading.hide();
-			this.showIndex();
+			void this.$router.replace('/verify');
 		}
-	}
-
-	private showIndex() {
-		void this.$router.replace('/');
 	}
 }
 </script>
