@@ -35,31 +35,39 @@ export class NewsService {
 		const doc = new JSDOM(page.data, { contentType: 'application/rss+xml' }).window.document;
 		const newsItems = Array.from(doc.querySelectorAll('item'));
 		
-		// Take top 3 news entries
-		const result = await Promise.all(newsItems.slice(0, 3).map(async item => {
-			const content = item.querySelector('description')!.textContent!; // Guaranteed to exist
-			const contentHtml = parse(content);
+		return Promise.all(newsItems.slice(0, 3).map(async item => {
+			const title = item.querySelector('title')!.textContent!; // Guaranteed to exist
+			const author = item.getElementsByTagName('dc:creator')[0].textContent!; // Guaranteed to exist
+			const link = item.querySelector('link')!.textContent!; // Guaranteed to exist
+
+			const description = item.querySelector('description')!.textContent!; // Guaranteed to exist
+			const contentHtml = parse(description);
 			const contentParagraph = contentHtml.querySelector('p');
+			const content = contentParagraph ? contentParagraph.textContent! : '';
 
 			try {
 				// Get image URL from linked page
-				const link = item.querySelector('link')!.textContent!; // Guaranteed to exist
 				const linkedPage = await this.httpService.get<string>(link).toPromise();
 				const linkedDoc = parse(linkedPage.data);
 				const image = linkedDoc.querySelector('.attachment-medium_large');
 
 				return {
-					title: item.querySelector('title')!.textContent!, // Guaranteed to exist
-					author: item.getElementsByTagName('dc:creator')[0].textContent!, // Guaranteed to exist
-					content: contentParagraph ? contentParagraph.textContent : '',
-					image: image ? image.getAttribute('data-src') : '',
+					title,
+					author,
+					content,
 					link,
+					image: image ? image.getAttribute('data-src')! : '',
 				};
 			} catch (e) {
-				return null;
+				// Fallback in case we can't get the image URL
+				return {
+					title,
+					author,
+					content,
+					link,
+					image: ''
+				};
 			}
 		}));
-
-		return result.filter(item => item !== null) as NewsDto[];
 	}
 }
