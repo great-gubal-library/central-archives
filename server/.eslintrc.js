@@ -29,5 +29,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'no-restricted-syntax': 'off',
     'no-continue': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
 };

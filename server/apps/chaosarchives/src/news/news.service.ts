@@ -1,15 +1,14 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { HttpService, Injectable } from '@nestjs/common';
 import parse from 'node-html-parser';
+import { JSDOM } from 'jsdom';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 
 @Injectable()
 export class NewsService {
-	private readonly NEWS_SITE = 'https://crescentmoonpublishing.com/the-daily-moogle/';
+	private readonly NEWS_SITE = 'https://crescentmoonpublishing.com/feed/';
 
 	private readonly CACHE_DURATION_SEC = 5 * 60;
-
-	private readonly IMAGE_REGEX = /background-image:url\("(http[^"]*)"\)/;
 
 	constructor(
 		@InjectRedis()
@@ -31,24 +30,36 @@ export class NewsService {
 	}
 
 	private async fetchNews(): Promise<NewsDto[]> {
-		const response = await this.httpService.get<string>(this.NEWS_SITE).toPromise();
-		const doc = parse(response.data);
-		const newsItems = doc.querySelectorAll('.grid-col-desk-2 .jet-listing-grid__item');
+		// Parse RSS feed
+		const page = await this.httpService.get<string>(this.NEWS_SITE).toPromise();
+		const doc = new JSDOM(page.data, { contentType: 'application/rss+xml' }).window.document;
+		const newsItems = Array.from(doc.querySelectorAll('item'));
+		
+		// Take top 3 news entries
+		const result = await Promise.all(newsItems.slice(0, 3).map(async item => {
+			const content = item.querySelector('description')!.textContent!; // Guaranteed to exist
+			const contentHtml = parse(content);
+			const contentParagraph = contentHtml.querySelector('p');
 
-		return newsItems.slice(0, 3).map(item => {
-			const style = item.querySelector("style").textContent;
-			const imageMatch = style.match(this.IMAGE_REGEX);
-			const titleLink = item.querySelector('.elementor-heading-title a');
-			const authorLink = item.querySelector('.jet-listing-dynamic-field__content a');
-			const content = item.querySelector('.elementor-text-editor');
+			try {
+				// Get image URL from linked page
+				const link = item.querySelector('link')!.textContent!; // Guaranteed to exist
+				const linkedPage = await this.httpService.get<string>(link).toPromise();
+				const linkedDoc = parse(linkedPage.data);
+				const image = linkedDoc.querySelector('.attachment-medium_large');
 
-			return {
-				title: titleLink.textContent || '',
-				author: authorLink ? authorLink.textContent : '',
-				content: content ? content.textContent.trim() : '',
-				image: imageMatch ? imageMatch[1] : '',
-				link: titleLink.getAttribute('href') || '',
-			};
-		});
+				return {
+					title: item.querySelector('title')!.textContent!, // Guaranteed to exist
+					author: item.getElementsByTagName('dc:creator')[0].textContent!, // Guaranteed to exist
+					content: contentParagraph ? contentParagraph.textContent : '',
+					image: image ? image.getAttribute('data-src') : '',
+					link,
+				};
+			} catch (e) {
+				return null;
+			}
+		}));
+
+		return result.filter(item => item !== null) as NewsDto[];
 	}
 }
