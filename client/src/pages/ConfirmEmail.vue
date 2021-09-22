@@ -34,7 +34,12 @@ export default class PageConfirmEmail extends Vue {
 			});
 		} finally {
 			this.$q.loading.hide();
-			void this.$router.replace('/verify');
+
+			if (this.$store.state.user) {
+				void this.$router.replace('/verify');
+			} else {
+				void this.$router.replace('/login');
+			}
 		}
 	}
 }
