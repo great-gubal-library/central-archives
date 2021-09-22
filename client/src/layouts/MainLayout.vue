@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LpR fff">
+  <q-layout view="hHh Lpr fff">
     <q-header elevated>
       <q-toolbar>
         <div class="layout__filler">
