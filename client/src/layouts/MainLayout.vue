@@ -247,13 +247,7 @@ export default class MainLayout extends Vue {
 </script>
 
 <style lang="scss">
-  $max-layout-width: 1920px;
-
-  .q-layout {
-    background-image: url(assets/bg.jpg);
-    background-size: cover;
-    background-attachment: fixed;
-	}
+  $max-layout-width: 1280px;
 
   .layout__filler {
     flex-basis: 0;
@@ -339,11 +333,11 @@ export default class MainLayout extends Vue {
     }
 
     .q-drawer--left {
-      left: calc((100vw - #{$max-layout-width}) / 2);
+      left: calc((100% - #{$max-layout-width}) / 2);
     }
 
     .q-drawer--right {
-      right: calc((100vw - #{$max-layout-width}) / 2);
+      right: calc((100% - #{$max-layout-width}) / 2);
     }
   }
 </style>
