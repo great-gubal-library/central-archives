@@ -313,9 +313,12 @@ export default class MainLayout extends Vue {
 
   .layout__page-container {
     max-width: 800px;
-    padding: 16px;
     margin: auto;
     background: rgba(white, 0.9);
+  }
+
+  .q-page {
+    padding: 16px;
   }
   
   .q-footer {
