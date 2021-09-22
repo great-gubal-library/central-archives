@@ -16,7 +16,13 @@ export class EventsService {
 
 	private readonly MAX_RESULTS = 10;
 
-	private readonly DATE_TIME_FORMAT = 'd LLLL yyyy h:mm a';
+	// CMP sometimes uses different date formats on event pages because they're human-created. It's a mess.
+	private readonly DATE_TIME_FORMATS = [
+		'd LLLL yyyy h:mm a',
+		'd LLL yyyy h:mm a',
+		'd LLLL h:mm a',
+		'd LLL h:mm a',
+	];
 
 	constructor(
 		@InjectRedis()
@@ -60,17 +66,29 @@ export class EventsService {
 				const timeField = linkedDoc.querySelector('i.fa-clock + div');
 				
 				if (!dateField || !timeField) {
+					this.log.warn('No date/time found');
 					return null;
 				}
 
-				const dateString = dateField.textContent.trim();
-				const timeString = timeField.textContent.trim();
-				const date = DateTime.fromFormat(`${dateString} ${timeString}`, this.DATE_TIME_FORMAT, {
+				const dateTimeString = `${dateField.textContent.trim()} ${timeField.textContent.trim()}`;
+				const dateParseOptions = {
 					locale: 'en',
 					zone: SharedConstants.FFXIV_SERVER_TIMEZONE,
-				});
+				};
+				let date: DateTime;
+				
+				// Try different formats in an attempt to make sense of human-typed dates
+				for (const format of this.DATE_TIME_FORMATS) {
+					date = DateTime.fromFormat(dateTimeString, format, dateParseOptions);
 
-				if (!date.isValid) {
+					if (date.isValid) {
+						break;
+					}
+				}
+
+				// Non-null coercion is safe because date is guaranteed to be assigned at least once.
+				if (!date!.isValid) {
+					this.log.warn(`Invalid date: ${dateTimeString}`);
 					return null;
 				}
 
@@ -81,7 +99,7 @@ export class EventsService {
 					name,
 					location,
 					link: href,
-					date: date.toMillis(),
+					date: date!.toMillis(),
 				};
 			} catch (e) {
 				this.log.error(e);
