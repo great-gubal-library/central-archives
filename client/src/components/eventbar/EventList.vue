@@ -1,5 +1,5 @@
 <template>
-  <q-list dark>
+  <q-list class="event-list" dark>
     <q-item-label header> Events </q-item-label>
     <q-item
       v-for="event in events"
@@ -80,6 +80,10 @@ export default class EventList extends Vue {
 </script>
 
 <style lang="scss">
+.event-list a.q-item:nth-of-type(even) {
+  background: rgba(255, 255, 255, 0.11);
+}
+
 .event-list__link {
   border: none;
 }
