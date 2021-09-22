@@ -4,6 +4,7 @@
       <q-toolbar>
         <div class="layout__filler">
           <q-btn
+            class="lt-md"
             flat
             dense
             no-caps
@@ -12,9 +13,9 @@
             aria-label="Menu"
             @click="toggleLeftDrawer"
           >
-            <span v-if="$store.state.user" class="gt-sm layout__char-name">{{ $store.getters.characterShortName }}</span>
             <q-tooltip>Menu</q-tooltip>
           </q-btn>
+          <span v-if="$store.state.user" class="gt-sm layout__char-name">{{ $store.getters.characterShortName }}</span>
           <q-btn-group v-if="!$store.state.user" flat class="gt-sm">
             <q-btn flat label="Sign up" to="/signup" />
             <q-btn flat label="Log in" to="/login" />
@@ -44,7 +45,7 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <q-btn dense flat round icon="event" @click="toggleRightDrawer">
+          <q-btn class="lt-md" dense flat round icon="event" @click="toggleRightDrawer">
             <q-tooltip>Events</q-tooltip>
           </q-btn>
         </div>
@@ -246,6 +247,14 @@ export default class MainLayout extends Vue {
 </script>
 
 <style lang="scss">
+  $max-layout-width: 1920px;
+
+  .q-layout {
+    background-image: url(assets/bg.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+	}
+
   .layout__filler {
     flex-basis: 0;
     flex-grow: 1;
@@ -321,5 +330,20 @@ export default class MainLayout extends Vue {
   
   .q-footer {
     background: #795548;
+  }
+
+  @media screen and (min-width: $max-layout-width) {
+    .q-layout, .q-header {
+      max-width: $max-layout-width;
+      margin: auto;
+    }
+
+    .q-drawer--left {
+      left: calc((100vw - #{$max-layout-width}) / 2);
+    }
+
+    .q-drawer--right {
+      right: calc((100vw - #{$max-layout-width}) / 2);
+    }
   }
 </style>
