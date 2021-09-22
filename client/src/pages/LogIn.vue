@@ -1,11 +1,11 @@
 <template>
   <q-page>
     <h2>Log In</h2>
-    <p>
-      Please fill in the form below to log in to Chaos Archives.
-    </p>
-    <q-form @submit="onSubmit">
-      <section class="page-login__form-controls">
+    <q-form class="page-login__form" @submit="onSubmit">
+      <p>
+        Please fill in the form below to log in to Chaos Archives.
+      </p>
+      <section>
         <q-input
           v-model="email"
           label="Email"
@@ -83,12 +83,14 @@ export default class PageLogIn extends Vue {
 </script>
 
 <style lang="scss">
-.page-login__form-controls {
+.page-login__form {
   max-width: 500px;
+  margin: auto;
 }
 
 .page-login__button-bar {
   margin-top: 8px;
   margin-bottom: 16px;
+  text-align: right;
 }
 </style>
