@@ -16,10 +16,6 @@
             <q-tooltip>Menu</q-tooltip>
           </q-btn>
           <span v-if="$store.state.user" class="gt-sm layout__char-name">{{ $store.getters.characterShortName }}</span>
-          <q-btn-group v-if="!$store.state.user" flat class="gt-sm">
-            <q-btn flat label="Sign up" to="/signup" />
-            <q-btn flat label="Log in" to="/login" />
-          </q-btn-group>
         </div>
 
         <q-toolbar-title class="layout__toolbar-title text-center">
@@ -177,18 +173,17 @@ export default class MainLayout extends Vue {
   readonly DRAWER_WIDTH = 250;
 
   readonly navbarLinks = [
-    { label: 'About', to: '/about' },
     { label: 'Rules', to: '/rules' },
-    // { label: 'FAQ', to: '' },
     { label: 'Contact', to: '' },
   ];
 
   readonly siteLinks = [
     { label: 'About', to: '/about' },
-    { label: 'People', to: '' },
+    { label: 'Profiles', to: '' },
     { label: 'Free Companies', to: '' },
+    { label: 'Venues', to: '' },
+    { label: 'Stories', to: '' },
     { label: 'Noticeboard', to: '' },
-    { label: 'Adventures', to: '' },
   ];
 
   readonly userLinks = [
