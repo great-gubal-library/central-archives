@@ -75,14 +75,12 @@
           <q-item-label header>
             User
           </q-item-label>
-          <q-item clickable v-ripple to="/signup">
+          <q-item>
             <q-item-section>
-              <q-item-label>Sign up</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple to="/login">
-            <q-item-section>
-              <q-item-label>Log in</q-item-label>
+              <q-item-label>
+                <q-btn color="green-7" label="Sign up" to="/signup" />&nbsp;
+                <q-btn color="grey-7" label="Log in" to="/login" />
+              </q-item-label>
             </q-item-section>
           </q-item>
         </template>
