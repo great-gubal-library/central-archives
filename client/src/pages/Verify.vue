@@ -68,7 +68,7 @@
           <ol>
             <li>
               Open
-              <a :href="lodestoneCharacterLink"
+              <a :href="lodestoneCharacterLink" target="_blank"
                 >{{ $store.state.user.character.name }}'s page on Lodestone</a
               >.
             </li>

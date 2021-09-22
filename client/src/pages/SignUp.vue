@@ -1,11 +1,11 @@
 <template>
   <q-page>
     <h2>Sign Up</h2>
-    <p>
-      Welcome to Chaos Archives. Please fill in the form below to create your
-      account and register your first character.
-    </p>
-    <q-form @submit="onSubmit">
+    <q-form v-if="!signedUp" @submit="onSubmit">
+      <p>
+        Welcome to Chaos Archives. Please fill in the form below to create your
+        account and register your first character.
+      </p>
       <section class="page-signup__form-controls">
         <h6>Account information</h6>
         <q-input
@@ -101,6 +101,11 @@
       </div>
       <q-inner-loading :showing="loading" />
     </q-form>
+    <template v-else>
+      <p>Thank you for signing up! Your account has been created.</p>
+      <p>You will now need to verify your email address and your ownership of the character. We have sent you an email message with a link for continuing your signup process.</p>
+      <p>You can now close this page, or <router-link to="/verify">check</router-link> what remains to be done to activate your account.</p>
+    </template>
   </q-page>
 </template>
 
@@ -140,6 +145,7 @@ export default class PageSignUp extends Vue {
 
   private accept = false;
   private loading = false;
+  private signedUp = false;
 
 	async onCharacterFilter(value: string, update: () => void, abort: () => void) {
     value = value.trim();
@@ -206,7 +212,7 @@ export default class PageSignUp extends Vue {
         type: 'positive'
       });
 
-      void this.$router.replace('/');
+      this.signedUp = true; // hide form and show post-signup message
     } catch (e) {
       this.$q.notify({
         message: errors.getMessage(e),
