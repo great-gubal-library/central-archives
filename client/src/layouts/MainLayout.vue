@@ -64,7 +64,7 @@
       <q-list dense dark>
         <q-item>
           <q-item-section>
-            <q-input dark label="Search" />
+            <q-input dark color="white" label="Search" />
           </q-item-section>
         </q-item>
         <q-item-label header>
