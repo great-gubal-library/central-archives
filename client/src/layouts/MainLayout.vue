@@ -249,6 +249,10 @@ export default class MainLayout extends Vue {
 <style lang="scss">
   $max-layout-width: 1280px;
 
+  .q-layout {
+    box-shadow: rgba(black, 0.2) 8px 0px 4px, rgba(black, 0.2) -8px 0 4px;
+  }
+
   .layout__filler {
     flex-basis: 0;
     flex-grow: 1;
@@ -319,7 +323,6 @@ export default class MainLayout extends Vue {
     padding: 16px;
     margin: auto;
     background: rgba(white, 0.9);
-    /* box-shadow: rgba(black, 0.2) 8px 0px 4px, rgba(black, 0.2) -8px 0 4px; */
   }
   
   .q-footer {
