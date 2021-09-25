@@ -46,6 +46,13 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Verify.vue') }],
   },
 
+  // Characters
+  {
+    path: '/:server([A-Z][a-z]+)/:character([^/]+)',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Character.vue') }],
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {

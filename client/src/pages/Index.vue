@@ -233,7 +233,15 @@ export default class PageIndex extends Vue {
   content: MainPageContentDto | null = null;
 
   async created() {
-    this.content = await this.$api.getMainPageContent();
+    try {
+      this.content = await this.$api.getMainPageContent();
+    } catch (e) {
+      console.log(e);
+      this.$q.notify({
+				type: 'negative',
+				message: 'Cannot retrieve main page'
+			});
+    }
   }
 }
 </script>

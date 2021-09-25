@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { MailModule } from './mail/mail.module';
 import { AuthModule } from './auth/auth.module';
 import { MainPageModule } from './mainpage/main-page.module';
+import { CharactersModule } from './characters/characters.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MainPageModule } from './mainpage/main-page.module';
     UserModule,
     MailModule,
     AuthModule,
+    CharactersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
