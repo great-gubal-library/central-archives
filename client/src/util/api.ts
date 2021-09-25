@@ -1,5 +1,5 @@
 import { EventDto } from '@app/shared/dto/events/event.dto';
-import { NewsDto } from '@app/shared/dto/news/news.dto';
+import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
@@ -33,8 +33,8 @@ export default class API {
     }
   }
 
-  async getNews(): Promise<NewsDto[]> {
-    return (await this.axios.get<NewsDto[]>('news')).data;
+  async getMainPageContent(): Promise<MainPageContentDto> {
+    return (await this.axios.get<MainPageContentDto>('main-page')).data;
   }
 
   async getEvents(): Promise<EventDto[]> {

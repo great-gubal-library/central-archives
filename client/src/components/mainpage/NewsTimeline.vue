@@ -44,15 +44,19 @@
 </template>
 
 <script lang="ts">
-import { Vue } from 'vue-class-component';
+import { Options, Vue } from 'vue-class-component';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 
-export default class NewsTimeline extends Vue {
-  news: NewsDto[] = [];
-
-  async created() {
-    this.news = await this.$api.getNews();
+@Options({
+  props: {
+    news: {
+      type: Object as () => NewsDto[],
+      required: true
+    }
   }
+})
+export default class NewsTimeline extends Vue {
+  
 }
 </script>
 
