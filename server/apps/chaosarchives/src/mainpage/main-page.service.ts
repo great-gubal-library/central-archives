@@ -2,7 +2,7 @@ import { Character } from '@app/entity';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MainPageService {

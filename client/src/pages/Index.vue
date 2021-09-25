@@ -86,21 +86,9 @@
         </q-markup-table>
       </section>
       -->
-      <section class="row">
-        <div class="index__profile-fc-col">
-          <h5>New profiles</h5>
-          <q-markup-table dense>
-            <tbody class="index__table">
-              <tr
-                v-for="(character, index) in content.newProfiles"
-                :key="index"
-              >
-                <td>{{ character.name }}</td>
-                <td>{{ character.race }}</td>
-              </tr>
-            </tbody>
-          </q-markup-table>
-        </div>
+      <section>
+        <h5 style="margin: 1rem">New profiles</h5>
+        <new-profile-list :profiles="content.newProfiles" />
         <!--
         <div class="index__profile-fc-col">
           <h5 style="margin: 1rem">New free companies</h5>
@@ -113,7 +101,7 @@
           </q-markup-table>
         </div>
         -->
-        </section>
+      </section>
       <!--
       <section>
         <h5 style="margin: 1rem">New screenshots</h5>
@@ -179,11 +167,13 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
+import NewProfileList from 'components/mainpage/NewProfileList.vue';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 
 @Options({
   components: {
     NewsTimeline,
+    NewProfileList,
   },
 })
 export default class PageIndex extends Vue {
