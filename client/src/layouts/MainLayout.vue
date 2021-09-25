@@ -195,15 +195,6 @@ export default class MainLayout extends Vue {
   toggleRightDrawer () {
     this.rightDrawerOpen = !this.rightDrawerOpen
   }
-
-  logOut() {
-    this.$store.commit('setUser', null);
-    this.$api.setAccessToken(null);
-    this.$q.notify({
-      message: 'You have been logged out.'
-    });
-    void this.$router.push('/');
-  }
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
 	<q-editor
-      :model-value="value"
-			@input="onInput"
+      :model-value="modelValue"
+			@update:model-value="onInput"
       :dense="$q.screen.lt.md"
       :toolbar="[
         [
@@ -58,7 +58,7 @@ import { Options, Vue } from 'vue-class-component';
 
 @Options({
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true,
     },
@@ -66,7 +66,7 @@ import { Options, Vue } from 'vue-class-component';
 })
 export default class HtmlEditor extends Vue {
   onInput(newValue: string) {
-		this.$emit('input', newValue);
+		this.$emit('update:modelValue', newValue);
 	}
 }
 </script>

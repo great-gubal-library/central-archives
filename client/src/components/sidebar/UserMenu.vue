@@ -82,6 +82,15 @@ export default class UserMenu extends Vue {
 		const character = this.$store.state.user?.character.name.replace(' ', '_') || '';
 		return `/${server}/${character}`;
 	}
+
+  logOut() {
+    this.$store.commit('setUser', null);
+    this.$api.setAccessToken(null);
+    this.$q.notify({
+      message: 'You have been logged out.'
+    });
+    void this.$router.push('/');
+  }
 }
 </script>
 

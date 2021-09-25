@@ -20,6 +20,7 @@
     "luxon": "^2.0.2",
     "markdown-loader": "^6.0.0",
     "quasar": "^2.0.4",
+    "sanitize-html": "^2.5.1",
     "vue-class-component": "^8.0.0-rc.1",
     "vuex": "^4.0.1"
   },
@@ -28,6 +29,7 @@
     "@quasar/app": "^3.0.0",
     "@types/luxon": "^2.0.0",
     "@types/node": "^10.17.15",
+    "@types/sanitize-html": "^2.3.2",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "eslint": "^7.14.0",
