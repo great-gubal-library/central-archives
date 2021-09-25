@@ -100,4 +100,16 @@ export default class API {
     };
     return (await this.axios.get<CharacterProfileDto>(`characters/profile/${server}/${name}`, options)).data;
   }
+
+  async saveCharacter(character: CharacterProfileDto): Promise<void> {
+    if (!this.accessToken) {
+      throw new Error();
+    }
+
+    await this.axios.put<void>('characters/profile', character, {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      }
+    });
+  }
 }

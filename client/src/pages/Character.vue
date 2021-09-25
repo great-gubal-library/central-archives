@@ -4,6 +4,9 @@
 			<q-responsive :ratio="590/150" class="page-character__banner">
 				<div>Banner</div>
 			</q-responsive>
+			<p v-if="character.mine">
+				<router-link to="/edit-character">Edit profile</router-link>
+			</p>
 			<header class="page-character__header">
 				<div class="layout__filler">
 					<q-avatar round>
@@ -49,15 +52,13 @@
 			</q-card>
 			<template v-if="character.appearance">
 				<h3>Outward appearance</h3>
-				<section>
-					{{character.appearance}}
+				<section class="page-character__appearance-background" v-html="character.appearance">
 				</section>
 				<template v-if="character.background"><hr /></template>
 			</template>
 			<template v-if="character.background">
 				<h3>Background</h3>
-				<section>
-					{{character.background}}
+				<section class="page-character__appearance-background" v-html="character.background">
 				</section>
 			</template>
 			<template v-if="!character.appearance && !character.background">
@@ -166,5 +167,9 @@ export default class PageCharacter extends Vue {
 
 .page-character__details tr > td:first-child {
 	font-weight: bold;
+}
+
+.page-character__appearance-background {
+	margin-bottom: 24px;
 }
 </style>

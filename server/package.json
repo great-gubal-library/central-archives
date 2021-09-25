@@ -52,6 +52,7 @@
     "rfc4648": "^1.5.0",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6",
+    "sanitize-html": "^2.5.1",
     "typeorm": "^0.2.32"
   },
   "devDependencies": {
@@ -70,6 +71,7 @@
     "@types/nodemailer": "^6.4.4",
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
+    "@types/sanitize-html": "^2.3.2",
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "4.16.1",
     "@typescript-eslint/parser": "4.16.1",

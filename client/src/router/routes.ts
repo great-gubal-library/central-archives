@@ -46,6 +46,13 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Verify.vue') }],
   },
 
+  // User actions
+  {
+    path: '/edit-character',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditCharacter.vue') }],
+  },
+
   // Characters
   {
     path: '/:server([A-Z][a-z]+)/:character([^/]+)',
