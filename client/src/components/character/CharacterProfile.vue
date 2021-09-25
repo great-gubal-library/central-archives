@@ -106,30 +106,26 @@
 
 <script lang="ts">
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
-import { Options, Vue } from 'vue-class-component';
+import { prop, Vue } from 'vue-class-component';
 import sanitizeHtml from 'sanitize-html';
 
-@Options({
-  props: {
-    character: {
-      type: Object as () => CharacterProfileDto,
-      required: true,
-    },
-		showEditLink: {
-			type: Boolean,
-			default: true,
-		}
-  },
-})
-export default class CharacterProfile extends Vue {
+class Props {
+  character = prop<CharacterProfileDto>({
+    required: true,
+  });
+
+  showEditLink = prop<boolean>({
+    default: true,
+  });
+}
+
+export default class CharacterProfile extends Vue.with(Props) {
   get appearance(): string {
-    const result = sanitizeHtml((this as any).character.appearance);
-    console.log('sanitize', result);
-    return result;
+    return sanitizeHtml(this.character.appearance);
   }
 
   get background(): string {
-    return sanitizeHtml((this as any).character.background);
+    return sanitizeHtml(this.character.background);
   }
 }
 </script>

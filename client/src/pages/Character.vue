@@ -22,7 +22,7 @@ import { Options, Vue } from 'vue-class-component';
 export default class PageCharacter extends Vue {
 	private name: string|null = null;
 	private server: string|null = null;
-	private character: CharacterProfileDto|null = null;
+	private character: CharacterProfileDto = new CharacterProfileDto();
 	private notFound = false;
 
 	async created() {
