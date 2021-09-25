@@ -107,7 +107,7 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component';
-import { CharacterProfileDto } from '@app/shared/dto/character/character-profile.dto';
+import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import errors from '@app/shared/errors';
 
 export default class PageCharacter extends Vue {

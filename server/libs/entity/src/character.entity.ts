@@ -51,4 +51,78 @@ export class Character extends BasicEntity {
     nullable: false,
   })
   user: User;
+
+  @Column({
+    type: 'mediumtext',
+    nullable: false,
+    default: ''
+  })
+  appearance: string;
+
+  @Column({
+    type: 'mediumtext',
+    nullable: false,
+    default: ''
+  })
+	background: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	occupation: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	age: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	birthplace: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	residence: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	title: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	nickname: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	motto: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	loves: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	hates: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	motivation: string;
 }

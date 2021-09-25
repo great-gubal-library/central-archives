@@ -1,4 +1,4 @@
-import { CharacterProfileDto } from '@app/shared/dto/character/character-profile.dto';
+import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
@@ -93,6 +93,11 @@ export default class API {
 
   // Character profile
   async getCharacterProfile(name: string, server: string): Promise<CharacterProfileDto> {
-    return (await this.axios.get<CharacterProfileDto>(`characters/profile/${server}/${name}`)).data;
+    const options = !this.accessToken ? {} : {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`
+      }
+    };
+    return (await this.axios.get<CharacterProfileDto>(`characters/profile/${server}/${name}`, options)).data;
   }
 }
