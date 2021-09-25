@@ -4,7 +4,7 @@
       <news-timeline :news="content.news" />
       <!--
       <section>
-        <h5 style="margin: 1rem">Latest stories</h5>
+        <h5>Latest stories</h5>
         <q-markup-table dense>
           <tbody class="index__table">
             <tr v-for="(story, index) in stories" :key="index">
@@ -16,7 +16,7 @@
         </q-markup-table>
       </section>
       <section>
-        <h5 style="margin: 1rem">New artwork</h5>
+        <h5>New artwork</h5>
         <div class="row">
           <div class="col index__image-wrapper">
             <q-responsive :ratio="1/1">
@@ -71,7 +71,7 @@
         </div>
       </section>
       <section>
-        <h5 style="margin: 1rem">Noticeboard</h5>
+        <h5>Noticeboard</h5>
         <q-markup-table dense>
           <tbody class="index__table">
             <tr v-for="(adventure, index) in noticeboard" :key="index">
@@ -87,11 +87,11 @@
       </section>
       -->
       <section>
-        <h5 style="margin: 1rem">New profiles</h5>
+        <h5>New profiles</h5>
         <new-profile-list :profiles="content.newProfiles" />
         <!--
         <div class="index__profile-fc-col">
-          <h5 style="margin: 1rem">New free companies</h5>
+          <h5>New free companies</h5>
           <q-markup-table dense>
             <tbody class="index__table">
               <tr v-for="(fc, index) in newFCs" :key="index">
@@ -104,7 +104,7 @@
       </section>
       <!--
       <section>
-        <h5 style="margin: 1rem">New screenshots</h5>
+        <h5>New screenshots</h5>
         <div class="row">
           <div class="col index__image-wrapper">
             <q-responsive :ratio="1/1">
