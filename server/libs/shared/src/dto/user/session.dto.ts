@@ -7,5 +7,6 @@ export interface SessionDto {
 		id: number,
 		lodestoneId: number,
 		name: string,
+		server: string,
 	}
 }

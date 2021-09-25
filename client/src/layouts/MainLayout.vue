@@ -327,7 +327,7 @@ export default class MainLayout extends Vue {
   }
 
   .q-page {
-    padding: 16px;
+    padding: 24px 24px 48px 24px;
   }
   
   .q-footer {

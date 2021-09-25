@@ -46,7 +46,10 @@ export class AuthService {
   }
 
   private async getAndCacheUserInfo(user: User): Promise<UserInfo> {
-    const character = await this.characterRepo.findOne({ user });
+    const character = await this.characterRepo.findOne({
+      where: { user },
+      relations: [ 'server' ],
+    });
 
     if (!character) {
       // Shouldn't happen
@@ -60,6 +63,7 @@ export class AuthService {
         id: character.id,
         lodestoneId: character.lodestoneId,
         name: character.name,
+        server: character.server.name,
       },
     });
 

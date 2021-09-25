@@ -9,6 +9,7 @@ export class UserInfo {
 		id: number;
 		lodestoneId: number;
 		name: string;
+		server: string;
 	};
 
 	constructor(properties: Readonly<UserInfo>) {
