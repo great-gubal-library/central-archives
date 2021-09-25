@@ -160,7 +160,9 @@
       </section>
       -->
     </template>
-    <q-spinner v-else />
+    <div class="text-center" v-else>
+      <q-spinner size="lg" />
+    </div>
   </q-page>
 </template>
 
