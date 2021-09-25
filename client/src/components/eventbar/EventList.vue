@@ -20,12 +20,6 @@
       </q-item-section>
     </q-item>
     <q-separator />
-    <q-item clickable v-ripple>
-      <q-item-section>
-        <q-item-label>Event archive</q-item-label>
-      </q-item-section>
-    </q-item>
-    <q-separator />
   </q-list>
 </template>
 
