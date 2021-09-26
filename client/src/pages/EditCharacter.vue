@@ -86,6 +86,13 @@ export default class PageEditCharacter extends Vue {
       this.$q.notify({
         message: 'Character saved.',
         type: 'positive',
+        actions: [
+          {
+            label: 'View',
+            color: 'white',
+            handler: () => this.viewCharacter()
+          }
+        ]
       });
     } catch (e) {
       this.$q.notify({
@@ -95,6 +102,12 @@ export default class PageEditCharacter extends Vue {
     } finally {
       this.saving = false;
     }
+  }
+
+  viewCharacter() {
+    const name = this.$store.state.user?.character.name || '';
+    const server = this.$store.state.user?.character.server || '';
+    void this.$router.push(`/${server}/${name.replace(' ', '_')}`);
   }
 }
 </script>
