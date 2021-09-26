@@ -27,8 +27,7 @@ export default class CharacterDetail extends Vue.with(Props) {
 .character-detail {
   display: flex;
   flex-basis: 0;
-  flex-grow: 1;
-  width: 50%;
+  flex-grow: 0.5;
   min-width: 320px;
 }
 
