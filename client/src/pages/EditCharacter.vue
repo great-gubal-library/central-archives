@@ -21,7 +21,7 @@
             <q-input v-model="character.nickname" label="Nickname" />
             <h6>Biography</h6>
             <q-input v-model="character.occupation" label="Occupation" />
-            <q-input v-model="character.age" style="width: 200px" label="Age" />
+            <q-input v-model="character.age" class="page-edit-character__age" label="Age" />
             <q-input v-model="character.birthplace" label="Birthplace" />
             <q-input v-model="character.residence" label="Residence" />
             <h6>Personality</h6>
@@ -108,6 +108,10 @@ export default class PageEditCharacter extends Vue {
 
 .page-edit-character__preview {
   margin-bottom: 24px;
+}
+
+.page-edit-character__age {
+  width: 200px;
 }
 
 .page-edit-character__button-bar {
