@@ -38,7 +38,7 @@
         <section v-else class="page-edit-character__preview">
           <character-profile :character="character" :show-edit-link="false" />
         </section>
-        <div class="page-edit-character__button-bar">
+        <div class="page-edit-character__button-bar text-right">
           <q-btn label="Save changes" type="submit" color="primary" />
         </div>
         <q-inner-loading :showing="saving" />
