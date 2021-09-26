@@ -2,9 +2,6 @@
   <q-page class="page-edit-character">
     <template v-if="character.id">
       <h2>Edit Profile</h2>
-      <div class="page-edit-character__button-bar">
-        <q-btn-toggle v-model="preview" :options="previewOptions" />
-      </div>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
           <section class="page-edit-character__form-controls">
@@ -38,8 +35,12 @@
         <section v-else class="page-edit-character__preview">
           <character-profile :character="character" :show-edit-link="false" />
         </section>
-        <div class="page-edit-character__button-bar text-right">
-          <q-btn label="Save changes" type="submit" color="primary" />
+        <div class="page-edit-character__button-bar">
+          <q-btn-toggle v-model="preview" :options="previewOptions" toggle-color="secondary" />
+          <div class="page-edit-character__revert-submit">
+            <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
+            <q-btn label="Save changes" type="submit" color="primary" />
+          </div>
         </div>
         <q-inner-loading :showing="saving" />
       </q-form>
@@ -67,14 +68,20 @@ export default class PageEditCharacter extends Vue {
     { label: 'Preview', value: true },
   ];
 
-  private character: CharacterProfileDto = new CharacterProfileDto();
+  private character = new CharacterProfileDto();
+  private characterBackup = new CharacterProfileDto();
   private preview = false;
   private saving = false;
 
   async created() {
     const name = this.$store.state.user?.character.name || '';
     const server = this.$store.state.user?.character.server || '';
-    this.character = await this.$api.getCharacterProfile(name, server);
+    this.characterBackup = await this.$api.getCharacterProfile(name, server);
+    this.character = new CharacterProfileDto(this.characterBackup);
+  }
+
+  revert() {
+    this.character = new CharacterProfileDto(this.characterBackup);
   }
 
   async onSubmit() {
@@ -128,6 +135,8 @@ export default class PageEditCharacter extends Vue {
 }
 
 .page-edit-character__button-bar {
+  display: flex;
+  justify-content: space-between;
   margin-top: 8px;
   margin-bottom: 16px;
 }
