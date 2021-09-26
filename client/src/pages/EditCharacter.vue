@@ -44,7 +44,7 @@
           </section>
         </template>
         <section v-else class="page-edit-character__preview">
-          <character-profile :character="character" :show-edit-link="false" />
+          <character-profile :character="character" :preview="true" />
         </section>
         <div class="page-edit-character__button-bar">
           <q-btn-toggle v-model="preview" :options="previewOptions" toggle-color="secondary" />
