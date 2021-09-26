@@ -58,6 +58,7 @@
             { title: 'Justify', format: 'alignjustify' }
           ]}
         ],
+        fontsize_formats: '8pt 10.5pt 12pt 14pt 18pt 24pt 36pt',
       }"
     :model-value="modelValue"
     @update:model-value="onInput"
