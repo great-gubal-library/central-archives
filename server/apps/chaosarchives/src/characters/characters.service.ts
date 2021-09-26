@@ -1,9 +1,9 @@
 import { Character } from '@app/entity';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { Role } from '@app/shared/enums/role.enum';
+import html from '@app/shared/html';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import sanitizeHtml from 'sanitize-html';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { UserInfo } from '../auth/user-info';
@@ -82,8 +82,8 @@ export class CharactersService {
 
 			// TODO: Refactor
 			Object.assign(characterEntity, {
-				appearance: sanitizeHtml(character.appearance),
-				background: sanitizeHtml(character.background),
+				appearance: html.sanitize(character.appearance),
+				background: html.sanitize(character.background),
 				occupation: character.occupation,
 				age: character.age,
 				birthplace: character.birthplace,

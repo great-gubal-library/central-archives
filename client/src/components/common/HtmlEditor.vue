@@ -3,12 +3,11 @@
     class="html-editor"
     api-key="no-api-key"
     :init="{
-        height: 400,
         inline: true,
         plugins: [
-          'advlist autolink lists link image charmap print preview anchor',
-          'searchreplace visualblocks code fullscreen',
-          'insertdatetime media table paste code help wordcount'
+          'advlist autolink lists link image charmap',
+          'searchreplace visualblocks',
+          'table paste help wordcount'
         ],
         toolbar:
           'undo redo | formatselect | bold italic backcolor | \
@@ -85,9 +84,11 @@ export default class HtmlEditor extends Vue {
 
 <style lang="scss">
 .html-editor {
+  height: 400px;
   background: white;
   border: 1px solid #aaa;
   padding: 8px;
+  overflow-y: auto;
 }
 
 .html-editor h6 {

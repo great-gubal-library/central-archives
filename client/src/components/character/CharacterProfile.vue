@@ -56,7 +56,7 @@
 
 <script lang="ts">
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
-import sanitizeHtml from 'sanitize-html';
+import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import CharacterDetail from './CharacterDetail.vue';
 import CharacterDetailsBox from './CharacterDetailsBox.vue';
@@ -79,11 +79,11 @@ class Props {
 })
 export default class CharacterProfile extends Vue.with(Props) {
   get appearance(): string {
-    return sanitizeHtml(this.character.appearance);
+    return html.sanitize(this.character.appearance);
   }
 
   get background(): string {
-    return sanitizeHtml(this.character.background);
+    return html.sanitize(this.character.background);
   }
 
   get hasPersonalityBox(): boolean {
