@@ -5,7 +5,7 @@
     :init="{
         inline: true,
         plugins: [
-          'advlist autolink lists link image charmap',
+          'code advlist autolink lists link image charmap',
           'searchreplace visualblocks',
           'table paste help wordcount'
         ],
@@ -18,12 +18,14 @@
         menu: {
           edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
           view: { title: 'View', items: 'code | visualaid visualchars visualblocks' },
-          insert: { title: 'Insert', items: 'link | charmap hr | nonbreaking' },
+          insert: { title: 'Insert', items: 'image link | charmap hr | nonbreaking' },
           format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat' },
           table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' },
           help: { title: 'Help', items: 'help' }
         },
         menubar: 'edit view insert format table help',
+        image_title: false,
+        image_description: false,
         block_formats: 'Paragraph=p; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6',
         font_formats: 'Noto Sans=Noto Sans, sans serif; Cinzel=Cinzel, sans-serif; Michroma=Michroma, sans-serif',
         style_formats: [
