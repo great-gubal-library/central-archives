@@ -19,40 +19,14 @@
       </div>
       <div class="layout__filler"></div>
     </header>
-    <q-card>
-      <section class="row character-profile__details">
-        <div class="col-12 col-md-6">
-          <table>
-            <tr>
-              <td>World</td>
-              <td>{{ character.server }}</td>
-            </tr>
-            <tr>
-              <td>Occupation</td>
-              <td>{{ character.occupation }}</td>
-            </tr>
-            <tr>
-              <td>Age</td>
-              <td>{{ character.age }}</td>
-            </tr>
-          </table>
-        </div>
-        <div class="col-12 col-md-6">
-          <tr>
-            <td>Race</td>
-            <td>{{ $display.races[character.race] }}</td>
-          </tr>
-          <tr>
-            <td>Birthplace</td>
-            <td>{{ character.birthplace }}</td>
-          </tr>
-          <tr>
-            <td>Residence</td>
-            <td>{{ character.residence }}</td>
-          </tr>
-        </div>
-      </section>
-    </q-card>
+    <character-details-box>
+      <character-detail label="World" :value="character.server" />
+      <character-detail label="Race" :value="$display.races[character.race]" />
+      <character-detail label="Occupation" :value="character.occupation" />
+      <character-detail label="Age" :value="character.age" />
+      <character-detail label="Birthplace" :value="character.birthplace" />
+      <character-detail label="Residence" :value="character.residence" />
+    </character-details-box>
     <template v-if="character.appearance">
       <h3>Outward appearance</h3>
       <section
@@ -71,39 +45,21 @@
     <template v-if="!character.appearance && !character.background">
       &nbsp;
     </template>
-    <q-card>
-      <section class="row character-profile__details">
-        <div class="col-12 col-md-6">
-          <table>
-            <tr>
-              <td>Loves</td>
-              <td>{{ character.loves }}</td>
-            </tr>
-            <tr>
-              <td>Motto</td>
-              <td>{{ character.motto }}</td>
-            </tr>
-          </table>
-        </div>
-        <div class="col-12 col-md-6">
-          <tr>
-            <td>Hates</td>
-            <td>{{ character.hates }}</td>
-          </tr>
-          <tr>
-            <td>Motivation</td>
-            <td>{{ character.motivation }}</td>
-          </tr>
-        </div>
-      </section>
-    </q-card>
+    <character-details-box v-if="hasPersonalityBox">
+      <character-detail label="Loves" :value="character.loves" />
+      <character-detail label="Hates" :value="character.hates" />
+      <character-detail label="Motto" :value="character.motto" />
+      <character-detail label="Motivation" :value="character.motivation" />
+    </character-details-box>
   </div>
 </template>
 
 <script lang="ts">
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
-import { prop, Vue } from 'vue-class-component';
 import sanitizeHtml from 'sanitize-html';
+import { Options, prop, Vue } from 'vue-class-component';
+import CharacterDetail from './CharacterDetail.vue';
+import CharacterDetailsBox from './CharacterDetailsBox.vue';
 
 class Props {
   character = prop<CharacterProfileDto>({
@@ -115,6 +71,12 @@ class Props {
   });
 }
 
+@Options({
+  components: {
+    CharacterDetail,
+    CharacterDetailsBox
+  }
+})
 export default class CharacterProfile extends Vue.with(Props) {
   get appearance(): string {
     return sanitizeHtml(this.character.appearance);
@@ -122,6 +84,13 @@ export default class CharacterProfile extends Vue.with(Props) {
 
   get background(): string {
     return sanitizeHtml(this.character.background);
+  }
+
+  get hasPersonalityBox(): boolean {
+    return !!(this.character.loves
+      || this.character.hates
+      || this.character.motto
+      || this.character.motivation);
   }
 }
 </script>
@@ -156,7 +125,7 @@ export default class CharacterProfile extends Vue.with(Props) {
 
 .character-profile__header-subtitle {
   font-family: $header-font;
-  font-size: 1.4em;
+  font-size: 1.6em;
 }
 
 .character-profile__details td {

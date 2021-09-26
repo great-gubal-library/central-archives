@@ -25,9 +25,9 @@
             <q-input v-model="character.birthplace" label="Birthplace" />
             <q-input v-model="character.residence" label="Residence" />
             <h6>Personality</h6>
-            <q-input v-model="character.motto" label="Motto" />
             <q-input v-model="character.loves" label="Loves" />
             <q-input v-model="character.hates" label="Hates" />
+            <q-input v-model="character.motto" label="Motto" />
             <q-input v-model="character.motivation" label="Motivation" />
           </section>
           <h6>Appearance</h6>
