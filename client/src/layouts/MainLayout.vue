@@ -146,19 +146,10 @@ export default class MainLayout extends Vue {
   readonly siteLinks = [
     { label: 'About', to: '/about' },
     { label: 'Profiles', to: '' },
-    { label: 'Free Companies', to: '' },
-    { label: 'Venues', to: '' },
-    { label: 'Stories', to: '' },
-    { label: 'Noticeboard', to: '' },
-  ];
-
-  readonly userLinks = [
-    { label: 'My profile', to: '' },
-    { label: 'My account', to: '' },
-    { label: 'My content', to: '' },
-    { label: 'My friendlist', to: '' },
-    { label: 'My mailbox', to: '' },
-    { label: 'Switch character', to: '' },
+    // { label: 'Free Companies', to: '' },
+    // { label: 'Venues', to: '' },
+    // { label: 'Stories', to: '' },
+    // { label: 'Noticeboard', to: '' },
   ];
 
   readonly createContentLinks = [
@@ -167,13 +158,6 @@ export default class MainLayout extends Vue {
     { label: 'Event', to: '' },
     { label: 'Free Company', to: '' },
     { label: 'Noticeboard item', to: '' },
-  ];
-
-  readonly events = [
-    { title: 'Tavern Roulette', date: '23 August 2021' },
-    { title: 'Market Night', date: '24 August 2021' },
-    { title: 'Eorzea Grand Prix', date: '25 August 2021' },
-    { title: 'The Daily Moogle Open Doors', date: '26 August 2021' },
   ];
 
   readonly friendActivity = [

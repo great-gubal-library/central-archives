@@ -160,4 +160,8 @@ export default class PageEditCharacter extends Vue {
   margin-top: 8px;
   margin-bottom: 16px;
 }
+
+.page-edit-character__preview h6 {
+  font-family: $header-font;
+}
 </style>

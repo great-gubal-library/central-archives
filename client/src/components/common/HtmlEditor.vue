@@ -1,62 +1,74 @@
 <template>
-	<q-editor
-      :model-value="modelValue"
-			@update:model-value="onInput"
-      :dense="$q.screen.lt.md"
-      :toolbar="[
-        [
-          {
-            label: $q.lang.editor.align,
-            icon: $q.iconSet.editor.align,
-            fixedLabel: true,
-            options: ['left', 'center', 'right', 'justify']
-          }
+  <editor
+    class="html-editor"
+    api-key="no-api-key"
+    :init="{
+        height: 400,
+        inline: true,
+        plugins: [
+          'advlist autolink lists link image charmap print preview anchor',
+          'searchreplace visualblocks code fullscreen',
+          'insertdatetime media table paste code help wordcount'
         ],
-        ['bold', 'italic', 'strike', 'hr', 'link'],
-        [
-          {
-            label: $q.lang.editor.formatting,
-            icon: $q.iconSet.editor.formatting,
-            list: 'no-icons',
-            options: [
-              'p',
-              'h1',
-              'h2',
-              'h3',
-              'h4',
-              'h5',
-              'h6',
-              'code'
-            ]
-          },
-          {
-            icon: $q.iconSet.editor.fontSize,
-            fixedLabel: true,
-            fixedIcon: true,
-            list: 'no-icons',
-            options: [
-              'size-1',
-              'size-2',
-              'size-3',
-              'size-4',
-              'size-5',
-              'size-6',
-              'size-7'
-            ]
-          },
-          'removeFormat'
+        toolbar:
+          'undo redo | formatselect | bold italic backcolor | \
+          alignleft aligncenter alignright alignjustify | \
+          bullist numlist outdent indent | removeformat',
+        toolbar_mode: 'wrap',
+        menu: {
+          edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
+          view: { title: 'View', items: 'code | visualaid visualchars visualblocks' },
+          insert: { title: 'Insert', items: 'link | charmap hr | nonbreaking' },
+          format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat' },
+          table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' },
+          help: { title: 'Help', items: 'help' }
+        },
+        menubar: 'edit view insert format table help',
+        block_formats: 'Paragraph=p; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6',
+        font_formats: 'Noto Sans=Noto Sans, sans serif; Cinzel=Cinzel, sans-serif; Michroma=Michroma, sans-serif',
+        style_formats: [
+          { title: 'Headings', items: [
+            { title: 'Heading 3', format: 'h3' },
+            { title: 'Heading 4', format: 'h4' },
+            { title: 'Heading 5', format: 'h5' },
+            { title: 'Heading 6', format: 'h6' }
+          ]},
+          { title: 'Inline', items: [
+            { title: 'Bold', format: 'bold' },
+            { title: 'Italic', format: 'italic' },
+            { title: 'Underline', format: 'underline' },
+            { title: 'Strikethrough', format: 'strikethrough' },
+            { title: 'Superscript', format: 'superscript' },
+            { title: 'Subscript', format: 'subscript' },
+            { title: 'Code', format: 'code' }
+          ]},
+          { title: 'Blocks', items: [
+            { title: 'Paragraph', format: 'p' },
+            { title: 'Blockquote', format: 'blockquote' },
+            { title: 'Div', format: 'div' },
+            { title: 'Pre', format: 'pre' }
+          ]},
+          { title: 'Align', items: [
+            { title: 'Left', format: 'alignleft' },
+            { title: 'Center', format: 'aligncenter' },
+            { title: 'Right', format: 'alignright' },
+            { title: 'Justify', format: 'alignjustify' }
+          ]}
         ],
-        ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
-
-        ['undo', 'redo', 'viewsource'],
-      ]"
-    />
+      }"
+    :model-value="modelValue"
+    @update:model-value="onInput"
+  />
 </template>
 
 <script lang="ts">
+import Editor from '@tinymce/tinymce-vue';
 import { Options, Vue } from 'vue-class-component';
 
 @Options({
+  components: {
+    Editor
+  },
   props: {
     modelValue: {
       type: String,
@@ -66,7 +78,19 @@ import { Options, Vue } from 'vue-class-component';
 })
 export default class HtmlEditor extends Vue {
   onInput(newValue: string) {
-		this.$emit('update:modelValue', newValue);
-	}
+    this.$emit('update:modelValue', newValue);
+  }
 }
 </script>
+
+<style lang="scss">
+.html-editor {
+  background: white;
+  border: 1px solid #aaa;
+  padding: 8px;
+}
+
+.html-editor h6 {
+  font-family: $header-font;
+}
+</style>

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.10.11",
+    "@tinymce/tinymce-vue": "^4",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "html-loader": "^2.1.2",
