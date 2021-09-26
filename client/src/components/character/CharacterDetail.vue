@@ -30,6 +30,7 @@ export default class CharacterDetail extends Vue.with(Props) {
   flex-grow: 0.5;
   min-width: 320px;
   border-bottom: 1px solid #ddd;
+  margin-bottom: -1px; /* So that odd last child doesn't have uneven borders */
 }
 
 .character-detail:only-child {

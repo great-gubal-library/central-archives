@@ -19,5 +19,6 @@ export default class CharacterDetailsBox extends Vue {
 .character-details-box__content {
 	display: flex;
 	flex-wrap: wrap;
+	overflow: hidden;
 }
 </style>
