@@ -15,7 +15,12 @@
           >
             <q-tooltip>Menu</q-tooltip>
           </q-btn>
-          <span v-if="$store.state.user" class="gt-sm layout__char-name">{{ $store.getters.characterShortName }}</span>
+          <div v-if="$store.state.user" class="gt-sm layout__char-name">
+            <q-avatar round>
+              <img :src="$store.state.user.character.avatar" />
+            </q-avatar>
+            <span>{{ $store.getters.characterShortName }}</span>
+          </div>
         </div>
 
         <q-toolbar-title class="layout__toolbar-title text-center">
@@ -58,11 +63,13 @@
     >
       
       <q-list dense dark>
+        <!--
         <q-item>
           <q-item-section>
             <q-input dark color="white" label="Search" />
           </q-item-section>
         </q-item>
+        -->
         <q-item-label header>
           Chaos Archives
         </q-item-label>
@@ -197,8 +204,14 @@ export default class MainLayout extends Vue {
   }
 
   .layout__char-name {
-    padding-left: 6px;
     font-size: 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .layout__char-name span {
+    padding-left: 6px;
+    color: #eee;
   }
 
   .layout__toolbar-title {

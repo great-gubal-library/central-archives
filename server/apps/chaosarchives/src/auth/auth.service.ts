@@ -64,6 +64,7 @@ export class AuthService {
         lodestoneId: character.lodestoneId,
         name: character.name,
         server: character.server.name,
+        avatar: character.avatar,
       },
     });
 
