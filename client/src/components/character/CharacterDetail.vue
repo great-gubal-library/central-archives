@@ -31,6 +31,10 @@ export default class CharacterDetail extends Vue.with(Props) {
   min-width: 320px;
 }
 
+.character-detail:only-child {
+  flex-grow: 1;
+}
+
 .character-detail > div {
   padding: 4px 8px;
 }

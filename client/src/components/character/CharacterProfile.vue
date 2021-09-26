@@ -20,12 +20,12 @@
       <div class="layout__filler"></div>
     </header>
     <character-details-box>
-      <character-detail label="World" :value="character.server" />
-      <character-detail label="Race" :value="$display.races[character.race]" />
-      <character-detail label="Occupation" :value="character.occupation" />
-      <character-detail label="Age" :value="character.age" />
-      <character-detail label="Birthplace" :value="character.birthplace" />
-      <character-detail label="Residence" :value="character.residence" />
+      <character-detail label="World" :value="character.server" v-if="character.server" />
+      <character-detail label="Race" :value="$display.races[character.race]" v-if="character.race" />
+      <character-detail label="Occupation" :value="character.occupation" v-if="character.occupation" />
+      <character-detail label="Age" :value="character.age" v-if="character.age" />
+      <character-detail label="Birthplace" :value="character.birthplace" v-if="character.birthplace" />
+      <character-detail label="Residence" :value="character.residence" v-if="character.residence" />
     </character-details-box>
     <template v-if="character.appearance">
       <h3>Outward appearance</h3>
@@ -46,10 +46,10 @@
       &nbsp;
     </template>
     <character-details-box v-if="hasPersonalityBox">
-      <character-detail label="Loves" :value="character.loves" />
-      <character-detail label="Hates" :value="character.hates" />
-      <character-detail label="Motto" :value="character.motto" />
-      <character-detail label="Motivation" :value="character.motivation" />
+      <character-detail label="Loves" :value="character.loves" v-if="character.loves" />
+      <character-detail label="Hates" :value="character.hates" v-if="character.hates" />
+      <character-detail label="Motto" :value="character.motto" v-if="character.motto" />
+      <character-detail label="Motivation" :value="character.motivation" v-if="character.motivation" />
     </character-details-box>
   </div>
 </template>
