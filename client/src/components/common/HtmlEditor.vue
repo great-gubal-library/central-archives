@@ -10,9 +10,9 @@
           'table paste help wordcount'
         ],
         toolbar:
-          'undo redo | formatselect | bold italic backcolor | \
+          'undo redo | formatselect | bold italic | \
           alignleft aligncenter alignright alignjustify | \
-          bullist numlist outdent indent | removeformat',
+          image link | bullist numlist outdent indent | removeformat',
         toolbar_mode: 'wrap',
         toolbar_persist: true,
         menu: {
@@ -26,6 +26,7 @@
         menubar: 'edit view insert format table help',
         image_title: false,
         image_description: false,
+        link_title: false,
         block_formats: 'Paragraph=p; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6',
         font_formats: 'Noto Sans=Noto Sans, sans serif; Cinzel=Cinzel, sans-serif; Michroma=Michroma, sans-serif',
         style_formats: [
