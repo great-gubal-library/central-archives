@@ -1,8 +1,10 @@
 <template>
   <div class="character-profile">
+    <!--
     <q-responsive :ratio="590 / 150" class="character-profile__banner">
       <div>Banner</div>
     </q-responsive>
+    -->
     <p v-if="!preview && character.mine">
       <router-link to="/edit-character">Edit profile</router-link>
     </p>
