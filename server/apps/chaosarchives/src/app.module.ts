@@ -10,6 +10,7 @@ import { MailModule } from './mail/mail.module';
 import { AuthModule } from './auth/auth.module';
 import { MainPageModule } from './mainpage/main-page.module';
 import { CharactersModule } from './characters/characters.module';
+import { CarrdModule } from './carrd/carrd.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CharactersModule } from './characters/characters.module';
     MailModule,
     AuthModule,
     CharactersModule,
+    CarrdModule,
   ],
   controllers: [AppController],
   providers: [AppService],

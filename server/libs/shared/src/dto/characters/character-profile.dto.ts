@@ -60,6 +60,9 @@ export class CharacterProfileDto {
 
   @IsString()
   motivation: string;
+
+  @IsString()
+  carrdProfile: string;
 	
 	constructor(properties?: Readonly<CharacterProfileDto>) {
     if (properties) {

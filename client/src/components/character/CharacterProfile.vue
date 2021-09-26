@@ -3,7 +3,7 @@
     <q-responsive :ratio="590 / 150" class="character-profile__banner">
       <div>Banner</div>
     </q-responsive>
-    <p v-if="showEditLink && character.mine">
+    <p v-if="!preview && character.mine">
       <router-link to="/edit-character">Edit profile</router-link>
     </p>
     <header class="character-profile__header">
@@ -45,12 +45,14 @@
     <template v-if="!character.appearance && !character.background">
       &nbsp;
     </template>
-    <character-details-box v-if="hasPersonalityBox">
+    <character-details-box v-if="hasPersonalityBox" class="character-profile__personality-box">
       <character-detail label="Loves" :value="character.loves" v-if="character.loves" />
       <character-detail label="Hates" :value="character.hates" v-if="character.hates" />
       <character-detail label="Motto" :value="character.motto" v-if="character.motto" />
       <character-detail label="Motivation" :value="character.motivation" v-if="character.motivation" />
     </character-details-box>
+    <iframe v-if="character.carrdProfile" v-iframe-resize :src="carrdLink" width="100%" height="500px" class="character-profile__carrd-iframe">
+    </iframe>
   </div>
 </template>
 
@@ -66,8 +68,8 @@ class Props {
     required: true,
   });
 
-  showEditLink = prop<boolean>({
-    default: true,
+  preview = prop<boolean>({
+    default: false,
   });
 }
 
@@ -91,6 +93,14 @@ export default class CharacterProfile extends Vue.with(Props) {
       || this.character.hates
       || this.character.motto
       || this.character.motivation);
+  }
+
+  get carrdLink(): string {
+    if (this.preview) {
+      return `${this.$api.prefix}carrd/character/preview/${this.character.carrdProfile}`;
+    }
+
+    return `${this.$api.prefix}carrd/character/${this.character.id}`;
   }
 }
 </script>
@@ -138,5 +148,13 @@ export default class CharacterProfile extends Vue.with(Props) {
 
 .character-profile__appearance-background {
   margin-bottom: 24px;
+}
+
+.character-profile__personality-box {
+  margin-bottom: 24px;
+}
+
+.character-profile__carrd-iframe {
+  border: none;
 }
 </style>

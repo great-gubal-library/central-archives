@@ -55,6 +55,7 @@ export class CharactersService {
       loves: character.loves,
       hates: character.hates,
       motivation: character.motivation,
+      carrdProfile: character.carrdProfile,
     };
   }
 
@@ -63,8 +64,6 @@ export class CharactersService {
 		if (user.role === Role.UNVERIFIED) {
 			throw new ForbiddenException();
 		}
-
-    console.log(character);
 
     await this.connection.transaction(async em => {
 			const repo = em.getRepository(Character);
@@ -94,6 +93,7 @@ export class CharactersService {
 				loves: character.loves,
 				hates: character.hates,
 				motivation: character.motivation,
+        carrdProfile: character.carrdProfile,
 			});
 
 			await repo.save(characterEntity);

@@ -18,6 +18,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "html-loader": "^2.1.2",
+    "iframe-resizer": "^4.3.2",
     "luxon": "^2.0.2",
     "markdown-loader": "^6.0.0",
     "quasar": "^2.0.4",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app": "^3.0.0",
+    "@types/iframe-resizer": "^3.5.9",
     "@types/luxon": "^2.0.0",
     "@types/node": "^10.17.15",
     "@types/sanitize-html": "^2.3.2",

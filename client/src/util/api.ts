@@ -12,8 +12,12 @@ import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import axios from 'axios';
 import { LocalStorage } from 'quasar';
 
+const API_PREFIX = '/api/v1/';
+
 export default class API {
-  private readonly axios = axios.create({ baseURL: '/api/v1/' });
+  readonly prefix = API_PREFIX;
+
+  private readonly axios = axios.create({ baseURL: API_PREFIX });
   private accessToken: string | null = null;
 
   constructor() {

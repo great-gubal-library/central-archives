@@ -31,6 +31,17 @@
           <html-editor v-model="character.appearance" />
           <h6>Background</h6>
           <html-editor v-model="character.background" />
+          <section class="page-edit-character__form-controls">
+            <h6>Carrd integration</h6>
+            <q-input v-model="character.carrdProfile" label="Carrd profile" hint="Leave blank if you don't have a Carrd profile or don't want to it on your page.">
+              <template v-slot:prepend>
+                <q-icon name="link" />
+              </template>
+              <template v-slot:after>
+                .carrd.co
+              </template>
+            </q-input>
+          </section>
         </template>
         <section v-else class="page-edit-character__preview">
           <character-profile :character="character" :show-edit-link="false" />
@@ -157,7 +168,7 @@ export default class PageEditCharacter extends Vue {
 .page-edit-character__button-bar {
   display: flex;
   justify-content: space-between;
-  margin-top: 8px;
+  margin-top: 16px;
   margin-bottom: 16px;
 }
 

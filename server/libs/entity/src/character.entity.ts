@@ -125,4 +125,11 @@ export class Character extends BasicEntity {
     default: ''
   })
 	motivation: string;
+
+  @Column({
+    nullable: false,
+    width: 100,
+    default: ''
+  })
+	carrdProfile: string;
 }

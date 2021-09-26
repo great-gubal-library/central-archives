@@ -19,7 +19,6 @@ export class CharactersController {
 	@Put('profile')
 	@UseGuards(JwtAuthGuard)
 	async saveCharacter(@Body() profile: CharacterProfileDto, @CurrentUser() user: UserInfo): Promise<void> {
-		console.log('profile', profile);
 		await this.charactersService.saveCharacter(profile, user);
 	}
 }
