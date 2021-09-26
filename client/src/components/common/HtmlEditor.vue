@@ -100,4 +100,8 @@ export default class HtmlEditor extends Vue {
 .html-editor h6 {
   font-family: $header-font;
 }
+
+.tox, .tox-tinymce {
+  font-family: $body-font!important;
+}
 </style>
