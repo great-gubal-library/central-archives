@@ -46,6 +46,19 @@
       </q-form>
     </template>
     <q-spinner v-else />
+
+    <q-dialog v-model="confirmRevert" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">Do you want to revert your unsaved changes to the last saved version?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Keep editing" color="secondary" v-close-popup />
+          <q-btn flat label="Revert" color="negative" v-close-popup @click="onConfirmRevert" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -73,6 +86,8 @@ export default class PageEditCharacter extends Vue {
   private preview = false;
   private saving = false;
 
+  private confirmRevert = false;
+
   async created() {
     const name = this.$store.state.user?.character.name || '';
     const server = this.$store.state.user?.character.server || '';
@@ -81,6 +96,10 @@ export default class PageEditCharacter extends Vue {
   }
 
   revert() {
+    this.confirmRevert = true;
+  }
+
+  onConfirmRevert() {
     this.character = new CharacterProfileDto(this.characterBackup);
   }
 
@@ -89,6 +108,7 @@ export default class PageEditCharacter extends Vue {
 
     try {
       await this.$api.saveCharacter(this.character);
+      this.characterBackup = new CharacterProfileDto(this.character);
 
       this.$q.notify({
         message: 'Character saved.',
