@@ -1,6 +1,7 @@
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
+import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
@@ -103,6 +104,10 @@ export default class API {
       }
     };
     return (await this.axios.get<CharacterProfileDto>(`characters/profile/${server}/${name}`, options)).data;
+  }
+
+  async getCharacterProfiles(): Promise<NewProfileDto[]> {
+    return (await this.axios.get<NewProfileDto[]>('characters')).data;
   }
 
   async saveCharacter(character: CharacterProfileDto): Promise<void> {

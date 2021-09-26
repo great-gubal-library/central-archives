@@ -55,6 +55,12 @@ const routes: RouteRecordRaw[] = [
 
   // Characters
   {
+    path: '/profiles',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Characters.vue') }],
+  },
+
+  {
     path: '/:server([A-Z][a-z]+)/:character([^/]+)',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Character.vue') }],

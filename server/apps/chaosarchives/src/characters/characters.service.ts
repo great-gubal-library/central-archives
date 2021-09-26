@@ -1,5 +1,6 @@
 import { Character } from '@app/entity';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
+import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import html from '@app/shared/html';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
@@ -99,4 +100,20 @@ export class CharactersService {
 			await repo.save(characterEntity);
 		});
   }
+
+  async getCharacterList(): Promise<NewProfileDto[]> {
+		const characters = await this.characterRepo.createQueryBuilder('character')
+			.where('character.verifiedAt IS NOT NULL')
+			.orderBy('character.name', 'ASC')
+			.innerJoinAndSelect('character.server', 'server')
+			.select([ 'character.name', 'character.race', 'character.avatar', 'server.name' ])
+			.getMany();
+
+		return characters.map(character => ({
+				name: character.name,
+				race: character.race,
+				avatar: character.avatar,
+				server: character.server.name,
+			}));
+	}
 }
