@@ -19,6 +19,18 @@ body {
 	border-radius: 5px;
 }
 
+.q-page *::-webkit-scrollbar {
+	background: #eeeeee;
+	border: none;
+	width: 12px;
+}
+
+.q-page *::-webkit-scrollbar-thumb {
+	background: #cccccc;
+	border: none;
+	border-radius: 5px;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	font-family: $header-font;
 	font-weight: 500;
