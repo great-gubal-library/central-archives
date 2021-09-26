@@ -28,9 +28,9 @@
             <q-input v-model="character.motivation" label="Motivation" />
           </section>
           <h6>Appearance</h6>
-          <html-editor v-model="character.appearance" style="height: 400px" />
+          <html-editor v-model="character.appearance" />
           <h6>Background</h6>
-          <html-editor v-model="character.background" style="height: 400px" />
+          <html-editor v-model="character.background" />
         </template>
         <section v-else class="page-edit-character__preview">
           <character-profile :character="character" :show-edit-link="false" />
