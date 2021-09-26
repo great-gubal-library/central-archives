@@ -12,7 +12,11 @@
           <img :src="character.avatar" />
         </q-avatar>
       </div>
-      <h2>{{ character.name }}</h2>
+      <div class="character-profile__header-names">
+        <div v-if="character.title" class="character-profile__header-subtitle">{{ character.title }}</div>
+        <h2 class="character-profile__header-title">{{ character.name }}</h2>
+        <div v-if="character.nickname" class="character-profile__header-subtitle">«{{ character.nickname }}»</div>
+      </div>
       <div class="layout__filler"></div>
     </header>
     <q-card>
@@ -72,12 +76,8 @@
         <div class="col-12 col-md-6">
           <table>
             <tr>
-              <td>Title</td>
-              <td>{{ character.title }}</td>
-            </tr>
-            <tr>
-              <td>Nickname</td>
-              <td>{{ character.nickname }}</td>
+              <td>Loves</td>
+              <td>{{ character.loves }}</td>
             </tr>
             <tr>
               <td>Motto</td>
@@ -86,10 +86,6 @@
           </table>
         </div>
         <div class="col-12 col-md-6">
-          <tr>
-            <td>Loves</td>
-            <td>{{ character.loves }}</td>
-          </tr>
           <tr>
             <td>Hates</td>
             <td>{{ character.hates }}</td>
@@ -145,6 +141,22 @@ export default class CharacterProfile extends Vue.with(Props) {
 
 .character-profile__header {
   display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.character-profile__header-title {
+  margin: 0;
+  line-height: auto;
+}
+
+.character-profile__header-names {
+  text-align: center;
+}
+
+.character-profile__header-subtitle {
+  font-family: $header-font;
+  font-size: 1.4em;
 }
 
 .character-profile__details td {
