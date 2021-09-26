@@ -1,7 +1,7 @@
 <template>
   <editor
     class="html-editor"
-    api-key="no-api-key"
+    api-key="dnguuf3cwxakkez6t1njyi2m6gavgoa97jqo3yt8qoirudgb"
     :init="{
         inline: true,
         plugins: [
@@ -14,6 +14,7 @@
           alignleft aligncenter alignright alignjustify | \
           bullist numlist outdent indent | removeformat',
         toolbar_mode: 'wrap',
+        toolbar_persist: true,
         menu: {
           edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
           view: { title: 'View', items: 'code | visualaid visualchars visualblocks' },
@@ -85,6 +86,7 @@ export default class HtmlEditor extends Vue {
 <style lang="scss">
 .html-editor {
   height: 400px;
+  margin-top: 86px;
   background: white;
   border: 1px solid #aaa;
   padding: 8px;
