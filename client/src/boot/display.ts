@@ -1,6 +1,9 @@
 import { Race } from '@app/shared/enums/race.enum';
 import { boot } from 'quasar/wrappers';
 
+// This boot file adds a $display property to all Vue components, containing human-readable display names
+// for constants used in the code.
+
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $display: Display;
