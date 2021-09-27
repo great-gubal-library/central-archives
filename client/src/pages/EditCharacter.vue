@@ -13,6 +13,22 @@
             />
             <p></p>
             <p>All fields are optional.</p>
+            <h6>Profile display</h6>
+            <q-field class="page-edit-character__checkbox" borderless hint="Displays the character avatar to the left of their name.">
+              <template v-slot:control>
+                <q-checkbox v-model="character.showAvatar" label="Show avatar" />
+              </template>
+            </q-field>
+            <q-field class="page-edit-character__checkbox" borderless hint="Displays character information in infoboxes. If unchecked, all infoboxes will be hidden from the public profile page.">
+              <template v-slot:control>
+                <q-checkbox v-model="character.showInfoboxes" label="Show infoboxes" />
+              </template>
+            </q-field>
+            <q-field class="page-edit-character__checkbox" borderless hint="Uses a single &quot;Description&quot; field with no header instead of separate &quot;Outward appearance&quot; and &quot;Background&quot; with headers.">
+              <template v-slot:control>
+                <q-checkbox v-model="character.combinedDescription" label="Merge appearance and background" />
+              </template>
+            </q-field>
             <h6>Names</h6>
             <q-input v-model="character.title" label="Title" />
             <q-input v-model="character.nickname" label="Nickname" />
@@ -27,10 +43,12 @@
             <q-input v-model="character.motto" label="Motto" />
             <q-input v-model="character.motivation" label="Motivation" />
           </section>
-          <h6>Appearance</h6>
+          <h6>{{character.combinedDescription ? 'Description' : 'Appearance'}}</h6>
           <html-editor v-model="character.appearance" />
-          <h6>Background</h6>
-          <html-editor v-model="character.background" />
+          <template v-if="!character.combinedDescription">
+            <h6>Background</h6>
+            <html-editor v-model="character.background" />
+          </template>
           <section class="page-edit-character__form-controls">
             <h6>Carrd integration</h6>
             <q-input v-model="character.carrdProfile" label="Carrd profile" hint="Leave blank if you don't have a Carrd profile or don't want to it on your page.">
@@ -155,6 +173,10 @@ export default class PageEditCharacter extends Vue {
   max-width: 500px;
   flex-basis: 0;
   flex-grow: 1;
+}
+
+.page-edit-character__checkbox .q-field__bottom {
+  padding-top: 0;
 }
 
 .page-edit-character__preview {

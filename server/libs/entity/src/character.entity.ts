@@ -132,4 +132,22 @@ export class Character extends BasicEntity {
     default: ''
   })
 	carrdProfile: string;
+
+  @Column({
+    nullable: false,
+    default: true
+  })
+	showAvatar: boolean;
+
+  @Column({
+    nullable: false,
+    default: true
+  })
+	showInfoboxes: boolean;
+
+  @Column({
+    nullable: false,
+    default: false
+  })
+	combinedDescription: boolean;
 }

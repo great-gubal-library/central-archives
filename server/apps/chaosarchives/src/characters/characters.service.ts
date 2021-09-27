@@ -57,6 +57,9 @@ export class CharactersService {
       hates: character.hates,
       motivation: character.motivation,
       carrdProfile: character.carrdProfile,
+      showAvatar: character.showAvatar,
+      showInfoboxes: character.showInfoboxes,
+      combinedDescription: character.combinedDescription,
     };
   }
 
@@ -95,6 +98,9 @@ export class CharactersService {
 				hates: character.hates,
 				motivation: character.motivation,
         carrdProfile: character.carrdProfile,
+        showAvatar: character.showAvatar,
+        showInfoboxes: character.showInfoboxes,
+        combinedDescription: character.combinedDescription,
 			});
 
 			await repo.save(characterEntity);

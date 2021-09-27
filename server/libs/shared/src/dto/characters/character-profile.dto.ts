@@ -63,6 +63,15 @@ export class CharacterProfileDto {
 
   @IsString()
   carrdProfile: string;
+
+  @IsBoolean()
+  showAvatar: boolean;
+
+  @IsBoolean()
+  showInfoboxes: boolean;
+
+  @IsBoolean()
+  combinedDescription: boolean;
 	
 	constructor(properties?: Readonly<CharacterProfileDto>) {
     if (properties) {
