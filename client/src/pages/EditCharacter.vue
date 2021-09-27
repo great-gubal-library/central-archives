@@ -43,7 +43,7 @@
             <q-input v-model="character.motto" label="Motto" />
             <q-input v-model="character.motivation" label="Motivation" />
           </section>
-          <h6>{{character.combinedDescription ? 'Description' : 'Appearance'}}</h6>
+          <h6>{{character.combinedDescription ? 'Description' : 'Outward appearance'}}</h6>
           <html-editor v-model="character.appearance" />
           <template v-if="!character.combinedDescription">
             <h6>Background</h6>

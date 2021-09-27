@@ -111,6 +111,8 @@ export default class CharacterProfile extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
+@import url($extraGoogleFonts);
+
 .character-profile__banner {
   background: #80a0c0;
   color: white;
