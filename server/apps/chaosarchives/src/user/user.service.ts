@@ -1,6 +1,7 @@
 import { serverConfiguration } from '@app/configuration';
 import { Character, Server, User } from '@app/entity';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
+import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
@@ -305,5 +306,34 @@ export class UserService {
 
     const link = `${serverConfiguration.frontendRoot}/reset-password/${result.verificationCode}`;
     await this.mailService.sendPasswordResetMail(result.email, result.name, link);
+  }
+
+  async resetPassword(request: ResetPasswordRequestDto): Promise<void> {
+    const verified = await this.connection.transaction(async (em) => {
+      const repo = em.getRepository(User);
+      const user = await repo.findOne({
+        email: request.email,
+        verificationCode: request.verificationCode,
+      });
+
+      if (!user) {
+        throw new BadRequestException('Invalid email or verification code');
+      }
+
+      user.passwordHash = await hashPassword(request.password);
+
+      if (user.verifiedAt !== null) {
+        // User is already verified, so remove the verification code immediately so it cannot be used again.
+        // Otherwise, we reuse it to also confirm the email while we're at it.
+        user.verificationCode = null;
+      }
+
+      await this.userRepo.save(user);
+      return user.verifiedAt !== null;
+    });
+
+    if (!verified) {
+      await this.confirmEmail(request.verificationCode);
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
+import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
@@ -75,5 +76,10 @@ export class UserController {
   @Post('forgot-password')
   async forgotPassword(@Body() request: ForgotPasswordRequestDto): Promise<void> {
     await this.userService.forgotPassword(request);
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() request: ResetPasswordRequestDto): Promise<void> {
+    await this.userService.resetPassword(request);
   }
 }

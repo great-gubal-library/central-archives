@@ -4,6 +4,7 @@ import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
+import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import { UserLogInDto } from '@app/shared/dto/user/user-log-in.dto';
@@ -62,6 +63,10 @@ export default class API {
 
   async forgotPassword(forgotPasswordData: ForgotPasswordRequestDto): Promise<void> {
     await this.axios.post<void>('user/forgot-password', forgotPasswordData);
+  }
+
+  async resetPassword(resetPasswordData: ResetPasswordRequestDto): Promise<void> {
+    await this.axios.post<void>('user/reset-password', resetPasswordData);
   }
 
   async getSession(): Promise<SessionDto> {

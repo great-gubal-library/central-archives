@@ -30,6 +30,8 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    // Note that we do not use MainLayout here. Confirm email is a minimal page
+    // that redirects you to the verify page once the email is confirmed.
     path: '/confirm-email/:verificationToken',
     component: () => import('pages/ConfirmEmail.vue'),
   },
@@ -56,6 +58,12 @@ const routes: RouteRecordRaw[] = [
     path: '/forgot-password/:email',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/ForgotPassword.vue') }],
+  },
+
+  {
+    path: '/reset-password/:verificationToken',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/ResetPassword.vue') }],
   },
 
   // User actions
