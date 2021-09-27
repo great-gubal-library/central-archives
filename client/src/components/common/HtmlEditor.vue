@@ -103,7 +103,7 @@ const TINYMCE_OPTIONS = {
   },
 })
 export default class HtmlEditor extends Vue {
-  options = TINYMCE_OPTIONS;
+  readonly options = TINYMCE_OPTIONS;
 
   onInput(newValue: string) {
     this.$emit('update:modelValue', newValue);
