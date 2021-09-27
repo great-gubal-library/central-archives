@@ -121,7 +121,7 @@ export default class PageVerify extends Vue {
 
   private async refresh() {
 		try {
-			this.verificationStatus = await this.$api.getVerificationStatus();
+			this.verificationStatus = await this.$api.user.getVerificationStatus();
 
 			if (!this.verificationStatus.characterVerified) {
 				await this.refreshLodestoneStatus();
@@ -137,7 +137,7 @@ export default class PageVerify extends Vue {
       setTimeout(() => void this.refresh(), REFRESH_INTERVAL);
     } else {
 			// Update user role
-			const session = await this.$api.getSession();
+			const session = await this.$api.user.getSession();
 			this.$store.commit('setUser', session);
 		}
   }
@@ -151,9 +151,9 @@ export default class PageVerify extends Vue {
 				return;
 			}
 
-			await this.$api.verifyCharacter({ lodestoneId });
+			await this.$api.user.verifyCharacter({ lodestoneId });
 			// If we get here, this means character verification succeeded.
-			this.verificationStatus = await this.$api.getVerificationStatus();
+			this.verificationStatus = await this.$api.user.getVerificationStatus();
 		} catch (e) {
       if (errors.getStatusCode(e) !== 404) {
         console.log(e);

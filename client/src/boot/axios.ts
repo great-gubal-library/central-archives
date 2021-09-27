@@ -19,7 +19,7 @@ export default boot(async ({ app, store }) => {
 
   if (api.hasAccessToken()) {
     try {
-      const session = await api.getSession();
+      const session = await api.user.getSession();
       store.commit('setUser', session);
       console.log('user', (store.state as StateInterface).user);
     } catch (e) {

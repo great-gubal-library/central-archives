@@ -22,7 +22,7 @@ export default class PageConfirmEmail extends Vue {
 		});
 		
 		try {
-			await this.$api.confirmEmail({ code: verificationToken });
+			await this.$api.user.confirmEmail({ code: verificationToken });
 			this.$q.notify({
 				type: 'positive',
 				message: 'Your email address has been confirmed.'

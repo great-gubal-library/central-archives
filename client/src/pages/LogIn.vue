@@ -60,7 +60,7 @@ export default class PageLogIn extends Vue {
     this.loading = true;
 
     try {
-      const result = await this.$api.logIn({
+      const result = await this.$api.user.logIn({
         email: this.email,
         password: this.password,
       });

@@ -62,7 +62,7 @@ export default class PageLogIn extends Vue {
     this.loading = true;
 
     try {
-      await this.$api.forgotPassword({
+      await this.$api.user.forgotPassword({
         email: this.email,
       });
 

@@ -197,7 +197,7 @@ export default class PageSignUp extends Vue {
     this.loading = true;
 
     try {
-      const result = await this.$api.signUp({
+      const result = await this.$api.user.signUp({
         email: this.email,
         password: this.password,
         confirmPassword: this.confirmPassword,
