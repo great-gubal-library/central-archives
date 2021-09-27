@@ -36,11 +36,11 @@ export default class API {
 
   // Character profile
   async getCharacterProfile(name: string, server: string): Promise<CharacterProfileDto> {
-    return this.transport.authGet<CharacterProfileDto>(`characters/profile/${server}/${name}`);
+    return this.transport.get<CharacterProfileDto>(`characters/profile/${server}/${name}`);
   }
 
   async getCharacterProfiles(): Promise<NewProfileDto[]> {
-    return this.transport.authGet<NewProfileDto[]>('characters');
+    return this.transport.get<NewProfileDto[]>('characters');
   }
 
   async saveCharacter(character: CharacterProfileDto): Promise<void> {
