@@ -111,7 +111,7 @@
 
 <script lang="ts">
 import SharedConstants from '@app/shared/SharedConstants';
-import minXIVAPI from 'src/util/xivapi-min';
+import minXIVAPI from 'src/common/xivapi-min';
 import rules from 'src/markdown/rules.md';
 import { Vue } from 'vue-class-component';
 import errors from '@app/shared/errors';
