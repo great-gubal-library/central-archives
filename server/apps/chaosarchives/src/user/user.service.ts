@@ -291,7 +291,7 @@ export class UserService {
       // Note that we intentionally don't check verifiedAt. If the user is unverified,
       // clicking the password reset link will silently double as email verification.
       user.verificationCode = generateVerificationCode();
-      repo.save(user);
+      await repo.save(user);
       
       return {
         email: user.email,
