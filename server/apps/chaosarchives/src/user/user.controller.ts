@@ -1,3 +1,4 @@
+import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
@@ -69,5 +70,10 @@ export class UserController {
   async verifyCharacter(@CurrentUser() user: UserInfo, @Body() verifyData: VerifyCharacterDto): Promise<void> {
     await this.userService.verifyCharacter(user, verifyData);
     await this.publicAuthService.notifyUserChanged(user.id);
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() request: ForgotPasswordRequestDto): Promise<void> {
+    await this.userService.forgotPassword(request);
   }
 }

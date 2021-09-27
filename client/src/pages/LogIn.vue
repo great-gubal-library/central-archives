@@ -31,6 +31,9 @@
           </template>
         </q-input>
       </section>
+      <p>
+        <router-link :to="`/forgot-password/${email}`">Forgot your password?</router-link>
+      </p>
       <div class="page-login__button-bar">
         <q-btn
           label="Log in"

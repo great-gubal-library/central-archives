@@ -1,12 +1,19 @@
 <template>
-  <q-list dense dark>
+  <q-list class="user-menu" dense dark>
     <template v-if="!$store.state.user">
       <q-item-label header> User </q-item-label>
-      <q-item>
+      <q-item class="user-menu__button-bar">
         <q-item-section>
           <q-item-label>
             <q-btn color="green-7" label="Sign up" to="/signup" />&nbsp;
             <q-btn color="grey-7" label="Log in" to="/login" />
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-item clickable v-ripple to="/forgot-password">
+        <q-item-section>
+          <q-item-label>
+            Forgot your password?
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -95,11 +102,7 @@ export default class UserMenu extends Vue {
 </script>
 
 <style lang="scss">
-.new-profile-list .q-item {
-  background: $blue-1;
-}
-
-.new-profile-list .q-item:nth-child(even) {
-  background: rgba($blue-2, 0.4);
+.user-menu__button-bar {
+  margin-bottom: 8px;
 }
 </style>

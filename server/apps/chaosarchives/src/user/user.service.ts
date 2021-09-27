@@ -1,5 +1,6 @@
 import { serverConfiguration } from '@app/configuration';
 import { Character, Server, User } from '@app/entity';
+import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
@@ -246,6 +247,7 @@ export class UserService {
       return;
     }
 
+    // Assumes one character per user. This is safe because unverified users always have exactly one character.
     const character = await em.getRepository(Character).findOne({
       where: {
         user: {
@@ -261,5 +263,47 @@ export class UserService {
     const savedUser = user;
     savedUser.role = Role.USER;
     await this.userRepo.save(savedUser);
+  }
+
+  async forgotPassword(request: ForgotPasswordRequestDto): Promise<void> {
+    const result = await this.connection.transaction(async (em) => {
+      const repo = em.getRepository(User);
+      const user = await repo.findOne({
+        email: request.email,
+      });
+
+      if (!user) {
+        // No such email in the database. Don't do anything, but don't reveal this to the client
+        return null;
+      }
+
+      // TODO: Assumes one character per user
+      const character = await em.getRepository(Character).findOne({
+        where: {
+          user: {
+            id: user.id
+          },
+        },
+        select: [ 'name' ]
+      });
+
+      // Note that we intentionally don't check verifiedAt. If the user is unverified,
+      // clicking the password reset link will silently double as email verification.
+      user.verificationCode = generateVerificationCode();
+      repo.save(user);
+      
+      return {
+        email: user.email,
+        name: character ? character.name : user.email,
+        verificationCode: user.verificationCode
+      };
+    });
+
+    if (!result) {
+      return;
+    }
+
+    const link = `${serverConfiguration.frontendRoot}/reset-password/${result.verificationCode}`;
+    await this.mailService.sendPasswordResetMail(result.email, result.name, link);
   }
 }

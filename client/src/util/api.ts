@@ -2,6 +2,7 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
@@ -57,6 +58,10 @@ export default class API {
 
   async logIn(loginData: UserLogInDto): Promise<LoginResponseDto> {
     return (await this.axios.post<LoginResponseDto>('user/login', loginData)).data;
+  }
+
+  async forgotPassword(forgotPasswordData: ForgotPasswordRequestDto): Promise<void> {
+    await this.axios.post<void>('user/forgot-password', forgotPasswordData);
   }
 
   async getSession(): Promise<SessionDto> {

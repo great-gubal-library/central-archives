@@ -46,6 +46,18 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Verify.vue') }],
   },
 
+  {
+    path: '/forgot-password',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/ForgotPassword.vue') }],
+  },
+
+  {
+    path: '/forgot-password/:email',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/ForgotPassword.vue') }],
+  },
+
   // User actions
   {
     path: '/edit-character',

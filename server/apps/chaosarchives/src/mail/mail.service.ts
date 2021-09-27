@@ -16,4 +16,16 @@ export class MailService {
 			}
 		});
 	}
+
+  async sendPasswordResetMail(email: string, name: string, resetLink: string): Promise<void> {
+		return this.mailerService.sendMail({
+			to: email,
+			subject: 'Your password reset link',
+			template: './reset-password',
+			context: {
+				name,
+				resetLink
+			}
+		});
+	}
 }
