@@ -254,7 +254,8 @@ export class UserService {
         user: {
           id: user.id
         }
-      }
+      },
+      select: [ 'id', 'verifiedAt' ]
     });
 
     if (!character || character.verifiedAt === null) {
