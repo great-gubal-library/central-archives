@@ -45,10 +45,14 @@ export class CarrdService {
 
 		// Rewrite CSS URLs
 		for (const style of doc.querySelectorAll('style')) {
-			const newContent = style.textContent.replace(this.URL_IN_CSS_REGEX, (_, src) => {
+			let newContent = style.textContent.replace(this.URL_IN_CSS_REGEX, (_, src) => {
 				const newSrc = this.rewriteUrl(baseUrl, src);
 				return `url('${newSrc}')`;
 			});
+
+			// Remove min-width: var(--viewport-height) to allow iframe content to downsize
+			newContent = newContent.replace(/var\(--viewport-height\)/g, 'auto');
+
 			style.textContent = newContent;
 		}
 
