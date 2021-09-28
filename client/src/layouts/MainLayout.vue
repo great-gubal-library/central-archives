@@ -121,7 +121,7 @@
     <q-footer elevated>
       <q-toolbar>
         <div class="layout__filler text-body justify-center text-center">
-          Final Fantasy XIV is © 2010&ndash;2021 Square Enix Holdings Co., Ltd. All rights reserved.<br />
+          Final Fantasy XIV is © 2010&ndash;2021 Square Enix Co., Ltd. All rights reserved.<br />
           All text and images on this site are © 2021 by their respective owners.
         </div>
       </q-toolbar>
