@@ -40,7 +40,13 @@ export class CarrdService {
 
 		// Rewrite image URLs
 		for (const img of doc.querySelectorAll('img')) {
-			img.setAttribute('src', this.rewriteUrl(baseUrl, img.getAttribute('src') || ''));
+			for (const attribute of [ 'src', 'data-src' ]) {
+				const value = img.getAttribute(attribute);
+
+				if (value) {
+					img.setAttribute(attribute, this.rewriteUrl(baseUrl, value));
+				}
+			}
 		}
 
 		// Rewrite CSS URLs
