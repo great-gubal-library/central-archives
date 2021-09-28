@@ -147,7 +147,7 @@ export default class MainLayout extends Vue {
 
   readonly navbarLinks = [
     { label: 'Rules', to: '/rules' },
-    { label: 'Contact', to: '' },
+    { label: 'Contact', to: '/contact' },
   ];
 
   readonly siteLinks = [

@@ -21,6 +21,12 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Rules.vue') }],
   },
 
+  {
+    path: '/contact',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Contact.vue') }],
+  },
+
   // User actions
 
   {
