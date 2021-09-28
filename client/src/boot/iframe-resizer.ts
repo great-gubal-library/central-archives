@@ -9,7 +9,7 @@ interface IFrameObject extends iFrameResize.IFrameObject {
 }
 
 interface IFrameElement extends HTMLIFrameElement {
-	iFrameResizer: IFrameObject;
+	iFrameResizer?: IFrameObject;
 }
 
 export default boot(({ app }) => {
@@ -19,7 +19,9 @@ export default boot(({ app }) => {
 		},
 
 		unmounted(el: IFrameElement) {
-			el.iFrameResizer.removeListeners();
+			if (el.iFrameResizer) {
+				el.iFrameResizer.removeListeners();
+			}
 		}
 	})
 });
