@@ -329,7 +329,7 @@ export class UserService {
         user.verificationCode = null;
       }
 
-      await this.userRepo.save(user);
+      await repo.save(user);
       return user.verifiedAt !== null;
     });
 
