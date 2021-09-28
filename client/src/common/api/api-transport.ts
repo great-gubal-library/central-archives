@@ -63,20 +63,22 @@ export default class APITransport {
 
 	// Requests with an access token
 
-	private getAuthConfig(queryParams?: { [k: string]: string }): AxiosRequestConfig {
+	private getAuthConfig(queryParams?: { [k: string]: string }, requireToken = true): AxiosRequestConfig {
 		const accessToken = this.getAccessToken();
 
-		if (!accessToken) {
+		if (requireToken && !accessToken) {
 			throw new Error();
 		}
 
 		return {
-      headers: {
+      headers: accessToken ? {
         Authorization: `Bearer ${accessToken}`
-      },
+      } : {},
 			params: queryParams
     }
 	}
+
+	// Token required
 
 	async authGet<R>(path: string, queryParams?: { [k: string]: string }): Promise<R> {
 		return (await this.axios.get<R>(path, this.getAuthConfig(queryParams))).data;
@@ -92,6 +94,12 @@ export default class APITransport {
 
 	async authDelete<R>(path: string, queryParams?: { [k: string]: string }): Promise<R> {
 		return (await this.axios.delete<R>(path, this.getAuthConfig(queryParams))).data;
+	}
+
+	// Token optional
+
+	async tokenGet<R>(path: string, queryParams?: { [k: string]: string }): Promise<R> {
+		return (await this.axios.get<R>(path, this.getAuthConfig(queryParams, false))).data;
 	}
 }
 
