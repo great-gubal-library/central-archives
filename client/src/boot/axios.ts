@@ -1,8 +1,7 @@
-import { boot } from 'quasar/wrappers';
-import axios, { AxiosInstance } from 'axios';
-import API from 'src/common/api';
 import errors from '@app/shared/errors';
-import { StateInterface } from 'src/store';
+import axios, { AxiosInstance } from 'axios';
+import { boot } from 'quasar/wrappers';
+import API from 'src/common/api';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
