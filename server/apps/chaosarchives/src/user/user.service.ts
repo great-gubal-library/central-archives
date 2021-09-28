@@ -264,7 +264,7 @@ export class UserService {
 
     const savedUser = user;
     savedUser.role = Role.USER;
-    await this.userRepo.save(savedUser);
+    await em.getRepository(User).save(savedUser);
   }
 
   async forgotPassword(request: ForgotPasswordRequestDto): Promise<void> {
