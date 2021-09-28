@@ -76,8 +76,6 @@ export class CarrdService {
 					link.setAttribute('target', '_blank');
 				}
 			}
-
-			
 		}
 
 		// Inject iframe resizer JavaScript
