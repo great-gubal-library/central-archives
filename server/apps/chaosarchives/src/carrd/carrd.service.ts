@@ -52,6 +52,15 @@ export class CarrdService {
 			style.textContent = newContent;
 		}
 
+		// Rewrite external links to use target="_blank"
+		for (const link of doc.querySelectorAll('a')) {
+			const href = link.getAttribute('href');
+
+			if (href && this.ABSOLUTE_URL_REGEX.test(href)) {
+				link.setAttribute('target', '_blank');
+			}
+		}
+
 		// Inject iframe resizer JavaScript
 		const head = doc.querySelector('head');
 		head.insertAdjacentHTML('beforeend', "<script src='/js/iframeResizer.contentWindow.min.js'></script>");
