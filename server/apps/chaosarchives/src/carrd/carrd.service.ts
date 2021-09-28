@@ -52,6 +52,7 @@ export class CarrdService {
 
 			// Remove min-width: var(--viewport-height) to allow iframe content to downsize
 			newContent = newContent.replace(/var\(--viewport-height\)/g, 'auto');
+			newContent = newContent.replace(/min-height:\s*100vh;/g, '');
 
 			style.textContent = newContent;
 		}
