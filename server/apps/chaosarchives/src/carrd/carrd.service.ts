@@ -63,13 +63,21 @@ export class CarrdService {
 			style.textContent = newContent;
 		}
 
-		// Rewrite external links to use target="_blank"
+		// Rewrite links
 		for (const link of doc.querySelectorAll('a')) {
 			const href = link.getAttribute('href');
 
-			if (href && this.ABSOLUTE_URL_REGEX.test(href)) {
-				link.setAttribute('target', '_blank');
+			if (href) {
+				if (href.startsWith(baseUrl)) {
+					// Some Carrd profiles actually have absolute links to their own address. Relativize them.
+					link.setAttribute('href', href.replace(baseUrl, ''));
+				} else if (this.ABSOLUTE_URL_REGEX.test(href)) {
+					// Open external links in new tabs
+					link.setAttribute('target', '_blank');
+				}
 			}
+
+			
 		}
 
 		// Inject iframe resizer JavaScript
