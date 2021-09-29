@@ -77,8 +77,20 @@ a {
 	color: $indigo-8;
 }
 
+.q-page a:visited {
+	color: $blue-grey-8;
+}
+
+.q-page a.q-item:visited {
+	color: inherit;
+}
+
 .q-page a:hover {
-	color: $blue-8;
+	color: $deep-orange-8;
+}
+
+.q-page a.q-item:hover {
+	color: inherit;
 }
 
 ol li {

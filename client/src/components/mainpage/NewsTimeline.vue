@@ -66,16 +66,11 @@ export default class NewsTimeline extends Vue {
 }
 
 .news-timeline__link {
-  color: $blue-grey-8;
   text-decoration: inherit;
   border: inherit;
 }
 
 .news-timeline__blurb {
   text-align: center;
-}
-
-.news-timeline__link:hover {
-  color: $blue-grey-6;
 }
 </style>
