@@ -48,7 +48,7 @@ export class EventsService {
 		const doc = parse(response.data);
 
 		// Sidebar events are unreliable, so we query the calendar instead
-		const calendarItems = doc.querySelectorAll('.jet-listing-calendar .jet-calendar-week__day.has-events .jet-engine-listing-overlay-wrap');
+		const calendarItems = doc.querySelectorAll('.jet-listing-calendar .jet-calendar-week__day .jet-engine-listing-overlay-wrap');
 
 		// Query linked pages in parallel
 		const result: (EventDto|null)[] = await Promise.all(calendarItems.map(async calendarItem => {
@@ -107,10 +107,10 @@ export class EventsService {
 			}
 		}));
 		
-		const now = Date.now();
+		const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day').toMillis();
 
 		return (result.filter(event => event !== null) as EventDto[])
-			.filter(event => event.date >= now && !event.name.includes('OOC'))
+			.filter(event => event.date >= startOfDay && !event.name.includes('OOC'))
 			.sort((e1, e2) => utils.compareNumbers(e1.date, e2.date))
 			.slice(0, this.MAX_RESULTS);
 	}
