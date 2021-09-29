@@ -73,11 +73,11 @@ form h6 {
 
 a {
 	text-decoration: none;
-	color: $indigo-8;
+	color: $link-color;
 }
 
 .q-page a:visited {
-	color: #667280;
+	color: $link-visited-color;
 }
 
 .q-page a.q-item:visited {
@@ -85,7 +85,7 @@ a {
 }
 
 .q-page a:hover {
-	color: $deep-orange-8;
+	color: $link-hover-color;
 }
 
 .q-page a.q-item:hover {

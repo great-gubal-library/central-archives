@@ -73,4 +73,8 @@ export default class NewsTimeline extends Vue {
 .news-timeline__blurb {
   text-align: center;
 }
+
+.news-timeline__header a, .news-timeline__blurb a {
+  color: $link-visited-color;
+}
 </style>
