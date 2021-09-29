@@ -193,7 +193,8 @@ export default class MainLayout extends Vue {
   $max-layout-width: 1280px;
 
   .q-layout {
-    box-shadow: rgba(black, 0.2) 8px 0px 4px, rgba(black, 0.2) -8px 0 4px;
+    /* box-shadow: rgba(black, 0.2) 8px 0px 4px, rgba(black, 0.2) -8px 0 4px; */
+    outline: 1px solid #505050;
   }
 
   .layout__filler {
