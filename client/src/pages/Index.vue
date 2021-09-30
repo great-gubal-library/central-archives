@@ -179,59 +179,6 @@ import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.
   },
 })
 export default class PageIndex extends Vue {
-  readonly stories = [
-    {
-      title: 'Lurkers in the Grotto',
-      author: 'Vielle Janlenoux',
-      date: '1 hour ago',
-    },
-    {
-      title: 'Dressed to Call',
-      author: 'Vielle Janlenoux',
-      date: '2 hours ago',
-    },
-    {
-      title: 'On to Summerford',
-      author: 'Vielle Janlenoux',
-      date: '3 hours ago',
-    },
-    { title: 'Close to Home', author: 'Vielle Janlenoux', date: '4 hours ago' },
-  ];
-
-  readonly noticeboard = [
-    {
-      title: 'Call to Adventure',
-      author: 'Vielle Janlenoux',
-      location: 'Limsa Lominsa',
-      date: '1 hour ago',
-    },
-    {
-      title: 'Tavern Opened',
-      author: 'Vielle Janlenoux',
-      location: 'Gridania',
-      date: '2 hours ago',
-    },
-    {
-      title: 'Travel Advisory',
-      author: 'Vielle Janlenoux',
-      location: "Ul'dah",
-      date: '3 hours ago',
-    },
-    {
-      title: 'Job Offer',
-      author: 'Vielle Janlenoux',
-      location: 'Multiple',
-      date: '4 hours ago',
-    },
-  ];
-
-  readonly newFCs = [
-    { name: "Wanderer' Alliance" },
-    { name: 'Unsung Tide' },
-    { name: 'Crossed Paths' },
-    { name: 'The Silver Mark' },
-  ];
-
   content: MainPageContentDto | null = null;
 
   async created() {
