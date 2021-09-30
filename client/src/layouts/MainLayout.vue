@@ -25,9 +25,7 @@
 
         <q-toolbar-title class="layout__toolbar-title text-center">
           <router-link to="/">
-            <svg style="width: 223px; height: 31px" viewBox="0 0 223 31">
-              <text x="0" y="27">Chaos Archives</text>
-            </svg>
+            <inline-svg :src="require('src/assets/logo.svg')" />
           </router-link>
         </q-toolbar-title>
 
@@ -138,11 +136,13 @@
 import { Vue, Options } from 'vue-class-component'
 import EventList from '../components/eventbar/EventList.vue'
 import UserMenu from '../components/sidebar/UserMenu.vue'
+import InlineSvg from 'vue-inline-svg';
 
 @Options({
   components: {
     EventList,
-    UserMenu
+    UserMenu,
+    InlineSvg,
   }
 })
 export default class MainLayout extends Vue {
@@ -238,15 +238,16 @@ export default class MainLayout extends Vue {
   }
 
   .layout__toolbar-title svg {
+    width: 400px;
     max-width: 100%;
   }
 
-  .layout__toolbar-title text {
-    fill: white;
+  .layout__toolbar-title g {
+    fill: #f8f8f8!important;
   }
 
-  .layout__toolbar-title:hover text {
-    fill: #e8e8e8;
+  .layout__toolbar-title:hover g {
+    fill: #e8e8e8!important;
   }
 
   .layout__toolbar-buton-more {
