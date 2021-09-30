@@ -35,7 +35,7 @@
           <q-btn-group flat class="gt-sm">
             <q-btn v-for="link in navbarLinks" stretch flat :key="link.label" :label="link.label" :to="link.to" />
           </q-btn-group>
-          <q-btn-dropdown flat class="lt-md" dropdown-icon="more_horiz">
+          <q-btn-dropdown flat class="layout__toolbar-buton-more lt-md" dropdown-icon="more_horiz">
             <q-list>
               <q-item
                 v-for="link in navbarLinks"
@@ -233,6 +233,8 @@ export default class MainLayout extends Vue {
   .q-toolbar__title {
     font-family: Michroma, sans-serif;
     font-weight: bold;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .layout__toolbar-title svg {
@@ -245,6 +247,11 @@ export default class MainLayout extends Vue {
 
   .layout__toolbar-title:hover text {
     fill: #e8e8e8;
+  }
+
+  .layout__toolbar-buton-more {
+    padding-left: 4px;
+    padding-right: 4px;
   }
 
   .q-header {
