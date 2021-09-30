@@ -277,6 +277,18 @@ export default class MainLayout extends Vue {
   .q-page {
     padding: 24px 24px 48px 24px;
   }
+
+  @media screen and (max-width: $breakpoint-sm) {
+    .q-page {
+      padding: 18px 18px 36px 18px;
+    }
+  }
+
+  @media screen and (max-width: $breakpoint-xs) {
+    .q-page {
+      padding: 12px 12px 24px 12px;
+    }
+  }
   
   .q-footer {
     background: #795548;
