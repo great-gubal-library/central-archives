@@ -1,4 +1,5 @@
 import { route } from 'quasar/wrappers';
+import { nextTick } from 'vue';
 import {
   createMemoryHistory,
   createRouter,
@@ -22,7 +23,7 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     ? createMemoryHistory
     : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
 
-  const Router = createRouter({
+  const router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
 
@@ -34,5 +35,18 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     ),
   });
 
-  return Router;
+  router.afterEach((to) => {
+    let title = to.meta.title;
+
+    if (typeof title === 'function') {
+      title = title(to);
+    }
+
+    // nextTick is necessary here to properly record browser history
+    void nextTick(() => {
+      document.title = (title ? `${title as string} — ` : '') + 'Chaos Archives';
+    });
+  });
+
+  return router;
 });

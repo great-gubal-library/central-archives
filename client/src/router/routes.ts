@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -13,18 +13,27 @@ const routes: RouteRecordRaw[] = [
     path: '/about',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/About.vue') }],
+    meta: {
+      title: 'About'
+    },
   },
 
   {
     path: '/rules',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Rules.vue') }],
+    meta: {
+      title: 'Rules'
+    },
   },
 
   {
     path: '/contact',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Contact.vue') }],
+    meta: {
+      title: 'Contact'
+    },
   },
 
   // User actions
@@ -33,6 +42,9 @@ const routes: RouteRecordRaw[] = [
     path: '/signup',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/SignUp.vue') }],
+    meta: {
+      title: 'Sign Up'
+    },
   },
 
   {
@@ -40,36 +52,54 @@ const routes: RouteRecordRaw[] = [
     // that redirects you to the verify page once the email is confirmed.
     path: '/confirm-email/:verificationToken',
     component: () => import('pages/ConfirmEmail.vue'),
+    meta: {
+      title: 'Confirm Email'
+    },
   },
 
   {
     path: '/login',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/LogIn.vue') }],
+    meta: {
+      title: 'Log In'
+    },
   },
 
   {
     path: '/verify',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Verify.vue') }],
+    meta: {
+      title: 'Verify Account'
+    },
   },
 
   {
     path: '/forgot-password',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/ForgotPassword.vue') }],
+    meta: {
+      title: 'Forgot Password'
+    },
   },
 
   {
     path: '/forgot-password/:email',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/ForgotPassword.vue') }],
+    meta: {
+      title: 'Forgot Password'
+    },
   },
 
   {
     path: '/reset-password/:verificationToken',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/ResetPassword.vue') }],
+    meta: {
+      title: 'Reset Password'
+    },
   },
 
   // User actions
@@ -77,6 +107,9 @@ const routes: RouteRecordRaw[] = [
     path: '/edit-character',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditCharacter.vue') }],
+    meta: {
+      title: 'Edit Profile'
+    },
   },
 
   // Characters
@@ -84,12 +117,20 @@ const routes: RouteRecordRaw[] = [
     path: '/profiles',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Characters.vue') }],
+    meta: {
+      title: 'Profiles'
+    },
   },
 
   {
     path: '/:server([A-Z][a-z]+)/:character([^/]+)',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Character.vue') }],
+    meta: {
+      title(route: RouteLocationNormalized): string {
+        return (route.params.character as string).replace('_', ' ');
+      }
+    },
   },
 
   // Always leave this as last one,
@@ -97,6 +138,9 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/Error404.vue'),
+    meta: {
+      title: 'Error'
+    },
   },
 ];
 
