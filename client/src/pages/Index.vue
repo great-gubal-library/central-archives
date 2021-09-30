@@ -87,7 +87,7 @@
       </section>
       -->
       <section>
-        <h5>New profiles</h5>
+        <h5><router-link to="/profiles">New profiles</router-link></h5>
         <new-profile-list :profiles="content.newProfiles" />
         <!--
         <div class="index__profile-fc-col">
