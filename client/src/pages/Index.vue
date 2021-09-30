@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <template v-if="content">
+    <template v-if="loaded">
       <news-timeline :news="content.news" />
       <!--
       <section>
@@ -179,11 +179,23 @@ import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.
   },
 })
 export default class PageIndex extends Vue {
-  content: MainPageContentDto | null = null;
+  content: MainPageContentDto = {
+    news: [],
+    newsUpToDate: false,
+    newProfiles: [],
+  };
+
+  loaded = false;
 
   async created() {
     try {
       this.content = await this.$api.getMainPageContent();
+      this.loaded = true;
+
+      if (!this.content.newsUpToDate) {
+        // Update news later without blocking page load
+        void this.updateNews();
+      }
     } catch (e) {
       console.log(e);
       this.$q.notify({
@@ -191,6 +203,10 @@ export default class PageIndex extends Vue {
 				message: 'Cannot retrieve main page'
 			});
     }
+  }
+
+  private async updateNews() {
+    this.content.news = await this.$api.getUpdatedNews();
   }
 }
 </script>

@@ -3,12 +3,19 @@ import { HttpService, Injectable } from '@nestjs/common';
 import parse from 'node-html-parser';
 import { JSDOM } from 'jsdom';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
+import { DateTime, Duration } from 'luxon';
+
+export enum NewsCacheType {
+	LONG, SHORT
+}
 
 @Injectable()
 export class NewsService {
 	private readonly NEWS_SITE = 'https://crescentmoonpublishing.com/feed/';
 
-	private readonly CACHE_DURATION_SEC = 5 * 60;
+	private readonly CACHE_DURATION_LONG_SEC = 86400;
+
+	private readonly CACHE_DURATION_SHORT_MS = Duration.fromObject({ minutes: 5 }).toMillis();
 
 	constructor(
 		@InjectRedis()
@@ -16,17 +23,34 @@ export class NewsService {
 		private httpService: HttpService,
 	) { }
 
-	async getNews(): Promise<NewsDto[]> {
-		const cachedNews = await this.redisService.get('news');
+	async getNews(cacheType: NewsCacheType = NewsCacheType.LONG): Promise<{ news: NewsDto[], newsUpToDate: boolean }> {
+		const [ cachedNews, newsTimestamp ] = await Promise.all([
+			this.redisService.get('news'),
+			this.redisService.get('newsTimestamp'),
+		]);
 
 		if (cachedNews) {
-			return JSON.parse(cachedNews);
+			let newsUpToDate = false;
+
+			if (newsTimestamp) {
+				const date = DateTime.fromMillis(parseInt(newsTimestamp, 10));
+				if (DateTime.now().diff(date).toMillis() <= this.CACHE_DURATION_SHORT_MS) {
+					// Still up to date
+					newsUpToDate = true;
+				}
+			}
+			
+			if (cacheType === NewsCacheType.LONG || newsUpToDate) {
+				// On initial load, even old news is better than nothing
+				return { news: JSON.parse(cachedNews), newsUpToDate };
+			}
 		}
 
-		// Not cached - fetch and cache
+		// Not cached, or cache is obsolete - fetch and cache
 		const news = await this.fetchNews();
-		this.redisService.set('news', JSON.stringify(news), 'ex', this.CACHE_DURATION_SEC); // Intentionally no await
-		return news;
+		this.redisService.set('news', JSON.stringify(news), 'ex', this.CACHE_DURATION_LONG_SEC); // Intentionally no await
+		this.redisService.set('newsTimestamp', Date.now.toString(), 'ex', this.CACHE_DURATION_LONG_SEC);
+		return { news, newsUpToDate: true };
 	}
 
 	private async fetchNews(): Promise<NewsDto[]> {

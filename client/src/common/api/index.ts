@@ -2,6 +2,7 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { NewsDto } from '@app/shared/dto/news/news.dto';
 import APITransport from './api-transport';
 import UserAPI from './user-api';
 
@@ -28,6 +29,10 @@ export default class API {
 
   async getMainPageContent(): Promise<MainPageContentDto> {
     return this.transport.get<MainPageContentDto>('main-page');
+  }
+
+  async getUpdatedNews(): Promise<NewsDto[]> {
+    return this.transport.get<NewsDto[]>('main-page/news');
   }
 
   async getEvents(): Promise<EventDto[]> {
