@@ -31,7 +31,7 @@
         }}</a>
       </template>
       <div class="row justify-center">
-        <div class="col" style="max-width: 300px; min-width: 200px">
+        <div class="col news-timeline__image-container">
           <q-img :src="entry.image" />
         </div>
         <div class="col" style="padding-left: 6px; min-width: 300px">
@@ -76,5 +76,10 @@ export default class NewsTimeline extends Vue {
 
 .news-timeline__header a, .news-timeline__blurb a {
   color: $link-visited-color;
+}
+
+.row > .news-timeline__image-container {
+  max-width: 250px;
+  min-width: 175px;
 }
 </style>
