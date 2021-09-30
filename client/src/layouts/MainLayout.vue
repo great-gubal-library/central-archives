@@ -24,7 +24,11 @@
         </div>
 
         <q-toolbar-title class="layout__toolbar-title text-center">
-          <router-link to="/">Chaos Archives</router-link>
+          <router-link to="/">
+            <svg style="width: 223px; height: 31px" viewBox="0 0 223 31">
+              <text x="0" y="27">Chaos Archives</text>
+            </svg>
+          </router-link>
         </q-toolbar-title>
 
         <div class="layout__filler justify-end">
@@ -226,8 +230,21 @@ export default class MainLayout extends Vue {
 	  border-bottom: none;
   }
 
-  .layout__toolbar-title a:hover {
-    color: #e8e8e8;
+  .q-toolbar__title {
+    font-family: Michroma, sans-serif;
+    font-weight: bold;
+  }
+
+  .layout__toolbar-title svg {
+    max-width: 100%;
+  }
+
+  .layout__toolbar-title text {
+    fill: white;
+  }
+
+  .layout__toolbar-title:hover text {
+    fill: #e8e8e8;
   }
 
   .q-header {
@@ -256,11 +273,6 @@ export default class MainLayout extends Vue {
 
   .q-drawer .q-list a {
     border-bottom: none;
-  }
-
-  .q-toolbar__title {
-    font-family: Michroma, sans-serif;
-    font-weight: bold;
   }
 
   .layout__create-content-list {
