@@ -101,7 +101,13 @@ module.exports = configure(function (ctx) {
 
     // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
-      config: {},
+      config: {
+        loadingBar: {
+          position: 'bottom',
+          color: 'accent',
+          size: '10px',
+        }
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
@@ -116,6 +122,7 @@ module.exports = configure(function (ctx) {
       // Quasar plugins
       plugins: [
         'Loading',
+        'LoadingBar',
         'LocalStorage',
         'Notify',
       ]
