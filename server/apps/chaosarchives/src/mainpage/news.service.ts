@@ -49,7 +49,7 @@ export class NewsService {
 		// Not cached, or cache is obsolete - fetch and cache
 		const news = await this.fetchNews();
 		this.redisService.set('news', JSON.stringify(news), 'ex', this.CACHE_DURATION_LONG_SEC); // Intentionally no await
-		this.redisService.set('newsTimestamp', Date.now.toString(), 'ex', this.CACHE_DURATION_LONG_SEC);
+		this.redisService.set('newsTimestamp', Date.now().toString(), 'ex', this.CACHE_DURATION_LONG_SEC);
 		return { news, newsUpToDate: true };
 	}
 
