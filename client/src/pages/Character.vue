@@ -13,10 +13,17 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import errors from '@app/shared/errors';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
 import { Options, Vue } from 'vue-class-component';
+import { RouteParams } from 'vue-router';
 
 @Options({
 	components: {
 		CharacterProfile
+	},
+	beforeRouteEnter(to, _, next) {
+		next(vm => (vm as PageCharacter).load(to.params));
+	},
+	async beforeRouteUpdate(to) {
+		await (this as PageCharacter).load(to.params);
 	}
 })
 export default class PageCharacter extends Vue {
@@ -25,9 +32,9 @@ export default class PageCharacter extends Vue {
 	private character: CharacterProfileDto = new CharacterProfileDto();
 	private notFound = false;
 
-	async created() {
-		this.server = this.$route.params.server as string;
-		this.name = this.$route.params.character as string;
+	private async load(params: RouteParams) {
+		this.server = params.server as string;
+		this.name = params.character as string;
 
 		if (!this.name || !this.server) {
 			void this.$router.replace('/');
