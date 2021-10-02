@@ -33,10 +33,13 @@ class Display {
 	};
 
 	relativeTime(timestamp: number) {
-		return DateTime.fromMillis(timestamp).toRelative({
+		const result = DateTime.fromMillis(timestamp).toRelative({
 			locale: 'en',
 			unit: [ 'years', 'months', 'days', 'hours', 'minutes' ]
-		})
+		}) || '';
+
+		console.log(`"${result}"`);
+		return result === '0 minutes ago' ? 'Just now' : result;
 	}
 
 	formatDate(timestamp: number) {
