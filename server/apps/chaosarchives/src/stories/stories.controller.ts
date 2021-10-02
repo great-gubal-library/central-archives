@@ -1,3 +1,4 @@
+import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import { Role } from '@app/shared/enums/role.enum';
@@ -20,7 +21,7 @@ export class StoriesController {
 
 	@Post()
 	@UseGuards(JwtAuthGuard)
-	async createStory(@Body() story: StoryDto, @CurrentUser() user: UserInfo): Promise<void> {
+	async createStory(@Body() story: StoryDto, @CurrentUser() user: UserInfo): Promise<IdWrapper> {
 		// TODO: Refactor
 		if (user.role === Role.UNVERIFIED) {
 			throw new ForbiddenException();
@@ -30,7 +31,7 @@ export class StoriesController {
 			throw new BadRequestException('ID is forbidden for create request');
 		}
 
-		await this.storiesService.createStory(story as StoryDto & { id: undefined }, user);
+		return this.storiesService.createStory(story as StoryDto & { id: undefined }, user);
 	}
 
 	@Put(':id')

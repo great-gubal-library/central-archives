@@ -1,4 +1,5 @@
 import { Character, Story, StoryTag } from '@app/entity';
+import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import html from '@app/shared/html';
@@ -51,8 +52,8 @@ export class StoriesService {
 		});
   }
 
-  async createStory(storyDto: StoryDto & { id: undefined }, user: UserInfo): Promise<void> {
-    await this.connection.transaction(async em => {
+  async createStory(storyDto: StoryDto & { id: undefined }, user: UserInfo): Promise<IdWrapper> {
+    const storyEntity = await this.connection.transaction(async em => {
 			const storyRepo = em.getRepository(Story);
 			
 			const story = storyRepo.create({
@@ -69,8 +70,12 @@ export class StoriesService {
 				story
 			}));
 
-			await storyRepo.save(story);
+			return storyRepo.save(story);
 		});
+		
+		return {
+			id: storyEntity.id
+		};
   }
 
   async editStory(storyDto: StoryDto & { id: number }, user: UserInfo): Promise<void> {

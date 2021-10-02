@@ -1,4 +1,5 @@
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
+import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
@@ -60,6 +61,14 @@ export default class API {
   }
 
   async getStory(id: number): Promise<StoryDto> {
-    return this.transport.get<StoryDto>(`stories/${id}`);
+    return this.transport.tokenGet<StoryDto>(`stories/${id}`);
+  }
+
+  async createStory(story: StoryDto): Promise<IdWrapper> {
+    return this.transport.authPost<IdWrapper>('stories', story);
+  }
+
+  async editStory(story: StoryDto): Promise<void> {
+    return this.transport.authPut<void>(`stories/${story.id || -1}`, story);
   }
 }

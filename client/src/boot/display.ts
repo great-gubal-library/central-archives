@@ -49,6 +49,8 @@ class Display {
 	}
 }
 
+export const displayOptions = new Display();
+
 export default boot(({ app }) => {
-  app.config.globalProperties.$display = new Display();
+  app.config.globalProperties.$display = displayOptions;
 });

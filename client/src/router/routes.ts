@@ -131,6 +131,24 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/create-story',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditStory.vue') }],
+    meta: {
+      title: 'Create Story'
+    },
+  },
+
+  { 
+    path: '/edit-story/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditStory.vue') }],
+    meta: {
+      title: 'Edit Story'
+    },
+  },
+
   // Characters
   {
     path: '/profiles',

@@ -8,9 +8,10 @@
       <div class="story-view__posted-by">
       Posted by <router-link :to="authorLink">{{ story.author }}</router-link> on {{ date }}
       <template v-if="story.tags.length > 0">
+        in
         <template v-for="(tag, index) in story.tags" :key="tag.name">
           <template v-if="index > 0">, </template>
-          <span>tag</span>
+          <span>{{ tag }}</span>
         </template>
       </template>
       </div>
