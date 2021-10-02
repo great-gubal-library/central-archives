@@ -3,6 +3,7 @@ import { EventDto } from '@app/shared/dto/events/event.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
+import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import APITransport from './api-transport';
 import UserAPI from './user-api';
 
@@ -50,5 +51,10 @@ export default class API {
 
   async saveCharacter(character: CharacterProfileDto): Promise<void> {
     await this.transport.authPut<void>('characters/profile', character);
+  }
+
+  // Stories
+  async getStories(): Promise<StorySummaryDto[]> {
+    return this.transport.get<StorySummaryDto[]>('stories');
   }
 }

@@ -1,4 +1,5 @@
 import { Race } from '@app/shared/enums/race.enum';
+import { DateTime } from 'luxon';
 import { boot } from 'quasar/wrappers';
 
 // This boot file adds a $display property to all Vue components, containing human-readable display names
@@ -21,6 +22,13 @@ class Display {
 		[Race.HROTHGAR]: 'Hhothgar',
 		[Race.VIERA]: 'Viera'
 	};
+
+	relativeTime(timestamp: number) {
+		return DateTime.fromMillis(timestamp).toRelative({
+			locale: 'en',
+			unit: [ 'years', 'months', 'days', 'hours', 'minutes' ]
+		})
+	}
 }
 
 export default boot(({ app }) => {

@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { MainPageModule } from './mainpage/main-page.module';
 import { CharactersModule } from './characters/characters.module';
 import { CarrdModule } from './carrd/carrd.module';
+import { StoriesModule } from './stories/stories.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CarrdModule } from './carrd/carrd.module';
     AuthModule,
     CharactersModule,
     CarrdModule,
+    StoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

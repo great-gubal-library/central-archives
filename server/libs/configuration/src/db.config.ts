@@ -12,6 +12,7 @@ export const dbConfiguration: TypeOrmModuleOptions = {
   password: dbConfig.password,
   database: dbConfig.database,
   logging: true,
+  timezone: 'Z',
   entities: [
     Character,
     Server,

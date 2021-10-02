@@ -2,19 +2,11 @@
   <q-page>
     <template v-if="loaded">
       <news-timeline :news="content.news" />
-      <!--
       <section>
-        <h5>Latest stories</h5>
-        <q-markup-table dense>
-          <tbody class="index__table">
-            <tr v-for="(story, index) in stories" :key="index">
-              <td>{{story.title}}</td>
-              <td>{{story.author}}</td>
-              <td>{{story.date}}</td>
-            </tr>
-          </tbody>
-        </q-markup-table>
+        <h5>New stories</h5>
+        <story-list :stories="content.newStories" />
       </section>
+      <!--
       <section>
         <h5>New artwork</h5>
         <div class="row">
@@ -170,12 +162,14 @@
 import { Vue, Options } from 'vue-class-component';
 import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
 import NewProfileList from 'components/mainpage/NewProfileList.vue';
+import StoryList from 'src/components/stories/StoryList.vue';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 
 @Options({
   components: {
     NewsTimeline,
     NewProfileList,
+    StoryList,
   },
 })
 export default class PageIndex extends Vue {
@@ -183,6 +177,7 @@ export default class PageIndex extends Vue {
     news: [],
     newsUpToDate: false,
     newProfiles: [],
+    newStories: [],
   };
 
   loaded = false;

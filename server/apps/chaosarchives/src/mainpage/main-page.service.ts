@@ -29,6 +29,7 @@ export class MainPageService {
 				avatar: character.avatar,
 				server: character.server.name,
 			})),
+			newStories: [], // Will be loaded by StoriesService instead
 			news: [], // Will be loaded by NewsService instead
 			newsUpToDate: false,
 		};

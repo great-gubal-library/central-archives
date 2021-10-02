@@ -157,9 +157,9 @@ export default class MainLayout extends Vue {
   readonly siteLinks = [
     { label: 'About', to: '/about' },
     { label: 'Profiles', to: '/profiles' },
+    { label: 'Stories', to: '/stories' },
     // { label: 'Free Companies', to: '' },
     // { label: 'Venues', to: '' },
-    // { label: 'Stories', to: '' },
     // { label: 'Noticeboard', to: '' },
   ];
 
