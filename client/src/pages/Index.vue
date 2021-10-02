@@ -3,7 +3,7 @@
     <template v-if="loaded">
       <news-timeline :news="content.news" />
       <section>
-        <h5>New stories</h5>
+        <h5><router-link to="/stories">New stories</router-link></h5>
         <story-list :stories="content.newStories" />
       </section>
       <!--
