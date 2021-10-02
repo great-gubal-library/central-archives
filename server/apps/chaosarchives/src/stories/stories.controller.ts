@@ -58,7 +58,7 @@ export class StoriesController {
 	}
 
 	@Get()
-	async getStoryList(@Query('characterId', ParseIntPipe) characterId?: number): Promise<StorySummaryDto[]> {
-		return this.storiesService.getStoryList({ characterId });
+	async getStoryList(@Query('characterId') characterId?: string): Promise<StorySummaryDto[]> {
+		return this.storiesService.getStoryList(characterId ? { characterId : parseInt(characterId, 10) } : {});
 	}
 }

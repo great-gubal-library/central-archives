@@ -21,7 +21,7 @@ export default class PageCharacters extends Vue {
 
 	async created() {
 		try {
-			this.stories = await this.$api.getStories();
+			this.stories = await this.$api.getStories({});
 		} catch (e) {
 			this.$q.notify({
 				type: 'negative',
