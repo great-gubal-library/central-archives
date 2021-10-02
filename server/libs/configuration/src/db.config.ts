@@ -1,4 +1,4 @@
-import { Character, Server, User } from '@app/entity';
+import { Character, Server, Story, StoryTag, User } from '@app/entity';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import config from 'config';
 import { DbConfigInterface } from './interfaces/db-config.interface';
@@ -15,6 +15,8 @@ export const dbConfiguration: TypeOrmModuleOptions = {
   entities: [
     Character,
     Server,
+    Story,
+    StoryTag,
     User,
   ],
   synchronize: dbConfig.synchronize,
