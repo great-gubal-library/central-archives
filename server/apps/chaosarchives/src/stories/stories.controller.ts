@@ -1,7 +1,7 @@
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { Body, Controller, Delete, ForbiddenException, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, ForbiddenException, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
@@ -20,18 +20,22 @@ export class StoriesController {
 
 	@Post()
 	@UseGuards(JwtAuthGuard)
-	async createStory(@Body() story: Omit<StoryDto, 'id'>, @CurrentUser() user: UserInfo): Promise<void> {
+	async createStory(@Body() story: StoryDto, @CurrentUser() user: UserInfo): Promise<void> {
 		// TODO: Refactor
 		if (user.role === Role.UNVERIFIED) {
 			throw new ForbiddenException();
 		}
 
-		await this.storiesService.createStory(story, user);
+		if (story.id !== undefined) {
+			throw new BadRequestException('ID is forbidden for create request');
+		}
+
+		await this.storiesService.createStory(story as StoryDto & { id: undefined }, user);
 	}
 
 	@Put(':id')
 	@UseGuards(JwtAuthGuard)
-	async editStory(@Param('id', ParseIntPipe) id: number, @Body() story: Omit<StoryDto, 'id'>, @CurrentUser() user: UserInfo): Promise<void> {
+	async editStory(@Param('id', ParseIntPipe) id: number, @Body() story: StoryDto, @CurrentUser() user: UserInfo): Promise<void> {
 		// TODO: Refactor
 		if (user.role === Role.UNVERIFIED) {
 			throw new ForbiddenException();

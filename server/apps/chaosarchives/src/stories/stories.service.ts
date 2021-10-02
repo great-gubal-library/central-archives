@@ -1,9 +1,10 @@
 import { Character, Story, StoryTag } from '@app/entity';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
+import html from '@app/shared/html';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Connection, In, Not, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 
 @Injectable()
@@ -50,30 +51,92 @@ export class StoriesService {
 		});
   }
 
-  async createStory(story: Omit<StoryDto, 'id'>, user: UserInfo): Promise<void> {
+  async createStory(storyDto: StoryDto & { id: undefined }, user: UserInfo): Promise<void> {
     await this.connection.transaction(async em => {
-			const repo = em.getRepository(Story);
+			const storyRepo = em.getRepository(Story);
 			
+			const story = storyRepo.create({
+				owner: {
+					id: user.character.id
+				},
+				title: storyDto.title,
+				content: html.sanitize(storyDto.content),
+				type: storyDto.type
+			});
 
-			
+			story.tags = storyDto.tags.map(tag => new StoryTag({
+				name: tag,
+				story
+			}));
+
+			await storyRepo.save(story);
 		});
   }
 
-  async editStory(story: StoryDto & { id: number }, user: UserInfo): Promise<void> {
+  async editStory(storyDto: StoryDto & { id: number }, user: UserInfo): Promise<void> {
     await this.connection.transaction(async em => {
-			const repo = em.getRepository(Story);
-			
+			const storyRepo = em.getRepository(Story);
+			const story = await storyRepo.createQueryBuilder('story')
+			.innerJoinAndSelect('story.owner', 'character')
+			.innerJoinAndSelect('character.user', 'user')
+			.where('story.id = :id', { id: storyDto.id })
+			.andWhere('user.id = :userId', { userId: user.id })
+			.select([ 'story' ])
+			.getOne();
 
+			if (!story) {
+				throw new NotFoundException('Story not found');
+			}
 			
+			Object.assign(story, {
+				title: storyDto.title,
+				content: html.sanitize(storyDto.content),
+				type: storyDto.type
+			});
+
+			if (storyDto.tags.length > 0) {
+				em.getRepository(StoryTag).delete({
+					story: {
+						id: storyDto.id
+					},
+					name: Not(In(storyDto.tags))
+				});
+			}
+
+			story.tags = await em.getRepository(StoryTag).createQueryBuilder('tag')
+				.innerJoinAndSelect('tag.story', 'story')
+				.where('story.id = :id', { id: storyDto.id })
+				.select('tag')
+				.getMany();
+
+			const existingTagNames = story.tags.map(tag => tag.name);
+			const newTagNames = storyDto.tags.filter(tagName => !existingTagNames.includes(tagName));
+
+			story.tags = [...story.tags, ...newTagNames.map(tag => new StoryTag({
+				name: tag,
+				story
+			}))];
+
+			await storyRepo.save(story);
 		});
   }
 
 	async deleteStory(id: number, user: UserInfo): Promise<void> {
 		await this.connection.transaction(async em => {
-			const repo = em.getRepository(Story);
-			
+			const storyRepo = em.getRepository(Story);
+			const story = await storyRepo.createQueryBuilder('story')
+			.innerJoinAndSelect('story.owner', 'character')
+			.innerJoinAndSelect('character.user', 'user')
+			.where('story.id = :id', { id })
+			.andWhere('user.id = :userId', { userId: user.id })
+			.select([ 'story.id' ])
+			.getOne();
 
-			
+			if (!story) {
+				throw new NotFoundException('Story not found');
+			}
+
+			await storyRepo.softRemove(story);
 		});
 	}
 

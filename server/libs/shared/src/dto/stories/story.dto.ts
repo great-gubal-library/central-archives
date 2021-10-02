@@ -7,15 +7,19 @@ export class StoryDto {
 	id?: number;
 
 	@IsBoolean()
+	@IsOptional()
 	mine: boolean;
 
 	@IsString()
+	@IsOptional()
 	author: string;
 
 	@IsString()
+	@IsOptional()
 	authorServer: string;
 
 	@IsNumber()
+	@IsOptional()
 	createdAt: number;
 
 	@IsString()

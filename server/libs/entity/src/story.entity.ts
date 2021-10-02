@@ -34,7 +34,7 @@ export class Story extends BasicEntity {
   type: StoryType;
 
   @OneToMany(() => StoryTag, tag => tag.story, {
-    cascade: [ 'insert', 'remove' ],
+    cascade: true,
   })
 	tags: StoryTag[]
 }

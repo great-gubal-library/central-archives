@@ -17,4 +17,10 @@ export class StoryTag {
     width: 60,
   })
   name: string;
+
+  constructor(properties?: Partial<StoryTag>) {
+    if (properties) {
+      Object.assign(this, properties);
+    }
+  }
 }
