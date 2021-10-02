@@ -1,4 +1,5 @@
 import { Race } from '@app/shared/enums/race.enum';
+import { StoryType } from '@app/shared/enums/story-type.enum';
 import { DateTime } from 'luxon';
 import { boot } from 'quasar/wrappers';
 
@@ -20,7 +21,15 @@ class Display {
 		[Race.ROEGADYN]: 'Roegadyn',
 		[Race.AURA]: 'Au Ra',
 		[Race.HROTHGAR]: 'Hhothgar',
-		[Race.VIERA]: 'Viera'
+		[Race.VIERA]: 'Viera',
+	};
+
+	readonly storyTypes: { [k: string]: string } = {
+		[StoryType.PUBLISHED_WORK]: 'Published Work',
+		[StoryType.DIARY]: 'Diary',
+		[StoryType.POETRY]: 'Poetry',
+		[StoryType.IC_HAPPENING]: 'IC Happening',
+		[StoryType.CONCEPTUAL]: 'Conceptual',
 	};
 
 	relativeTime(timestamp: number) {
@@ -28,6 +37,12 @@ class Display {
 			locale: 'en',
 			unit: [ 'years', 'months', 'days', 'hours', 'minutes' ]
 		})
+	}
+
+	formatDate(timestamp: number) {
+		return DateTime.fromMillis(timestamp).toLocaleString({
+			dateStyle: 'long',
+		});
 	}
 }
 

@@ -1,13 +1,19 @@
 import { StoryType } from "@app/shared/enums/story-type.enum";
-import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class StoryDto {
 	@IsNumber()
 	@IsOptional()
 	id?: number;
 
-	@IsNumber()
-	ownerId: number;
+	@IsBoolean()
+	mine: boolean;
+
+	@IsString()
+	author: string;
+
+	@IsString()
+	authorServer: string;
 
 	@IsNumber()
 	createdAt: number;

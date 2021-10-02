@@ -4,6 +4,7 @@ import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
+import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import APITransport from './api-transport';
 import UserAPI from './user-api';
 
@@ -56,5 +57,9 @@ export default class API {
   // Stories
   async getStories(): Promise<StorySummaryDto[]> {
     return this.transport.get<StorySummaryDto[]>('stories');
+  }
+
+  async getStory(id: number): Promise<StoryDto> {
+    return this.transport.get<StoryDto>(`stories/${id}`);
   }
 }

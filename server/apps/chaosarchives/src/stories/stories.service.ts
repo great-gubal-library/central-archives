@@ -1,14 +1,9 @@
-import { Character, Story } from '@app/entity';
-import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
-import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { Character, Story, StoryTag } from '@app/entity';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
-import { Role } from '@app/shared/enums/role.enum';
-import html from '@app/shared/html';
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, IsNull, Not, Repository } from 'typeorm';
-import { CurrentUser } from '../auth/current-user.decorator';
+import { Connection, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 
 @Injectable()
@@ -17,21 +12,42 @@ export class StoriesService {
     private connection: Connection,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     @InjectRepository(Story) private storyRepo: Repository<Story>,
+		@InjectRepository(StoryTag) private storyTagRepo: Repository<StoryTag>,
   ) {}
 
   async getStory(
     id: number,
-    @CurrentUser() user?: UserInfo,
+		user?: UserInfo,
   ): Promise<StoryDto> {
-		const story = await this.storyRepo.findOne(id, {
-			relations: [ 'character', 'tags' ],
-		});
+		const story = await this.storyRepo.createQueryBuilder('story')
+			.innerJoinAndSelect('story.owner', 'character')
+			.innerJoinAndSelect('character.user', 'user')
+			.innerJoinAndSelect('character.server', 'server')
+			.where('story.id = :id', { id })
+			.select([ 'story', 'character.id', 'character.name', 'user.id', 'server.name' ])
+			.getOne();
 
 		if (!story) {
 			throw new NotFoundException('Story not found');
 		}
 
-    return new StoryDto();
+		story.tags = await this.storyTagRepo.createQueryBuilder('tag')
+			.innerJoinAndSelect('tag.story', 'story')
+			.where('story.id = :id', { id })
+			.select('tag')
+			.getMany();
+
+    return new StoryDto({
+			id: story.id,
+			mine: user ? story.owner.user.id === user.id : false,
+			author: story.owner.name,
+			authorServer: story.owner.server.name,
+			title: story.title,
+			content: story.content,
+			createdAt: story.createdAt!.getTime(),
+			type: story.type,
+			tags: story.tags.map(tag => tag.name),
+		});
   }
 
   async createStory(story: Omit<StoryDto, 'id'>, user: UserInfo): Promise<void> {

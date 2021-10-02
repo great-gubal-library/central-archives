@@ -8,12 +8,12 @@
 <script lang="ts">
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import errors from '@app/shared/errors';
-import NewProfileList from 'components/mainpage/NewProfileList.vue';
+import StoryList from 'components/stories/StoryList.vue';
 import { Options, Vue } from 'vue-class-component';
 
 @Options({
 	components: {
-		NewProfileList
+		StoryList
 	}
 })
 export default class PageCharacters extends Vue {
