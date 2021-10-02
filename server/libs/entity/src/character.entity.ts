@@ -37,7 +37,7 @@ export class Character extends BasicEntity {
   verifiedAt: Date;
 
   @Column({
-    type: 'text',
+    type: 'varchar',
     nullable: true
   })
   verificationCode: string | null;
