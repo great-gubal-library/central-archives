@@ -2,7 +2,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { BadRequestException, Body, Controller, Delete, ForbiddenException, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, ForbiddenException, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
@@ -58,7 +58,7 @@ export class StoriesController {
 	}
 
 	@Get()
-	async getStoryList(): Promise<StorySummaryDto[]> {
-		return this.storiesService.getStoryList();
+	async getStoryList(@Query('characterId', ParseIntPipe) characterId?: number): Promise<StorySummaryDto[]> {
+		return this.storiesService.getStoryList({ characterId });
 	}
 }

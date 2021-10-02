@@ -41,7 +41,7 @@ export default class APITransport {
 
 	// Requests without an access token
 
-	async get<R>(path: string, queryParams?: { [k: string]: string }): Promise<R> {
+	async get<R>(path: string, queryParams?: { [k: string]: string|number }): Promise<R> {
 		return (await this.axios.get<R>(path, {
 			params: queryParams
 		})).data;
@@ -55,7 +55,7 @@ export default class APITransport {
 		return (await this.axios.put<R>(path, data)).data;
 	}
 
-	async delete<R>(path: string, queryParams?: { [k: string]: string }): Promise<R> {
+	async delete<R>(path: string, queryParams?: { [k: string]: string|number }): Promise<R> {
 		return (await this.axios.delete<R>(path, {
 			params: queryParams
 		})).data;
@@ -63,7 +63,7 @@ export default class APITransport {
 
 	// Requests with an access token
 
-	private getAuthConfig(queryParams?: { [k: string]: string }, requireToken = true): AxiosRequestConfig {
+	private getAuthConfig(queryParams?: { [k: string]: string|number }, requireToken = true): AxiosRequestConfig {
 		const accessToken = this.getAccessToken();
 
 		if (requireToken && !accessToken) {
@@ -80,7 +80,7 @@ export default class APITransport {
 
 	// Token required
 
-	async authGet<R>(path: string, queryParams?: { [k: string]: string }): Promise<R> {
+	async authGet<R>(path: string, queryParams?: { [k: string]: string|number }): Promise<R> {
 		return (await this.axios.get<R>(path, this.getAuthConfig(queryParams))).data;
 	}
 
@@ -92,13 +92,13 @@ export default class APITransport {
 		return (await this.axios.put<R>(path, data, this.getAuthConfig())).data;
 	}
 
-	async authDelete<R>(path: string, queryParams?: { [k: string]: string }): Promise<R> {
+	async authDelete<R>(path: string, queryParams?: { [k: string]: string|number }): Promise<R> {
 		return (await this.axios.delete<R>(path, this.getAuthConfig(queryParams))).data;
 	}
 
 	// Token optional
 
-	async tokenGet<R>(path: string, queryParams?: { [k: string]: string }): Promise<R> {
+	async tokenGet<R>(path: string, queryParams?: { [k: string]: string|number }): Promise<R> {
 		return (await this.axios.get<R>(path, this.getAuthConfig(queryParams, false))).data;
 	}
 }

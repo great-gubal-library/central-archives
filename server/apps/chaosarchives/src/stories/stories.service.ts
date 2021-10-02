@@ -145,13 +145,18 @@ export class StoriesService {
 		});
 	}
 
-  async getStoryList(limit?: number): Promise<StorySummaryDto[]> {
-		const stories = await this.storyRepo.createQueryBuilder('story')
+  async getStoryList(params: { characterId?: number, limit?: number }): Promise<StorySummaryDto[]> {
+		const query = this.storyRepo.createQueryBuilder('story')
 			.innerJoinAndSelect('story.owner', 'character')
       .orderBy('story.createdAt', 'DESC')
-      .limit(limit)
 			.select([ 'story.id', 'character.name', 'story.title', 'story.createdAt' ])
-			.getMany();
+      .limit(params.limit);
+
+		if (params.characterId) {
+			query.where('character.id = :characterId', { characterId: params.characterId });
+		}
+
+		const stories = await query.getMany();
 
 		return stories.map(story => ({
 				id: story.id,

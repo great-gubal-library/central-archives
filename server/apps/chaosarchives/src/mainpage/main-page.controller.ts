@@ -21,7 +21,7 @@ export class MainPageController {
     const [mainPageContent, newsResult, storyList] = await Promise.all([
 			this.mainPageService.getMainPageContent(),
 			this.newsService.getNews(),
-      this.storiesService.getStoryList(this.MAX_STORIES),
+      this.storiesService.getStoryList({ limit: this.MAX_STORIES }),
 		]);
 		
 		mainPageContent.news = newsResult.news;

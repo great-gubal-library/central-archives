@@ -56,8 +56,8 @@ export default class API {
   }
 
   // Stories
-  async getStories(): Promise<StorySummaryDto[]> {
-    return this.transport.get<StorySummaryDto[]>('stories');
+  async getStories(params: { characterId?: number }): Promise<StorySummaryDto[]> {
+    return this.transport.get<StorySummaryDto[]>('stories', params);
   }
 
   async getStory(id: number): Promise<StoryDto> {
