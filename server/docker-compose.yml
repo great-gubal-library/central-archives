@@ -25,6 +25,7 @@ services:
       - MARIADB_USER=mariadb
       - MARIADB_PASSWORD=mariadb
       - MARIADB_DATABASE=chaosarchives
+      - TZ=UTC
 
   chaosarchives:
     build: ./
