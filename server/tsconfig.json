@@ -18,6 +18,9 @@
       "@xivapi/js": [
         "types/xivapi.d.ts"
       ],
+      "jpegtran": [
+        "types/jpegtran.d.ts"
+      ],
       "@app/configuration": [
         "libs/configuration/src"
       ],

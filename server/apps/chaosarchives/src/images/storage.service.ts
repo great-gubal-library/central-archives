@@ -1,5 +1,4 @@
 import { s3Configuration } from '@app/configuration';
-import { S3ConfigInterface } from '@app/configuration/interfaces/s3-config.interface';
 import { Injectable } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
 
@@ -23,27 +22,32 @@ export class StorageService {
 		this.bucketName = s3Configuration.bucketName;
 
 		const publicRoot = s3Configuration.publicRootUrl;
-		this.publicRootUrl = publicRoot.endsWith('/') ? publicRoot.slice(0, -1) : publicRoot;
+		this.publicRootUrl = publicRoot.endsWith('/') ? publicRoot : `${publicRoot}/`;
 	}
 
-	async uploadFile(path: string, buffer: Buffer): Promise<string> {
-		const key = path.startsWith('/') ? path.substring(1) : path;
+	getUrl(path: string): string {
+		return `${this.publicRootUrl}${this.normalizePath(path)}`;
+	}
 
+	async uploadFile(path: string, buffer: Buffer, mimetype: string): Promise<void> {
 		await this.s3.upload({
 			Bucket: this.bucketName,
 			ACL: 'public-read',
+			ContentType: mimetype,
 			ContentDisposition: 'inline',
 			Body: buffer,
-			Key: key,
+			Key: this.normalizePath(path),
 		}).promise();
-
-		return `${this.publicRootUrl}/${key}`;
 	}
 
 	async deleteFile(path: string): Promise<void> {
 		await this.s3.deleteObject({
 			Bucket: this.bucketName,
-			Key: path,
+			Key: this.normalizePath(path),
 		}).promise();
+	}
+
+	private normalizePath(path: string): string {
+		return path.startsWith('/') ? path.substring(1) : path;
 	}
 }

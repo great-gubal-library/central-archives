@@ -1,4 +1,5 @@
 export interface ImageDto {
+	id: number,
 	url: string,
 	filename: string,
 	width: number,
