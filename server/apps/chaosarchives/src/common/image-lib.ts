@@ -108,8 +108,6 @@ export async function sanitizeImage(buffer: Buffer, mimetype: string): Promise<I
 		result = await callJpegTran(buffer, jpegTranArgs);
 	}
 
-	await promises.writeFile('/tmp/__.jpg', result);
-
 	return {
 		buffer: result,
 		format,
