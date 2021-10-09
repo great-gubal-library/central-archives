@@ -2,6 +2,7 @@ server:
   port: 8111
   frontendRoot: 'http://localhost:8080'
   maxUploadSizeKiB: 5120 # 5 MiB
+  maxUploadSpacePerUserMiB: 100
 
 db:
   type: 'mariadb'

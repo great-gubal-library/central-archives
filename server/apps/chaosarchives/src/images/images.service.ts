@@ -1,9 +1,10 @@
+import { serverConfiguration } from '@app/configuration';
 import { Character, Image } from '@app/entity';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
-import { BadRequestException, Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import BufferList from 'bl';
 import { promises } from 'fs';
 import JpegTran from 'jpegtran';
@@ -65,8 +66,36 @@ export class ImagesService {
         const { buffer, format, width, height } = await this.sanitizeImage(origBuffer, origMimetype);
         const size = buffer.length;
         const hash = await hashFile(buffer);
-        const path = `${request.characterId}/${hash}/${filename}`;
+        const path = `${character.id}/${hash}/${filename}`;
         const mimetype = format === ImageFormat.PNG ? 'image/png' : 'image/jpeg';
+
+        // Check that this is not a duplicate upload
+        const existingImage = await em.getRepository(Image).findOne({
+          where: {
+            hash,
+            owner: character
+          },
+          select: [ 'id', 'filename' ]
+        });
+
+        if (existingImage && existingImage.id) {
+          throw new ConflictException(
+            `You already have an image with the same contents: ${existingImage.filename}`);
+        }
+
+        // Check the user still has upload space left
+        const maxUploadSpaceMiB = serverConfiguration.maxUploadSpacePerUserMiB;
+        const maxUploadSpaceBytes = maxUploadSpaceMiB * 1024 * 1024;
+        const currentUploadSpaceBytes = await em.getRepository(Image).createQueryBuilder('image')
+          .innerJoinAndSelect('image.owner', 'character')
+          .innerJoinAndSelect('character.user', 'user')
+          .where('user.id = :userId', { userId: user.id })
+          .select('SUM(image.size)')
+          .getRawOne();
+
+        if (currentUploadSpaceBytes + size > maxUploadSpaceBytes) {
+          throw new BadRequestException(`You have too much image content stored (maximum is ${maxUploadSpaceMiB})`);
+        }
 
         try {
           await this.storageService.uploadFile(path, buffer, mimetype);
@@ -142,6 +171,7 @@ export class ImagesService {
 
     if (format === ImageFormat.PNG) {
       // PNG is lossless, so we can just re-save it as PNG using sharp.
+      // TODO: use a PNG optimizer, as sharp produces larger PNGs than the original
       result = await image
         .withMetadata({
           orientation: metadata.orientation,
