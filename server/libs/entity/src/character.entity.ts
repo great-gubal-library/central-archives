@@ -1,10 +1,11 @@
 import { Race } from '@app/shared/enums/race.enum';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Server } from './server.entity';
 import { User } from './user.entity';
 
 @Entity()
+@Unique(['name', 'server'])
 export class Character extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
