@@ -12,6 +12,7 @@ import { MainPageModule } from './mainpage/main-page.module';
 import { CharactersModule } from './characters/characters.module';
 import { CarrdModule } from './carrd/carrd.module';
 import { StoriesModule } from './stories/stories.module';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { StoriesModule } from './stories/stories.module';
     CharactersModule,
     CarrdModule,
     StoriesModule,
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
