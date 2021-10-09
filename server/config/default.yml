@@ -27,3 +27,10 @@ mail:
 auth:
   jwtSecret: 'secret'
   jwtExpiry: '30d'
+
+s3:
+  endpoint: 'https://servername.tld'
+  bucketName: 'mybucket'
+  publicRootUrl: 'https://publicservername.tld'
+  accessKeyId: 'MY_ACCESS_KEY'
+  secretAccessKey: 'MY_SECRET_ACCESS_KEY'

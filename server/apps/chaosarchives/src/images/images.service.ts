@@ -6,6 +6,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import sharp from 'sharp';
 import { UserInfo } from '../auth/user-info';
 import { hashFile } from '../common/security';
+import { StorageService } from './storage.service';
 
 interface ImageResult {
 	buffer: Buffer;
@@ -16,6 +17,8 @@ interface ImageResult {
 
 @Injectable()
 export class ImagesService {
+  constructor(private storageService: StorageService) { }
+  
   async uploadImage(
 		user: UserInfo,
     request: ImageUploadRequestDto,
@@ -30,9 +33,12 @@ export class ImagesService {
     const { buffer, format, width, height } = await this.sanitizeImage(origBuffer, mimetype);
 		const size = buffer.length;
     const hash = await hashFile(buffer);
+    const path = `${request.characterId}/${hash}/${filename}`;
+
+    const url = await this.storageService.uploadFile(path, buffer);
 
     return {
-      url: '',
+      url,
       filename,
       width,
       height,

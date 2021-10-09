@@ -1,7 +1,9 @@
 import { ImageCategory } from "@app/shared/enums/image-category.enum";
+import { Type } from "class-transformer";
 import { IsEnum, IsNumber, IsString } from "class-validator";
 
 export class ImageUploadRequestDto {
+	@Type(() => Number)
 	@IsNumber()
 	readonly characterId: number;
 
