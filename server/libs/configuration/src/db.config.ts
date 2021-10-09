@@ -1,4 +1,4 @@
-import { Character, Server, Story, StoryTag, User } from '@app/entity';
+import { Character, Image, Server, Story, StoryTag, User } from '@app/entity';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import config from 'config';
 import { DbConfigInterface } from './interfaces/db-config.interface';
@@ -15,6 +15,7 @@ export const dbConfiguration: TypeOrmModuleOptions = {
   timezone: 'Z',
   entities: [
     Character,
+    Image,
     Server,
     Story,
     StoryTag,
