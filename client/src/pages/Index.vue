@@ -6,7 +6,6 @@
         <h5><router-link to="/stories">New stories</router-link></h5>
         <story-list :stories="content.newStories" />
       </section>
-      <!--
       <section>
         <h5>New artwork</h5>
         <div class="row">
@@ -62,6 +61,7 @@
           </div>
         </div>
       </section>
+      <!--
       <section>
         <h5>Noticeboard</h5>
         <q-markup-table dense>

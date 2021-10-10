@@ -48,36 +48,44 @@
           <q-item-label>Account verification</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item
-        v-if="$store.state.user.role !== 'unverified'"
-        clickable
-        v-ripple
-        :to="myProfileLink"
-      >
-        <q-item-section>
-          <q-item-label>View profile</q-item-label>
-        </q-item-section>
-      </q-item>
-      <q-item
-        v-if="$store.state.user.role !== 'unverified'"
-        clickable
-        v-ripple
-        to="/edit-character"
-      >
-        <q-item-section>
-          <q-item-label>Edit profile</q-item-label>
-        </q-item-section>
-      </q-item>
-      <q-item
-        v-if="$store.state.user.role !== 'unverified'"
-        clickable
-        v-ripple
-        to="/create-story"
-      >
-        <q-item-section>
-          <q-item-label>New story</q-item-label>
-        </q-item-section>
-      </q-item>
+      <template v-if="$store.state.user.role !== 'unverified'">
+        <q-item
+          clickable
+          v-ripple
+          :to="myProfileLink"
+        >
+          <q-item-section>
+            <q-item-label>View profile</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
+          to="/edit-character"
+        >
+          <q-item-section>
+            <q-item-label>Edit profile</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
+          to="/create-story"
+        >
+          <q-item-section>
+            <q-item-label>New story</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
+          @click="uploadImage"
+        >
+          <q-item-section>
+            <q-item-label>Upload image</q-item-label>
+          </q-item-section>
+        </q-item>
+      </template>
       <q-item clickable v-ripple @click="logOut">
         <q-item-section>
           <q-item-label>Log out</q-item-label>
@@ -99,6 +107,14 @@ export default class UserMenu extends Vue {
 		const character = this.$store.state.user?.character.name.replace(' ', '_') || '';
 		return `/${server}/${character}`;
 	}
+
+  async uploadImage() {
+    const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
+
+    this.$q.dialog({
+      component: UploadDialog
+    });
+  }
 
   logOut() {
     this.$store.commit('setUser', null);
