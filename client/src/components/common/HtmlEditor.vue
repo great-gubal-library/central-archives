@@ -1,11 +1,15 @@
 <template>
-  <editor
-    class="html-editor"
+  <div class="html-editor">
+    <div :id="toolbarId" class="html-editor__toolbar"></div>
+    <editor
+    class="html-editor__editor"
+    :style="{ height: height }"
     api-key="dnguuf3cwxakkez6t1njyi2m6gavgoa97jqo3yt8qoirudgb"
     :init="options"
     :model-value="modelValue"
     @update:model-value="onInput"
   />
+  </div>
 </template>
 
 <script lang="ts">
@@ -91,6 +95,8 @@ const TINYMCE_OPTIONS = {
   fontsize_formats: '8pt 10.5pt 12pt 14pt 18pt 24pt 36pt',
 };
 
+let uid = 0;
+
 @Options({
   components: {
     Editor
@@ -100,10 +106,21 @@ const TINYMCE_OPTIONS = {
       type: String,
       required: true,
     },
+    height: {
+      type: String,
+      default: '400px',
+    }
   },
 })
 export default class HtmlEditor extends Vue {
-  readonly options = TINYMCE_OPTIONS;
+  toolbarId = `html-editor__toolbar${uid++}`;
+
+  get options() {
+    return {
+      ...TINYMCE_OPTIONS,
+      fixed_toolbar_container: `#${this.toolbarId}`
+    }
+  }
 
   onInput(newValue: string) {
     this.$emit('update:modelValue', newValue);
@@ -114,9 +131,8 @@ export default class HtmlEditor extends Vue {
 <style lang="scss">
 @import url($extraGoogleFonts);
 
-.html-editor {
+.html-editor__editor {
   height: 400px;
-  margin-top: 86px;
   background: white;
   border: 1px solid #aaa;
   padding: 8px;
@@ -129,5 +145,9 @@ export default class HtmlEditor extends Vue {
 
 .tox, .tox-tinymce {
   font-family: $body-font!important;
+}
+
+.html-editor__toolbar {
+  width: calc(100% + 4px);
 }
 </style>

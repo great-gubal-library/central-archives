@@ -8,40 +8,43 @@
       @dragover.capture="onDragOver"
       @drop.capture="onDrop"
     >
-			<q-stepper v-model="step" color="primary" animated>
-				<q-step :name="Step.SELECT_IMAGE" title="Select image" :done="step !== Step.SELECT_IMAGE">
+			<q-stepper class="upload-dialog__stepper" v-model="step" color="primary" animated>
+				<q-step :name="Step.SELECT_IMAGE" title="Select image" icon="folder_open" active-icon="folder_open" :done="step !== Step.SELECT_IMAGE">
 					<step-select-image
 						v-model="fileModel"
 					/>
 				</q-step>
-				<q-step :name="Step.THUMBNAIL" title="Customize thumbnail" :done="step === Step.IMAGE_INFO">
+				<q-step :name="Step.THUMBNAIL" title="Customize thumbnail" icon="image" active-icon="image" :done="step === Step.IMAGE_DETAILS">
 					<step-thumbnail
 						:image="fileModel.image"
 						v-model="thumbModel"
 					/>
 				</q-step>
-				<template v-slot:navigation>
-					<q-card-actions align="right">
-						<q-btn flat color="secondary" label="Cancel" @click="onCancelClick" />
-						<q-btn
-							v-if="canGoBack"
-							flat
-							color="secondary"
-							label="< Back"
-							@click="goBack"
-						/>
-						<q-btn
-							v-if="!canUpload"
-							:disable="!canGoNext"
-							flat
-							color="primary"
-							label="Next >"
-							@click="goNext"
-						/>
-						<q-btn v-else flat color="primary" label="Upload" @click="onOKClick" />
-					</q-card-actions>
-				</template>
+				<q-step :name="Step.IMAGE_DETAILS" title="Fill in details" icon="edit" active-icon="edit">
+					<step-image-details
+						v-model="detailsModel"
+					/>
+				</q-step>
 			</q-stepper>
+			<q-card-actions align="right">
+				<q-btn flat color="secondary" label="Cancel" @click="onCancelClick" />
+				<q-btn
+					v-if="canGoBack"
+					flat
+					color="secondary"
+					label="< Back"
+					@click="goBack"
+				/>
+				<q-btn
+					v-if="!canUpload"
+					:disable="!canGoNext"
+					flat
+					color="primary"
+					label="Next >"
+					@click="goNext"
+				/>
+				<q-btn v-else color="primary" label="Upload" @click="onOKClick" />
+			</q-card-actions>
       <div
         class="upload-dialog__drag-overlay"
         v-show="dragging"
@@ -60,13 +63,16 @@
 import { Options, Vue } from 'vue-class-component';
 import StepSelectImage from './StepSelectImage.vue';
 import StepThumbnail from './StepThumbnail.vue';
+import StepImageDetails from './StepImageDetails.vue';
 import { ImageSelectModel } from './image-select-model';
 import { ImageThumbModel } from './image-thumb-model';
+import { ImageDetailsModel } from './image-details-model';
+import { ImageCategory } from '@app/shared/enums/image-category.enum';
 
 enum Step {
   SELECT_IMAGE = 'SELECT_IMAGE',
   THUMBNAIL = 'THUMBNAIL',
-  IMAGE_INFO = 'IMAGE_INFO',
+  IMAGE_DETAILS = 'IMAGE_DETAILS',
 }
 
 interface DialogRef {
@@ -78,6 +84,7 @@ interface DialogRef {
   components: {
     StepSelectImage,
     StepThumbnail,
+		StepImageDetails,
   },
   emits: ['ok', 'hide'],
 })
@@ -94,6 +101,11 @@ export default class UploadDialog extends Vue {
     left: -1,
     top: -1,
     width: -1,
+  };
+  private detailsModel: ImageDetailsModel = {
+    title: '',
+		description: '',
+		category: ImageCategory.UNLISTED,
   };
 
   show() {
@@ -159,7 +171,7 @@ export default class UploadDialog extends Vue {
         };
         this.step = Step.SELECT_IMAGE;
         return;
-      case Step.IMAGE_INFO:
+      case Step.IMAGE_DETAILS:
         this.step = Step.THUMBNAIL;
         return;
     }
@@ -171,8 +183,8 @@ export default class UploadDialog extends Vue {
         return !!this.fileModel.image;
       case Step.THUMBNAIL:
         return this.thumbModel.left !== -1;
-      case Step.IMAGE_INFO:
-        return true; // temp
+      case Step.IMAGE_DETAILS:
+        return false;
     }
 	}
 
@@ -182,15 +194,15 @@ export default class UploadDialog extends Vue {
         this.step = Step.THUMBNAIL;
         return;
       case Step.THUMBNAIL:
-        this.step = Step.IMAGE_INFO;
+        this.step = Step.IMAGE_DETAILS;
         return;
-      case Step.IMAGE_INFO:
+      case Step.IMAGE_DETAILS:
         return;
     }
   }
 
 	get canUpload() {
-		return this.step === Step.IMAGE_INFO;
+		return this.step === Step.IMAGE_DETAILS;
 	}
 
   onDialogHide() {

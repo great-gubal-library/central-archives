@@ -1,3 +1,4 @@
+import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { Race } from '@app/shared/enums/race.enum';
 import { StoryType } from '@app/shared/enums/story-type.enum';
 import { DateTime } from 'luxon';
@@ -30,6 +31,12 @@ class Display {
 		[StoryType.POETRY]: 'Poetry',
 		[StoryType.IC_HAPPENING]: 'IC Happening',
 		[StoryType.CONCEPTUAL]: 'Conceptual',
+	};
+
+	readonly imageCategories: { [k: string]: string } = {
+		[ImageCategory.UNLISTED]: 'Unlisted',
+		[ImageCategory.ARTWORK]: 'Artwork',
+		[ImageCategory.SCREENSHOT]: 'Screenshot',
 	};
 
 	relativeTime(timestamp: number) {
