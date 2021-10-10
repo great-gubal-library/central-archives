@@ -1,6 +1,8 @@
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
+import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
+import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
@@ -70,5 +72,16 @@ export default class API {
 
   async editStory(story: StoryDto): Promise<void> {
     return this.transport.authPut<void>(`stories/${story.id || -1}`, story);
+  }
+
+  // Images
+  async uploadImage(request: ImageUploadRequestDto, file: Blob, filename: string): Promise<ImageDto> {
+    const formData = new FormData();
+    formData.append('file', file, filename);
+
+    const requestMap = request as unknown as {[k: string] : string|number};
+    Object.keys(requestMap).forEach(key => formData.append(key, `${requestMap[key]}`));
+    
+    return this.transport.authPost<ImageDto>('images', formData);
   }
 }

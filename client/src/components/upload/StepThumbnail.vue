@@ -63,9 +63,9 @@ export default class StepThumbnail extends Vue.with(Props) {
 			crop: event => {
 				const { x, y, width } = event.detail;
 				this.$emit('update:model-value', {
-					left: x,
-					top: y,
-					width
+					left: Math.round(x),
+					top: Math.round(y),
+					width: Math.round(width)
 				});
 			}
 		});

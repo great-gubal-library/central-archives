@@ -55,6 +55,7 @@
       >
         Drop file here
       </div>
+      <q-inner-loading :showing="uploading" />
     </q-card>
   </q-dialog>
 </template>
@@ -68,6 +69,8 @@ import { ImageSelectModel } from './image-select-model';
 import { ImageThumbModel } from './image-thumb-model';
 import { ImageDetailsModel } from './image-details-model';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
+import { ImageDto } from '@app/shared/dto/image/image.dto';
+import errors from '@app/shared/errors';
 
 enum Step {
   SELECT_IMAGE = 'SELECT_IMAGE',
@@ -92,6 +95,8 @@ export default class UploadDialog extends Vue {
   private readonly Step = Step;
 
   private dragging = false;
+  private uploading = false;
+
   private step = Step.SELECT_IMAGE;
   private fileModel: ImageSelectModel = {
     file: null,
@@ -213,15 +218,46 @@ export default class UploadDialog extends Vue {
   }
 
   async onUploadClick() {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		const stepImageDetails = this.$refs.stepImageDetails as StepImageDetails;
+    try {
+      this.uploading = true;
 
-		if (!await stepImageDetails.validate()) {
-			return;
-		}
+      const imageDto = await this.upload();
 
-    this.$emit('ok');
-    this.hide();
+      this.$q.notify({
+        message: 'Image uploaded.',
+        type: 'positive',
+      });
+
+      this.$emit('ok', imageDto);
+      this.hide();
+    } catch (e) {
+      this.$q.notify({
+        message: errors.getMessage(e),
+        type: 'negative',
+      });
+    } finally {
+      this.uploading = false;
+    }
+  }
+
+  private async upload(): Promise<ImageDto> {
+    const user = this.$store.state.user;
+    const file = this.fileModel.file;
+
+    if (!user || !file) {
+      throw new Error();
+    }
+
+    return this.$api.uploadImage({
+      characterId: user.character.id,
+      title: this.detailsModel.title,
+      description: this.detailsModel.description,
+      category: this.detailsModel.category,
+      credits: this.detailsModel.credits,
+      thumbLeft: this.thumbModel.left,
+      thumbTop: this.thumbModel.top,
+      thumbWidth: this.thumbModel.width,
+    }, file, file.name);
   }
 
   onCancelClick() {
