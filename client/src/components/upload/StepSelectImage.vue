@@ -3,7 +3,7 @@
 		<h5>Select Image</h5>
 		<q-file filled bottom-slots :model-value="modelValue.file" label="Select image" counter @update:model-value="selectFile">
 			<template v-slot:prepend>
-				<q-icon name="cloud_upload" @click.stop />
+				<q-icon name="image" @click.stop />
 			</template>
 			<template v-slot:append>
 				<q-icon name="close" @click.stop.prevent="selectFile(null)" class="cursor-pointer" />
@@ -14,6 +14,12 @@
 			<h6>Preview</h6>
 			<q-img :src="modelValue.image.src" />
 		</template>
+		<q-banner v-if="modelValue.file && !modelValue.image" class="bg-negative text-white">
+			Not an image file.
+		</q-banner>
+		<q-banner v-if="!modelValue.file">
+			You can also drop a file here from your file manager.
+		</q-banner>
 	</div>
 </template>
 
@@ -34,7 +40,17 @@ class Props {
 @Options({
 	emits: [
 		'update:model-value'
-	]
+	],
+	watch: {
+		modelValue: {
+			handler(newValue: ImageSelectModel, oldValue: ImageSelectModel) {
+				if (newValue.file && (!oldValue || newValue.file !== oldValue.file)) {
+					console.log('file updated');
+					void (this as StepSelectImage).selectFile(newValue.file);
+				}
+			}
+		}
+	}
 })
 export default class StepSelectImage extends Vue.with(Props) {
 	async selectFile(file: File|null) {
