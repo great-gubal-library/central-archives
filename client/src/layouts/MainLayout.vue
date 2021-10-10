@@ -25,7 +25,7 @@
 
         <q-toolbar-title class="layout__toolbar-title text-center">
           <router-link to="/">
-            <inline-svg :src="require('src/assets/logo.svg')" />
+            <img src="~/assets/logo_1x.png" srcset="~/assets/logo_2x.png 2x, ~/assets/logo_4x.png 4x" />
           </router-link>
         </q-toolbar-title>
 
@@ -248,6 +248,10 @@ export default class MainLayout extends Vue {
 
   .layout__toolbar-title:hover g {
     fill: #e8e8e8!important;
+  }
+
+  .layout__toolbar-title img:hover {
+    filter: saturate(1.4);
   }
 
   .layout__toolbar-buton-more {
