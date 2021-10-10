@@ -3,7 +3,7 @@
     <q-card class="post-upload-dialog">
 			<h5>Image Uploaded!</h5>
 			Your image has been successfully uploaded. Click it to copy the URL to clipboard.
-			<q-img :src="image.url" @click="copyUrl" />
+			<q-img :src="image.url" fit="contain" @click="copyUrl" />
 			<q-input
 			label="Image URL"
 				readonly
@@ -80,7 +80,13 @@ export default class PostUploadDialog extends Vue.with(Props) {
 	padding: 8px 24px;
 }
 
+.post-upload-dialog .q-img {
+	max-height: 50vh;
+	height: auto;
+}
+
 .post-upload-dialog .q-img img {
 	cursor: pointer;
 }
+
 </style>
