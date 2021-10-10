@@ -4,6 +4,7 @@ import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-reques
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
+import html from '@app/shared/html';
 import { BadRequestException, ConflictException, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { Connection, IsNull, Not } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
@@ -128,7 +129,7 @@ export class ImagesService {
           filename,
           category: request.category,
           title: request.title,
-          description: request.description,
+          description: html.sanitize(request.description),
           credits: request.credits,
           format
         });
