@@ -36,14 +36,14 @@
 					@click="goBack"
 				/>
 				<q-btn
-					v-if="!canUpload"
+					v-if="this.step !== Step.IMAGE_DETAILS"
 					:disable="!canGoNext"
 					flat
 					color="primary"
 					label="Next >"
 					@click="goNext"
 				/>
-				<q-btn v-else color="primary" label="Upload" @click="onOKClick" />
+				<q-btn v-else :disable="!canUpload" color="primary" label="Upload" @click="onUploadClick" />
 			</q-card-actions>
       <div
         class="upload-dialog__drag-overlay"
@@ -103,9 +103,10 @@ export default class UploadDialog extends Vue {
     width: -1,
   };
   private detailsModel: ImageDetailsModel = {
+		category: ImageCategory.UNLISTED,
     title: '',
 		description: '',
-		category: ImageCategory.UNLISTED,
+    credits: '',
   };
 
   show() {
@@ -202,14 +203,23 @@ export default class UploadDialog extends Vue {
   }
 
 	get canUpload() {
-		return this.step === Step.IMAGE_DETAILS;
+		return this.step === Step.IMAGE_DETAILS
+      && (this.detailsModel.category === ImageCategory.UNLISTED || !!this.detailsModel.title)
+      && !!this.detailsModel.credits;
 	}
 
   onDialogHide() {
     this.$emit('hide');
   }
 
-  onOKClick() {
+  async onUploadClick() {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		const stepImageDetails = this.$refs.stepImageDetails as StepImageDetails;
+
+		if (!await stepImageDetails.validate()) {
+			return;
+		}
+
     this.$emit('ok');
     this.hide();
   }

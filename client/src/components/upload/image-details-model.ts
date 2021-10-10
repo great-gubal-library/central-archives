@@ -1,5 +1,8 @@
+import { ImageCategory } from '@app/shared/enums/image-category.enum';
+
 export interface ImageDetailsModel {
-	title: string;
-	description: string;
-	category: string;
+  category: ImageCategory;
+  title: string;
+  description: string;
+  credits: string;
 }
