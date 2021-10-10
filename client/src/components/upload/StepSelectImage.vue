@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { Options, prop, Vue } from 'vue-class-component';
-import { readImage } from 'src/common/read-image';
+import { readImage } from 'src/common/images';
 import { ImageSelectModel } from './image-select-model';
 
 class Props {
@@ -44,7 +44,6 @@ class Props {
 		modelValue: {
 			handler(newValue: ImageSelectModel, oldValue: ImageSelectModel) {
 				if (newValue.file && (!oldValue || newValue.file !== oldValue.file)) {
-					console.log('file updated');
 					void (this as StepSelectImage).selectFile(newValue.file);
 				}
 			}
@@ -60,6 +59,7 @@ export default class StepSelectImage extends Vue.with(Props) {
 				image
 			});
 		} catch (e) {
+			console.log(e);
 			this.$emit('update:model-value', {
 				file,
 				image: null

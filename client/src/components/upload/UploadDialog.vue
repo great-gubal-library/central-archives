@@ -71,6 +71,7 @@ import { ImageDetailsModel } from './image-details-model';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
+import { convertImageForUpload } from 'src/common/images';
 
 enum Step {
   SELECT_IMAGE = 'SELECT_IMAGE',
@@ -248,6 +249,9 @@ export default class UploadDialog extends Vue {
       throw new Error();
     }
 
+    // Converts if necessary, otherwise leaves the original file intact
+    const { blob, filename } = await convertImageForUpload(file);
+
     return this.$api.uploadImage({
       characterId: user.character.id,
       title: this.detailsModel.title,
@@ -257,7 +261,7 @@ export default class UploadDialog extends Vue {
       thumbLeft: this.thumbModel.left,
       thumbTop: this.thumbModel.top,
       thumbWidth: this.thumbModel.width,
-    }, file, file.name);
+    }, blob, filename);
   }
 
   onCancelClick() {
@@ -279,6 +283,10 @@ export default class UploadDialog extends Vue {
 
 .upload-dialog .q-stepper--horizontal .q-stepper__step-inner {
 	padding: 16px 24px 0px 24px;
+}
+
+.upload-dialog__stepper .q-panel.scroll {
+	overflow: hidden;
 }
 
 .upload-dialog img {
