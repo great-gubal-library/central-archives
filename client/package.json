@@ -17,6 +17,7 @@
     "@tinymce/tinymce-vue": "^4",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "cropperjs": "^1.5.12",
     "html-loader": "^2.1.2",
     "iframe-resizer": "^4.3.2",
     "luxon": "^2.0.2",

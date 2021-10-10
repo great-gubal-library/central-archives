@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="step-select-image">
 		<h5>Select Image</h5>
 		<q-file filled bottom-slots :model-value="modelValue.file" label="Select image" counter @update:model-value="selectFile">
 			<template v-slot:prepend>
@@ -12,7 +12,7 @@
 		</q-file>
 		<template v-if="modelValue.image">
 			<h6>Preview</h6>
-			<q-img :src="modelValue.image.src" />
+			<img :src="modelValue.image.src" />
 		</template>
 		<q-banner v-if="modelValue.file && !modelValue.image" class="bg-negative text-white">
 			Not an image file.
@@ -79,5 +79,7 @@ export default class StepSelectImage extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
-
+.step-select-image img {
+	max-height: 50vh;
+}
 </style>
