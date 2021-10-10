@@ -321,4 +321,8 @@ export default class UploadDialog extends Vue {
   outline: 2px dashed #aaa;
   outline-offset: -5px;
 }
+
+.upload-dialog .q-inner-loading {
+  z-index: 2;
+}
 </style>

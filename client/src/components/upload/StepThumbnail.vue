@@ -84,6 +84,10 @@ export default class StepThumbnail extends Vue.with(Props) {
 	display: flex;
 }
 
+.step-thumbnail img {
+	max-height: 50vh;
+}
+
 .step-thumbnail__col {
 	padding-left: 8px;
 	padding-right: 8px;
