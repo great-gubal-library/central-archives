@@ -47,6 +47,25 @@ export class Image extends BasicEntity {
   })
   category: ImageCategory;
 
+  @Column({
+    nullable: false,
+    default: ''
+  })
+  title: string;
+
+  @Column({
+    type: 'mediumtext',
+    nullable: false,
+    default: ''
+  })
+  description: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+  credits: string;
+
 	@Column({
 		type: 'enum',
 		enum: ImageFormat,

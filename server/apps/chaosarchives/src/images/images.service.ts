@@ -127,6 +127,9 @@ export class ImagesService {
           hash,
           filename,
           category: request.category,
+          title: request.title,
+          description: request.description,
+          credits: request.credits,
           format
         });
     
