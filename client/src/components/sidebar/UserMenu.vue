@@ -97,6 +97,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
+import { ImageDto } from '@app/shared/dto/image/image.dto';
 
 @Options({
   
@@ -113,6 +114,16 @@ export default class UserMenu extends Vue {
 
     this.$q.dialog({
       component: UploadDialog
+    }).onOk(async (image: ImageDto) => {
+      console.log('onOk', image);
+      const PostUploadDialog = (await import('components/upload/PostUploadDialog.vue')).default;
+
+      this.$q.dialog({
+        component: PostUploadDialog,
+        componentProps: {
+          image
+        }
+      });
     });
   }
 
