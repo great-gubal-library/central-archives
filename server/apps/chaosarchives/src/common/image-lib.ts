@@ -1,6 +1,5 @@
 import { ImageFormat } from "@app/shared/enums/image-format.enum";
 import BufferList from 'bl';
-import { promises } from 'fs';
 import JpegTran from 'jpegtran';
 import sharp from 'sharp';
 import { Readable } from 'stream';
@@ -56,11 +55,8 @@ function callJpegTran(buffer: Buffer, args?: (string|number)[]): Promise<Buffer>
 		});
 	});
 }
-export async function sanitizeImage(buffer: Buffer, mimetype: string): Promise<ImageSanitizeResult> {
-	if (mimetype !== 'image/jpeg' && mimetype !== 'image/png') {
-		throw new ImageSanitizeError('Only JPEG and PNG formats are allowed');
-	}
 
+export async function sanitizeImage(buffer: Buffer): Promise<ImageSanitizeResult> {
 	const image = sharp(buffer);
 	const metadata = await image.metadata();
 

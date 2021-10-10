@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { createReadStream, PathLike } from 'fs';
+import { createReadStream } from 'fs';
 import { base32 } from 'rfc4648';
 
 export async function hashPassword(password: string): Promise<string> {

@@ -27,6 +27,11 @@ export class ImagesService {
 			throw new BadRequestException('Title is required for artwork and screenshots');
 		}
 
+    // Validate MIME type before doing anything else
+    if (origMimetype !== 'image/jpeg' && origMimetype !== 'image/png') {
+      throw new BadRequestException('Only JPEG and PNG formats are allowed');
+    }  
+  
     // Remember uploaded path in case upload succeeds but then the transaction fails
     let uploadedPath: string|null = null;
 
@@ -55,7 +60,7 @@ export class ImagesService {
         let sanitizeResult: ImageSanitizeResult;
 
         try {
-          sanitizeResult = await sanitizeImage(origBuffer, origMimetype);
+          sanitizeResult = await sanitizeImage(origBuffer);
         } catch (e) {
           if (e instanceof ImageSanitizeError) {
             throw new BadRequestException(e.message);
