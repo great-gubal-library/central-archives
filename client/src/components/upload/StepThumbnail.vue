@@ -1,12 +1,19 @@
 <template>
 	<div class="step-thumbnail">
-		<h5>Customize Thumbnail</h5>
-		<h6>Full image</h6>
-		<div class="step-thumbnail__label">The full image will be uploaded.</div>
-		<section><img :src="image.src" /></section>
-		<h6>Thumbnail</h6>
-		<div class="step-thumbnail__label">This is what will be shown on your media library page and on gallery pages.</div>
-		<section style="display: inline-block"><img ref="cropper" :src="image.src" /></section>
+		<div class="step-thumbnail__col">
+			<section class="step-thumbnail__description">
+				<h6>Full image</h6>
+				<div class="step-thumbnail__label">The full image will be uploaded.</div>
+			</section>
+			<section><img :src="image.src" /></section>
+		</div>
+		<div class="step-thumbnail__col">
+			<section class="step-thumbnail__description">
+				<h6>Thumbnail</h6>
+				<div class="step-thumbnail__label">This is what will be shown on your media library page and on gallery pages.</div>
+			</section>
+			<section style="display: inline-block"><img ref="cropper" :src="image.src" /></section>
+		</div>
 	</div>
 </template>
 
@@ -73,8 +80,20 @@ export default class StepThumbnail extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
-.step-thumbnail img {
-	max-height: 30vh;
+.step-thumbnail {
+	display: flex;
+}
+
+.step-thumbnail__col {
+	padding-left: 8px;
+	padding-right: 8px;
+	display: flex;
+	flex-direction: column;
+}
+
+.step-thumbnail__description {
+	flex-basis: 0;
+	flex-grow: 1;
 }
 
 .step-thumbnail__label {

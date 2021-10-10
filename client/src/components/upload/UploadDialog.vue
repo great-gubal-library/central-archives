@@ -8,35 +8,40 @@
       @dragover.capture="onDragOver"
       @drop.capture="onDrop"
     >
-      <step-select-image
-        v-if="step === Step.SELECT_IMAGE"
-        v-model="fileModel"
-      />
-      <step-thumbnail
-        v-else-if="step === Step.THUMBNAIL"
-        :image="fileModel.image"
-        v-model="thumbModel"
-      />
-			<div v-else></div>
-      <q-card-actions align="right">
-        <q-btn flat color="secondary" label="Cancel" @click="onCancelClick" />
-        <q-btn
-          v-if="canGoBack"
-          flat
-          color="secondary"
-          label="< Back"
-          @click="goBack"
-        />
-        <q-btn
-          v-if="!canUpload"
-          :disable="!canGoNext"
-          flat
-          color="primary"
-          label="Next >"
-          @click="goNext"
-        />
-        <q-btn v-else flat color="primary" label="Upload" @click="onOKClick" />
-      </q-card-actions>
+			<q-stepper v-model="step" color="primary" animated>
+				<q-step :name="Step.SELECT_IMAGE" title="Select image" :done="step !== Step.SELECT_IMAGE">
+					<step-select-image
+						v-model="fileModel"
+					/>
+				</q-step>
+				<q-step :name="Step.THUMBNAIL" title="Customize thumbnail" :done="step === Step.IMAGE_INFO">
+					<step-thumbnail
+						:image="fileModel.image"
+						v-model="thumbModel"
+					/>
+				</q-step>
+				<template v-slot:navigation>
+					<q-card-actions align="right">
+						<q-btn flat color="secondary" label="Cancel" @click="onCancelClick" />
+						<q-btn
+							v-if="canGoBack"
+							flat
+							color="secondary"
+							label="< Back"
+							@click="goBack"
+						/>
+						<q-btn
+							v-if="!canUpload"
+							:disable="!canGoNext"
+							flat
+							color="primary"
+							label="Next >"
+							@click="goNext"
+						/>
+						<q-btn v-else flat color="primary" label="Upload" @click="onOKClick" />
+					</q-card-actions>
+				</template>
+			</q-stepper>
       <div
         class="upload-dialog__drag-overlay"
         v-show="dragging"
@@ -205,8 +210,17 @@ export default class UploadDialog extends Vue {
 
 <style lang="scss">
 .upload-dialog {
-  padding-left: 16px;
-  padding-right: 16px;
+  width: 800px;
+}
+
+@media (min-width: 1280px) {
+	.q-dialog__inner--minimized > .upload-dialog {
+		max-width: 800px;
+	}
+}
+
+.upload-dialog .q-stepper--horizontal .q-stepper__step-inner {
+	padding: 16px 24px 0px 24px;
 }
 
 .upload-dialog img {

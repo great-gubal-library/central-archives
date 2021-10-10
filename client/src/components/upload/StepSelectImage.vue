@@ -1,6 +1,5 @@
 <template>
 	<div class="step-select-image">
-		<h5>Select Image</h5>
 		<q-file filled bottom-slots :model-value="modelValue.file" label="Select image" counter @update:model-value="selectFile">
 			<template v-slot:prepend>
 				<q-icon name="image" @click.stop />
