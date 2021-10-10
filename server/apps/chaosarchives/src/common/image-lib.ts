@@ -5,8 +5,17 @@ import sharp from 'sharp';
 import { Readable } from 'stream';
 import { AppError } from "./app-error";
 
+const THUMB_WIDTH = 174;
+
+export interface ThumbProperties {
+	left: number;
+	top: number;
+	width: number;
+}
+
 export interface ImageSanitizeResult {
 	buffer: Buffer;
+	thumb: Buffer;
 	format: ImageFormat;
 	width: number;
 	height: number;
@@ -56,7 +65,7 @@ function callJpegTran(buffer: Buffer, args?: (string|number)[]): Promise<Buffer>
 	});
 }
 
-export async function sanitizeImage(buffer: Buffer): Promise<ImageSanitizeResult> {
+export async function sanitizeImage(buffer: Buffer, thumb: ThumbProperties): Promise<ImageSanitizeResult> {
 	const image = sharp(buffer);
 	const metadata = await image.metadata();
 
@@ -71,6 +80,15 @@ export async function sanitizeImage(buffer: Buffer): Promise<ImageSanitizeResult
 	const isRotated = metadata.orientation && metadata.orientation >= 5;
 	const height = isRotated ? metadata.width : metadata.height;
 	const width = isRotated ? metadata.height : metadata.width;
+
+	if (!width || !height) {
+		throw new ImageSanitizeError('Cannot read image');
+	}
+
+	if (thumb.left < 0 || thumb.top < 0 || thumb.width < 1
+			|| thumb.left + thumb.width > width || thumb.top + thumb.width > height) {
+		throw new ImageSanitizeError('Invalid thumbnail parameters');
+	}
 	
 	// At this stage, we know it's a PNG or JPEG image, but we can't just leave it as is:
 	// the user might be trying to smuggle malicious content inside the image by e.g. doing
@@ -104,8 +122,28 @@ export async function sanitizeImage(buffer: Buffer): Promise<ImageSanitizeResult
 		result = await callJpegTran(buffer, jpegTranArgs);
 	}
 
+	// Generate thumbnail
+	const thumbOperation = sharp(result)
+		.extract({
+			left: thumb.left,
+			top: thumb.top,
+			width: thumb.width,
+			height: thumb.width
+		})
+		.resize(THUMB_WIDTH)
+		.toFormat(format === ImageFormat.PNG ? 'png' : 'jpeg');
+
+	if (format === ImageFormat.JPEG) {
+		thumbOperation.jpeg({
+			quality: 90
+		});
+	}
+
+	const thumbBuffer = await thumbOperation.toBuffer();
+
 	return {
 		buffer: result,
+		thumb: thumbBuffer,
 		format,
 		width: width || -1,
 		height: height || -1,

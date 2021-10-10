@@ -16,6 +16,18 @@ export class ImageUploadRequestDto {
 	@IsEnum(ImageCategory)
 	readonly category: ImageCategory;
 
+	@Type(() => Number)
+	@IsNumber()
+	readonly thumbLeft: number;
+
+	@Type(() => Number)
+	@IsNumber()
+	readonly thumbTop: number;
+
+	@Type(() => Number)
+	@IsNumber()
+	readonly thumbWidth: number;
+
 	constructor(properties?: Readonly<ImageUploadRequestDto>) {
     if (properties) {
       Object.assign(this, properties);

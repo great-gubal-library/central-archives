@@ -32,8 +32,8 @@ export class ImagesService {
       throw new BadRequestException('Only JPEG and PNG formats are allowed');
     }  
   
-    // Remember uploaded path in case upload succeeds but then the transaction fails
-    let uploadedPath: string|null = null;
+    // Remember uploaded paths in case upload succeeds but then the transaction fails
+    const uploadedPaths: string[] = [];
 
     try {
       return await this.connection.transaction(async em => {
@@ -60,7 +60,11 @@ export class ImagesService {
         let sanitizeResult: ImageSanitizeResult;
 
         try {
-          sanitizeResult = await sanitizeImage(origBuffer);
+          sanitizeResult = await sanitizeImage(origBuffer, {
+            left: request.thumbLeft,
+            top: request.thumbTop,
+            width: request.thumbWidth,
+          });
         } catch (e) {
           if (e instanceof ImageSanitizeError) {
             throw new BadRequestException(e.message);
@@ -69,10 +73,9 @@ export class ImagesService {
           throw e;
         }
 
-        const { buffer, format, width, height } = sanitizeResult;
+        const { buffer, thumb, format, width, height } = sanitizeResult;
         const size = buffer.length;
         const hash = await hashFile(buffer);
-        const path = `${character.id}/${hash}/${filename}`;
         const mimetype = format === ImageFormat.PNG ? 'image/png' : 'image/jpeg';
 
         // Check that this is not a duplicate upload
@@ -103,12 +106,17 @@ export class ImagesService {
           throw new BadRequestException(`You have too much image content stored (maximum is ${maxUploadSpaceMiB})`);
         }
 
+        const path = `${character.id}/${hash}/${filename}`;
+        const thumbPath = `${character.id}/${hash}/thumb_${filename}`;
+
         try {
           await this.storageService.uploadFile(path, buffer, mimetype);
+          uploadedPaths.push(path);
+          await this.storageService.uploadFile(thumbPath, thumb, mimetype);
+          uploadedPaths.push(thumbPath);
         } catch (e) {
           throw new ServiceUnavailableException('Cannot upload file to storage service');
         }
-        uploadedPath = path;
 
         // Save image in database
         const image = await em.getRepository(Image).save({
@@ -125,18 +133,19 @@ export class ImagesService {
         return {
           id: image.id,
           url: this.storageService.getUrl(path),
+          thumbUrl: this.storageService.getUrl(thumbPath),
           filename,
           width,
           height,
           size,
-          createdAt: Date.now(),
+          createdAt: image.createdAt!.getTime(),
         };
       });
     } catch (e) {
-      if (uploadedPath) {
+      if (uploadedPaths.length > 0) {
         // We uploaded the file before the transaction failed. Delete it.
         try {
-          await this.storageService.deleteFile(uploadedPath);
+          await Promise.all(uploadedPaths.map(path => this.storageService.deleteFile(path)));
         } catch (ex) {
           // Well, what can we do?
         }
