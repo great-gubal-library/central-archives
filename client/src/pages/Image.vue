@@ -10,7 +10,7 @@
 					{{ $display.imageCategories[image.category] }}
 				</div>
 			</section>
-			<q-img :src="image.url" :ratio="image.width / image.height" />
+			<a :href="image.url" :title="image.title" target="_blank"><q-img :src="image.url" :ratio="image.width / image.height" /></a>
 			<template v-if="image.description">
 				<section class="page-image__description" v-html="description"></section>
 				<hr />
@@ -23,16 +23,12 @@
 <script lang="ts">
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
-import StoryView from 'components/stories/StoryView.vue';
+import html from '@app/shared/html';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import html from '@app/shared/html';
 
 @Options({
 	name: 'PageImage',
-	components: {
-		StoryView
-	},
 	beforeRouteEnter(to, _, next) {
 		next(vm => (vm as PageImage).load(to.params));
 	},
