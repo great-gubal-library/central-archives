@@ -250,6 +250,10 @@ export default class MainLayout extends Vue {
     fill: #e8e8e8!important;
   }
 
+  .layout__toolbar-title img {
+    max-width: 100%;
+  }
+
   .layout__toolbar-title img:hover {
     filter: saturate(1.4);
   }
