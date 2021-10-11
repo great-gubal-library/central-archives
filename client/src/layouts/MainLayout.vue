@@ -270,12 +270,12 @@ export default class MainLayout extends Vue {
   }
 
   .q-drawer {
-    background: rgba(#016097, 0.4);
+    background: #08589766;
   }
 
   @media screen and (max-width: 1023px) {
    .q-drawer {
-      background: #006ead;
+      background: #1162ad;
     } 
   }
 
