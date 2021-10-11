@@ -301,7 +301,7 @@ export default class MainLayout extends Vue {
   .layout__page-container {
     max-width: 800px;
     margin: auto;
-    background: rgba(white, 0.9);
+    background: #fdfdffee;
   }
 
   .q-page {
