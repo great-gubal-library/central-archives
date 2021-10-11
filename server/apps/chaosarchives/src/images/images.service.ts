@@ -5,49 +5,89 @@ import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import html from '@app/shared/html';
-import { BadRequestException, ConflictException, Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { Connection, IsNull, Not } from 'typeorm';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  ServiceUnavailableException
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Connection, IsNull, Not, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
-import { ImageSanitizeError, ImageSanitizeResult, sanitizeImage } from '../common/image-lib';
+import {
+  ImageSanitizeError,
+  ImageSanitizeResult,
+  sanitizeImage
+} from '../common/image-lib';
 import { hashFile } from '../common/security';
 import { StorageService } from './storage.service';
 
 @Injectable()
 export class ImagesService {
-  constructor(private storageService: StorageService, private connection: Connection) { }
-  
+  constructor(
+    private storageService: StorageService,
+    private connection: Connection,
+    @InjectRepository(Image) private imageRepo: Repository<Image>,
+  ) {}
+
+  async getImages(
+    limit: number,
+    category: ImageCategory,
+  ): Promise<ImageDto[]> {
+    const images = await this.imageRepo.createQueryBuilder('image')
+      .leftJoinAndSelect('image.owner', 'character')
+      .where('image.category = :category', { category })
+      .orderBy('image.createdAt', 'DESC')
+      .limit(limit)
+      .select(['image', 'character.id'])
+      .getMany();
+
+    return images.map(image => ({
+      id: image.id,
+      url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
+      thumbUrl: this.storageService.getUrl(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
+      filename: image.filename,
+      width: image.width,
+      height: image.height,
+      title: image.title,
+      createdAt: image.createdAt!.getTime(),
+    }));
+  }
+
   async uploadImage(
-		user: UserInfo,
+    user: UserInfo,
     request: ImageUploadRequestDto,
     origBuffer: Buffer,
     origFilename: string,
     origMimetype: string,
   ): Promise<ImageDto> {
     // Validate category and title
-		if (request.category !== ImageCategory.UNLISTED && !request.title.trim()) {
-			throw new BadRequestException('Title is required for artwork and screenshots');
-		}
+    if (request.category !== ImageCategory.UNLISTED && !request.title.trim()) {
+      throw new BadRequestException(
+        'Title is required for artwork and screenshots',
+      );
+    }
 
     // Validate MIME type before doing anything else
     if (origMimetype !== 'image/jpeg' && origMimetype !== 'image/png') {
       throw new BadRequestException('Only JPEG and PNG formats are allowed');
-    }  
-  
+    }
+
     // Remember uploaded paths in case upload succeeds but then the transaction fails
     const uploadedPaths: string[] = [];
 
     try {
-      return await this.connection.transaction(async em => {
+      return await this.connection.transaction(async (em) => {
         // Validate character ID
         const character = await em.getRepository(Character).findOne({
           where: {
             id: request.characterId,
             verifiedAt: Not(IsNull()),
             user: {
-              id: user.id
-            }
+              id: user.id,
+            },
           },
-          select: ['id']
+          select: ['id'],
         });
 
         if (!character) {
@@ -77,26 +117,30 @@ export class ImagesService {
         const { buffer, thumb, format, width, height } = sanitizeResult;
         const size = buffer.length;
         const hash = await hashFile(buffer);
-        const mimetype = format === ImageFormat.PNG ? 'image/png' : 'image/jpeg';
+        const mimetype =
+          format === ImageFormat.PNG ? 'image/png' : 'image/jpeg';
 
         // Check that this is not a duplicate upload
         const existingImage = await em.getRepository(Image).findOne({
           where: {
             hash,
-            owner: character
+            owner: character,
           },
-          select: [ 'id', 'filename' ]
+          select: ['id', 'filename'],
         });
 
         if (existingImage && existingImage.id) {
           throw new ConflictException(
-            `You already have an image with the same contents: ${existingImage.filename}`);
+            `You already have an image with the same contents: ${existingImage.filename}`,
+          );
         }
 
         // Check the user still has upload space left
         const maxUploadSpaceMiB = serverConfiguration.maxUploadSpacePerUserMiB;
         const maxUploadSpaceBytes = maxUploadSpaceMiB * 1024 * 1024;
-        const currentUploadSpaceBytes = await em.getRepository(Image).createQueryBuilder('image')
+        const currentUploadSpaceBytes = await em
+          .getRepository(Image)
+          .createQueryBuilder('image')
           .innerJoinAndSelect('image.owner', 'character')
           .innerJoinAndSelect('character.user', 'user')
           .where('user.id = :userId', { userId: user.id })
@@ -104,7 +148,9 @@ export class ImagesService {
           .getRawOne();
 
         if (currentUploadSpaceBytes + size > maxUploadSpaceBytes) {
-          throw new BadRequestException(`You have too much image content stored (maximum is ${maxUploadSpaceMiB})`);
+          throw new BadRequestException(
+            `You have too much image content stored (maximum is ${maxUploadSpaceMiB})`,
+          );
         }
 
         const path = `${character.id}/${hash}/${filename}`;
@@ -116,7 +162,9 @@ export class ImagesService {
           await this.storageService.uploadFile(thumbPath, thumb, mimetype);
           uploadedPaths.push(thumbPath);
         } catch (e) {
-          throw new ServiceUnavailableException('Cannot upload file to storage service');
+          throw new ServiceUnavailableException(
+            'Cannot upload file to storage service',
+          );
         }
 
         // Save image in database
@@ -131,9 +179,9 @@ export class ImagesService {
           title: request.title,
           description: html.sanitize(request.description),
           credits: request.credits,
-          format
+          format,
         });
-    
+
         return {
           id: image.id,
           url: this.storageService.getUrl(path),
@@ -141,7 +189,7 @@ export class ImagesService {
           filename,
           width,
           height,
-          size,
+          title: request.title,
           createdAt: image.createdAt!.getTime(),
         };
       });
@@ -149,7 +197,9 @@ export class ImagesService {
       if (uploadedPaths.length > 0) {
         // We uploaded the file before the transaction failed. Delete it.
         try {
-          await Promise.all(uploadedPaths.map(path => this.storageService.deleteFile(path)));
+          await Promise.all(
+            uploadedPaths.map((path) => this.storageService.deleteFile(path)),
+          );
         } catch (ex) {
           // Well, what can we do?
         }

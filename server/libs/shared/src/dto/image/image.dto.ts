@@ -3,8 +3,8 @@ export interface ImageDto {
 	url: string,
 	thumbUrl: string,
 	filename: string,
+	title: string,
 	width: number,
 	height: number,
-	size: number,
 	createdAt: number,
 }

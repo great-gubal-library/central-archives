@@ -6,63 +6,10 @@
         <h5><router-link to="/stories">New stories</router-link></h5>
         <story-list :stories="content.newStories" />
       </section>
-      <!--
-      <section>
+      <section v-if="content.newArtwork.length > 0">
         <h5>New artwork</h5>
-        <div class="row">
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image">
-              </div>
-            </q-responsive>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image">
-              </div>
-            </q-responsive>
-          </div>
-        </div>
+        <thumb-gallery :images="content.newArtwork" />
       </section>
-      -->
       <!--
       <section>
         <h5>Noticeboard</h5>
@@ -96,63 +43,10 @@
         </div>
         -->
       </section>
-      <!--
-      <section>
+      <section v-if="content.newScreenshots.length > 0">
         <h5>New screenshots</h5>
-        <div class="row">
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image index__snapshot">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image index__snapshot">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image index__snapshot">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image index__snapshot">
-              </div>
-            </q-responsive>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image index__snapshot">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image index__snapshot">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image index__snapshot">
-              </div>
-            </q-responsive>
-          </div>
-          <div class="col index__image-wrapper">
-            <q-responsive :ratio="1/1">
-              <div class="index__image index__snapshot">
-              </div>
-            </q-responsive>
-          </div>
-        </div>
+        <thumb-gallery :images="content.newScreenshots" />
       </section>
-      -->
     </template>
     <div class="text-center" v-else>
       <q-spinner size="lg" />
@@ -164,14 +58,17 @@
 import { Vue, Options } from 'vue-class-component';
 import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
 import NewProfileList from 'components/mainpage/NewProfileList.vue';
-import StoryList from 'src/components/stories/StoryList.vue';
+import StoryList from 'components/stories/StoryList.vue';
+import ThumbGallery from 'components/images/ThumbGallery.vue';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 
 @Options({
+  name: 'PageIndex',
   components: {
     NewsTimeline,
     NewProfileList,
     StoryList,
+    ThumbGallery,
   },
 })
 export default class PageIndex extends Vue {
@@ -180,6 +77,8 @@ export default class PageIndex extends Vue {
     newsUpToDate: false,
     newProfiles: [],
     newStories: [],
+    newArtwork: [],
+    newScreenshots: [],
   };
 
   loaded = false;
@@ -209,42 +108,5 @@ export default class PageIndex extends Vue {
 </script>
 
 <style lang="scss">
-.index__table {
-  background: $blue-1;
-}
 
-.index__table tr:nth-child(even) {
-  background: rgba($blue-2, 0.4);
-}
-
-tbody.index__table td {
-  font-size: 1em;
-}
-
-.index__image-wrapper {
-  padding-right: 12px;
-  padding-bottom: 12px;
-}
-
-.index__image-wrapper:last-child {
-  padding-right: 0;
-}
-
-.index__image {
-  background: #a0a0a0;
-}
-
-.index__image.index__snapshot {
-  background: #80a0c0;
-}
-
-.index__profile-fc-col {
-  flex-basis: 0;
-  flex-grow: 1;
-  min-width: 350px;
-}
-
-.index__profile-fc-col:first-child {
-  margin-right: 12px;
-}
 </style>

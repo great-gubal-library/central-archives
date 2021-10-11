@@ -20,7 +20,8 @@ import { StorageService } from './storage.service';
     }),
     AuthModule, 
   ],
+  controllers: [ImagesController],
   providers: [ImagesService, StorageService],
-  controllers: [ImagesController]
+  exports: [ImagesService]
 })
 export class ImagesModule {}
