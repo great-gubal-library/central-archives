@@ -25,7 +25,8 @@
 
         <q-toolbar-title class="layout__toolbar-title text-center">
           <router-link to="/">
-            <img src="~/assets/logo_1x.png" srcset="~/assets/logo_2x.png 2x, ~/assets/logo_4x.png 4x" />
+            <img src="~/assets/logo_1x.png"
+              srcset="~/assets/logo_2x.png 2x, ~/assets/logo_3x.png 3x, ~/assets/logo_4x.png 4x" />
           </router-link>
         </q-toolbar-title>
 
@@ -251,6 +252,7 @@ export default class MainLayout extends Vue {
   }
 
   .layout__toolbar-title img {
+    width: 540px;
     max-width: 100%;
   }
 
