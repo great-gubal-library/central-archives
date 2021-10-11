@@ -149,6 +149,17 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Images
+
+  { 
+    path: '/image/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Image.vue') }],
+    meta: {
+      title: 'Image'
+    },
+  },
+
   // Characters
   {
     path: '/profiles',
@@ -161,6 +172,7 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/:server([A-Z][a-z]+)/:character([^/]+)',
+    sensitive: true,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Character.vue') }],
     meta: {

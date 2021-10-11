@@ -1,9 +1,9 @@
 <template>
 	<div class="thumb-gallery">
 		<div v-for="image in images" :key="image.id">
-			<a class="thumb-gallery__image-wrapper" href="#" :title="image.title">
+			<router-link class="thumb-gallery__image-wrapper" :to="`/image/${image.id}`" :title="image.title">
 				<img :src="image.thumbUrl" :alt="image.title" />
-			</a>
+			</router-link>
 		</div>
 	</div>
 </template>

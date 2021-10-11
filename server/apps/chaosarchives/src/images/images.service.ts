@@ -1,7 +1,8 @@
 import { serverConfiguration } from '@app/configuration';
 import { Character, Image } from '@app/entity';
-import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
+import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
+import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import html from '@app/shared/html';
@@ -9,6 +10,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
   ServiceUnavailableException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,6 +31,35 @@ export class ImagesService {
     private connection: Connection,
     @InjectRepository(Image) private imageRepo: Repository<Image>,
   ) {}
+
+  async getImage(id: number): Promise<ImageDto> {
+    const image = await this.imageRepo.createQueryBuilder('image')
+      .leftJoinAndSelect('image.owner', 'character')
+      .leftJoinAndSelect('character.server', 'server')
+      .where('image.id = :id', { id })
+      .select(['image', 'character.id', 'character.name', 'server.name'])
+      .getOne();
+
+    if (!image || image.category === ImageCategory.UNLISTED) {
+      throw new NotFoundException('Image not found');
+    }
+
+    return {
+      id: image.id,
+      url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
+      thumbUrl: this.storageService.getUrl(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
+      filename: image.filename,
+      width: image.width,
+      height: image.height,
+      title: image.title,
+      description: image.description,
+      category: image.category,
+      createdAt: image.createdAt!.getTime(),
+      author: image.owner.name,
+      authorServer: image.owner.server.name,
+      credits: image.credits
+    };
+  }
 
   async getImages(
     limit: number,

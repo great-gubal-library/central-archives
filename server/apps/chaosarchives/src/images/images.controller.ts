@@ -1,14 +1,17 @@
-import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
+import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
+import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import {
   Body,
   Controller,
   ForbiddenException,
-  Post,
-  UploadedFile,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post, UploadedFile,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -19,6 +22,11 @@ import { ImagesService } from './images.service';
 @Controller('images')
 export class ImagesController {
   constructor(private imageService: ImagesService) {}
+
+  @Get(':id')
+  async getImage(@Param('id', ParseIntPipe) id: number): Promise<ImageDto> {
+    return this.imageService.getImage(id);
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)

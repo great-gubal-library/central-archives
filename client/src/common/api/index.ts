@@ -1,8 +1,9 @@
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
-import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
+import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
+import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
@@ -75,6 +76,10 @@ export default class API {
   }
 
   // Images
+  async getImage(id: number): Promise<ImageDto> {
+    return this.transport.tokenGet<ImageDto>(`images/${id}`);
+  }
+
   async uploadImage(request: ImageUploadRequestDto, file: Blob, filename: string): Promise<ImageSummaryDto> {
     const formData = new FormData();
     formData.append('file', file, filename);
