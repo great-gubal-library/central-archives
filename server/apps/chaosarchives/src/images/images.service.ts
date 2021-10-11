@@ -1,7 +1,7 @@
 import { serverConfiguration } from '@app/configuration';
 import { Character, Image } from '@app/entity';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
-import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import html from '@app/shared/html';
@@ -33,7 +33,7 @@ export class ImagesService {
   async getImages(
     limit: number,
     category: ImageCategory,
-  ): Promise<ImageDto[]> {
+  ): Promise<ImageSummaryDto[]> {
     const images = await this.imageRepo.createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
       .where('image.category = :category', { category })
@@ -60,7 +60,7 @@ export class ImagesService {
     origBuffer: Buffer,
     origFilename: string,
     origMimetype: string,
-  ): Promise<ImageDto> {
+  ): Promise<ImageSummaryDto> {
     // Validate category and title
     if (request.category !== ImageCategory.UNLISTED && !request.title.trim()) {
       throw new BadRequestException(

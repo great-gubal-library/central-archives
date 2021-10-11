@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { copyToClipboard } from 'quasar';
 import { Options, prop, Vue } from 'vue-class-component';
 
@@ -33,7 +33,7 @@ interface DialogRef {
 }
 
 class Props {
-	image = prop<ImageDto>({
+	image = prop<ImageSummaryDto>({
 		required: true
 	})
 }

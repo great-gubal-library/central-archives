@@ -1,5 +1,5 @@
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
-import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import {
   Body,
@@ -27,7 +27,7 @@ export class ImagesController {
 		@CurrentUser() user: UserInfo,
     @Body() request: ImageUploadRequestDto,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<ImageDto> {
+  ): Promise<ImageSummaryDto> {
 		if (user.role === Role.UNVERIFIED) {
 			throw new ForbiddenException();
 		}

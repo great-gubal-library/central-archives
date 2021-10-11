@@ -69,7 +69,7 @@ import { ImageSelectModel } from './image-select-model';
 import { ImageThumbModel } from './image-thumb-model';
 import { ImageDetailsModel } from './image-details-model';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
-import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import errors from '@app/shared/errors';
 import { convertImageForUpload } from 'src/common/images';
 
@@ -241,7 +241,7 @@ export default class UploadDialog extends Vue {
     }
   }
 
-  private async upload(): Promise<ImageDto> {
+  private async upload(): Promise<ImageSummaryDto> {
     const user = this.$store.state.user;
     const file = this.fileModel.file;
 

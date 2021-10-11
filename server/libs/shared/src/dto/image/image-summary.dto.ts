@@ -1,4 +1,4 @@
-export interface ImageDto {
+export interface ImageSummaryDto {
 	id: number,
 	url: string,
 	thumbUrl: string,

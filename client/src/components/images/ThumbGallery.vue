@@ -9,11 +9,11 @@
 </template>
 
 <script lang="ts">
-import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { prop, Vue } from 'vue-class-component';
 
 class Props {
-	images = prop<ImageDto[]>({
+	images = prop<ImageSummaryDto[]>({
 		required: true
 	});
 }
