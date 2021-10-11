@@ -33,7 +33,7 @@ export default class ThumbGallery extends Vue.with(Props) {
 }
 
 .thumb-gallery__image-wrapper {
-	display: block;
+	display: flex;
 	margin-right: 12px;
 	margin-bottom: 12px;
 }
