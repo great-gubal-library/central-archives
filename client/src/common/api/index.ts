@@ -1,4 +1,5 @@
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
+import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
@@ -56,6 +57,10 @@ export default class API {
 
   async saveCharacter(character: CharacterProfileDto): Promise<void> {
     await this.transport.authPut<void>('characters/profile', character);
+  }
+
+  async refreshCharacter(request: IdWrapper): Promise<CharacterRefreshResultDto> {
+    return this.transport.authPost<CharacterRefreshResultDto>('characters/refresh', request);
   }
 
   // Stories

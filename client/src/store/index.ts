@@ -1,3 +1,4 @@
+import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto'
 import { SessionDto } from '@app/shared/dto/user/session.dto'
 import { store } from 'quasar/wrappers'
 import { InjectionKey } from 'vue'
@@ -45,6 +46,15 @@ export default store(function (/* { ssrContext } */) {
     mutations: {
       setUser(state, user: SessionDto) {
         state.user = user;
+      },
+
+      updateCharacter(state, characterData: CharacterRefreshResultDto) {
+        if (!state.user) {
+          return;
+        }
+
+        const { name, server, avatar } = characterData;
+        Object.assign(state.user.character, { name, server, avatar });
       }
     },
 

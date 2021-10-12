@@ -12,11 +12,11 @@ import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, GoneException, HttpService, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import XIVAPI, { CharacterInfo } from '@xivapi/js';
 import parse from 'node-html-parser';
 import { Connection, EntityManager, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 import db from '../common/db';
+import { getLodestoneCharacter } from '../common/lodestone';
 import { generateVerificationCode, hashPassword } from '../common/security';
 import { MailService } from '../mail/mail.service';
 
@@ -43,7 +43,7 @@ export class UserService {
             verificationCode: generateVerificationCode(),
           });
 
-          const characterInfo = await this.getLodestoneCharacter(
+          const characterInfo = await getLodestoneCharacter(
             signupData.lodestoneId,
           );
 
@@ -97,25 +97,6 @@ export class UserService {
 
       // default
       throw e;
-    }
-  }
-
-  private async getLodestoneCharacter(
-    lodestoneId: number,
-  ): Promise<CharacterInfo | null> {
-    try {
-      const xivapi = new XIVAPI();
-      return await xivapi.character.get(lodestoneId);
-    } catch (e) {
-      // eslint-disable-next-line prefer-destructuring
-      const statusCode: number|undefined = (e as any).statusCode;
-      
-      if (statusCode === HttpStatus.NOT_FOUND) {
-        // Character not found on Lodestone
-        return null;
-      } 
-
-      throw new ServiceUnavailableException('Unable to check character on Lodestone');
     }
   }
 

@@ -4,13 +4,20 @@
       <h2>Edit Profile</h2>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
+          <div class="page-edit-character__lodestone-info">
+            <section class="page-edit-character__form-controls">
+              <q-input :model-value="character.name" label="Name" readonly />
+              <q-input
+                :model-value="$display.races[character.race]"
+                label="Race"
+                readonly
+              />
+            </section>
+            <section>
+              <q-btn outline color="secondary" @click="onRefreshClick" style="max-width: 140px"><i class="material-icons q-icon">refresh</i>Refresh from Lodestone</q-btn>
+            </section>
+          </div>
           <section class="page-edit-character__form-controls">
-            <q-input :model-value="character.name" label="Name" readonly />
-            <q-input
-              :model-value="$display.races[character.race]"
-              label="Race"
-              readonly
-            />
             <p></p>
             <p>All fields are optional.</p>
             <h6>Profile display</h6>
@@ -67,7 +74,7 @@
         <div class="page-edit-character__button-bar">
           <q-btn-toggle v-model="preview" :options="previewOptions" toggle-color="secondary" />
           <div class="page-edit-character__revert-submit">
-            <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
+            <q-btn label="Revert" color="secondary" @click="onRevertClick" />&nbsp;
             <q-btn label="Save changes" type="submit" color="primary" />
           </div>
         </div>
@@ -97,6 +104,7 @@ import errors from '@app/shared/errors';
 import { Options, Vue } from 'vue-class-component';
 import HtmlEditor from '../components/common/HtmlEditor.vue';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
+import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 
 @Options({
   components: {
@@ -124,7 +132,22 @@ export default class PageEditCharacter extends Vue {
     this.character = new CharacterProfileDto(this.characterBackup);
   }
 
-  revert() {
+  async onRefreshClick() {
+    const RefreshCharacterDialog = (await import('src/components/character/RefreshCharacterDialog.vue')).default;
+
+    this.$q.dialog({
+      component: RefreshCharacterDialog,
+      componentProps: {
+        characterId: this.character.id,
+        characterName: this.character.name
+      }
+    }).onOk((characterData: CharacterRefreshResultDto) => {
+      const { name, race, server, avatar } = characterData;
+      Object.assign(this.character, { name, race, server, avatar });
+    });
+  }
+
+  onRevertClick() {
     this.confirmRevert = true;
   }
 
@@ -173,6 +196,12 @@ export default class PageEditCharacter extends Vue {
   max-width: 500px;
   flex-basis: 0;
   flex-grow: 1;
+}
+
+.page-edit-character__lodestone-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .page-edit-character__checkbox .q-field__bottom {
