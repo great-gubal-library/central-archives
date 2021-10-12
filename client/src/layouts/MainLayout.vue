@@ -259,7 +259,7 @@ export default class MainLayout extends Vue {
     max-width: 100%;
   }
 
-  .layout__logo {
+  .layout__logo:hover {
     filter: saturate(1.4);
   }
 
