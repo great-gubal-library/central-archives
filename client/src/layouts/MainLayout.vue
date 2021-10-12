@@ -269,7 +269,7 @@ export default class MainLayout extends Vue {
   }
 
   .q-header {
-    background: #1162adcc;
+    background: #1e68b6;
   }
 
   .q-drawer {
