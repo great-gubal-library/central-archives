@@ -103,9 +103,9 @@ module.exports = configure(function (ctx) {
     framework: {
       config: {
         loadingBar: {
-          position: 'bottom',
+          position: 'top',
           color: 'accent',
-          size: '10px',
+          size: '4px',
         }
       },
 
