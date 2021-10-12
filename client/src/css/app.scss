@@ -8,6 +8,10 @@ body {
 	scrollbar-color: dark;
 }
 
+html.webp body {
+	background-image: url(assets/bg.webp);
+}
+
 *::-webkit-scrollbar {
 	background: #005383;
 	width: 12px;
