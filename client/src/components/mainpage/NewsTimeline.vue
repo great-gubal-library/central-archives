@@ -32,7 +32,15 @@
       </template>
       <div class="row justify-center">
         <div class="col news-timeline__image-container">
-          <q-img :src="entry.image" />
+          <q-img
+            :src="entry.image"
+            :initial-ratio="768 / 432"
+            loading="eager"    
+          >
+            <div v-if="!entry.image" class="absolute-full text-subtitle2 flex flex-center">
+              No picture
+            </div>
+          </q-img>
         </div>
         <div class="col" style="padding-left: 6px; min-width: 300px">
           {{ entry.content }}
@@ -51,13 +59,11 @@ import { NewsDto } from '@app/shared/dto/news/news.dto';
   props: {
     news: {
       type: Object as () => NewsDto[],
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 })
-export default class NewsTimeline extends Vue {
-  
-}
+export default class NewsTimeline extends Vue {}
 </script>
 
 <style lang="scss">
@@ -74,12 +80,17 @@ export default class NewsTimeline extends Vue {
   text-align: center;
 }
 
-.news-timeline__header a, .news-timeline__blurb a {
+.news-timeline__header a,
+.news-timeline__blurb a {
   color: $link-visited-color;
 }
 
 .row > .news-timeline__image-container {
   max-width: 250px;
   min-width: 175px;
+}
+
+.news-timeline__image-container .q-img {
+  background: #80a0c0;
 }
 </style>
