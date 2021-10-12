@@ -35,6 +35,7 @@ export class StorageService {
 			ACL: 'public-read',
 			ContentType: mimetype,
 			ContentDisposition: 'inline',
+			CacheControl: 'max-age=31536000', // cache for one year
 			Body: buffer,
 			Key: this.normalizePath(path),
 		}).promise();
