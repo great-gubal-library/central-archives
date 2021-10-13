@@ -10,10 +10,15 @@ declare module '@vue/runtime-core' {
   }
 }
 
+const api = new API();
+
+export function useApi() {
+  return api;
+}
+
 export default boot(async ({ app, store }) => {
   app.config.globalProperties.$axios = axios;
 
-  const api = new API();
   app.config.globalProperties.$api = api;
 
   if (api.hasAccessToken()) {

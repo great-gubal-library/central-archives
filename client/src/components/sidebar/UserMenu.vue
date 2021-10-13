@@ -95,46 +95,50 @@
   </q-list>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
+import { useStore } from 'src/store';
+import { useQuasar } from 'quasar';
+import { useApi } from 'src/boot/axios';
+import { useRouter } from 'vue-router';
 
-@Options({
-  
-})
-export default class UserMenu extends Vue {
-  get myProfileLink() {
-		const server = this.$store.state.user?.character.server || '';
-		const character = this.$store.state.user?.character.name.replace(' ', '_') || '';
-		return `/${server}/${character}`;
-	}
+const $q = useQuasar();
+const $store = useStore();
+const $api = useApi();
+const $router = useRouter();
 
-  async uploadImage() {
-    const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
+const myProfileLink = computed(() => {
+  const server = $store.state.user?.character.server || '';
+  const character = $store.state.user?.character.name.replace(' ', '_') || '';
+  return `/${server}/${character}`;
+});
 
-    this.$q.dialog({
-      component: UploadDialog
-    }).onOk(async (image: ImageSummaryDto) => {
-      console.log('onOk', image);
-      const PostUploadDialog = (await import('components/upload/PostUploadDialog.vue')).default;
+async function uploadImage() {
+  const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
 
-      this.$q.dialog({
-        component: PostUploadDialog,
-        componentProps: {
-          image
-        }
-      });
+  $q.dialog({
+    component: UploadDialog
+  }).onOk(async (image: ImageSummaryDto) => {
+    console.log('onOk', image);
+    const PostUploadDialog = (await import('components/upload/PostUploadDialog.vue')).default;
+
+    $q.dialog({
+      component: PostUploadDialog,
+      componentProps: {
+        image
+      }
     });
-  }
+  });
+}
 
-  logOut() {
-    this.$store.commit('setUser', null);
-    this.$api.setAccessToken(null);
-    this.$q.notify({
-      message: 'You have been logged out.'
-    });
-    void this.$router.push('/');
-  }
+function logOut() {
+  $store.commit('setUser', null);
+  $api.setAccessToken(null);
+  $q.notify({
+    message: 'You have been logged out.'
+  });
+  void $router.push('/');
 }
 </script>
 

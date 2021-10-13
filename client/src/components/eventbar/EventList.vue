@@ -5,7 +5,7 @@
       v-for="event in events"
       clickable
       v-ripple
-      :key="event.title"
+      :key="event.name"
       tag="a"
       target="_blank"
       class="event-list__link"
@@ -23,53 +23,52 @@
   </q-list>
 </template>
 
-<script lang="ts">
-import { Vue } from 'vue-class-component';
+<script lang="ts" setup>
+import { onBeforeMount, ref } from 'vue';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
 import SharedConstants from '@app/shared/SharedConstants';
+import { useApi } from 'src/boot/axios';
 
 const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = Object.freeze({
   dateStyle: 'long',
   timeStyle: 'short',
 });
 
-export default class EventList extends Vue {
-  events: EventDto[] = [];
+let events = ref([] as EventDto[]);
 
-  async created() {
-    const today = DateTime.now()
-      .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
-      .startOf('day');
+const today = DateTime.now()
+  .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
+  .startOf('day');
 
-    // Show only events from today and later
-    this.events = (await this.$api.getEvents()).filter(
-      (event) =>
-        DateTime.fromMillis(event.date)
-          .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
-          .startOf('day') >= today
-    );
-  }
+onBeforeMount(async () => {
+  // Show only events from today and later
+  events.value = (await useApi().getEvents()).filter(
+    (event) =>
+      DateTime.fromMillis(event.date)
+        .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
+        .startOf('day') >= today
+  );
+});
 
-  formatDateServer(date: number) {
-    return (
-      DateTime.fromMillis(date).toLocaleString(
-        Object.assign(
-          {
-            timeZone: SharedConstants.FFXIV_SERVER_TIMEZONE,
-          },
-          BASIC_DATE_FORMAT_OPTIONS
-        )
-      ) + ' ST'
-    );
-  }
+function formatDateServer(date: number) {
+  return (
+    DateTime.fromMillis(date).toLocaleString(
+      Object.assign(
+        {
+          timeZone: SharedConstants.FFXIV_SERVER_TIMEZONE,
+        },
+        BASIC_DATE_FORMAT_OPTIONS
+      )
+    ) + ' ST'
+  );
+}
 
-  formatDateLocal(date: number) {
-    return (
-      DateTime.fromMillis(date).toLocaleString(BASIC_DATE_FORMAT_OPTIONS) +
-      ' LT'
-    );
-  }
+function formatDateLocal(date: number) {
+  return (
+    DateTime.fromMillis(date).toLocaleString(BASIC_DATE_FORMAT_OPTIONS) +
+    ' LT'
+  );
 }
 </script>
 

@@ -13,8 +13,7 @@
 </template>
 
 <script lang="ts">
-import Editor from '@tinymce/tinymce-vue';
-import { Options, Vue } from 'vue-class-component';
+// static definitions
 
 const FONTS = [
   // Three main ones
@@ -96,35 +95,35 @@ const TINYMCE_OPTIONS = {
 };
 
 let uid = 0;
+</script>
 
-@Options({
-  components: {
-    Editor
+<script lang="ts" setup>
+import Editor from '@tinymce/tinymce-vue';
+import { computed } from 'vue';
+
+defineProps({
+  modelValue: {
+    type: String,
+    required: true,
   },
-  props: {
-    modelValue: {
-      type: String,
-      required: true,
-    },
-    height: {
-      type: String,
-      default: '400px',
-    }
-  },
-})
-export default class HtmlEditor extends Vue {
-  toolbarId = `html-editor__toolbar${uid++}`;
-
-  get options() {
-    return {
-      ...TINYMCE_OPTIONS,
-      fixed_toolbar_container: `#${this.toolbarId}`
-    }
+  height: {
+    type: String,
+    default: '400px',
   }
+});
 
-  onInput(newValue: string) {
-    this.$emit('update:modelValue', newValue);
+const emit = defineEmits([ 'update:modelValue' ]);
+const toolbarId = `html-editor__toolbar${uid++}`;
+
+const options = computed(() => {
+  return {
+    ...TINYMCE_OPTIONS,
+    fixed_toolbar_container: `#${toolbarId}`
   }
+});
+
+function onInput(newValue: string) {
+  emit('update:modelValue', newValue);
 }
 </script>
 

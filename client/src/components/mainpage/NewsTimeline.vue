@@ -51,19 +51,15 @@
   </q-timeline>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+<script lang="ts" setup>
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 
-@Options({
-  props: {
-    news: {
+defineProps({
+  news: {
       type: Object as () => NewsDto[],
       required: true,
     },
-  },
 })
-export default class NewsTimeline extends Vue {}
 </script>
 
 <style lang="scss">

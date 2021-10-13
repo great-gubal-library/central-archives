@@ -20,22 +20,18 @@
   </q-list>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
-import { Options, Vue } from 'vue-class-component';
 
-@Options({
-  props: {
-    profiles: {
-      type: Object as () => NewProfileDto[],
-      required: true,
-    },
+defineProps({
+  profiles: {
+    type: Object as () => NewProfileDto[],
+    required: true,
   },
 })
-export default class NewProfileList extends Vue {
-  getLink(profile: NewProfileDto) {
-    return `/${profile.server}/${profile.name.replace(' ', '_')}`
-  }
+
+function getLink(profile: NewProfileDto) {
+  return `/${profile.server}/${profile.name.replace(' ', '_')}`
 }
 </script>
 
