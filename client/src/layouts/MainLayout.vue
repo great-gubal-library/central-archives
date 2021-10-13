@@ -269,7 +269,7 @@ export default class MainLayout extends Vue {
   }
 
   .q-header {
-    background: #1e68b6;
+    background: #1e6ab6;
   }
 
   .q-drawer {
@@ -324,7 +324,7 @@ export default class MainLayout extends Vue {
   }
   
   .q-footer {
-    background: #795548;
+    background: #1f5993;
   }
 
   @media screen and (min-width: $max-layout-width) {

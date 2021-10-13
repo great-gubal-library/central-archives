@@ -5,8 +5,8 @@
       <q-item class="user-menu__button-bar">
         <q-item-section>
           <q-item-label>
-            <q-btn color="green-7" label="Sign up" to="/signup" />&nbsp;
-            <q-btn color="grey-7" label="Log in" to="/login" />
+            <q-btn class="user-menu__sign-up-button" label="Sign up" to="/signup" />&nbsp;
+            <q-btn class="user-menu__log-in-button" label="Log in" to="/login" />
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -141,5 +141,13 @@ export default class UserMenu extends Vue {
 <style lang="scss">
 .user-menu__button-bar {
   margin-bottom: 8px;
+}
+
+.user-menu__sign-up-button {
+  background-color: #ae9459;
+}
+
+.user-menu__log-in-button {
+  background-color: #2e95b6;
 }
 </style>
