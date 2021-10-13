@@ -82,7 +82,7 @@ export default class NewsTimeline extends Vue {}
 
 .news-timeline__header a,
 .news-timeline__blurb a {
-  color: $link-visited-color;
+  color: #1e6ab6;
 }
 
 .row > .news-timeline__image-container {
