@@ -76,11 +76,6 @@ defineProps({
   text-align: center;
 }
 
-.news-timeline__header a,
-.news-timeline__blurb a {
-  color: #1e6ab6;
-}
-
 .row > .news-timeline__image-container {
   max-width: 250px;
   min-width: 175px;
