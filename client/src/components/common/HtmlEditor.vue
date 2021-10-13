@@ -95,6 +95,8 @@ const TINYMCE_OPTIONS = {
 };
 
 let uid = 0;
+
+export default {}
 </script>
 
 <script lang="ts" setup>
