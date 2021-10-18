@@ -130,22 +130,22 @@ export default class PageSignUp extends Vue {
   readonly rules = rules;
   readonly SharedConstants = SharedConstants;
 
-  private email = '';
-  private password = '';
-  private confirmPassword = '';
+  email = '';
+  password = '';
+  confirmPassword = '';
 
-	private character: Character = {
+	character: Character = {
 		name: '',
 		server: '',
     avatar: '',
     lodestoneId: -1,
 	};
-	private characterOptions: Character[] = [];
-  private characterOptionsSearchString = '';
+	characterOptions: Character[] = [];
+  characterOptionsSearchString = '';
 
-  private accept = false;
-  private loading = false;
-  private signedUp = false;
+  accept = false;
+  loading = false;
+  signedUp = false;
 
 	async onCharacterFilter(value: string, update: () => void, abort: () => void) {
     value = value.trim();

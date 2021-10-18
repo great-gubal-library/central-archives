@@ -35,7 +35,7 @@ const $q = useQuasar();
   }
 })
 export default class PageCharacters extends Vue {
-	private stories: StorySummaryDto[] = [];
+	stories: StorySummaryDto[] = [];
 
 	setContent(stories: StorySummaryDto[]) {
 		this.stories = stories;

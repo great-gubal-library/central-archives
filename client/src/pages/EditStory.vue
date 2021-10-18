@@ -92,23 +92,23 @@ import { RouteParams } from 'vue-router';
   },
 })
 export default class PageEditStory extends Vue {
-  private readonly previewOptions = [
+  readonly previewOptions = [
     { label: 'Edit', value: false },
     { label: 'Preview', value: true },
   ];
 
-  private readonly typeOptions = Object.values(StoryType).map((storyType) => ({
+  readonly typeOptions = Object.values(StoryType).map((storyType) => ({
     label: displayOptions.storyTypes[storyType],
     value: storyType,
   }));
 
-  private story = new StoryDto();
-  private storyBackup = new StoryDto();
-  private preview = false;
-  private loaded = false;
-  private saving = false;
+  story = new StoryDto();
+  storyBackup = new StoryDto();
+  preview = false;
+  loaded = false;
+  saving = false;
 
-  private confirmRevert = false;
+  confirmRevert = false;
 
   private async load(params: RouteParams) {
     const id = parseInt(params.id as string, 10);
