@@ -9,25 +9,39 @@
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import errors from '@app/shared/errors';
 import NewProfileList from 'components/mainpage/NewProfileList.vue';
+import { useQuasar } from 'quasar';
+import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
+
+const $api = useApi();
+const $q = useQuasar();
+
+async function load(): Promise<NewProfileDto[]> {
+	try {
+		return await $api.getCharacterProfiles();
+	} catch (e) {
+		$q.notify({
+			type: 'negative',
+			message: errors.getMessage(e)
+		});
+		throw e;
+	}
+}
 
 @Options({
 	components: {
 		NewProfileList
+	},
+	async beforeRouteEnter(_, __, next) {
+		const stories = await load();
+		next(vm => (vm as PageCharacters).setContent(stories));
 	}
 })
 export default class PageCharacters extends Vue {
-	private profiles: NewProfileDto[] = [];
+	profiles: NewProfileDto[] = [];
 
-	async created() {
-		try {
-			this.profiles = await this.$api.getCharacterProfiles();
-		} catch (e) {
-			this.$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
-		}
+	setContent(profiles: NewProfileDto[]) {
+		this.profiles = profiles;
 	}
 }
 </script>

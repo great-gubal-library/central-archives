@@ -9,25 +9,36 @@
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import errors from '@app/shared/errors';
 import StoryList from 'components/stories/StoryList.vue';
+import { useQuasar } from 'quasar';
+import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 
+const $api = useApi();
+const $q = useQuasar();
+
 @Options({
+	name: 'PageCharacters',
 	components: {
 		StoryList
-	}
+	},
+  async beforeRouteEnter(_, __, next) {
+    try {
+      const stories = await $api.getStories({});
+      next(vm => (vm as PageCharacters).setContent(stories));
+    } catch (e) {
+      console.log(e);
+      $q.notify({
+				type: 'negative',
+				message: errors.getMessage(e)
+			});
+    }
+  }
 })
 export default class PageCharacters extends Vue {
 	private stories: StorySummaryDto[] = [];
 
-	async created() {
-		try {
-			this.stories = await this.$api.getStories({});
-		} catch (e) {
-			this.$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
-		}
+	setContent(stories: StorySummaryDto[]) {
+		this.stories = stories;
 	}
 }
 </script>

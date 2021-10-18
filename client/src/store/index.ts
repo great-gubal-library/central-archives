@@ -5,7 +5,6 @@ import { InjectionKey } from 'vue'
 import {
   createStore,
   Store as VuexStore,
-  useStore as vuexUseStore,
 } from 'vuex'
 
 // import example from './module-example'
@@ -37,8 +36,10 @@ declare module '@vue/runtime-core' {
 // provide typings for `useStore` helper
 export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-key')
 
+let $store: VuexStore<StateInterface>;
+
 export default store(function (/* { ssrContext } */) {
-  const Store = createStore<StateInterface>({
+  $store = createStore<StateInterface>({
     modules: {
       // example
     },
@@ -69,9 +70,9 @@ export default store(function (/* { ssrContext } */) {
     strict: !!process.env.DEBUGGING
   })
 
-  return Store;
+  return $store;
 })
 
 export function useStore() {
-  return vuexUseStore(storeKey)
+  return $store
 }

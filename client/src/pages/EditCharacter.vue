@@ -105,30 +105,54 @@ import { Options, Vue } from 'vue-class-component';
 import HtmlEditor from '../components/common/HtmlEditor.vue';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
+import { useStore } from 'src/store';
+import { useApi } from 'src/boot/axios';
+import { useQuasar } from 'quasar';
+
+const $api = useApi();
+const $q = useQuasar();
+
+async function load(): Promise<CharacterProfileDto> {
+  const $store = useStore();
+  const name = $store.state.user?.character.name || '';
+  const server = $store.state.user?.character.server || '';
+
+  try {
+    return await $api.getCharacterProfile(name, server);
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      message: errors.getMessage(e)
+    });
+    throw e;
+  }
+}
 
 @Options({
   components: {
     HtmlEditor,
     CharacterProfile,
   },
+  async beforeRouteEnter(_, __, next) {
+    const character = await load();
+    next(vm => (vm as PageEditCharacter).setContent(character));
+  }
 })
 export default class PageEditCharacter extends Vue {
-  private readonly previewOptions = [
+  readonly previewOptions = [
     { label: 'Edit', value: false },
     { label: 'Preview', value: true },
   ];
 
-  private character = new CharacterProfileDto();
-  private characterBackup = new CharacterProfileDto();
-  private preview = false;
-  private saving = false;
+  character = new CharacterProfileDto();
+  characterBackup = new CharacterProfileDto();
+  preview = false;
+  saving = false;
 
-  private confirmRevert = false;
+  confirmRevert = false;
 
-  async created() {
-    const name = this.$store.state.user?.character.name || '';
-    const server = this.$store.state.user?.character.server || '';
-    this.characterBackup = await this.$api.getCharacterProfile(name, server);
+  setContent(character: CharacterProfileDto) {
+    this.characterBackup = character;
     this.character = new CharacterProfileDto(this.characterBackup);
   }
 

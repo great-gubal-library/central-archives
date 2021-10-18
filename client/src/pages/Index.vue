@@ -1,56 +1,51 @@
 <template>
   <q-page>
-    <template v-if="loaded">
-      <news-timeline :news="content.news" />
-      <section>
-        <h5><router-link to="/stories">New stories</router-link></h5>
-        <story-list :stories="content.newStories" />
-      </section>
-      <section v-if="content.newArtwork.length > 0">
-        <h5>New artwork</h5>
-        <thumb-gallery :images="content.newArtwork" />
-      </section>
+    <news-timeline :news="content.news" />
+    <section>
+      <h5><router-link to="/stories">New stories</router-link></h5>
+      <story-list :stories="content.newStories" />
+    </section>
+    <section v-if="content.newArtwork.length > 0">
+      <h5>New artwork</h5>
+      <thumb-gallery :images="content.newArtwork" />
+    </section>
+    <!--
+    <section>
+      <h5>Noticeboard</h5>
+      <q-markup-table dense>
+        <tbody class="index__table">
+          <tr v-for="(adventure, index) in noticeboard" :key="index">
+            <td>
+              <div>{{adventure.title}}</div>
+              <div style="margin-top: -8px"><small style="color: #888">{{adventure.author}}</small></div>
+            </td>
+            <td>{{adventure.location}}</td>
+            <td>{{adventure.date}}</td>
+          </tr>
+        </tbody>
+      </q-markup-table>
+    </section>
+    -->
+    <section>
+      <h5><router-link to="/profiles">New profiles</router-link></h5>
+      <new-profile-list :profiles="content.newProfiles" />
       <!--
-      <section>
-        <h5>Noticeboard</h5>
+      <div class="index__profile-fc-col">
+        <h5>New free companies</h5>
         <q-markup-table dense>
           <tbody class="index__table">
-            <tr v-for="(adventure, index) in noticeboard" :key="index">
-              <td>
-                <div>{{adventure.title}}</div>
-                <div style="margin-top: -8px"><small style="color: #888">{{adventure.author}}</small></div>
-              </td>
-              <td>{{adventure.location}}</td>
-              <td>{{adventure.date}}</td>
+            <tr v-for="(fc, index) in newFCs" :key="index">
+              <td>{{fc.name}}</td>
             </tr>
           </tbody>
         </q-markup-table>
-      </section>
+      </div>
       -->
-      <section>
-        <h5><router-link to="/profiles">New profiles</router-link></h5>
-        <new-profile-list :profiles="content.newProfiles" />
-        <!--
-        <div class="index__profile-fc-col">
-          <h5>New free companies</h5>
-          <q-markup-table dense>
-            <tbody class="index__table">
-              <tr v-for="(fc, index) in newFCs" :key="index">
-                <td>{{fc.name}}</td>
-              </tr>
-            </tbody>
-          </q-markup-table>
-        </div>
-        -->
-      </section>
-      <section v-if="content.newScreenshots.length > 0">
-        <h5>New screenshots</h5>
-        <thumb-gallery :images="content.newScreenshots" />
-      </section>
-    </template>
-    <div class="text-center" v-else>
-      <q-spinner size="lg" />
-    </div>
+    </section>
+    <section v-if="content.newScreenshots.length > 0">
+      <h5>New screenshots</h5>
+      <thumb-gallery :images="content.newScreenshots" />
+    </section>
   </q-page>
 </template>
 
@@ -61,6 +56,24 @@ import NewProfileList from 'components/mainpage/NewProfileList.vue';
 import StoryList from 'components/stories/StoryList.vue';
 import ThumbGallery from 'components/images/ThumbGallery.vue';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
+import { useApi } from 'src/boot/axios';
+import { useQuasar } from 'quasar';
+
+const $api = useApi();
+const $q = useQuasar();
+
+async function load(): Promise<MainPageContentDto> {
+  try {
+    return await $api.getMainPageContent();
+  } catch (e) {
+    console.log(e);
+    $q.notify({
+      type: 'negative',
+      message: 'Cannot retrieve main page'
+    });
+    throw e;
+  }
+}
 
 @Options({
   name: 'PageIndex',
@@ -70,6 +83,10 @@ import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.
     StoryList,
     ThumbGallery,
   },
+  async beforeRouteEnter(_, __, next) {
+    const content = await load();
+    next(vm => (vm as PageIndex).setContent(content));
+  }
 })
 export default class PageIndex extends Vue {
   content: MainPageContentDto = {
@@ -83,25 +100,16 @@ export default class PageIndex extends Vue {
 
   loaded = false;
 
-  async created() {
-    try {
-      this.content = await this.$api.getMainPageContent();
-      this.loaded = true;
+  setContent(content: MainPageContentDto) {
+    this.content = content;
 
-      if (!this.content.newsUpToDate) {
-        // Update news later without blocking page load
-        void this.updateNews();
-      }
-    } catch (e) {
-      console.log(e);
-      this.$q.notify({
-				type: 'negative',
-				message: 'Cannot retrieve main page'
-			});
+    if (!this.content.newsUpToDate) {
+      // Update news later without blocking page load
+      void this.updateNews();
     }
   }
 
-  private async updateNews() {
+  async updateNews() {
     this.content.news = await this.$api.getUpdatedNews();
   }
 }

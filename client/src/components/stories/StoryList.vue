@@ -23,18 +23,22 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
+import { Options, Vue } from 'vue-class-component';
 
-defineProps({
-  stories: {
-    type: Object as () => StorySummaryDto[],
-    required: true,
+@Options({
+  props: {
+    stories: {
+      type: Object as () => StorySummaryDto[],
+      required: true,
+    },
   },
 })
-
-function getLink(story: StorySummaryDto) {
-  return `/story/${story.id}`
+export default class NewProfileList extends Vue {
+  getLink(story: StorySummaryDto) {
+    return `/story/${story.id}`
+  }
 }
 </script>
 
