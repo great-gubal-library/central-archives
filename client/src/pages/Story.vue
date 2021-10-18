@@ -1,6 +1,8 @@
 <template>
   <q-page class="page-story">
-		<story-view :story="story" />
+		<template v-if="story.id">
+			<story-view :story="story" />
+		</template>
 	</q-page>	
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-image">
-		<template v-if="loaded">
-			<h2>{{image.title}}</h2>
+		<h2>{{image.title}}</h2>
+		<template v-if="image.id">
 			<section class="text-caption page-image__subtitle row">
 				<div class="page-image__posted-by">
 				Posted by <router-link :to="authorLink">{{ image.author }}</router-link> on {{ date }}
@@ -24,49 +24,61 @@
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
 import html from '@app/shared/html';
+import { useQuasar } from 'quasar';
+import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
-import { RouteParams } from 'vue-router';
+import { RouteParams, useRouter } from 'vue-router';
+
+const $api = useApi();
+const $q = useQuasar();
+const $router = useRouter();
+
+async function load(params: RouteParams): Promise<ImageDto> {
+	const id = parseInt(params.id as string, 10);
+
+	if (!id) {
+		void $router.replace('/');
+		throw new Error();
+	}
+
+	try {
+		const image = await $api.getImage(id);
+		document.title = `${image.title} — Chaos Archives`;
+		return image;
+	} catch (e) {
+		if (errors.getStatusCode(e) === 404) {
+			$q.notify({
+				type: 'negative',
+				message: 'Image not found.'
+			});
+			void $router.replace('/');
+		} else {
+			$q.notify({
+				type: 'negative',
+				message: errors.getMessage(e)
+			});
+		}
+
+		throw e;
+	}
+}
 
 @Options({
 	name: 'PageImage',
-	beforeRouteEnter(to, _, next) {
-		next(vm => (vm as PageImage).load(to.params));
+	async beforeRouteEnter(to, _, next) {
+		const image = await load(to.params);
+		next(vm => (vm as PageImage).setContent(image));
 	},
 	async beforeRouteUpdate(to) {
-		await (this as PageImage).load(to.params);
+		const image = await load(to.params);
+		(this as PageImage).setContent(image);
 	}
 })
 export default class PageImage extends Vue {
-	private id: number|null = null;
-	private image = {} as ImageDto;
-	private loaded = false;
+	image = {} as ImageDto;
 
-	private async load(params: RouteParams) {
-		this.id = parseInt(params.id as string, 10);
-
-		if (!this.id) {
-			void this.$router.replace('/');
-			return;
-		}
-
-		try {
-			this.image = await this.$api.getImage(this.id);
-			document.title = `${this.image.title} — Chaos Archives`;
-			this.loaded = true;
-		} catch (e) {
-			if (errors.getStatusCode(e) === 404) {
-				this.$q.notify({
-					type: 'negative',
-					message: 'Story not found.'
-				});
-				void this.$router.replace('/');
-			} else {
-				this.$q.notify({
-					type: 'negative',
-					message: errors.getMessage(e)
-				});
-			}
-		}
+	setContent(image: ImageDto) {
+		this.image = image;
 	}
 
 	get description() {
