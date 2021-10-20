@@ -50,16 +50,24 @@ export default class ThumbGallery extends Vue.with(Props) {
 }
 
 @media screen and (max-width: $breakpoint-sm) {
+	.thumb-gallery > div {
+		width: calc(((100% - 48px) / 4) + 12px);
+	}
+
 	.thumb-gallery img {
-		width: 149px;
-		height: 149px;
+		width: 100%;
+		height: auto;
 	}
 }
 
 @media screen and (max-width: $breakpoint-xs) {
+	.thumb-gallery > div {
+		width: calc(((100% - 36px) / 3) + 12px);
+	}
+
 	.thumb-gallery img {
-		width: 124px;
-		height: 124px;
+		width: 100%;
+		height: auto;
 	}
 }
 </style>
