@@ -61,8 +61,17 @@ export default class ThumbGallery extends Vue.with(Props) {
 }
 
 @media screen and (max-width: $breakpoint-xs) {
+	.thumb-gallery {
+		margin-right: -6px;
+	}
+
+	.thumb-gallery__image-wrapper {
+		margin-right: 6px;
+		margin-bottom: 6px;
+	}
+
 	.thumb-gallery > div {
-		width: calc(((100% - 36px) / 3) + 12px);
+		width: calc(((100% - 24px) / 4) + 6px);
 	}
 
 	.thumb-gallery img {
