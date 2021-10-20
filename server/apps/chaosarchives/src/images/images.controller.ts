@@ -9,8 +9,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Post, UploadedFile,
-  UseGuards,
+  Post, UploadedFile, UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -18,6 +17,7 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserInfo } from '../auth/user-info';
 import { ImagesService } from './images.service';
+import { PayloadTooLargeInterceptor } from './payload-too-large.interceptor';
 
 @Controller('images')
 export class ImagesController {
@@ -31,6 +31,7 @@ export class ImagesController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(PayloadTooLargeInterceptor) // Must be after FileInterceptor
   async uploadImage(
 		@CurrentUser() user: UserInfo,
     @Body() request: ImageUploadRequestDto,

@@ -15,7 +15,7 @@ import { StorageService } from './storage.service';
       useFactory: () => ({
         limits: {
           fileSize: serverConfiguration.maxUploadSizeKiB * 1024,
-        }
+        },
       }),
     }),
     AuthModule, 

@@ -17,6 +17,10 @@ const errors = {
 				if (errorBody.message) {
 					return errorBody.message;
 				}
+				
+				if (axiosError.response.status === 413) {
+					return 'Your file is too large';
+				}
 			}
 			
 			return e.message;
