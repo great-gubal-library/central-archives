@@ -44,6 +44,11 @@ export default class ThumbGallery extends Vue.with(Props) {
 	height: 174px;
 }
 
+.thumb-gallery img:hover {
+	filter: brightness(1.2);
+  transition: all 0.5s ease;
+}
+
 @media screen and (max-width: $breakpoint-sm) {
 	.thumb-gallery img {
 		width: 149px;

@@ -90,6 +90,7 @@ a {
 
 .q-page a:hover {
 	color: $link-hover-color;
+	transition: all 0.3s ease;
 }
 
 .q-page a.q-item:hover {

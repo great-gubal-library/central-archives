@@ -162,6 +162,8 @@ export default class MainLayout extends Vue {
     { label: 'About', to: '/about' },
     { label: 'Profiles', to: '/profiles' },
     { label: 'Stories', to: '/stories' },
+    { label: 'Artwork', to: '/gallery/artwork' },
+    { label: 'Screenshots', to: '/gallery/screenshot' },
     // { label: 'Free Companies', to: '' },
     // { label: 'Venues', to: '' },
     // { label: 'Noticeboard', to: '' },
@@ -260,7 +262,8 @@ export default class MainLayout extends Vue {
   }
 
   .layout__logo:hover {
-    filter: saturate(1.4);
+    filter: brightness(1.1);
+    transition: all 0.3s ease;
   }
 
   .layout__toolbar-buton-more {

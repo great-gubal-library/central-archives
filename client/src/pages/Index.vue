@@ -6,7 +6,7 @@
       <story-list :stories="content.newStories" />
     </section>
     <section v-if="content.newArtwork.length > 0">
-      <h5>New artwork</h5>
+      <h5><router-link to="/gallery/artwork">New artwork</router-link></h5>
       <thumb-gallery :images="content.newArtwork" />
     </section>
     <!--
@@ -43,7 +43,7 @@
       -->
     </section>
     <section v-if="content.newScreenshots.length > 0">
-      <h5>New screenshots</h5>
+      <h5><router-link to="/gallery/screenshot">New screenshots</router-link></h5>
       <thumb-gallery :images="content.newScreenshots" />
     </section>
   </q-page>

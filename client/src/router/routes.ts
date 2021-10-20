@@ -160,6 +160,15 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/gallery/:category',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Gallery.vue') }],
+    meta: {
+      title: 'Gallery'
+    },
+  },
+
   // Characters
   {
     path: '/profiles',
