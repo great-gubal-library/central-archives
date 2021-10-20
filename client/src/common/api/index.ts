@@ -1,3 +1,4 @@
+import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
@@ -61,6 +62,10 @@ export default class API {
 
   async refreshCharacter(request: IdWrapper): Promise<CharacterRefreshResultDto> {
     return this.transport.authPost<CharacterRefreshResultDto>('characters/refresh', request);
+  }
+
+  async getCharacterContent(id: number): Promise<CharacterContentDto> {
+    return this.transport.get<CharacterContentDto>(`characters/content/${id}`);
   }
 
   // Stories

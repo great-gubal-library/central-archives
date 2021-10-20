@@ -6,16 +6,20 @@
 			<p>The character {{name}} ({{server}}) is not registered on Chaos Archives.</p>
 		</template>
 		<h3>{{name}}'s stories</h3>
-		<story-list v-if="stories.length > 0" :stories="stories" />
+		<story-list v-if="content.stories.length > 0" :stories="content.stories" />
 		<p v-else>
 			{{name}} has no stories... for now!
 		</p>
+		<template v-if="content.images && content.images.length > 0">
+			<h3>{{name}}'s Gallery</h3>
+			<thumb-gallery :images="content.images" />
+		</template>
 	</q-page>	
 </template>
 
 <script lang="ts">
+import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
-import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import errors from '@app/shared/errors';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
 import StoryList from 'components/stories/StoryList.vue';
@@ -23,6 +27,7 @@ import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
+import ThumbGallery from '../components/images/ThumbGallery.vue';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -32,7 +37,7 @@ interface Content {
 	name: string;
 	server: string;
 	character: CharacterProfileDto;
-	stories: StorySummaryDto[];
+	content: CharacterContentDto;
 	notFound: boolean;
 }
 
@@ -54,7 +59,7 @@ async function load(params: RouteParams): Promise<Content> {
 				name,
 				server,
 				character,
-				stories: await $api.getStories({ characterId: character.id }),
+				content: await $api.getCharacterContent(character.id),
 				notFound: false
 			}
 		} catch (e) {
@@ -63,7 +68,7 @@ async function load(params: RouteParams): Promise<Content> {
 					name,
 					server,
 					character: new CharacterProfileDto(),
-					stories: [],
+					content: { stories: [], images: [] },
 					notFound: true
 				}
 			} else {
@@ -80,6 +85,7 @@ async function load(params: RouteParams): Promise<Content> {
 	components: {
 		CharacterProfile,
 		StoryList,
+		ThumbGallery,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const content = await load(to.params);
@@ -94,7 +100,7 @@ export default class PageCharacter extends Vue {
 	name = '';
 	server = '';
 	character: CharacterProfileDto = new CharacterProfileDto();
-	stories: StorySummaryDto[] = [];
+	content: CharacterContentDto = { stories: [], images: [] };
 	notFound = false;
 
 	setContent(content: Content) {

@@ -1,3 +1,4 @@
+import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
@@ -9,19 +10,25 @@ import {
   ForbiddenException,
   Get,
   Param,
+  ParseIntPipe,
   Post,
-  Put,
-  UseGuards,
+  Put, UseGuards
 } from '@nestjs/common';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
 import { UserInfo } from '../auth/user-info';
+import { ImagesService } from '../images/images.service';
+import { StoriesService } from '../stories/stories.service';
 import { CharactersService } from './characters.service';
 
 @Controller('characters')
 export class CharactersController {
-  constructor(private charactersService: CharactersService) {}
+  constructor(
+    private charactersService: CharactersService,
+    private storiesService: StoriesService,
+    private imagesService: ImagesService,
+  ) {}
 
   @Get('profile/:server/:name')
   @UseGuards(OptionalJwtAuthGuard)
@@ -58,6 +65,18 @@ export class CharactersController {
     @Body() characterId: IdWrapper,
     @CurrentUser() user: UserInfo,
   ): Promise<CharacterRefreshResultDto> {
-		return this.charactersService.refreshCharacter(characterId, user);
-	}
+    return this.charactersService.refreshCharacter(characterId, user);
+  }
+
+  @Get('content/:id')
+  async getCharacterContent(
+    @Param('id', ParseIntPipe) characterId: number,
+  ): Promise<CharacterContentDto> {
+    const [ stories, images ] = await Promise.all([
+      this.storiesService.getStoryList({ characterId }),
+      this.imagesService.getImages({ characterId })
+    ]);
+
+    return { stories, images };
+  }
 }

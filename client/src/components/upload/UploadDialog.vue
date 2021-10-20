@@ -36,7 +36,7 @@
 					@click="goBack"
 				/>
 				<q-btn
-					v-if="this.step !== Step.IMAGE_DETAILS"
+					v-if="step !== Step.IMAGE_DETAILS"
 					:disable="!canGoNext"
 					flat
 					color="primary"
@@ -93,22 +93,22 @@ interface DialogRef {
   emits: ['ok', 'hide'],
 })
 export default class UploadDialog extends Vue {
-  private readonly Step = Step;
+  readonly Step = Step;
 
-  private dragging = false;
-  private uploading = false;
+  dragging = false;
+  uploading = false;
 
-  private step = Step.SELECT_IMAGE;
-  private fileModel: ImageSelectModel = {
+  step = Step.SELECT_IMAGE;
+  fileModel: ImageSelectModel = {
     file: null,
     image: null,
   };
-  private thumbModel: ImageThumbModel = {
+  thumbModel: ImageThumbModel = {
     left: -1,
     top: -1,
     width: -1,
   };
-  private detailsModel: ImageDetailsModel = {
+  detailsModel: ImageDetailsModel = {
 		category: ImageCategory.UNLISTED,
     title: '',
 		description: '',

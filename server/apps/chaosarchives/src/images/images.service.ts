@@ -3,6 +3,7 @@ import { Character, Image } from '@app/entity';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { ImagesFilterDto } from '@app/shared/dto/image/images-filter.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import html from '@app/shared/html';
@@ -61,14 +62,26 @@ export class ImagesService {
     };
   }
 
-  async getImages(
-    limit: number,
-    category: ImageCategory,
-  ): Promise<ImageSummaryDto[]> {
-    const images = await this.imageRepo.createQueryBuilder('image')
-      .leftJoinAndSelect('image.owner', 'character')
-      .where('image.category = :category', { category })
-      .orderBy('image.createdAt', 'DESC')
+  async getImages(filter: ImagesFilterDto): Promise<ImageSummaryDto[]> {
+    const { characterId, limit, category } = filter;
+    const query = this.imageRepo.createQueryBuilder('image')
+      .leftJoinAndSelect('image.owner', 'character');
+
+    if (characterId) {
+      query.andWhere('character.id = :characterId', { characterId });
+    }
+
+    if (category) {
+      query.andWhere('image.category = :category', { category });
+    } else {
+      query.andWhere('image.category <> :category', { category: ImageCategory.UNLISTED });
+    }
+
+    if (limit) {
+      query.limit(limit);
+    }
+      
+    const images = await query.orderBy('image.createdAt', 'DESC')
       .limit(limit)
       .select(['image', 'character.id'])
       .getMany();

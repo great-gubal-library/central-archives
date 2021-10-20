@@ -1,15 +1,18 @@
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { ImagesFilterDto } from '@app/shared/dto/image/images-filter.dto';
+import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { Role } from '@app/shared/enums/role.enum';
 import {
+  BadRequestException,
   Body,
   Controller,
   ForbiddenException,
   Get,
   Param,
   ParseIntPipe,
-  Post, UploadedFile, UseGuards,
+  Post, Query, UploadedFile, UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -22,6 +25,15 @@ import { PayloadTooLargeInterceptor } from './payload-too-large.interceptor';
 @Controller('images')
 export class ImagesController {
   constructor(private imageService: ImagesService) {}
+
+  @Get()
+  async getImages(@Query() filter: ImagesFilterDto): Promise<ImageSummaryDto[]> {
+    if (filter.category === ImageCategory.UNLISTED) {
+      throw new BadRequestException('Invalid category');
+    }
+
+    return this.imageService.getImages(filter);
+  }
 
   @Get(':id')
   async getImage(@Param('id', ParseIntPipe) id: number): Promise<ImageDto> {

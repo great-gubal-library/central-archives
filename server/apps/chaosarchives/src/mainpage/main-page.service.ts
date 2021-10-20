@@ -22,8 +22,8 @@ export class MainPageService {
 	async getMainPageContent(): Promise<MainPageContentDto> {
 		const [ newProfiles, newArtwork, newScreenshots ] = await Promise.all([
 			this.getNewProfiles(),
-			this.imagesService.getImages(this.MAX_NEW_IMAGES, ImageCategory.ARTWORK),
-			this.imagesService.getImages(this.MAX_NEW_IMAGES, ImageCategory.SCREENSHOT),
+			this.imagesService.getImages({ limit: this.MAX_NEW_IMAGES, category: ImageCategory.ARTWORK }),
+			this.imagesService.getImages({ limit: this.MAX_NEW_IMAGES, category: ImageCategory.SCREENSHOT }),
 		]);
 
 		return {
