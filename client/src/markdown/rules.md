@@ -30,7 +30,7 @@ If the artwork or screenshot is made by you, the uploader, do state such in the 
 
 ##### Sexual and Violent Content
 
-Remember that the game is rated T by ESRB, and not all FFXIV players, nor all roleplayers, are over 18 years old. Refrain from posting or linking NSFW (not safe for work) content in both text and art/edited photographic forms — keep the site free of nudity and extreme depictions of sexual acts, violence, and gore.
+Remember that the game is <a href="https://www.esrb.org/ratings/29479/FINAL+FANTASY+XIV/" target="_blank">rated T by ESRB <i class="notranslate material-icons q-icon external-link-icon">launch</i></a>, and not all FFXIV players, nor all roleplayers, are over 18 years old. Refrain from posting or linking NSFW (not safe for work) content in both text and art/edited photographic forms — keep the site free of nudity and extreme depictions of sexual acts, violence, and gore.
 
 
 ##### Admin Team
