@@ -117,6 +117,11 @@ ol li {
 	border-radius: 50%;
 }
 
+.external-link-icon {
+	position: relative;
+	top: -1px;
+}
+
 // Mobile usability improvements
 @media screen and (max-width: $breakpoint-xs) {
 	h2 {

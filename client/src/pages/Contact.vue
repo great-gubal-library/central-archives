@@ -9,7 +9,7 @@
 		</p>
 		<h5>Bug reporting</h5>
 		<p>
-			The Chaos Archives code is open source and available <a href="https://github.com/great-gubal-library/chaos-archives" target="_blank">on GitHub <q-icon name="link" /></a>. Feel free to report any bugs there.
+			The Chaos Archives code is open source and available <a href="https://github.com/great-gubal-library/chaos-archives" target="_blank">on GitHub <q-icon class="external-link-icon" name="launch" /></a>. Feel free to report any bugs there.
 		</p>
 	</q-page>	
 </template>

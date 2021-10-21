@@ -69,7 +69,7 @@
             <li>
               Open
               <a :href="lodestoneCharacterLink" target="_blank"
-                >{{ $store.state.user.character.name }}'s page on Lodestone</a
+                >{{ $store.state.user.character.name }}'s page on Lodestone <q-icon class="external-link-icon" name="launch" /></a
               >.
             </li>
             <li>
