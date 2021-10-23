@@ -169,6 +169,15 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/my-images',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/MyImages.vue') }],
+    meta: {
+      title: 'My Images'
+    },
+  },
+
   // Characters
   {
     path: '/profiles',

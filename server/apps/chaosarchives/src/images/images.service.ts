@@ -32,20 +32,11 @@ export class ImagesService {
     private storageService: StorageService,
     private connection: Connection,
     @InjectRepository(Image) private imageRepo: Repository<Image>,
+    @InjectRepository(Character) private characterRepo: Repository<Character>,
   ) {}
 
-  async getImage(id: number): Promise<ImageDto> {
-    const image = await this.imageRepo.createQueryBuilder('image')
-      .leftJoinAndSelect('image.owner', 'character')
-      .leftJoinAndSelect('character.server', 'server')
-      .where('image.id = :id', { id })
-      .select(['image', 'character.id', 'character.name', 'server.name'])
-      .getOne();
 
-    if (!image || image.category === ImageCategory.UNLISTED) {
-      throw new NotFoundException('Image not found');
-    }
-
+  private toImageDto(image: Image): ImageDto {
     return {
       id: image.id,
       url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
@@ -61,6 +52,21 @@ export class ImagesService {
       authorServer: image.owner.server.name,
       credits: image.credits
     };
+  }
+
+  async getImage(id: number): Promise<ImageDto> {
+    const image = await this.imageRepo.createQueryBuilder('image')
+      .leftJoinAndSelect('image.owner', 'character')
+      .leftJoinAndSelect('character.server', 'server')
+      .where('image.id = :id', { id })
+      .select(['image', 'character.id', 'character.name', 'server.name'])
+      .getOne();
+
+    if (!image || image.category === ImageCategory.UNLISTED) {
+      throw new NotFoundException('Image not found');
+    }
+
+    return this.toImageDto(image);
   }
 
   async getImages(filter: ImagesFilterDto): Promise<ImageSummaryDto[]> {
@@ -97,6 +103,31 @@ export class ImagesService {
       title: image.title,
       createdAt: image.createdAt!.getTime(),
     }));
+  }
+
+  async getMyImages(characterId: number, user: UserInfo): Promise<ImageDto[]> {
+    const isMyCharacter = (await this.characterRepo.count({
+      where: {
+        id: characterId,
+        user: {
+          id: user.id
+        }
+      }
+    }) > 0);
+
+    if (!isMyCharacter) {
+      throw new NotFoundException('Character not found or is not your character');
+    }
+
+    const images = await this.imageRepo.createQueryBuilder('image')
+      .leftJoinAndSelect('image.owner', 'character')
+      .leftJoinAndSelect('character.server', 'server')
+      .where('character.id = :characterId', { characterId })
+      .orderBy('image.createdAt', 'DESC')
+      .select(['image', 'character.id', 'character.name', 'server.name'])
+      .getMany();
+
+    return images.map(image => this.toImageDto(image));
   }
 
   async uploadImage(

@@ -2,6 +2,7 @@ import { CharacterContentDto } from '@app/shared/dto/characters/character-conten
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import {
@@ -62,7 +63,7 @@ export class CharactersController {
     return this.charactersService.refreshCharacter(characterId, user);
   }
 
-  @Get('content/:id')
+  @Get(':id/content')
   async getCharacterContent(
     @Param('id', ParseIntPipe) characterId: number,
   ): Promise<CharacterContentDto> {
@@ -72,5 +73,12 @@ export class CharactersController {
     ]);
 
     return { stories, images };
+  }
+
+  @Get(':id/my-images')
+  @RoleRequired(Role.USER)
+  async getMyImages(@Param('id', ParseIntPipe) characterId: number,
+      @CurrentUser() user: UserInfo): Promise<ImageDto[]> {
+    return this.imagesService.getMyImages(characterId, user);
   }
 }

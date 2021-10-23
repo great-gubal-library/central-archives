@@ -1,7 +1,7 @@
 <template>
 	<div class="thumb-gallery">
 		<div v-for="image in images" :key="image.id">
-			<router-link class="thumb-gallery__image-wrapper" :to="`/image/${image.id}`" :title="image.title">
+			<router-link class="thumb-gallery__image-wrapper thumb-link" :to="`/image/${image.id}`" :title="image.title">
 				<img :src="image.thumbUrl" :alt="image.title" />
 			</router-link>
 		</div>

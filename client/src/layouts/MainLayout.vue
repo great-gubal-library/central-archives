@@ -92,6 +92,7 @@
           </q-item-section>
         </q-item>
       </q-list>
+      <q-separator dark />
       <user-menu />
     </q-drawer>
 

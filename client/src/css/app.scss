@@ -122,6 +122,11 @@ ol li {
 	top: -1px;
 }
 
+.thumb-link img:hover {
+	filter: brightness(1.2);
+  transition: all 0.5s ease;
+}
+
 // Mobile usability improvements
 @media screen and (max-width: $breakpoint-xs) {
 	h2 {

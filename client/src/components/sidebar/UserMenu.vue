@@ -76,6 +76,7 @@
             <q-item-label>New story</q-item-label>
           </q-item-section>
         </q-item>
+        <q-separator dark />
         <q-item
           clickable
           v-ripple
@@ -85,7 +86,17 @@
             <q-item-label>Upload image</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item
+          clickable
+          v-ripple
+          to="/my-images"
+        >
+          <q-item-section>
+            <q-item-label>My images</q-item-label>
+          </q-item-section>
+        </q-item>
       </template>
+      <q-separator dark />
       <q-item clickable v-ripple @click="logOut">
         <q-item-section>
           <q-item-label>Log out</q-item-label>

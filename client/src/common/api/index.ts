@@ -66,7 +66,7 @@ export default class API {
   }
 
   async getCharacterContent(id: number): Promise<CharacterContentDto> {
-    return this.transport.get<CharacterContentDto>(`characters/content/${id}`);
+    return this.transport.get<CharacterContentDto>(`characters/${id}/content`);
   }
 
   // Stories
@@ -93,6 +93,10 @@ export default class API {
 
   async getImages(filter: ImagesFilterDto): Promise<ImageSummaryDto[]> {
     return this.transport.tokenGet<ImageSummaryDto[]>('images', filter as { [ k: string ] : string|number });
+  }
+
+  async getMyImages(characterId: number): Promise<ImageDto[]> {
+    return this.transport.authGet<ImageDto[]>(`characters/${characterId}/my-images`);
   }
 
   async uploadImage(request: ImageUploadRequestDto, file: Blob, filename: string): Promise<ImageSummaryDto> {
