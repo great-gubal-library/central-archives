@@ -1,5 +1,6 @@
 import { serverConfiguration } from '@app/configuration';
 import { Character, Image } from '@app/entity';
+import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
@@ -251,5 +252,38 @@ export class ImagesService {
 
       throw e;
     }
+  }
+
+  async editImage(id: number, request: ImageDescriptionDto, user: UserInfo): Promise<void> {
+    await this.connection.transaction(async em => {
+      const imageRepo = em.getRepository(Image);
+      const image = await imageRepo.findOne({
+        where: {
+          id,
+          character: {
+            user: {
+              id: user.id
+            }
+          }
+        }
+      });
+
+      if (!image) {
+        throw new NotFoundException('Image not found');
+      }
+
+      if (request.category !== ImageCategory.UNLISTED && !request.title.trim()) {
+        throw new BadRequestException(
+          'Title is required for artwork and screenshots',
+        );
+      }  
+  
+      image.title = request.title;
+      image.category = request.category;
+      image.description = html.sanitize(request.description);
+      image.credits = request.credits;
+
+      await imageRepo.save(image);
+    });
   }
 }

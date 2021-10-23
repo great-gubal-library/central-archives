@@ -1,3 +1,4 @@
+import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
@@ -7,17 +8,13 @@ import { Role } from '@app/shared/enums/role.enum';
 import {
   BadRequestException,
   Body,
-  Controller,
-  ForbiddenException,
-  Get,
+  Controller, Get,
   Param,
   ParseIntPipe,
-  Post, Query, UploadedFile, UseGuards,
-  UseInterceptors
+  Post, Put, Query, UploadedFile, UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RoleRequired } from '../auth/role-required.decorator';
 import { UserInfo } from '../auth/user-info';
 import { ImagesService } from './images.service';
@@ -57,5 +54,15 @@ export class ImagesController {
       file.originalname,
       file.mimetype,
     );
+  }
+
+  @Put(':id')
+  @RoleRequired(Role.USER)
+  async editImage(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() request: ImageDescriptionDto,
+		@CurrentUser() user: UserInfo,
+  ): Promise<void> {
+		return this.imageService.editImage(id, request, user);
   }
 }
