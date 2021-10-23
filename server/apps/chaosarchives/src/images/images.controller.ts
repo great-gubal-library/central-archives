@@ -18,6 +18,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RoleRequired } from '../auth/role-required.decorator';
 import { UserInfo } from '../auth/user-info';
 import { ImagesService } from './images.service';
 import { PayloadTooLargeInterceptor } from './payload-too-large.interceptor';
@@ -41,7 +42,7 @@ export class ImagesController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @RoleRequired(Role.USER)
   @UseInterceptors(FileInterceptor('file'))
   @UseInterceptors(PayloadTooLargeInterceptor) // Must be after FileInterceptor
   async uploadImage(
@@ -49,10 +50,6 @@ export class ImagesController {
     @Body() request: ImageUploadRequestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<ImageSummaryDto> {
-		if (user.role === Role.UNVERIFIED) {
-			throw new ForbiddenException();
-		}
-
 		return this.imageService.uploadImage(
 			user,
 			request,

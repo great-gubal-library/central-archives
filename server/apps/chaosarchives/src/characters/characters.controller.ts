@@ -6,9 +6,7 @@ import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import {
   Body,
-  Controller,
-  ForbiddenException,
-  Get,
+  Controller, Get,
   Param,
   ParseIntPipe,
   Post,
@@ -17,6 +15,7 @@ import {
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
+import { RoleRequired } from '../auth/role-required.decorator';
 import { UserInfo } from '../auth/user-info';
 import { ImagesService } from '../images/images.service';
 import { StoriesService } from '../stories/stories.service';
@@ -41,16 +40,11 @@ export class CharactersController {
   }
 
   @Put('profile')
-  @UseGuards(JwtAuthGuard)
+  @RoleRequired(Role.USER)
   async saveCharacter(
     @Body() profile: CharacterProfileDto,
     @CurrentUser() user: UserInfo,
   ): Promise<void> {
-    // TODO: Refactor
-    if (user.role === Role.UNVERIFIED) {
-      throw new ForbiddenException();
-    }
-
     await this.charactersService.saveCharacter(profile, user);
   }
 
