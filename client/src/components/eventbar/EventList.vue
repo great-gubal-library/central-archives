@@ -5,7 +5,7 @@
       v-for="event in events"
       clickable
       v-ripple
-      :key="event.title"
+      :key="event.name"
       tag="a"
       target="_blank"
       class="event-list__link"
@@ -19,7 +19,7 @@
         </q-item-label>
       </q-item-section>
     </q-item>
-    <q-separator />
+    <q-separator dark />
   </q-list>
 </template>
 
