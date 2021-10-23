@@ -5,7 +5,7 @@ Welcome to Chaos Archives! By registering your account, you agree to the followi
 - Treat others with respect.
 - Refrain from posting content that references real-life politics or religion.
 - Refrain from posting content that promotes real-life racism, sexism, and other forms of bigotry.
-- Refrain from posting links that lead to <a id="nsfw-ref" href="/rules#nsfw">NSFW</a> sources or malware.
+- Refrain from posting links that lead to <a id="nsfw-ref" href="/rules#nsfw">NSFW</a> sources or malware. When adding external links in your content, check where they lead.
 
 ##### Out of Universe Content
 
