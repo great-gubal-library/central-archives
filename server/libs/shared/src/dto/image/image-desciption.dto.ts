@@ -13,4 +13,10 @@ export class ImageDescriptionDto {
 
 	@IsEnum(ImageCategory)
   readonly category: ImageCategory;
+
+	constructor(properties?: Readonly<ImageDescriptionDto>) {
+    if (properties) {
+      Object.assign(this, properties);
+    }
+  }
 }

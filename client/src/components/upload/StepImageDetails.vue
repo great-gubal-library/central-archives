@@ -20,6 +20,7 @@
         <div class="step-image-details__description-label">Description:</div>
         <html-editor
           v-model="modelValue.description"
+          :allow-images="false"
           height="200px"
           @update:model-value="onModelUpdated"
         />

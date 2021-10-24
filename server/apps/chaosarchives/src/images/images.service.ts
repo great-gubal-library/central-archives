@@ -292,7 +292,8 @@ export class ImagesService {
         .createQueryBuilder('image')
         .innerJoinAndSelect('image.owner', 'character')
         .innerJoinAndSelect('character.user', 'user')
-        .where('user.id = :userId', { userId: user.id })
+        .where('image.id = :id', { id } )
+        .andWhere('user.id = :userId', { userId: user.id })
         .select([ 'image' ])
         .getOne();
 

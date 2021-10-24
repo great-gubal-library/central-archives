@@ -3,6 +3,7 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
+import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
@@ -111,5 +112,9 @@ export default class API {
 
   async deleteImage(id: number): Promise<void> {
     await this.transport.authDelete<void>(`images/${id}`);
+  }
+
+  async saveImage(id: number, details: ImageDescriptionDto): Promise<void> {
+    await this.transport.authPut<void>(`images/${id}`, details);
   }
 }

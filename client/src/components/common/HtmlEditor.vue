@@ -36,13 +36,14 @@ const FONTS = [
 
 const FONT_OPTION = FONTS.map(font => `${font}=${font},sans-serif`).join(';');
 
+const TINYMCE_PLUGINS = [
+  'code advlist autolink lists link image charmap',
+  'searchreplace visualblocks',
+  'table paste help wordcount'
+];
+
 const TINYMCE_OPTIONS = {
   inline: true,
-  plugins: [
-    'code advlist autolink lists link image charmap',
-    'searchreplace visualblocks',
-    'table paste help wordcount'
-  ],
   toolbar:
     'undo redo | formatselect | bold italic | \
     alignleft aligncenter alignright alignjustify | \
@@ -105,9 +106,14 @@ class Props {
   height = prop<string>({
     default: '400px',
   });
+
+  allowImages = prop<boolean>({
+    default: true
+  });
 }
 
 @Options({
+  name: 'HtmlEditor',
   components: {
     Editor
   },
@@ -116,8 +122,17 @@ export default class HtmlEditor extends Vue.with(Props) {
   toolbarId = `html-editor__toolbar${uid++}`;
 
   get options() {
+    let plugins: string[];
+
+    if (this.allowImages) {
+      plugins = TINYMCE_PLUGINS;
+    } else {
+      plugins = TINYMCE_PLUGINS.map(str => str.replace(/image/g, ''));
+    }
+
     return {
       ...TINYMCE_OPTIONS,
+      plugins,
       fixed_toolbar_container: `#${this.toolbarId}`
     }
   }
