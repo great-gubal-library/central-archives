@@ -8,7 +8,7 @@ import { Role } from '@app/shared/enums/role.enum';
 import {
   BadRequestException,
   Body,
-  Controller, Get,
+  Controller, Delete, Get,
   Param,
   ParseIntPipe,
   Post, Put, Query, UploadedFile, UseInterceptors
@@ -64,5 +64,14 @@ export class ImagesController {
 		@CurrentUser() user: UserInfo,
   ): Promise<void> {
 		return this.imageService.editImage(id, request, user);
+  }
+
+  @Delete(':id')
+  @RoleRequired(Role.USER)
+  async deleteImage(
+    @Param('id', ParseIntPipe) id: number,
+		@CurrentUser() user: UserInfo,
+  ): Promise<void> {
+		return this.imageService.deleteImage(id, user);
   }
 }

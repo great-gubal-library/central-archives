@@ -2,7 +2,12 @@
   <q-page class="page-my-images">
 		<h2>My Images</h2>
     <div class="page-my-images__subtitle">for {{ $store.state.user?.character.name }}</div>
-		<my-image v-for="image in images" :key="image.id" :image="image" />
+    <transition
+      v-for="image in images" :key="image.id"
+      leave-active-class="animated fadeOut"
+    >
+		  <my-image v-show="!deleted[image.id]" :image="image" @deleted="onImageDeleted" />
+    </transition>
 	</q-page>	
 </template>
 
@@ -62,10 +67,15 @@ async function load(): Promise<ImageDto[]> {
 })
 export default class PageMyImages extends Vue {
 	images: ImageDto[] = [];
+  deleted: { [k: number]: boolean } = {};
 
 	setContent(images: ImageDto[]) {
 		this.images = images;
 	}
+
+  onImageDeleted(image: ImageDto) {
+    this.deleted[image.id] = true;
+  }
 }
 </script>
 

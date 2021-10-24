@@ -42,6 +42,7 @@ export class StorageService {
 	}
 
 	async deleteFile(path: string): Promise<void> {
+		console.log('deleting ', path);
 		await this.s3.deleteObject({
 			Bucket: this.bucketName,
 			Key: this.normalizePath(path),

@@ -10,7 +10,7 @@
 						</div>
 						<div class="text-right">
 							<q-btn flat disable color="primary" label="Edit" />
-							<q-btn flat disable color="negative" label="Delete" />
+							<q-btn flat color="negative" label="Delete" @click="onDeleteClick" />
 						</div>
 					</div>
 				</div>
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { prop, Vue } from 'vue-class-component';
+import { Options, prop, Vue } from 'vue-class-component';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import html from '@app/shared/html';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
@@ -30,12 +30,29 @@ class Props {
 	})
 }
 
+@Options({
+	name: 'MyImage',
+	emits: [ 'deleted' ]
+})
 export default class MyImage extends Vue.with(Props) {
 	readonly ImageCategory = ImageCategory;
 
 	get description() {
 		return html.sanitize(this.image.description);
-	}	
+	}
+
+	async onDeleteClick() {
+		const ConfirmImageDeleteDialog = (await import('./ConfirmImageDeleteDialog.vue')).default;
+
+		this.$q.dialog({
+			component: ConfirmImageDeleteDialog,
+			componentProps: {
+				image: this.image
+			}
+		}).onOk(() => {
+			this.$emit('deleted', this.image);
+		});
+	}
 }
 </script>
 

@@ -288,16 +288,13 @@ export class ImagesService {
   async editImage(id: number, request: ImageDescriptionDto, user: UserInfo): Promise<void> {
     await this.connection.transaction(async em => {
       const imageRepo = em.getRepository(Image);
-      const image = await imageRepo.findOne({
-        where: {
-          id,
-          character: {
-            user: {
-              id: user.id
-            }
-          }
-        }
-      });
+      const image = await em.getRepository(Image)
+        .createQueryBuilder('image')
+        .innerJoinAndSelect('image.owner', 'character')
+        .innerJoinAndSelect('character.user', 'user')
+        .where('user.id = :userId', { userId: user.id })
+        .select([ 'image' ])
+        .getOne();
 
       if (!image) {
         throw new NotFoundException('Image not found');
@@ -315,6 +312,33 @@ export class ImagesService {
       image.credits = request.credits;
 
       await imageRepo.save(image);
+    });
+  }
+
+  async deleteImage(id: number, user: UserInfo): Promise<void> {
+		await this.connection.transaction(async em => {
+      const imageRepo = em.getRepository(Image);
+      const image = await imageRepo
+        .createQueryBuilder('image')
+        .innerJoinAndSelect('image.owner', 'character')
+        .innerJoinAndSelect('character.user', 'user')
+        .where('image.id = :id', { id } )
+        .andWhere('user.id = :userId', { userId: user.id })
+        .select([ 'image.id', 'image.hash', 'image.filename', 'character.id' ])
+        .getOne();
+
+      if (!image) {
+        throw new NotFoundException('Image not found');
+      }
+
+      // Delete from storage
+      await Promise.all([
+        this.storageService.deleteFile(`${image.owner.id}/${image.hash}/${image.filename}`),
+        this.storageService.deleteFile(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
+      ]);
+
+      // Delete from the database
+      await imageRepo.remove(image);
     });
   }
 }
