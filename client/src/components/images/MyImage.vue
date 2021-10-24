@@ -3,9 +3,9 @@
 			<q-card-section>
 				<div class="flex">
 					<div class="my-image__thumb-column"><a class="thumb-link" :href="image.url" target="_blank"><img :src="image.thumbUrl" /></a></div>
-					<div class="flex" style="flex-grow: 1; flex-direction: column; justify-content: space-between;">
+					<div class="my-image__description-column">
 						<div>
-							<h5>{{image.category === ImageCategory.UNLISTED ? image.title : 'Unlisted Image'}}</h5>
+							<h5>{{image.category !== ImageCategory.UNLISTED ? image.title : 'Unlisted Image'}}</h5>
 							<section v-html="description"></section>
 						</div>
 						<div class="text-right">
@@ -46,5 +46,12 @@ export default class MyImage extends Vue.with(Props) {
 
 .my-image__thumb-column {
 	padding-right: 16px;
+}
+
+.my-image__description-column {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 </style>

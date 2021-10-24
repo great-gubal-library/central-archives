@@ -1,6 +1,7 @@
 <template>
-  <q-page>
+  <q-page class="page-my-images">
 		<h2>My Images</h2>
+    <div class="page-my-images__subtitle">for {{ $store.state.user?.character.name }}</div>
 		<my-image v-for="image in images" :key="image.id" :image="image" />
 	</q-page>	
 </template>
@@ -60,10 +61,23 @@ async function load(): Promise<ImageDto[]> {
   }
 })
 export default class PageMyImages extends Vue {
-	images: ImageDto[];
+	images: ImageDto[] = [];
 
 	setContent(images: ImageDto[]) {
 		this.images = images;
 	}
 }
 </script>
+
+<style lang="scss">
+.page-my-images h2 {
+  margin-bottom: 0;
+}
+
+.page-my-images__subtitle {
+  text-align: center;
+  font-family: $header-font;
+  font-size: 1.6em;
+  margin-bottom: 24px;
+}
+</style>
