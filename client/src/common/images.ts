@@ -36,7 +36,7 @@ function replaceExtension(filename: string, extension: string): string {
   const lastDot = filename.lastIndexOf('.');
 
   if (lastDot === -1) {
-    return filename + extension;
+    return filename + '.' + extension;
   }
 
   return filename.slice(0, lastDot + 1) + extension;
@@ -53,7 +53,14 @@ export async function convertImageForUpload(
     };
   }
 
-  const image = await readImage(file);
+  return convertImageElementForUpload(await readImage(file), file.name, format);
+}
+
+export async function convertImageElementForUpload(
+  image: HTMLImageElement,
+  filename: string,
+  format: ImageFormat
+): Promise<ImageConversionResult> {
   const canvas = document.createElement('canvas');
   canvas.width = image.width;
   canvas.height = image.height;
@@ -68,14 +75,14 @@ export async function convertImageForUpload(
   g.drawImage(image, 0, 0);
 
   return new Promise((resolve, reject) => {
-    const filename = replaceExtension(
-      file.name,
+    const newFilename = replaceExtension(
+      filename,
       format == ImageFormat.PNG ? 'png' : 'jpg'
     );
     canvas.toBlob(
       (blob) => {
         if (blob) {
-          resolve({ blob, filename });
+          resolve({ blob, filename: newFilename });
         } else {
           reject(new Error('Cannot convert image'));
         }

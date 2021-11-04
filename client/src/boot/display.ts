@@ -54,6 +54,19 @@ class Display {
 			dateStyle: 'long',
 		});
 	}
+
+	formatFileSize(fileSize: number) {
+		if (fileSize < 1024) {
+			return `${fileSize} bytes`;
+		} else if (fileSize < 1024 * 1024) {
+			const sizeKiB = Math.round(fileSize / 1024);
+			return `${sizeKiB} KiB`;
+		} else {
+			const sizeMiB = fileSize / (1024 * 1024);
+			const sizeMiBDisplay = Math.round(sizeMiB * 100) / 100; // 2 decimal digits
+			return `${sizeMiBDisplay} MiB`;
+		}
+	}
 }
 
 export const displayOptions = new Display();

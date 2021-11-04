@@ -101,7 +101,11 @@ export default class UploadDialog extends Vue {
   step = Step.SELECT_IMAGE;
   fileModel: ImageSelectModel = {
     file: null,
+    filename: null,
     image: null,
+    originalFormat: null,
+    format: null,
+    convertedFile: null,
   };
   thumbModel: ImageThumbModel = {
     left: -1,
@@ -156,7 +160,11 @@ export default class UploadDialog extends Vue {
     if (files && files.length > 0 && files[0].kind === 'file') {
       this.fileModel = {
         file: files[0].getAsFile(),
+        filename: null,
         image: null,
+        originalFormat: null,
+        format: null,
+        convertedFile: null
       };
       this.step = Step.SELECT_IMAGE;
     }
@@ -243,14 +251,13 @@ export default class UploadDialog extends Vue {
 
   private async upload(): Promise<ImageSummaryDto> {
     const user = this.$store.state.user;
-    const file = this.fileModel.file;
+    const { convertedFile, filename } = this.fileModel;
 
-    if (!user || !file) {
+    if (!user || !convertedFile || !filename) {
       throw new Error();
     }
 
     // Converts if necessary, otherwise leaves the original file intact
-    const { blob, filename } = await convertImageForUpload(file);
 
     return this.$api.uploadImage({
       characterId: user.character.id,
@@ -261,7 +268,7 @@ export default class UploadDialog extends Vue {
       thumbLeft: this.thumbModel.left,
       thumbTop: this.thumbModel.top,
       thumbWidth: this.thumbModel.width,
-    }, blob, filename);
+    }, convertedFile, filename);
   }
 
   onCancelClick() {
