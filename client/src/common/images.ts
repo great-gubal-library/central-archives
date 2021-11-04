@@ -30,30 +30,7 @@ export async function readImage(blob: Blob): Promise<HTMLImageElement> {
 export interface ImageConversionResult {
   filename: string;
   blob: Blob;
-}
-
-function replaceExtension(filename: string, extension: string): string {
-  const lastDot = filename.lastIndexOf('.');
-
-  if (lastDot === -1) {
-    return filename + '.' + extension;
-  }
-
-  return filename.slice(0, lastDot + 1) + extension;
-}
-
-export async function convertImageForUpload(
-  file: File,
-  format: ImageFormat = ImageFormat.PNG
-): Promise<ImageConversionResult> {
-  if (file.type === 'image/jpeg' || file.type === 'image/png') {
-    return {
-      filename: file.name,
-      blob: file,
-    };
-  }
-
-  return convertImageElementForUpload(await readImage(file), file.name, format);
+  hasTransparency: boolean;
 }
 
 export async function convertImageElementForUpload(
@@ -61,6 +38,37 @@ export async function convertImageElementForUpload(
   filename: string,
   format: ImageFormat
 ): Promise<ImageConversionResult> {
+  const g = createCanvas(image);
+
+  return new Promise((resolve, reject) => {
+    const newFilename = replaceExtension(
+      filename,
+      format == ImageFormat.PNG ? 'png' : 'jpg'
+    );
+    g.canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve({
+            blob,
+            filename: newFilename,
+            hasTransparency: checkTransparency(g)
+          });
+        } else {
+          reject(new Error('Cannot convert image'));
+        }
+      },
+      format == ImageFormat.PNG ? 'image/png' : 'image/jpeg'
+    );
+  });
+}
+
+export function hasTransparency(image: HTMLImageElement): boolean {
+  return checkTransparency(createCanvas(image));
+}
+
+// Auxiliary functions
+
+function createCanvas(image: HTMLImageElement): CanvasRenderingContext2D {
   const canvas = document.createElement('canvas');
   canvas.width = image.width;
   canvas.height = image.height;
@@ -73,21 +81,29 @@ export async function convertImageElementForUpload(
   }
 
   g.drawImage(image, 0, 0);
+  return g;
+}
 
-  return new Promise((resolve, reject) => {
-    const newFilename = replaceExtension(
-      filename,
-      format == ImageFormat.PNG ? 'png' : 'jpg'
-    );
-    canvas.toBlob(
-      (blob) => {
-        if (blob) {
-          resolve({ blob, filename: newFilename });
-        } else {
-          reject(new Error('Cannot convert image'));
-        }
-      },
-      format == ImageFormat.PNG ? 'image/png' : 'image/jpeg'
-    );
-  });
+function checkTransparency(g: CanvasRenderingContext2D): boolean {
+  const imageData = g.getImageData(0, 0, g.canvas.width, g.canvas.height).data;
+  
+  // imageData contains pixel data as bytes in RGBA order, so we check every 4th byte (alpha)
+  for (let i = 3; i < imageData.length; i += 4) {
+    if (imageData[i] !== 255) {
+      // not an entirely opaque pixel
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function replaceExtension(filename: string, extension: string): string {
+  const lastDot = filename.lastIndexOf('.');
+
+  if (lastDot === -1) {
+    return filename + '.' + extension;
+  }
+
+  return filename.slice(0, lastDot + 1) + extension;
 }

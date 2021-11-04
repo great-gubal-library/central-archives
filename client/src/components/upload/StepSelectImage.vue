@@ -74,7 +74,7 @@
 <script lang="ts">
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { convertImageElementForUpload, readImage } from 'src/common/images';
+import { convertImageElementForUpload, hasTransparency, readImage } from 'src/common/images';
 import { Options, prop, Vue } from 'vue-class-component';
 import { ImageSelectModel } from './image-select-model';
 
@@ -83,6 +83,7 @@ interface ConversionResult {
   filename: string;
   originalFormat: ImageFormat | null;
   newFormat: ImageFormat;
+	hasTransparency: boolean;
 }
 
 class Props {
@@ -94,6 +95,7 @@ class Props {
       convertedFile: null,
       originalFormat: null,
       format: null,
+			hasTransparency: false,
     },
   });
 }
@@ -141,6 +143,7 @@ export default class StepSelectImage extends Vue.with(Props) {
       let originalFormat: ImageFormat | null = null;
       let newFormat: ImageFormat | null = null;
       let filename: string | null = null;
+			let hasTransparency = false;
 
       if (file !== null && image !== null) {
         const result = await this.convertImage(file, image, format || null);
@@ -148,6 +151,7 @@ export default class StepSelectImage extends Vue.with(Props) {
         originalFormat = result.originalFormat;
         newFormat = result.newFormat;
         filename = result.filename;
+				hasTransparency = result.hasTransparency;
       }
 
       this.$emit('update:model-value', {
@@ -157,6 +161,7 @@ export default class StepSelectImage extends Vue.with(Props) {
         originalFormat,
         format: newFormat,
         image,
+				hasTransparency,
       });
     } catch (e) {
       console.log(e);
@@ -191,6 +196,7 @@ export default class StepSelectImage extends Vue.with(Props) {
         filename: file.name,
         originalFormat: ImageFormat.JPEG,
         newFormat: ImageFormat.JPEG,
+				hasTransparency: false
       };
     }
 
@@ -205,14 +211,14 @@ export default class StepSelectImage extends Vue.with(Props) {
           filename: file.name,
           originalFormat: ImageFormat.PNG,
           newFormat: ImageFormat.PNG,
+					hasTransparency: hasTransparency(image)
         };
       }
     }
 
     // We need to convert
     const newFormat = format || ImageFormat.PNG;
-    console.log('converting to ' + newFormat);
-    const result = await convertImageElementForUpload(
+    let result = await convertImageElementForUpload(
       image,
       file.name,
       newFormat
@@ -223,6 +229,7 @@ export default class StepSelectImage extends Vue.with(Props) {
       filename: result.filename,
       originalFormat,
       newFormat,
+			hasTransparency: result.hasTransparency
     };
   }
 
@@ -246,7 +253,7 @@ export default class StepSelectImage extends Vue.with(Props) {
   }
 
   get canChooseFormat(): boolean {
-    return this.modelValue.originalFormat !== ImageFormat.JPEG;
+    return this.modelValue.originalFormat !== ImageFormat.JPEG && !this.modelValue.hasTransparency;
   }
 }
 </script>

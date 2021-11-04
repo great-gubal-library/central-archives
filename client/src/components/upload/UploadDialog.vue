@@ -106,6 +106,7 @@ export default class UploadDialog extends Vue {
     originalFormat: null,
     format: null,
     convertedFile: null,
+    hasTransparency: false,
   };
   thumbModel: ImageThumbModel = {
     left: -1,
@@ -164,7 +165,8 @@ export default class UploadDialog extends Vue {
         image: null,
         originalFormat: null,
         format: null,
-        convertedFile: null
+        convertedFile: null,
+        hasTransparency: false,
       };
       this.step = Step.SELECT_IMAGE;
     }

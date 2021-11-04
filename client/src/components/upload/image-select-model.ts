@@ -7,4 +7,5 @@ export interface ImageSelectModel {
 	image: HTMLImageElement|null;
 	originalFormat: ImageFormat|null;
 	format: ImageFormat|null;
+	hasTransparency: boolean;
 }
