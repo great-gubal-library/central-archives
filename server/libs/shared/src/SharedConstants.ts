@@ -2,4 +2,5 @@ export default Object.freeze({
 	FFXIV_SERVER_TIMEZONE: 'UTC',
 	DATACENTER: 'Chaos',
 	PASSWORD_MIN_LENGTH: 8,
+	MAX_UPLOAD_SIZE: 1024 * 1024,
 })

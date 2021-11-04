@@ -1,5 +1,5 @@
-import { serverConfiguration } from '@app/configuration';
 import { Character, Image } from '@app/entity';
+import SharedConstants from '@app/shared/SharedConstants';
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,7 +14,7 @@ import { StorageService } from './storage.service';
     MulterModule.registerAsync({
       useFactory: () => ({
         limits: {
-          fileSize: serverConfiguration.maxUploadSizeKiB * 1024,
+          fileSize: SharedConstants.MAX_UPLOAD_SIZE,
         },
       }),
     }),

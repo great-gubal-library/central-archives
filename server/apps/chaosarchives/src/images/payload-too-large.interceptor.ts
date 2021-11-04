@@ -1,5 +1,5 @@
 
-import { serverConfiguration } from '@app/configuration';
+import SharedConstants from '@app/shared/SharedConstants';
 import { CallHandler, ExecutionContext, HttpException, HttpStatus, NestInterceptor, PayloadTooLargeException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -9,7 +9,7 @@ export class PayloadTooLargeInterceptor implements NestInterceptor {
     return next.handle()
       .pipe(catchError((error => {
         if (error instanceof PayloadTooLargeException) {
-					const maxSize = serverConfiguration.maxUploadSizeKiB;
+					const maxSize = SharedConstants.MAX_UPLOAD_SIZE;
           throw new HttpException(
 						`Your image is too large. Maximum allowed size is ${maxSize} KiB.`, HttpStatus.PAYLOAD_TOO_LARGE);
         } else {

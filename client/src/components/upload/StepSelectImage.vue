@@ -17,18 +17,21 @@
 		<q-banner v-if="modelValue.file && !modelValue.image" class="bg-negative text-white">
 			Not an image file.
 		</q-banner>
-		<section v-if="modelValue.file && modelValue.image">
-			<template v-if="modelValue.originalFormat !== ImageFormat.JPEG">
+		<section class="step-select-image__conversion" v-if="modelValue.file && modelValue.image">
+			<div class="step-select-image__conversion-switches" v-if="modelValue.originalFormat !== ImageFormat.JPEG">
 				<q-radio v-model="modelValue.format" :val="ImageFormat.PNG" :label="modelValue.originalFormat === ImageFormat.PNG ? 'Keep as PNG': 'Convert to PNG'" />
 				<q-radio v-model="modelValue.format" :val="ImageFormat.JPEG" label="Convert to JPEG" />
-			</template>
-			<div class="step-select-image__file-size">File size: {{fileSize}}</div>
+			</div>
+			<div class="step-select-image__file-size" :class="{ 'text-negative': exceedsMaxFileSize }">
+				File size: {{fileSize}} (maximum: {{maxFileSize}}) <q-icon v-if="exceedsMaxFileSize" name="error" />
+			</div>
 		</section>
 	</div>
 </template>
 
 <script lang="ts">
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
+import SharedConstants from '@app/shared/SharedConstants';
 import { convertImageElementForUpload, readImage } from 'src/common/images';
 import { Options, prop, Vue } from 'vue-class-component';
 import { ImageSelectModel } from './image-select-model';
@@ -170,11 +173,25 @@ export default class StepSelectImage extends Vue.with(Props) {
 
 		return this.$display.formatFileSize(this.modelValue.convertedFile.size);
 	}
+
+	get maxFileSize(): string {
+		return this.$display.formatFileSize(SharedConstants.MAX_UPLOAD_SIZE);
+	}
+
+	get exceedsMaxFileSize(): boolean {
+		return !!this.modelValue.convertedFile && this.modelValue.convertedFile.size > SharedConstants.MAX_UPLOAD_SIZE;
+	}
 }
 </script>
 
 <style lang="scss">
 .step-select-image img {
 	max-height: 50vh;
+}
+
+.step-select-image__conversion {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 </style>

@@ -71,7 +71,7 @@ import { ImageDetailsModel } from './image-details-model';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import errors from '@app/shared/errors';
-import { convertImageForUpload } from 'src/common/images';
+import SharedConstants from '@app/shared/SharedConstants';
 
 enum Step {
   SELECT_IMAGE = 'SELECT_IMAGE',
@@ -195,7 +195,9 @@ export default class UploadDialog extends Vue {
 	get canGoNext() {
 		switch (this.step) {
       case Step.SELECT_IMAGE:
-        return !!this.fileModel.image;
+        return !!this.fileModel.image
+            && !!this.fileModel.convertedFile
+            && this.fileModel.convertedFile.size <= SharedConstants.MAX_UPLOAD_SIZE;
       case Step.THUMBNAIL:
         return this.thumbModel.left !== -1;
       case Step.IMAGE_DETAILS:
