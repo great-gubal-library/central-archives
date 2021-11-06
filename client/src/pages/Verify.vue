@@ -54,14 +54,14 @@
         <template v-if="verificationStatus.characterVerified">
           <p>
             Your character
-            <strong>{{ $store.state.user.character.name }}</strong> has been
+            <strong>{{ $store.getters.character?.name }}</strong> has been
             verified.
           </p>
         </template>
         <template v-else>
           <p>
             You need to confirm that
-            <strong>{{ $store.state.user.character.name }}</strong> is your
+            <strong>{{ $store.getters.character?.name }}</strong> is your
             character by editing their character profile on Lodestone. To
             confirm your ownership of your character, follow these steps:
           </p>
@@ -69,7 +69,7 @@
             <li>
               Open
               <a :href="lodestoneCharacterLink" target="_blank"
-                >{{ $store.state.user.character.name }}'s page on Lodestone <q-icon class="external-link-icon" name="launch" /></a
+                >{{ $store.getters.character?.name }}'s page on Lodestone <q-icon class="external-link-icon" name="launch" /></a
               >.
             </li>
             <li>
@@ -144,7 +144,7 @@ export default class PageVerify extends Vue {
 
 	private async refreshLodestoneStatus() {
 		try {
-			const lodestoneId = this.$store.state.user?.character.lodestoneId;
+			const lodestoneId = this.$store.getters.character?.lodestoneId;
 			const verificationCode = this.verificationStatus.characterVerificationCode;
 
 			if (!lodestoneId || !verificationCode) {
@@ -162,7 +162,7 @@ export default class PageVerify extends Vue {
 	}
 
   get lodestoneCharacterLink() {
-    const lodestoneId = this.$store.state.user?.character.lodestoneId || -1; // guaranteed to exist
+    const lodestoneId = this.$store.getters.character?.lodestoneId || -1; // guaranteed to exist
     return `https://eu.finalfantasyxiv.com/lodestone/character/${lodestoneId}/`;
   }
 

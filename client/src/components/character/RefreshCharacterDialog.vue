@@ -44,7 +44,7 @@ class Props {
   emits: ['ok', 'hide'],
 })
 export default class RefreshCharacterDialog extends Vue.with(Props) {
-	private loading = false;
+	loading = false;
 
   show() {
     (this.$refs.dialog as DialogRef).show();
@@ -67,9 +67,9 @@ export default class RefreshCharacterDialog extends Vue.with(Props) {
 
 		try {
 			const result = await this.$api.refreshCharacter({ id: this.characterId });
-			const user = this.$store.state.user;
+			const characterId = this.$store.getters.characterId;
 
-			if (user && this.characterId === user.character.id) {
+			if (characterId && this.characterId === characterId) {
 				this.$store.commit('updateCharacter', result);
 			}
 

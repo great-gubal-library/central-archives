@@ -33,7 +33,7 @@ export default class ConfirmImageDeleteDialog extends Vue {
 	images: ImageSummaryDto[] = [];
 
 	async created() {
-		const characterId = this.$store.state.user?.character.id;
+		const characterId = this.$store.getters.characterId;
 
 		if (!characterId) {
 			return;

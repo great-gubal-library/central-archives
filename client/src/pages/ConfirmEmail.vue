@@ -35,7 +35,7 @@ export default class PageConfirmEmail extends Vue {
 		} finally {
 			this.$q.loading.hide();
 
-			if (this.$store.state.user) {
+			if (this.$store.getters.role) {
 				void this.$router.replace('/verify');
 			} else {
 				void this.$router.replace('/login');

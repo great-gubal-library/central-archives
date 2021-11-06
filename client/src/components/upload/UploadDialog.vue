@@ -254,17 +254,17 @@ export default class UploadDialog extends Vue {
   }
 
   private async upload(): Promise<ImageSummaryDto> {
-    const user = this.$store.state.user;
+    const characterId = this.$store.getters.characterId;
     const { convertedFile, filename } = this.fileModel;
 
-    if (!user || !convertedFile || !filename) {
+    if (!characterId || !convertedFile || !filename) {
       throw new Error();
     }
 
     // Converts if necessary, otherwise leaves the original file intact
 
     return this.$api.uploadImage({
-      characterId: user.character.id,
+      characterId,
       title: this.detailsModel.title,
       description: this.detailsModel.description,
       category: this.detailsModel.category,

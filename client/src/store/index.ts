@@ -1,5 +1,7 @@
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto'
+import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto'
 import { SessionDto } from '@app/shared/dto/user/session.dto'
+import { Role } from '@app/shared/enums/role.enum'
 import { store } from 'quasar/wrappers'
 import { InjectionKey } from 'vue'
 import {
@@ -26,17 +28,26 @@ export interface StateInterface {
   user: SessionDto | null
 }
 
+export interface GettersInterface {
+  characterId: number|null;
+  characterShortName: string|null;
+  character: SessionCharacterDto|null;
+  role: Role|null;
+}
+
+type CAStore = Omit<VuexStore<StateInterface>, 'getters'> & { getters: GettersInterface };
+
 // provide typings for `this.$store`
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $store: VuexStore<StateInterface>
+    $store: CAStore
   }
 }
 
 // provide typings for `useStore` helper
 export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-key')
 
-let $store: VuexStore<StateInterface>;
+let $store: CAStore;
 
 export default store(function (/* { ssrContext } */) {
   $store = createStore<StateInterface>({
@@ -60,8 +71,20 @@ export default store(function (/* { ssrContext } */) {
     },
 
     getters: {
-      characterShortName(state) {
+      characterId(state): number|null {
+        return state.user ? state.user.character.id : null
+      },
+
+      characterShortName(state): string|null {
         return state.user ? state.user.character.name.split(' ')[0] : null;
+      },
+
+      character(state): SessionCharacterDto|null {
+        return state.user ? state.user.character : null;
+      },
+
+      role(state): Role|null {
+        return state.user ? state.user.role : null;
       }
     },
 

@@ -114,8 +114,8 @@ const $q = useQuasar();
 
 async function load(): Promise<CharacterProfileDto> {
   const $store = useStore();
-  const name = $store.state.user?.character.name || '';
-  const server = $store.state.user?.character.server || '';
+  const name = $store.getters.character?.name || '';
+  const server = $store.getters.character?.server || '';
 
   try {
     return await $api.getCharacterProfile(name, server);
@@ -208,8 +208,8 @@ export default class PageEditCharacter extends Vue {
   }
 
   viewCharacter() {
-    const name = this.$store.state.user?.character.name || '';
-    const server = this.$store.state.user?.character.server || '';
+    const name = this.$store.getters.character?.name || '';
+    const server = this.$store.getters.character?.server || '';
     void this.$router.push(`/${server}/${name.replace(' ', '_')}`);
   }
 }

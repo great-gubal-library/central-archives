@@ -112,9 +112,9 @@ export default class PageEditStory extends Vue {
 
   private async load(params: RouteParams) {
     const id = parseInt(params.id as string, 10);
-    const user = this.$store.state.user;
+    const character = this.$store.getters.character;
 
-    if (!user) {
+    if (!character) {
       void this.$router.push('/');
       return;
     }
@@ -126,8 +126,8 @@ export default class PageEditStory extends Vue {
     } else {
       this.storyBackup = new StoryDto({
         mine: true,
-        author: user.character.name,
-        authorServer: user.character.server,
+        author: character.name,
+        authorServer: character.server,
         createdAt: Date.now(),
         type: StoryType.PUBLISHED_WORK,
         title: '',

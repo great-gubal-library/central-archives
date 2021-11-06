@@ -1,6 +1,6 @@
 <template>
   <q-list class="user-menu" dense dark>
-    <template v-if="!$store.state.user">
+    <template v-if="!$store.getters.role">
       <q-item-label header> User </q-item-label>
       <q-item class="user-menu__button-bar">
         <q-item-section>
@@ -20,7 +20,7 @@
     </template>
     <template v-else>
       <q-item-label header>
-        {{ $store.state.user.character.name }}
+        {{ $store.getters.character?.name }}
       </q-item-label>
       <!--
           <q-item v-for="link in userLinks" clickable v-ripple :key="link.label" :to="link.to">
@@ -39,7 +39,7 @@
           </q-expansion-item>
           -->
       <q-item
-        v-if="$store.state.user.role === 'unverified'"
+        v-if="$store.getters.role === 'unverified'"
         clickable
         v-ripple
         to="/verify"
@@ -48,7 +48,7 @@
           <q-item-label>Account verification</q-item-label>
         </q-item-section>
       </q-item>
-      <template v-if="$store.state.user.role !== 'unverified'">
+      <template v-if="$store.getters.role !== 'unverified'">
         <q-item
           clickable
           v-ripple
@@ -115,8 +115,8 @@ import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 })
 export default class UserMenu extends Vue {
   get myProfileLink() {
-		const server = this.$store.state.user?.character.server || '';
-		const character = this.$store.state.user?.character.name.replace(' ', '_') || '';
+		const server = this.$store.getters.character?.server || '';
+		const character = this.$store.getters.character?.name.replace(' ', '_') || '';
 		return `/${server}/${character}`;
 	}
 

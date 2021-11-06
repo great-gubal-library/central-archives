@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-my-images">
 		<h2>My Images</h2>
-    <div class="page-my-images__subtitle">for {{ $store.state.user?.character.name }}</div>
+    <div class="page-my-images__subtitle">for {{ $store.getters.character?.name }}</div>
     <transition
       v-for="image in images" :key="image.id"
       leave-active-class="animated fadeOut"
@@ -24,7 +24,7 @@ async function load(): Promise<ImageDto[]> {
 	const $api = useApi();
 	const $q = useQuasar();
   const $store = useStore();
-  const characterId = $store.state.user?.character.id;
+  const characterId = $store.getters.characterId;
 
 	if (!characterId) {
 		$q.notify({

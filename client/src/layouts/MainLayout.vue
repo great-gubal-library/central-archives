@@ -15,9 +15,9 @@
           >
             <q-tooltip>Menu</q-tooltip>
           </q-btn>
-          <div v-if="$store.state.user" class="gt-sm layout__char-name">
+          <div v-if="$store.getters.character" class="gt-sm layout__char-name">
             <q-avatar round>
-              <img :src="$store.state.user.character.avatar" />
+              <img :src="$store.getters.character.avatar" />
             </q-avatar>
             <span>{{ $store.getters.characterShortName }}</span>
           </div>
