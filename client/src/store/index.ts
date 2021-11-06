@@ -2,15 +2,13 @@ import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto'
 import { SessionDto } from '@app/shared/dto/user/session.dto'
 import { Role } from '@app/shared/enums/role.enum'
+import { LocalStorage } from 'quasar'
 import { store } from 'quasar/wrappers'
 import { InjectionKey } from 'vue'
 import {
   createStore,
-  Store as VuexStore,
+  Store as VuexStore
 } from 'vuex'
-
-// import example from './module-example'
-// import { ExampleStateInterface } from './module-example/state';
 
 /*
  * If not building with SSR mode, you can
@@ -21,11 +19,15 @@ import {
  * with the Store instance.
  */
 
+export interface StoreUser {
+  id: number;
+  role: Role;
+  currentCharacterId: number;
+  characters: Map<number, SessionCharacterDto>;
+}
+
 export interface StateInterface {
-  // Define your own store structure, using submodules if needed
-  // example: ExampleStateInterface;
-  // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  user: SessionDto | null
+  user: StoreUser | null;
 }
 
 export interface GettersInterface {
@@ -56,8 +58,26 @@ export default store(function (/* { ssrContext } */) {
     },
 
     mutations: {
-      setUser(state, user: SessionDto) {
-        state.user = user;
+      setUser(state, user: SessionDto | null) {
+        if (user === null) {
+          state.user = null;
+          return;
+        }
+
+        const characters = toMap(user.characters);
+        let currentCharacterId = getCurrentCharacterId();
+
+        if (!currentCharacterId || !characters.get(currentCharacterId)) {
+          currentCharacterId = user.characters[0].id;
+          setCurrentCharacterId(currentCharacterId);
+        }
+
+        state.user = {
+          id: user.id,
+          role: user.role,
+          characters,
+          currentCharacterId
+        };
       },
 
       updateCharacter(state, characterData: CharacterRefreshResultDto) {
@@ -66,25 +86,44 @@ export default store(function (/* { ssrContext } */) {
         }
 
         const { name, server, avatar } = characterData;
-        Object.assign(state.user.character, { name, server, avatar });
+        Object.assign(state.user.characters.get(state.user.currentCharacterId), { name, server, avatar });
       }
     },
 
     getters: {
       characterId(state): number|null {
-        return state.user ? state.user.character.id : null
+        return state.user ? state.user.currentCharacterId : null
       },
 
       characterShortName(state): string|null {
-        return state.user ? state.user.character.name.split(' ')[0] : null;
+        if (!state.user) {
+          return null;
+        }
+
+        const character = state.user.characters.get(state.user.currentCharacterId)!;
+        return character.name.split(' ')[0];
       },
 
       character(state): SessionCharacterDto|null {
-        return state.user ? state.user.character : null;
+        if (!state.user) {
+          return null;
+        }
+
+        return state.user.characters.get(state.user.currentCharacterId)!;
       },
 
       role(state): Role|null {
-        return state.user ? state.user.role : null;
+        if (!state.user) {
+          return null;
+        }
+
+        const character = state.user.characters.get(state.user.currentCharacterId)!;
+
+        if (!character.verified) {
+          return Role.UNVERIFIED;
+        }
+
+        return state.user.role;
       }
     },
 
@@ -95,6 +134,24 @@ export default store(function (/* { ssrContext } */) {
 
   return $store;
 })
+
+function getCurrentCharacterId(): number|null {
+  return LocalStorage.getItem('currentCharacterId');
+}
+
+function setCurrentCharacterId(currentCharacterId: number) {
+  LocalStorage.set('currentCharacterId', currentCharacterId);
+}
+
+function toMap(characters: SessionCharacterDto[]) {
+  const result = new Map<number, SessionCharacterDto>();
+
+  for (const character of characters) {
+    result.set(character.id, character);
+  }
+
+  return result;
+}
 
 export function useStore() {
   return $store

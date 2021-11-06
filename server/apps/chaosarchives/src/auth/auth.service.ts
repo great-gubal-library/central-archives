@@ -5,6 +5,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { checkPassword } from '../common/security';
+import { UserCharacterInfo } from './user-character-info';
 import { UserInfo } from './user-info';
 
 @Injectable()
@@ -46,12 +47,12 @@ export class AuthService {
   }
 
   private async getAndCacheUserInfo(user: User): Promise<UserInfo> {
-    const character = await this.characterRepo.findOne({
+    const characters = await this.characterRepo.find({
       where: { user },
       relations: [ 'server' ],
     });
 
-    if (!character) {
+    if (characters.length === 0) {
       // Shouldn't happen
       throw new UnauthorizedException();
     }
@@ -59,13 +60,14 @@ export class AuthService {
     const result = new UserInfo({
       id: user.id,
       role: user.role as Role,
-      character: {
+      characters: characters.map(character => new UserCharacterInfo({
         id: character.id,
         lodestoneId: character.lodestoneId,
         name: character.name,
         server: character.server.name,
         avatar: character.avatar,
-      },
+        verified: character.verifiedAt !== null
+      })),
     });
 
     this.redisService.set(

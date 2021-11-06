@@ -49,8 +49,10 @@ export default class UserAPI {
     return this.transport.authGet<SessionDto>('session');
   }
 
-  async getVerificationStatus(): Promise<VerificationStatusDto> {
-    return this.transport.authGet<VerificationStatusDto>('verification-status');
+  async getVerificationStatus(characterId: number): Promise<VerificationStatusDto> {
+    return this.transport.authGet<VerificationStatusDto>('verification-status', {
+      characterId
+    });
   }
 
   async verifyCharacter(characterData: VerifyCharacterDto): Promise<void> {

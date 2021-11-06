@@ -3,9 +3,9 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import html from '@app/shared/html';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, In, Not, Repository } from 'typeorm';
+import { Connection, In, IsNull, Not, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
 
 @Injectable()
@@ -54,11 +54,30 @@ export class StoriesService {
 
   async createStory(storyDto: StoryDto & { id: undefined }, user: UserInfo): Promise<IdWrapper> {
     const storyEntity = await this.connection.transaction(async em => {
+			const character = await em.getRepository(Character).findOne({
+				where: {
+					name: storyDto.author,
+					server: {
+						name: storyDto.authorServer,
+					},
+					user: {
+						id: user.id
+					},
+					verifiedAt: Not(IsNull())
+				},
+				relations: [ 'server' ],
+				select: [ 'id', ]
+			});
+
+			if (!character) {
+				throw new BadRequestException(`Author character "${storyDto.author}" not found`);
+			}
+
 			const storyRepo = em.getRepository(Story);
 			
 			const story = storyRepo.create({
 				owner: {
-					id: user.character.id
+					id: character.id
 				},
 				title: storyDto.title,
 				content: html.sanitize(storyDto.content),

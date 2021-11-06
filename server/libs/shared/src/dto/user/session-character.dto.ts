@@ -4,4 +4,5 @@ export interface SessionCharacterDto {
 	name: string;
 	server: string;
 	avatar: string;
+	verified: boolean;
 }

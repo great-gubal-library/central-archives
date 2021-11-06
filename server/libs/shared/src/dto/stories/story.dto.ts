@@ -11,11 +11,9 @@ export class StoryDto {
 	mine: boolean;
 
 	@IsString()
-	@IsOptional()
 	author: string;
 
 	@IsString()
-	@IsOptional()
 	authorServer: string;
 
 	@IsNumber()

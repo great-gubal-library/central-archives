@@ -7,7 +7,16 @@ import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-respons
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -26,15 +35,17 @@ export class UserController {
   async signUp(
     @Body() signupData: UserSignUpDto,
   ): Promise<UserSignUpResponseDto> {
-    const { userId, characterVerificationCode } = await this.userService.signUp(signupData);
+    const { userId, characterVerificationCode } = await this.userService.signUp(
+      signupData,
+    );
     const accessToken = this.publicAuthService.createAccessToken(userId);
     const userInfo = await this.publicAuthService.getUserInfo(userId);
 
     return {
       characterVerificationCode,
       accessToken,
-      session: this.userService.toSession(userInfo)
-    }
+      session: this.userService.toSession(userInfo),
+    };
   }
 
   @Post('confirm-email')
@@ -62,19 +73,27 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('verification-status')
-  async getVerificationStatus(@CurrentUser() user: UserInfo): Promise<VerificationStatusDto> {
-    return this.userService.getVerificationStatus(user);
+  async getVerificationStatus(
+    @CurrentUser() user: UserInfo,
+    @Query('characterId', ParseIntPipe) characterId: number,
+  ): Promise<VerificationStatusDto> {
+    return this.userService.getVerificationStatus(user, characterId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('verify-character')
-  async verifyCharacter(@CurrentUser() user: UserInfo, @Body() verifyData: VerifyCharacterDto): Promise<void> {
+  async verifyCharacter(
+    @CurrentUser() user: UserInfo,
+    @Body() verifyData: VerifyCharacterDto,
+  ): Promise<void> {
     await this.userService.verifyCharacter(user, verifyData);
     await this.publicAuthService.notifyUserChanged(user.id);
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body() request: ForgotPasswordRequestDto): Promise<void> {
+  async forgotPassword(
+    @Body() request: ForgotPasswordRequestDto,
+  ): Promise<void> {
     await this.userService.forgotPassword(request);
   }
 

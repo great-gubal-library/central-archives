@@ -128,21 +128,21 @@ export class UserService {
     return userInfo;
   }
 
-  async getVerificationStatus(user: UserInfo): Promise<VerificationStatusDto> {
+  async getVerificationStatus(user: UserInfo, characterId: number): Promise<VerificationStatusDto> {
     const userData = await this.userRepo.findOne(user.id, {
       select: [ 'email', 'verifiedAt' ],
     });
 
     if (!userData) {
-      throw new BadRequestException();
+      throw new BadRequestException(`User ${user.id} not found`);
     }
 
-    const characterData = await this.characterRepo.findOne(user.character.id, {
+    const characterData = await this.characterRepo.findOne(characterId, {
       select: [ 'verificationCode', 'verifiedAt' ],
     });
 
     if (!characterData) {
-      throw new BadRequestException();
+      throw new BadRequestException(`Character ${characterId} not found`);
     }
 
     return {

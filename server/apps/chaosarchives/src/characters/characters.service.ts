@@ -167,11 +167,8 @@ export class CharactersService {
 
 			await repo.save(characterEntity);
 
-      // But that's not all! If the user was refreshing their current character,
-      // we need to invalidate the session cache, since character data is cached there.
-      if (characterEntity.id === user.character.id) {
-        await this.publicAuthService.notifyUserChanged(user.id);
-      }
+      // But that's not all! We need to invalidate the session cache, since character data is cached there.
+      await this.publicAuthService.notifyUserChanged(user.id);
 
       return {
         name: characterEntity.name,

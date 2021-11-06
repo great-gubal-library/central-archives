@@ -121,7 +121,7 @@ export default class PageVerify extends Vue {
 
   private async refresh() {
 		try {
-			this.verificationStatus = await this.$api.user.getVerificationStatus();
+			this.verificationStatus = await this.$api.user.getVerificationStatus(this.$store.getters.characterId!);
 
 			if (!this.verificationStatus.characterVerified) {
 				await this.refreshLodestoneStatus();
@@ -144,7 +144,7 @@ export default class PageVerify extends Vue {
 
 	private async refreshLodestoneStatus() {
 		try {
-			const lodestoneId = this.$store.getters.character?.lodestoneId;
+			const lodestoneId = this.$store.getters.character!.lodestoneId;
 			const verificationCode = this.verificationStatus.characterVerificationCode;
 
 			if (!lodestoneId || !verificationCode) {
@@ -153,7 +153,7 @@ export default class PageVerify extends Vue {
 
 			await this.$api.user.verifyCharacter({ lodestoneId });
 			// If we get here, this means character verification succeeded.
-			this.verificationStatus = await this.$api.user.getVerificationStatus();
+			this.verificationStatus = await this.$api.user.getVerificationStatus(this.$store.getters.characterId!);
 		} catch (e) {
       if (errors.getStatusCode(e) !== 404) {
         console.log(e);
@@ -162,7 +162,7 @@ export default class PageVerify extends Vue {
 	}
 
   get lodestoneCharacterLink() {
-    const lodestoneId = this.$store.getters.character?.lodestoneId || -1; // guaranteed to exist
+    const lodestoneId = this.$store.getters.character!.lodestoneId || -1; // guaranteed to exist
     return `https://eu.finalfantasyxiv.com/lodestone/character/${lodestoneId}/`;
   }
 
