@@ -5,7 +5,8 @@
 			<section class="gallery-dialog__image-list">
 				<thumb-gallery :images="images" :links="false" @select="onImageSelect" />
 			</section>
-			<q-card-actions align="right">
+			<q-card-actions class="gallery-dialog__buttons">
+				<q-btn flat color="secondary" icon="upload" label="Upload new" @click="onUploadClick" />
 				<q-btn flat color="primary" label="Cancel" @click="onCancelClick" />
 			</q-card-actions>
     </q-card>
@@ -62,6 +63,16 @@ export default class ConfirmImageDeleteDialog extends Vue {
     this.$emit('hide');
   }
 
+  async onUploadClick() {
+    const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
+
+    this.$q.dialog({
+      component: UploadDialog
+    }).onOk((image: ImageSummaryDto) => {
+      this.onImageSelect(image);
+    });
+  }
+
   onCancelClick() {
     this.hide();
   }
@@ -77,6 +88,10 @@ export default class ConfirmImageDeleteDialog extends Vue {
 .gallery-dialog {
   width: 800px;
 	padding: 8px 24px;
+}
+
+.gallery-dialog__buttons {
+	justify-content: space-between;
 }
 
 @media (min-width: 1280px) {
