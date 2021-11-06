@@ -1,25 +1,37 @@
 <template>
 	<div class="thumb-gallery">
 		<div v-for="image in images" :key="image.id">
-			<router-link class="thumb-gallery__image-wrapper thumb-link" :to="`/image/${image.id}`" :title="image.title">
+			<router-link v-if="links" class="thumb-gallery__image-wrapper thumb-link" :to="`/image/${image.id}`" :title="image.title">
 				<img :src="image.thumbUrl" :alt="image.title" />
 			</router-link>
+			<div v-else class="thumb-gallery__image-wrapper thumb-link" @click="select(image)">
+				<img :src="image.thumbUrl" :alt="image.title" />
+			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
-import { prop, Vue } from 'vue-class-component';
+import { Options, prop, Vue } from 'vue-class-component';
 
 class Props {
 	images = prop<ImageSummaryDto[]>({
 		required: true
 	});
+	
+	links = prop<boolean>({
+		default: true
+	});
 }
 
+@Options({
+	emits: 'select'
+})
 export default class ThumbGallery extends Vue.with(Props) {
-	
+	select(image: ImageSummaryDto) {
+		this.$emit('select', image);
+	}
 }
 </script>
 
@@ -36,6 +48,7 @@ export default class ThumbGallery extends Vue.with(Props) {
 	display: flex;
 	margin-right: 12px;
 	margin-bottom: 12px;
+	cursor: pointer;
 }
 
 .thumb-gallery img {

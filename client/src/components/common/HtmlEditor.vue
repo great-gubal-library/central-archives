@@ -150,13 +150,25 @@ export default class HtmlEditor extends Vue.with(Props) {
         });
 
         if (this.allowImages) {
+          editor.ui.registry.addMenuItem('gallery', {
+            text: 'Image from my gallery...',
+            icon: 'gallery',
+            onAction: () => this.onGalleryClick(editor)
+          });
+
+          editor.ui.registry.addButton('gallery', {
+            tooltip: 'Insert image from my gallery',
+            icon: 'gallery',
+            onAction: () => this.onGalleryClick(editor)
+          });
+
           editor.ui.registry.addMenuItem('upload', {
             text: 'Upload image...',
             icon: 'upload',
             onAction: () => this.onUploadClick(editor)
           });
 
-          editor.ui.registry.addButton('gallery', {
+          editor.ui.registry.addButton('upload', {
             tooltip: 'Upload image',
             icon: 'upload',
             onAction: () => this.onUploadClick(editor)
@@ -168,6 +180,16 @@ export default class HtmlEditor extends Vue.with(Props) {
 
   onInput(newValue: string) {
     this.$emit('update:modelValue', newValue);
+  }
+
+  private async onGalleryClick(editor: any) {
+    const GalleryDialog = (await import('./GalleryDialog.vue')).default;
+
+    this.$q.dialog({
+      component: GalleryDialog
+    }).onOk((image: ImageSummaryDto) => {
+      this.insertImage(editor, image.url, image.width, image.height, image.title);
+    });
   }
 
   private async onUploadClick(editor: any) {
