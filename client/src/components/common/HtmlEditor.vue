@@ -15,6 +15,7 @@
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import Editor from '@tinymce/tinymce-vue';
+import { TinyMceEditor } from 'tinymce';
 import { Options, prop, Vue } from 'vue-class-component';
 
 const FONTS = [
@@ -63,6 +64,7 @@ const TINYMCE_OPTIONS = {
   menubar: 'edit view insert format list table help',
   image_title: false,
   image_description: false,
+  image_advtab: true,
   link_title: false,
   block_formats: 'Paragraph=p; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6',
   font_formats: FONT_OPTION,
@@ -136,7 +138,7 @@ export default class HtmlEditor extends Vue.with(Props) {
       ...TINYMCE_OPTIONS,
       plugins,
       fixed_toolbar_container: `#${this.toolbarId}`,
-      setup: (editor: any) => {
+      setup: (editor: TinyMceEditor) => {
         editor.ui.registry.addMenuItem('outdent', {
           text: 'Decrease indent',
           icon: 'outdent',
@@ -182,7 +184,7 @@ export default class HtmlEditor extends Vue.with(Props) {
     this.$emit('update:modelValue', newValue);
   }
 
-  private async onGalleryClick(editor: any) {
+  private async onGalleryClick(editor: TinyMceEditor) {
     const GalleryDialog = (await import('./GalleryDialog.vue')).default;
 
     this.$q.dialog({
@@ -192,7 +194,7 @@ export default class HtmlEditor extends Vue.with(Props) {
     });
   }
 
-  private async onUploadClick(editor: any) {
+  private async onUploadClick(editor: TinyMceEditor) {
     const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
 
     this.$q.dialog({
@@ -202,7 +204,7 @@ export default class HtmlEditor extends Vue.with(Props) {
     });
   }
 
-  private insertImage(editor: any, src: string, width: number, height: number, title: string) {
+  private insertImage(editor: TinyMceEditor, src: string, width: number, height: number, title: string) {
     const img = document.createElement('img');
     img.src = src;
     img.width = width;
