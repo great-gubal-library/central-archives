@@ -126,7 +126,6 @@ export default class UserMenu extends Vue {
     this.$q.dialog({
       component: UploadDialog
     }).onOk(async (image: ImageSummaryDto) => {
-      console.log('onOk', image);
       const PostUploadDialog = (await import('components/upload/PostUploadDialog.vue')).default;
 
       this.$q.dialog({
