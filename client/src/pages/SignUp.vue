@@ -49,42 +49,7 @@
         </q-input>
       </section>
       <h6>Character information</h6>
-      <div class="flex">
-        <section class="page-signup__form-controls">
-          <q-select
-            :model-value="character"
-            :display-value="character.name"
-            :options="characterOptions"
-            :option-label="(option) => `${option.name} (${option.server})`"
-            hide-dropdown-icon
-            use-input
-            emit-value
-            input-debounce="200"
-            label="Character name"
-            :hint="character.server ? '' : 'Start typing, and we will attempt to find your character.'"
-            @filter="onCharacterFilter"
-            @update:model-value="onCharacterSelected"
-            :rules="[
-              val => !!val && !!val.server || 'You must select a character.',
-            ]"
-          >
-            <template v-slot:prepend>
-              <q-icon name="face" />
-            </template>
-            <template v-slot:append>
-              <q-btn v-if="character.server" flat dense icon="delete" title="Clear" @click="clearCharacter" />
-            </template>
-          </q-select>
-          <q-input :model-value="character.server" label="Server" readonly>
-            <template v-slot:prepend>
-              <q-icon name="computer" />
-            </template>
-          </q-input>
-        </section>
-        <div class="page-signup__avatar">
-          <q-img width="96px" height="96px" :src="character.avatar" />
-        </div>
-      </div>
+      <character-finder-field class="page-signup__character-finder-field" v-model="character" />
       <h6>Terms of use</h6>
       <div
         class="page-signup__terms-of-use rounded-borders"
@@ -111,21 +76,17 @@
 
 <script lang="ts">
 import SharedConstants from '@app/shared/SharedConstants';
-import minXIVAPI from 'src/common/xivapi-min';
 import rules from 'src/markdown/rules.md';
-import { Vue } from 'vue-class-component';
+import { Options, Vue } from 'vue-class-component';
 import errors from '@app/shared/errors';
+import { CharacterSearchModel } from 'src/components/character/character-search-model';
+import CharacterFinderField from 'src/components/character/CharacterFinderField.vue';
 
-interface Character {
-	name: string;
-	server: string;
-  avatar: string;
-  lodestoneId: number;
-}
-
-// Datacenter name in parentheses: (Chaos)
-const SERVER_SUFFIX = `(${SharedConstants.DATACENTER})`;
-
+@Options({
+  components: {
+    CharacterFinderField
+  }
+})
 export default class PageSignUp extends Vue {
   readonly rules = rules;
   readonly SharedConstants = SharedConstants;
@@ -134,64 +95,16 @@ export default class PageSignUp extends Vue {
   password = '';
   confirmPassword = '';
 
-	character: Character = {
+	character: CharacterSearchModel = {
 		name: '',
 		server: '',
     avatar: '',
     lodestoneId: -1,
 	};
-	characterOptions: Character[] = [];
-  characterOptionsSearchString = '';
 
   accept = false;
   loading = false;
   signedUp = false;
-
-	async onCharacterFilter(value: string, update: () => void, abort: () => void) {
-    value = value.trim();
-
-    // require that the name consists of at least two components, each at least two characters long
-    if (!(/.. ../.exec(value))) {
-      this.characterOptions = [];
-      update();
-      return;
-    }
-
-    try {
-      this.characterOptionsSearchString = value;
-      const results = (await minXIVAPI.character.search(value)).Results;
-
-      if (this.characterOptionsSearchString !== value) {
-        // Too late
-        return;
-      }
-
-      this.characterOptions = results.filter(result => result.Server.endsWith(SERVER_SUFFIX)).map(result => ({
-        name: result.Name,
-        server: result.Server.split(/\s/)[0], // remove datacenter suffix
-        avatar: result.Avatar,
-        lodestoneId: result.ID,
-      }));
-      
-      update();
-    } catch (e) {
-      abort();
-      throw e;
-    }
-	}
-
-  onCharacterSelected(character?: Character) {
-    if (character) {
-      this.character = character;
-    }
-  }
-
-  clearCharacter() {
-    this.character.name = '';
-    this.character.server = '';
-    this.character.avatar = '';
-    this.character.lodestoneId = -1;
-  }
 
   async onSubmit() {
     this.loading = true;
@@ -226,18 +139,8 @@ export default class PageSignUp extends Vue {
 </script>
 
 <style lang="scss">
-.page-signup__form-controls {
+.page-signup__form-controls, .page-signup__character-finder-field .character-finder-field__inputs {
   max-width: 500px;
-  flex-basis: 0;
-  flex-grow: 1;
-}
-
-.page-signup__avatar {
-  margin-left: 16px;
-}
-
-.page-signup__avatar img {
-  border-radius: 50%;
 }
 
 .page-signup__terms-of-use {
