@@ -81,6 +81,15 @@ export default store(function (/* { ssrContext } */) {
         };
       },
 
+      setCurrentCharacterId(state, characterId: number) {
+        if (state.user === null || !state.user.characters.get(characterId)) {
+          return;
+        }
+
+        state.user.currentCharacterId = characterId;
+        setCurrentCharacterId(characterId);
+      },
+
       updateCharacter(state, characterData: CharacterRefreshResultDto) {
         if (!state.user) {
           return;

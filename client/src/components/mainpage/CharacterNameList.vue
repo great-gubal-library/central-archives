@@ -5,7 +5,8 @@
       :key="`${profile.name}_${profile.server}`"
       clickable
       v-ripple
-      :to="getLink(profile)"
+      :to="links ? getLink(profile) : null"
+      @click="select(profile)"
     >
       <q-item-section side>
         <q-avatar round>
@@ -22,7 +23,7 @@
 
 <script lang="ts">
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
-import { prop, Vue } from 'vue-class-component';
+import { Options, prop, Vue } from 'vue-class-component';
 
 class Props {
   profiles = prop<CharacterSummaryDto[]>({
@@ -34,9 +35,16 @@ class Props {
   })
 }
 
+@Options({
+  emits: [ 'select' ]
+})
 export default class CharacterNameList extends Vue.with(Props) {
   getLink(profile: CharacterSummaryDto) {
     return `/${profile.server}/${profile.name.replace(' ', '_')}`
+  }
+
+  select(profile: CharacterSummaryDto) {
+    this.$emit('select', profile);
   }
 }
 </script>

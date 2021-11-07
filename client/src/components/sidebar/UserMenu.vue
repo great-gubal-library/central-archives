@@ -22,33 +22,27 @@
       <q-item-label header>
         {{ $store.getters.character?.name }}
       </q-item-label>
-      <!--
-          <q-item v-for="link in userLinks" clickable v-ripple :key="link.label" :to="link.to">
-            <q-item-section>
-              <q-item-label>{{link.label}}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-expansion-item dense label="Create content" header-class="text-bold">
-            <q-list class="layout__create-content-list" dense>
-              <q-item v-for="link in createContentLinks" clickable v-ripple :key="link.label" :to="link.to">
-                <q-item-section>
-                  <q-item-label>{{link.label}}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-expansion-item>
-          -->
       <q-item
-        v-if="$store.getters.role === 'unverified'"
+        clickable
+        v-ripple
+        @click="switchCharacter"
+      >
+        <q-item-section>
+          <q-item-label>Switch character</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-separator dark />
+      <q-item
+        v-if="$store.getters.role === Role.UNVERIFIED"
         clickable
         v-ripple
         to="/verify"
       >
         <q-item-section>
-          <q-item-label>Account verification</q-item-label>
+          <q-item-label>{{ $store.getters.realRole === Role.UNVERIFIED ? 'Account verification' : 'Character verification'}}</q-item-label>
         </q-item-section>
       </q-item>
-      <template v-if="$store.getters.role !== 'unverified'">
+      <template v-else>
         <q-item
           clickable
           v-ripple
@@ -109,16 +103,31 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
+import { Role } from '@app/shared/enums/role.enum';
+import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 
 @Options({
   
 })
 export default class UserMenu extends Vue {
+  readonly Role = Role;
+
   get myProfileLink() {
 		const server = this.$store.getters.character?.server || '';
 		const character = this.$store.getters.character?.name.replace(' ', '_') || '';
 		return `/${server}/${character}`;
 	}
+
+  async switchCharacter() {
+    const SwitchCharacterDialog = (await import('components/character/SwitchCharacterDialog.vue')).default;
+
+    this.$q.dialog({
+      component: SwitchCharacterDialog
+    }).onOk(async (character: SessionCharacterDto) => {
+      console.log('x');
+      await Promise.resolve();
+    });
+  }
 
   async uploadImage() {
     const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
