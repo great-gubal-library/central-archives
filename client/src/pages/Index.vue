@@ -52,7 +52,7 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
-import NewProfileList from 'components/mainpage/NewProfileList.vue';
+import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
 import StoryList from 'components/stories/StoryList.vue';
 import ThumbGallery from 'components/images/ThumbGallery.vue';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
@@ -79,7 +79,7 @@ async function load(): Promise<MainPageContentDto> {
   name: 'PageIndex',
   components: {
     NewsTimeline,
-    NewProfileList,
+    CharacterNameList,
     StoryList,
     ThumbGallery,
   },

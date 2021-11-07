@@ -1,6 +1,6 @@
 import { Character } from '@app/entity';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
-import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -36,7 +36,7 @@ export class MainPageService {
 		};
 	}
 
-	private async getNewProfiles(): Promise<NewProfileDto[]> {
+	private async getNewProfiles(): Promise<CharacterSummaryDto[]> {
 		const newCharacters = await this.characterRepo.createQueryBuilder('character')
 			.where('character.verifiedAt IS NOT NULL')
 			.orderBy('character.verifiedAt', 'DESC')

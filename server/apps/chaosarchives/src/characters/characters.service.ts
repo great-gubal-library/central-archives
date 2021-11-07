@@ -3,7 +3,7 @@ import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
-import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import html from '@app/shared/html';
@@ -111,7 +111,7 @@ export class CharactersService {
 		});
   }
 
-  async getCharacterList(): Promise<NewProfileDto[]> {
+  async getCharacterList(): Promise<CharacterSummaryDto[]> {
 		const characters = await this.characterRepo.createQueryBuilder('character')
 			.where('character.verifiedAt IS NOT NULL')
 			.orderBy('character.name', 'ASC')

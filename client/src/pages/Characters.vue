@@ -6,9 +6,9 @@
 </template>
 
 <script lang="ts">
-import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import errors from '@app/shared/errors';
-import NewProfileList from 'components/mainpage/NewProfileList.vue';
+import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
@@ -16,7 +16,7 @@ import { Options, Vue } from 'vue-class-component';
 const $api = useApi();
 const $q = useQuasar();
 
-async function load(): Promise<NewProfileDto[]> {
+async function load(): Promise<CharacterSummaryDto[]> {
 	try {
 		return await $api.getCharacterProfiles();
 	} catch (e) {
@@ -30,7 +30,7 @@ async function load(): Promise<NewProfileDto[]> {
 
 @Options({
 	components: {
-		NewProfileList
+		CharacterNameList
 	},
 	async beforeRouteEnter(_, __, next) {
 		const stories = await load();
@@ -38,9 +38,9 @@ async function load(): Promise<NewProfileDto[]> {
 	}
 })
 export default class PageCharacters extends Vue {
-	profiles: NewProfileDto[] = [];
+	profiles: CharacterSummaryDto[] = [];
 
-	setContent(profiles: NewProfileDto[]) {
+	setContent(profiles: CharacterSummaryDto[]) {
 		this.profiles = profiles;
 	}
 }

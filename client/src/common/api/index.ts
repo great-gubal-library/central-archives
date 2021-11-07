@@ -9,7 +9,7 @@ import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-reques
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { ImagesFilterDto } from '@app/shared/dto/image/images-filter.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
-import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
@@ -54,8 +54,8 @@ export default class API {
     return this.transport.tokenGet<CharacterProfileDto>(`characters/profile/${server}/${name}`);
   }
 
-  async getCharacterProfiles(): Promise<NewProfileDto[]> {
-    return this.transport.get<NewProfileDto[]>('characters');
+  async getCharacterProfiles(): Promise<CharacterSummaryDto[]> {
+    return this.transport.get<CharacterSummaryDto[]>('characters');
   }
 
   async saveCharacter(character: CharacterProfileDto): Promise<void> {

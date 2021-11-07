@@ -35,6 +35,7 @@ export interface GettersInterface {
   characterShortName: string|null;
   character: SessionCharacterDto|null;
   role: Role|null;
+  realRole: Role|null;
 }
 
 type CAStore = Omit<VuexStore<StateInterface>, 'getters'> & { getters: GettersInterface };
@@ -121,6 +122,14 @@ export default store(function (/* { ssrContext } */) {
 
         if (!character.verified) {
           return Role.UNVERIFIED;
+        }
+
+        return state.user.role;
+      },
+
+      realRole(state): Role|null {
+        if (!state.user) {
+          return null;
         }
 
         return state.user.role;

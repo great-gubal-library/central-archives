@@ -1,5 +1,5 @@
 <template>
-  <q-list class="new-profile-list" bordered>
+  <q-list class="character-name-list" bordered>
     <q-item
       v-for="profile in profiles"
       :key="`${profile.name}_${profile.server}`"
@@ -21,30 +21,32 @@
 </template>
 
 <script lang="ts">
-import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
-import { Options, Vue } from 'vue-class-component';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
+import { prop, Vue } from 'vue-class-component';
 
-@Options({
-  props: {
-    profiles: {
-      type: Object as () => NewProfileDto[],
-      required: true,
-    },
-  },
-})
-export default class NewProfileList extends Vue {
-  getLink(profile: NewProfileDto) {
+class Props {
+  profiles = prop<CharacterSummaryDto[]>({
+    required: true,
+  });
+
+  links = prop<boolean>({
+    default: true,
+  })
+}
+
+export default class CharacterNameList extends Vue.with(Props) {
+  getLink(profile: CharacterSummaryDto) {
     return `/${profile.server}/${profile.name.replace(' ', '_')}`
   }
 }
 </script>
 
 <style lang="scss">
-.new-profile-list .q-item {
+.character-name-list .q-item {
   background: $blue-1;
 }
 
-.new-profile-list .q-item:nth-child(even) {
+.character-name-list .q-item:nth-child(even) {
   background: rgba($blue-2, 0.4);
 }
 </style>

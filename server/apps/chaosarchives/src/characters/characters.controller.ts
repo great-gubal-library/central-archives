@@ -4,7 +4,7 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
-import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
@@ -42,7 +42,7 @@ export class CharactersController {
   }
 
   @Get()
-  async getCharacterList(): Promise<NewProfileDto[]> {
+  async getCharacterList(): Promise<CharacterSummaryDto[]> {
     return this.charactersService.getCharacterList();
   }
 

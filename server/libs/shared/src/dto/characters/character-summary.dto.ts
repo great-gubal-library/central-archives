@@ -1,6 +1,6 @@
 import { Race } from "@app/shared/enums/race.enum";
 
-export interface NewProfileDto {
+export interface CharacterSummaryDto {
 	name: string;
 	server: string;
 	avatar: string;
