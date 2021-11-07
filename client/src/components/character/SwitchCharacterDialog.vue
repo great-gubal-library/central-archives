@@ -120,14 +120,9 @@ export default class ConfirmImageDeleteDialog extends Vue {
   padding: 8px 24px;
 }
 
-.switch-character-dialog__character-list {
-  display: flex;
-	justify-content: stretch;
-}
-
 .switch-character-dialog__character-list > * {
-  flex-basis: 0;
-  flex-grow: 0.5;
+	display: inline-flex;
+  width: 50%;
 	min-width: 200px;
 }
 
