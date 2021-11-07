@@ -28,7 +28,7 @@
     -->
     <section>
       <h5><router-link to="/profiles">New profiles</router-link></h5>
-      <new-profile-list :profiles="content.newProfiles" />
+      <character-name-list :profiles="content.newProfiles" />
       <!--
       <div class="index__profile-fc-col">
         <h5>New free companies</h5>

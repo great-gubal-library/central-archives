@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-characters">
 		<h2>People of the Realm</h2>
-		<new-profile-list :profiles="profiles" />
+		<character-name-list :profiles="profiles" />
 	</q-page>	
 </template>
 
