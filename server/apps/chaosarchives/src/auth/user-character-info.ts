@@ -1,3 +1,5 @@
+import { Race } from "@app/shared/enums/race.enum";
+
 export class UserCharacterInfo {
   readonly id: number;
 
@@ -8,6 +10,8 @@ export class UserCharacterInfo {
   readonly server: string;
 
   readonly avatar: string;
+  
+  readonly race: Race;
 
   readonly verified: boolean;
 

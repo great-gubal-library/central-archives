@@ -15,6 +15,8 @@ import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import APITransport from './api-transport';
 import UserAPI from './user-api';
+import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
+import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 
 export default class API {
   private readonly transport = new APITransport();
@@ -60,6 +62,10 @@ export default class API {
 
   async saveCharacter(character: CharacterProfileDto): Promise<void> {
     await this.transport.authPut<void>('characters/profile', character);
+  }
+
+  async addAccountCharacter(request: AddCharacterRequestDto): Promise<SessionCharacterDto> {
+    return this.transport.authPost<SessionCharacterDto>('characters', request);
   }
 
   async refreshCharacter(request: IdWrapper): Promise<CharacterRefreshResultDto> {

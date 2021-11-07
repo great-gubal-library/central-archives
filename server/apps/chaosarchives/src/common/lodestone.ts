@@ -1,5 +1,7 @@
-import { HttpStatus, ServiceUnavailableException } from '@nestjs/common';
+import { HttpStatus, ServiceUnavailableException, Logger } from '@nestjs/common';
 import XIVAPI, { CharacterInfo } from '@xivapi/js';
+
+const log = new Logger('getLodestoneCharacter');
 
 export async function getLodestoneCharacter(
   lodestoneId: number,
@@ -15,6 +17,8 @@ export async function getLodestoneCharacter(
       // Character not found on Lodestone
       return null;
     }
+
+    log.error(e);
 
     throw new ServiceUnavailableException(
       'Unable to check character on Lodestone',

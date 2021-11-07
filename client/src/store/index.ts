@@ -90,6 +90,14 @@ export default store(function (/* { ssrContext } */) {
         setCurrentCharacterId(characterId);
       },
 
+      addCharacter(state, character: SessionCharacterDto) {
+        if (state.user === null) {
+          return;
+        }
+
+        state.user.characters.set(character.id, character);
+      },
+
       updateCharacter(state, characterData: CharacterRefreshResultDto) {
         if (!state.user) {
           return;

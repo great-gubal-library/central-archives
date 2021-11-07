@@ -123,9 +123,12 @@ export default class UserMenu extends Vue {
 
     this.$q.dialog({
       component: SwitchCharacterDialog
-    }).onOk(async (character: SessionCharacterDto) => {
-      console.log('x');
-      await Promise.resolve();
+    }).onOk((character: SessionCharacterDto) => {
+      if (character.verified) {
+        void this.$router.push('/');
+      } else {
+        void this.$router.push('/verify');
+      }
     });
   }
 

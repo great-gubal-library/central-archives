@@ -66,6 +66,7 @@ export class AuthService {
         name: character.name,
         server: character.server.name,
         avatar: character.avatar,
+        race: character.race,
         verified: character.verifiedAt !== null
       })),
     });

@@ -184,7 +184,7 @@ export class CharactersService {
 	}
   
   async addAccountCharacter(request: AddCharacterRequestDto, user: UserInfo): Promise<SessionCharacterDto> {
-    return this.connection.transaction(async em => {
+    const result = this.connection.transaction(async em => {
       const userEntity = await em.getRepository(User).findOne(user.id, {
         select: [ 'id' ]
       });
@@ -201,9 +201,13 @@ export class CharactersService {
         server: character.server.name,
         avatar: character.avatar,
         lodestoneId: character.lodestoneId,
+        race: character.race,
         verified: false
       };
     });
+
+    await this.publicAuthService.notifyUserChanged(user.id);
+    return result;
   }
 
   // Utility methods
