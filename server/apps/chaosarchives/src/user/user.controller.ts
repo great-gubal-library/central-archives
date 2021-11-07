@@ -10,12 +10,10 @@ import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import {
   Body,
   Controller,
-  Get,
-  Param,
-  ParseIntPipe,
+  Get, ParseIntPipe,
   Post,
   Query,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/current-user.decorator';

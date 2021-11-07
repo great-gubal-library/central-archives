@@ -1,18 +1,13 @@
+import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import {
-  Body,
-  Controller, Get,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put, UseGuards
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
@@ -42,16 +37,22 @@ export class CharactersController {
 
   @Put('profile')
   @RoleRequired(Role.USER)
-  async saveCharacter(
-    @Body() profile: CharacterProfileDto,
-    @CurrentUser() user: UserInfo,
-  ): Promise<void> {
+  async saveCharacter(@Body() profile: CharacterProfileDto, @CurrentUser() user: UserInfo): Promise<void> {
     await this.charactersService.saveCharacter(profile, user);
   }
 
   @Get()
   async getCharacterList(): Promise<NewProfileDto[]> {
     return this.charactersService.getCharacterList();
+  }
+
+  @Post()
+  @RoleRequired(Role.USER)
+  async addAccountCharacter(
+    @Body() request: AddCharacterRequestDto,
+    @CurrentUser() user: UserInfo,
+  ): Promise<SessionCharacterDto> {
+    return this.charactersService.addAccountCharacter(request, user);
   }
 
   @Post('refresh')
@@ -64,12 +65,10 @@ export class CharactersController {
   }
 
   @Get(':id/content')
-  async getCharacterContent(
-    @Param('id', ParseIntPipe) characterId: number,
-  ): Promise<CharacterContentDto> {
-    const [ stories, images ] = await Promise.all([
+  async getCharacterContent(@Param('id', ParseIntPipe) characterId: number): Promise<CharacterContentDto> {
+    const [stories, images] = await Promise.all([
       this.storiesService.getStoryList({ characterId }),
-      this.imagesService.getImages({ characterId })
+      this.imagesService.getImages({ characterId }),
     ]);
 
     return { stories, images };
@@ -77,8 +76,10 @@ export class CharactersController {
 
   @Get(':id/my-images')
   @RoleRequired(Role.USER)
-  async getMyImages(@Param('id', ParseIntPipe) characterId: number,
-      @CurrentUser() user: UserInfo): Promise<ImageDto[]> {
+  async getMyImages(
+    @Param('id', ParseIntPipe) characterId: number,
+    @CurrentUser() user: UserInfo,
+  ): Promise<ImageDto[]> {
     return this.imagesService.getMyImages(characterId, user);
   }
 }

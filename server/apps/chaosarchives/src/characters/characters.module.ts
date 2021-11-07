@@ -14,7 +14,8 @@ import { CharactersService } from './characters.service';
     ImagesModule,
     AuthModule,
   ],
+  controllers: [CharactersController],
   providers: [CharactersService],
-  controllers: [CharactersController]
+  exports: [CharactersService],
 })
 export class CharactersModule {}

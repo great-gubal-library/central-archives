@@ -1,21 +1,25 @@
-import { Character, Server } from '@app/entity';
+import { Character, Server, User } from '@app/entity';
+import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { NewProfileDto } from '@app/shared/dto/main-page/new-profile.dto';
+import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import html from '@app/shared/html';
-import { GoneException, Injectable, NotFoundException } from '@nestjs/common';
+import SharedConstants from '@app/shared/SharedConstants';
+import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, IsNull, Not, Repository } from 'typeorm';
+import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { PublicAuthService } from '../auth/public-auth.service';
 import { UserInfo } from '../auth/user-info';
 import { getLodestoneCharacter } from '../common/lodestone';
+import { generateVerificationCode } from '../common/security';
 
 @Injectable()
 export class CharactersService {
-	constructor(
+  constructor(
     private publicAuthService: PublicAuthService,
     private connection: Connection,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
@@ -178,4 +182,67 @@ export class CharactersService {
       };
 		});
 	}
+  
+  async addAccountCharacter(request: AddCharacterRequestDto, user: UserInfo): Promise<SessionCharacterDto> {
+    return this.connection.transaction(async em => {
+      const userEntity = await em.getRepository(User).findOne(user.id, {
+        select: [ 'id' ]
+      });
+
+      if (!userEntity) {
+        throw new ConflictException();
+      }
+
+      const character = await this.saveCharacterForUser(em, userEntity, request.lodestoneId);
+
+      return {
+        id: character.id,
+        name: character.name,
+        server: character.server.name,
+        avatar: character.avatar,
+        lodestoneId: character.lodestoneId,
+        verified: false
+      };
+    });
+  }
+
+  // Utility methods
+
+
+  // Also used in UserService
+  async saveCharacterForUser(em: EntityManager, user: User, lodestoneId: number): Promise<Character> {
+    const characterInfo = await getLodestoneCharacter(lodestoneId);
+
+    if (!characterInfo) {
+      throw new BadRequestException('Invalid character');
+    }
+
+    if (characterInfo.Character.DC !== SharedConstants.DATACENTER) {
+      throw new BadRequestException('This character is from the wrong datacenter');
+    }
+
+    const server = await em.getRepository(Server).findOne({
+      name: characterInfo.Character.Server,
+    });
+
+    if (!server) {
+      throw new BadRequestException('Invalid server');
+    }
+
+    const race = getRaceById(characterInfo.Character.Race);
+
+    if (!race) {
+      throw new BadRequestException('Invalid race');
+    }
+
+    return em.getRepository(Character).save({
+      lodestoneId: characterInfo.Character.ID,
+      name: characterInfo.Character.Name,
+      race,
+      server,
+      user,
+      avatar: characterInfo.Character.Avatar,
+      verificationCode: generateVerificationCode(),
+    });
+  }
 }

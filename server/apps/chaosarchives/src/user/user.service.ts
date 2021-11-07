@@ -15,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import parse from 'node-html-parser';
 import { Connection, EntityManager, Repository } from 'typeorm';
 import { UserInfo } from '../auth/user-info';
+import { CharactersService } from '../characters/characters.service';
 import db from '../common/db';
 import { getLodestoneCharacter } from '../common/lodestone';
 import { generateVerificationCode, hashPassword } from '../common/security';
@@ -26,6 +27,7 @@ export class UserService {
     private connection: Connection,
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
+    private charactersService: CharactersService,
     private mailService: MailService,
     private httpService: HttpService,
   ) {}
@@ -43,41 +45,7 @@ export class UserService {
             verificationCode: generateVerificationCode(),
           });
 
-          const characterInfo = await getLodestoneCharacter(
-            signupData.lodestoneId,
-          );
-
-          if (!characterInfo) {
-            throw new BadRequestException('Invalid character');
-          }
-
-          if (characterInfo.Character.DC !== SharedConstants.DATACENTER) {
-            throw new BadRequestException('This character is from the wrong datacenter');
-          }
-
-          const server = await em.getRepository(Server).findOne({
-            name: characterInfo.Character.Server,
-          });
-
-          if (!server) {
-            throw new BadRequestException('Invalid server');
-          }
-
-          const race = getRaceById(characterInfo.Character.Race);
-
-          if (!race) {
-            throw new BadRequestException('Invalid race');
-          }
-
-          const character = await em.getRepository(Character).save({
-            lodestoneId: characterInfo.Character.ID,
-            name: characterInfo.Character.Name,
-            race,
-            server,
-            user,
-            avatar: characterInfo.Character.Avatar,
-            verificationCode: generateVerificationCode(),
-          });
+          const character = await this.charactersService.saveCharacterForUser(em, user, signupData.lodestoneId);
 
           return { userEntity: user, characterEntity: character };
         },
@@ -86,7 +54,7 @@ export class UserService {
       this.sendVerificationMail(userEntity, characterEntity.name); // no await
       return {
         userId: userEntity.id,
-        characterVerificationCode: characterEntity.verificationCode,
+        characterVerificationCode: characterEntity.verificationCode!, // set by saveCharacterForUser
       };
     } catch (e) {
       if (db.isQueryFailedError(e)) {
