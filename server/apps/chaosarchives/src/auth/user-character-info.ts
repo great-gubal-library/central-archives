@@ -1,19 +1,19 @@
 export class UserCharacterInfo {
-	readonly id: number;
-	
-	readonly lodestoneId: number;
+  readonly id: number;
 
-	readonly name: string;
+  readonly lodestoneId: number;
 
-	readonly server: string;
+  readonly name: string;
 
-	readonly avatar: string;
+  readonly server: string;
 
-	readonly verified: boolean;
+  readonly avatar: string;
 
-	constructor(properties: Readonly<UserCharacterInfo>) {
-		if (properties) {
-			Object.assign(this, properties);
-		}
-	}
+  readonly verified: boolean;
+
+  constructor(properties: Readonly<UserCharacterInfo>) {
+    if (properties) {
+      Object.assign(this, properties);
+    }
+  }
 }

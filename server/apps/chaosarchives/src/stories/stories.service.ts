@@ -14,175 +14,190 @@ export class StoriesService {
     private connection: Connection,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     @InjectRepository(Story) private storyRepo: Repository<Story>,
-		@InjectRepository(StoryTag) private storyTagRepo: Repository<StoryTag>,
+    @InjectRepository(StoryTag) private storyTagRepo: Repository<StoryTag>,
   ) {}
 
-  async getStory(
-    id: number,
-		user?: UserInfo,
-  ): Promise<StoryDto> {
-		const story = await this.storyRepo.createQueryBuilder('story')
-			.innerJoinAndSelect('story.owner', 'character')
-			.innerJoinAndSelect('character.user', 'user')
-			.innerJoinAndSelect('character.server', 'server')
-			.where('story.id = :id', { id })
-			.select([ 'story', 'character.id', 'character.name', 'user.id', 'server.name' ])
-			.getOne();
+  async getStory(id: number, user?: UserInfo): Promise<StoryDto> {
+    const story = await this.storyRepo
+      .createQueryBuilder('story')
+      .innerJoinAndSelect('story.owner', 'character')
+      .innerJoinAndSelect('character.user', 'user')
+      .innerJoinAndSelect('character.server', 'server')
+      .where('story.id = :id', { id })
+      .select(['story', 'character.id', 'character.name', 'user.id', 'server.name'])
+      .getOne();
 
-		if (!story) {
-			throw new NotFoundException('Story not found');
-		}
+    if (!story) {
+      throw new NotFoundException('Story not found');
+    }
 
-		story.tags = await this.storyTagRepo.createQueryBuilder('tag')
-			.innerJoinAndSelect('tag.story', 'story')
-			.where('story.id = :id', { id })
-			.select('tag')
-			.getMany();
+    story.tags = await this.storyTagRepo
+      .createQueryBuilder('tag')
+      .innerJoinAndSelect('tag.story', 'story')
+      .where('story.id = :id', { id })
+      .select('tag')
+      .getMany();
 
     return new StoryDto({
-			id: story.id,
-			mine: user ? story.owner.user.id === user.id : false,
-			author: story.owner.name,
-			authorServer: story.owner.server.name,
-			title: story.title,
-			content: story.content,
-			createdAt: story.createdAt!.getTime(),
-			type: story.type,
-			tags: story.tags.map(tag => tag.name),
-		});
+      id: story.id,
+      mine: user ? story.owner.user.id === user.id : false,
+      author: story.owner.name,
+      authorServer: story.owner.server.name,
+      title: story.title,
+      content: story.content,
+      createdAt: story.createdAt!.getTime(),
+      type: story.type,
+      tags: story.tags.map((tag) => tag.name),
+    });
   }
 
   async createStory(storyDto: StoryDto & { id: undefined }, user: UserInfo): Promise<IdWrapper> {
-    const storyEntity = await this.connection.transaction(async em => {
-			const character = await em.getRepository(Character).findOne({
-				where: {
-					name: storyDto.author,
-					server: {
-						name: storyDto.authorServer,
-					},
-					user: {
-						id: user.id
-					},
-					verifiedAt: Not(IsNull())
-				},
-				relations: [ 'server' ],
-				select: [ 'id', ]
-			});
+    const storyEntity = await this.connection.transaction(async (em) => {
+      const character = await em.getRepository(Character).findOne({
+        where: {
+          name: storyDto.author,
+          server: {
+            name: storyDto.authorServer,
+          },
+          user: {
+            id: user.id,
+          },
+          verifiedAt: Not(IsNull()),
+        },
+        relations: ['server'],
+        select: ['id'],
+      });
 
-			if (!character) {
-				throw new BadRequestException(`Author character "${storyDto.author}" not found`);
-			}
+      if (!character) {
+        throw new BadRequestException(`Author character "${storyDto.author}" not found`);
+      }
 
-			const storyRepo = em.getRepository(Story);
-			
-			const story = storyRepo.create({
-				owner: {
-					id: character.id
-				},
-				title: storyDto.title,
-				content: html.sanitize(storyDto.content),
-				type: storyDto.type
-			});
+      const storyRepo = em.getRepository(Story);
 
-			story.tags = storyDto.tags.map(tag => new StoryTag({
-				name: tag,
-				story
-			}));
+      const story = storyRepo.create({
+        owner: {
+          id: character.id,
+        },
+        title: storyDto.title,
+        content: html.sanitize(storyDto.content),
+        type: storyDto.type,
+      });
 
-			return storyRepo.save(story);
-		});
-		
-		return {
-			id: storyEntity.id
-		};
+      story.tags = storyDto.tags.map(
+        (tag) =>
+          new StoryTag({
+            name: tag,
+            story,
+          }),
+      );
+
+      return storyRepo.save(story);
+    });
+
+    return {
+      id: storyEntity.id,
+    };
   }
 
   async editStory(storyDto: StoryDto & { id: number }, user: UserInfo): Promise<void> {
-    await this.connection.transaction(async em => {
-			const storyRepo = em.getRepository(Story);
-			const story = await storyRepo.createQueryBuilder('story')
-			.innerJoinAndSelect('story.owner', 'character')
-			.innerJoinAndSelect('character.user', 'user')
-			.where('story.id = :id', { id: storyDto.id })
-			.andWhere('user.id = :userId', { userId: user.id })
-			.select([ 'story' ])
-			.getOne();
+    await this.connection.transaction(async (em) => {
+      const storyRepo = em.getRepository(Story);
+      const story = await storyRepo
+        .createQueryBuilder('story')
+        .innerJoinAndSelect('story.owner', 'character')
+        .innerJoinAndSelect('character.user', 'user')
+        .where('story.id = :id', { id: storyDto.id })
+        .andWhere('user.id = :userId', { userId: user.id })
+        .select(['story'])
+        .getOne();
 
-			if (!story) {
-				throw new NotFoundException('Story not found');
-			}
-			
-			Object.assign(story, {
-				title: storyDto.title,
-				content: html.sanitize(storyDto.content),
-				type: storyDto.type
-			});
+      if (!story) {
+        throw new NotFoundException('Story not found');
+      }
 
-			if (storyDto.tags.length > 0) {
-				em.getRepository(StoryTag).delete({
-					story: {
-						id: storyDto.id
-					},
-					name: Not(In(storyDto.tags))
-				});
-			}
+      Object.assign(story, {
+        title: storyDto.title,
+        content: html.sanitize(storyDto.content),
+        type: storyDto.type,
+      });
 
-			story.tags = await em.getRepository(StoryTag).createQueryBuilder('tag')
-				.innerJoinAndSelect('tag.story', 'story')
-				.where('story.id = :id', { id: storyDto.id })
-				.select('tag')
-				.getMany();
+      if (storyDto.tags.length > 0) {
+        em.getRepository(StoryTag).delete({
+          story: {
+            id: storyDto.id,
+          },
+          name: Not(In(storyDto.tags)),
+        });
+      }
 
-			const existingTagNames = story.tags.map(tag => tag.name);
-			const newTagNames = storyDto.tags.filter(tagName => !existingTagNames.includes(tagName));
+      story.tags = await em
+        .getRepository(StoryTag)
+        .createQueryBuilder('tag')
+        .innerJoinAndSelect('tag.story', 'story')
+        .where('story.id = :id', { id: storyDto.id })
+        .select('tag')
+        .getMany();
 
-			story.tags = [...story.tags, ...newTagNames.map(tag => new StoryTag({
-				name: tag,
-				story
-			}))];
+      const existingTagNames = story.tags.map((tag) => tag.name);
+      const newTagNames = storyDto.tags.filter((tagName) => !existingTagNames.includes(tagName));
 
-			await storyRepo.save(story);
-		});
+      story.tags = [
+        ...story.tags,
+        ...newTagNames.map(
+          (tag) =>
+            new StoryTag({
+              name: tag,
+              story,
+            }),
+        ),
+      ];
+
+      await storyRepo.save(story);
+    });
   }
 
-	async deleteStory(id: number, user: UserInfo): Promise<void> {
-		await this.connection.transaction(async em => {
-			const storyRepo = em.getRepository(Story);
-			const story = await storyRepo.createQueryBuilder('story')
-			.innerJoinAndSelect('story.owner', 'character')
-			.innerJoinAndSelect('character.user', 'user')
-			.where('story.id = :id', { id })
-			.andWhere('user.id = :userId', { userId: user.id })
-			.select([ 'story.id' ])
-			.getOne();
+  async deleteStory(id: number, user: UserInfo): Promise<void> {
+    await this.connection.transaction(async (em) => {
+      const storyRepo = em.getRepository(Story);
+      const story = await storyRepo
+        .createQueryBuilder('story')
+        .innerJoinAndSelect('story.owner', 'character')
+        .innerJoinAndSelect('character.user', 'user')
+        .where('story.id = :id', { id })
+        .andWhere('user.id = :userId', { userId: user.id })
+        .select(['story.id'])
+        .getOne();
 
-			if (!story) {
-				throw new NotFoundException('Story not found');
-			}
+      if (!story) {
+        throw new NotFoundException('Story not found');
+      }
 
-			await storyRepo.softRemove(story);
-		});
-	}
+      await storyRepo.softRemove(story);
+    });
+  }
 
-  async getStoryList(params: { characterId?: number, limit?: number }): Promise<StorySummaryDto[]> {
-		const query = this.storyRepo.createQueryBuilder('story')
-			.innerJoinAndSelect('story.owner', 'character')
+  async getStoryList(params: { characterId?: number; limit?: number }): Promise<StorySummaryDto[]> {
+    const query = this.storyRepo
+      .createQueryBuilder('story')
+      .innerJoinAndSelect('story.owner', 'character')
       .orderBy('story.createdAt', 'DESC')
-			.select([ 'story.id', 'character.name', 'story.title', 'story.createdAt' ])
+      .select(['story.id', 'character.name', 'story.title', 'story.createdAt'])
       .limit(params.limit);
 
-		if (params.characterId) {
-			query.where('character.id = :characterId', { characterId: params.characterId });
-		}
+    if (params.characterId) {
+      query.where('character.id = :characterId', {
+        characterId: params.characterId,
+      });
+    }
 
-		const stories = await query.getMany();
+    const stories = await query.getMany();
 
-		return stories.map(story => ({
-				id: story.id,
-				title: story.title,
-				author: story.owner.name,
-        createdAt: story.createdAt!.getTime(),
-        type: story.type,
-			}));
-	}
+    return stories.map((story) => ({
+      id: story.id,
+      title: story.title,
+      author: story.owner.name,
+      createdAt: story.createdAt!.getTime(),
+      type: story.type,
+    }));
+  }
 }
