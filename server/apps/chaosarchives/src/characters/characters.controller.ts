@@ -8,11 +8,11 @@ import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summar
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { CurrentUser } from '@app/auth/current-user.decorator';
-import { JwtAuthGuard } from '@app/auth/jwt-auth.guard';
-import { OptionalJwtAuthGuard } from '@app/auth/optional-jwt-auth.guard';
-import { RoleRequired } from '@app/auth/role-required.decorator';
-import { UserInfo } from '@app/auth/user-info';
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
+import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
+import { UserInfo } from '@app/auth/model/user-info';
 import { ImagesService } from '../images/images.service';
 import { StoriesService } from '../stories/stories.service';
 import { CharactersService } from './characters.service';

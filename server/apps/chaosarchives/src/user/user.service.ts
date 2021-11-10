@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/user-info';
+import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, User } from '@app/entity';
 import { generateVerificationCode, hashPassword } from '@app/security';

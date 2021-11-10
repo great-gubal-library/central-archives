@@ -16,17 +16,17 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from '@app/auth/current-user.decorator';
-import { JwtAuthGuard } from '@app/auth/jwt-auth.guard';
-import { PublicAuthService } from '@app/auth/public-auth.service';
-import { UserInfo } from '@app/auth/user-info';
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
+import { AuthService } from '@app/auth/auth.service';
+import { UserInfo } from '@app/auth/model/user-info';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
   constructor(
     private userService: UserService,
-    private publicAuthService: PublicAuthService,
+    private publicAuthService: AuthService,
   ) {}
 
   @Post('signup')

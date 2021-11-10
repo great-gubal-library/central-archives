@@ -4,12 +4,12 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthImplService } from './impl/auth-impl.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local.strategy';
-import { PublicAuthService } from './public-auth.service';
-import { RolesGuard } from './role.guard';
+import { RolesGuard } from './guards/role.guard';
 
 @Module({
   imports: [
@@ -24,8 +24,8 @@ import { RolesGuard } from './role.guard';
     }),
   ],
   providers: [
+    AuthImplService,
     AuthService,
-    PublicAuthService,
     LocalStrategy,
     JwtStrategy,
     JwtAuthGuard,
@@ -34,6 +34,6 @@ import { RolesGuard } from './role.guard';
       useClass: RolesGuard,
     },
   ],
-  exports: [PublicAuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -1,6 +1,6 @@
-import { CurrentUser } from '@app/auth/current-user.decorator';
-import { PublicAuthService } from '@app/auth/public-auth.service';
-import { UserInfo } from '@app/auth/user-info';
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
+import { AuthService } from '@app/auth/auth.service';
+import { UserInfo } from '@app/auth/model/user-info';
 import { Character, Server, User } from '@app/entity';
 import { generateVerificationCode } from '@app/security';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
@@ -20,7 +20,7 @@ import { getLodestoneCharacter } from '../common/lodestone';
 @Injectable()
 export class CharactersService {
   constructor(
-    private publicAuthService: PublicAuthService,
+    private publicAuthService: AuthService,
     private connection: Connection,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
   ) {}
