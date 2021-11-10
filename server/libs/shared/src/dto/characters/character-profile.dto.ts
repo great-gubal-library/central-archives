@@ -1,6 +1,6 @@
 import { Race } from '@app/shared/enums/race.enum';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsEnum, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { BannerDto } from './banner.dto';
 
 export class CharacterProfileDto {

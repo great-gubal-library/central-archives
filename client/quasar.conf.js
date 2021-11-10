@@ -33,6 +33,7 @@ module.exports = configure(function (ctx) {
       'axios',
       'display',
       'iframe-resizer',
+      'polyfills',
     ],
 
     // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
