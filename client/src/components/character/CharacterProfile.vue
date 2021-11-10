@@ -7,8 +7,7 @@
       v-if="character.banner"
       class="character-profile__banner"
       :src="character.banner.url"
-      :width="character.banner.width"
-      :height="character.banner.height"
+      :initial-ratio="character.banner.width / character.banner.height"
     />
     <header class="character-profile__header">
       <div class="layout__filler">
