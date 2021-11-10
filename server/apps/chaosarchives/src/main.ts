@@ -5,7 +5,7 @@ import { transformAndValidate } from './common/pipes/validate';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/internal');
   app.useGlobalPipes(transformAndValidate);
   await app.listen(serverConfiguration.port);
 }

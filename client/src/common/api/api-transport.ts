@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { LocalStorage } from 'quasar';
 
-const API_PREFIX = '/api/v1/';
+const API_PREFIX = '/api/internal/';
 
 export default class APITransport {
   readonly prefix;
