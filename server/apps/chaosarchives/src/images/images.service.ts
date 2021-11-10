@@ -342,4 +342,8 @@ export class ImagesService {
       await imageRepo.remove(image);
     });
   }
+
+  getUrl(image: Image): string {
+    return this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`);
+  }
 }

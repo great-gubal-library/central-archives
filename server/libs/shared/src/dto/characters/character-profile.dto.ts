@@ -1,5 +1,7 @@
 import { Race } from '@app/shared/enums/race.enum';
-import { IsBoolean, IsEnum, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsBoolean, IsEnum, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { BannerDto } from './banner.dto';
 
 export class CharacterProfileDto {
   @IsNumber()
@@ -63,6 +65,11 @@ export class CharacterProfileDto {
 
   @IsString()
   carrdProfile: string;
+
+  @Type(() => BannerDto)
+  @ValidateNested()
+  @IsOptional()
+  banner: BannerDto|null;
 
   @IsBoolean()
   showAvatar: boolean;

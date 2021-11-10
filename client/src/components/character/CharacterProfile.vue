@@ -1,13 +1,15 @@
 <template>
   <div class="character-profile">
-    <!--
-    <q-responsive :ratio="590 / 150" class="character-profile__banner">
-      <div>Banner</div>
-    </q-responsive>
-    -->
     <p v-if="!preview && character.mine">
       <router-link to="/edit-character">Edit profile</router-link>
     </p>
+    <q-img
+      v-if="character.banner"
+      class="character-profile__banner"
+      :src="character.banner.url"
+      :width="character.banner.width"
+      :height="character.banner.height"
+    />
     <header class="character-profile__header">
       <div class="layout__filler">
         <q-avatar v-if="character.showAvatar" round>
@@ -41,22 +43,29 @@
       <template v-if="character.background"><hr /></template>
       <template v-if="character.background">
         <h3>Background</h3>
-        <section
-          class="character-profile__appearance-background"
-          v-html="background"
-        ></section>
+        <section class="character-profile__appearance-background" v-html="background"></section>
       </template>
     </template>
     <template v-if="!character.appearance && (character.combinedDescription || !character.background)">
       &nbsp;
     </template>
-    <character-details-box v-if="character.showInfoboxes && hasPersonalityBox" class="character-profile__personality-box">
+    <character-details-box
+      v-if="character.showInfoboxes && hasPersonalityBox"
+      class="character-profile__personality-box"
+    >
       <character-detail label="Loves" :value="character.loves" v-if="character.loves" />
       <character-detail label="Hates" :value="character.hates" v-if="character.hates" />
       <character-detail label="Motto" :value="character.motto" v-if="character.motto" />
       <character-detail label="Motivation" :value="character.motivation" v-if="character.motivation" />
     </character-details-box>
-    <iframe v-if="character.carrdProfile" v-iframe-resize :src="carrdLink" width="100%" height="500px" class="character-profile__carrd-iframe">
+    <iframe
+      v-if="character.carrdProfile"
+      v-iframe-resize
+      :src="carrdLink"
+      width="100%"
+      height="500px"
+      class="character-profile__carrd-iframe"
+    >
     </iframe>
   </div>
 </template>
@@ -81,8 +90,8 @@ class Props {
 @Options({
   components: {
     CharacterDetail,
-    CharacterDetailsBox
-  }
+    CharacterDetailsBox,
+  },
 })
 export default class CharacterProfile extends Vue.with(Props) {
   get appearance(): string {
@@ -94,10 +103,7 @@ export default class CharacterProfile extends Vue.with(Props) {
   }
 
   get hasPersonalityBox(): boolean {
-    return !!(this.character.loves
-      || this.character.hates
-      || this.character.motto
-      || this.character.motivation);
+    return !!(this.character.loves || this.character.hates || this.character.motto || this.character.motivation);
   }
 
   get carrdLink(): string {

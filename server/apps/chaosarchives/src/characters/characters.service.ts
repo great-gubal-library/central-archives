@@ -1,9 +1,10 @@
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { AuthService } from '@app/auth/auth.service';
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character, Server, User } from '@app/entity';
+import { Character, Image, Server, User } from '@app/entity';
 import { generateVerificationCode } from '@app/security';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
+import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
@@ -16,11 +17,13 @@ import { BadRequestException, ConflictException, GoneException, Injectable, NotF
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
 import { getLodestoneCharacter } from '../common/lodestone';
+import { ImagesService } from '../images/images.service';
 
 @Injectable()
 export class CharactersService {
   constructor(
     private publicAuthService: AuthService,
+    private imagesService: ImagesService,
     private connection: Connection,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
   ) {}
@@ -45,6 +48,12 @@ export class CharactersService {
     }
 
 		// TODO: Refactor
+    const banner = await character.banner;
+
+    if (banner) {
+      banner.owner = character; // hack, needed to determine URL - TypeORM won't load banner.owner by itself
+    }
+
     return {
       id: character.id,
       mine: !!user && character.user.id === user.id,
@@ -66,6 +75,12 @@ export class CharactersService {
       hates: character.hates,
       motivation: character.motivation,
       carrdProfile: character.carrdProfile,
+      banner: !banner ? null : new BannerDto({
+        id: banner.id,
+        url: this.imagesService.getUrl(banner),
+        width: banner.width,
+        height: banner.height
+      }),
       showAvatar: character.showAvatar,
       showInfoboxes: character.showInfoboxes,
       combinedDescription: character.combinedDescription,
@@ -106,6 +121,27 @@ export class CharactersService {
         showInfoboxes: character.showInfoboxes,
         combinedDescription: character.combinedDescription,
 			});
+
+      if (character.banner && character.banner.id) {
+        const banner = await em.getRepository(Image).findOne({
+          where: {
+            id: character.banner.id,
+            owner: characterEntity
+          }
+        });
+
+        if (!banner) {
+          throw new BadRequestException('Banner not found');
+        }
+
+        if (banner.width / banner.height < SharedConstants.MIN_BANNER_ASPECT_RATIO) {
+          throw new BadRequestException('Banner is too tall for its width');
+        }
+
+        characterEntity.banner = Promise.resolve(banner);
+      } else {
+        characterEntity.banner = Promise.resolve(null as unknown as Image);
+      }
 
 			await repo.save(characterEntity);
 		});

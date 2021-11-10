@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeo
 import { BasicEntity } from './basic.entity';
 import { Server } from './server.entity';
 import { User } from './user.entity';
+import { Image } from './image.entity';
 
 @Entity()
 @Unique(['name', 'server'])
@@ -151,4 +152,9 @@ export class Character extends BasicEntity {
     default: false
   })
 	combinedDescription: boolean;
+
+  @ManyToOne(() => Image, {
+    lazy: true,
+  })
+  banner: Promise<Image>;
 }
