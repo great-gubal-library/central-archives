@@ -7,35 +7,73 @@
           <div class="page-edit-character__lodestone-info">
             <section class="page-edit-character__form-controls">
               <q-input :model-value="character.name" label="Name" readonly />
-              <q-input
-                :model-value="$display.races[character.race]"
-                label="Race"
-                readonly
-              />
+              <q-input :model-value="$display.races[character.race]" label="Race" readonly />
             </section>
             <section>
-              <q-btn outline color="secondary" @click="onRefreshClick" style="max-width: 140px"><i class="material-icons q-icon">refresh</i>Refresh from Lodestone</q-btn>
+              <q-btn outline color="secondary" @click="onRefreshClick" style="max-width: 140px"
+                ><i class="material-icons q-icon">refresh</i>Refresh from Lodestone</q-btn
+              >
             </section>
           </div>
           <section class="page-edit-character__form-controls">
             <p></p>
             <p>All fields are optional.</p>
             <h6>Profile display</h6>
-            <q-field class="page-edit-character__checkbox" borderless hint="Displays the character avatar to the left of their name.">
+            <q-field class="page-edit-character__checkbox" borderless>
               <template v-slot:control>
                 <q-checkbox v-model="character.showAvatar" label="Show avatar" />
               </template>
             </q-field>
-            <q-field class="page-edit-character__checkbox" borderless hint="Displays character information in infoboxes. If unchecked, all infoboxes will be hidden from the public profile page.">
+            <p class="text-caption">Displays the character avatar to the left of their name.</p>
+            <q-field class="page-edit-character__checkbox" borderless>
               <template v-slot:control>
                 <q-checkbox v-model="character.showInfoboxes" label="Show infoboxes" />
               </template>
             </q-field>
-            <q-field class="page-edit-character__checkbox" borderless hint="Uses a single &quot;Description&quot; field with no header instead of separate &quot;Outward appearance&quot; and &quot;Background&quot; with headers.">
+            <p class="text-caption">
+              Displays character information in infoboxes. If unchecked, all infoboxes will be hidden from the public
+              profile page.
+            </p>
+            <q-field class="page-edit-character__checkbox" borderless>
               <template v-slot:control>
                 <q-checkbox v-model="character.combinedDescription" label="Merge appearance and background" />
               </template>
             </q-field>
+            <p class="text-caption">
+              Uses a single "Description" field with no header instead of separate "Outward appearance" and "Background"
+              with headers.
+            </p>
+          </section>
+          <section>
+            <h6>Banner</h6>
+            <p class="text-caption">
+              Banners can be no taller than 4:1 width:height. For example, 500&times;100 and 400&times;100 are fine, but
+              not 300&times;100.
+            </p>
+            <q-responsive v-if="!character.banner" class="page-edit-character__banner-placeholder" :ratio="4 / 1">
+              <div>No banner</div>
+            </q-responsive>
+            <q-img
+              v-else
+              class="page-edit-character__banner"
+              :src="character.banner.url"
+              :width="character.banner.width"
+              :height="character.banner.height"
+            />
+            <div class="text-right">
+              <q-btn
+                v-if="character.banner"
+                flat
+                label="Remove"
+                icon="remove"
+                color="negative"
+                @click="onBannerRemoveClick"
+              />&nbsp;
+              <q-btn flat label="Select" icon="collections" color="secondary" @click="onBannerSelectClick" />&nbsp;
+              <q-btn flat label="Upload" icon="upload" color="secondary" @click="onBannerUploadClick" />
+            </div>
+          </section>
+          <section class="page-edit-character__form-controls">
             <h6>Names</h6>
             <q-input v-model="character.title" label="Title" />
             <q-input v-model="character.nickname" label="Nickname" />
@@ -50,7 +88,7 @@
             <q-input v-model="character.motto" label="Motto" />
             <q-input v-model="character.motivation" label="Motivation" />
           </section>
-          <h6>{{character.combinedDescription ? 'Description' : 'Outward appearance'}}</h6>
+          <h6>{{ character.combinedDescription ? 'Description' : 'Outward appearance' }}</h6>
           <html-editor v-model="character.appearance" />
           <template v-if="!character.combinedDescription">
             <h6>Background</h6>
@@ -58,13 +96,15 @@
           </template>
           <section class="page-edit-character__form-controls">
             <h6>Carrd integration</h6>
-            <q-input v-model="character.carrdProfile" label="Carrd profile" hint="Leave blank if you don't have a Carrd profile or don't want to it on your page.">
+            <q-input
+              v-model="character.carrdProfile"
+              label="Carrd profile"
+              hint="Leave blank if you don't have a Carrd profile or don't want to it on your page."
+            >
               <template v-slot:prepend>
                 <q-icon name="link" />
               </template>
-              <template v-slot:after>
-                .carrd.co
-              </template>
+              <template v-slot:after> .carrd.co </template>
             </q-input>
           </section>
         </template>
@@ -108,6 +148,8 @@ import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-
 import { useStore } from 'src/store';
 import { useApi } from 'src/boot/axios';
 import { useQuasar } from 'quasar';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
+import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -122,7 +164,7 @@ async function load(): Promise<CharacterProfileDto> {
   } catch (e) {
     $q.notify({
       type: 'negative',
-      message: errors.getMessage(e)
+      message: errors.getMessage(e),
     });
     throw e;
   }
@@ -135,8 +177,8 @@ async function load(): Promise<CharacterProfileDto> {
   },
   async beforeRouteEnter(_, __, next) {
     const character = await load();
-    next(vm => (vm as PageEditCharacter).setContent(character));
-  }
+    next((vm) => (vm as PageEditCharacter).setContent(character));
+  },
 })
 export default class PageEditCharacter extends Vue {
   readonly previewOptions = [
@@ -159,16 +201,62 @@ export default class PageEditCharacter extends Vue {
   async onRefreshClick() {
     const RefreshCharacterDialog = (await import('src/components/character/RefreshCharacterDialog.vue')).default;
 
-    this.$q.dialog({
-      component: RefreshCharacterDialog,
-      componentProps: {
-        characterId: this.character.id,
-        characterName: this.character.name
-      }
-    }).onOk((characterData: CharacterRefreshResultDto) => {
-      const { name, race, server, avatar } = characterData;
-      Object.assign(this.character, { name, race, server, avatar });
-    });
+    this.$q
+      .dialog({
+        component: RefreshCharacterDialog,
+        componentProps: {
+          characterId: this.character.id,
+          characterName: this.character.name,
+        },
+      })
+      .onOk((characterData: CharacterRefreshResultDto) => {
+        const { name, race, server, avatar } = characterData;
+        Object.assign(this.character, { name, race, server, avatar });
+      });
+  }
+
+  async onBannerSelectClick() {
+    const GalleryDialog = (await import('components/common/GalleryDialog.vue')).default;
+
+    this.$q
+      .dialog({
+        component: GalleryDialog,
+        componentProps: {
+          banner: true,
+        },
+      })
+      .onOk((image: ImageSummaryDto) => {
+        this.character.banner = new BannerDto({
+          id: image.id,
+          url: image.url,
+          width: image.width,
+          height: image.height,
+        });
+      });
+  }
+
+  async onBannerUploadClick() {
+    const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
+
+    this.$q
+      .dialog({
+        component: UploadDialog,
+        componentProps: {
+          banner: true,
+        },
+      })
+      .onOk((image: ImageSummaryDto) => {
+        this.character.banner = new BannerDto({
+          id: image.id,
+          url: image.url,
+          width: image.width,
+          height: image.height,
+        });
+      });
+  }
+
+  onBannerRemoveClick() {
+    this.character.banner = null;
   }
 
   onRevertClick() {
@@ -193,9 +281,9 @@ export default class PageEditCharacter extends Vue {
           {
             label: 'View',
             color: 'white',
-            handler: () => this.viewCharacter()
-          }
-        ]
+            handler: () => this.viewCharacter(),
+          },
+        ],
       });
     } catch (e) {
       this.$q.notify({
@@ -230,6 +318,22 @@ export default class PageEditCharacter extends Vue {
 
 .page-edit-character__checkbox .q-field__bottom {
   padding-top: 0;
+}
+
+.page-edit-character__banner {
+  margin-bottom: 16px;
+}
+
+.page-edit-character__banner-placeholder {
+  background: #80a0c0;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.page-edit-character__banner-placeholder div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page-edit-character__preview {

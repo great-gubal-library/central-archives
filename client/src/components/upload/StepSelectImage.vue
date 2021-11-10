@@ -30,6 +30,13 @@
     >
       Not an image file.
     </q-banner>
+    <q-banner
+      v-if="modelValue.image && !isValidAspectRatio"
+      class="step-select-image__not-image bg-negative text-white"
+    >
+      Banners can be no taller than 4:1 width:height. For example, 500&times;100 and 400&times;100 are fine, but
+              not 300&times;100.
+    </q-banner>
     <template v-if="modelValue.file && modelValue.image">
       <section
         class="step-select-image__conversion"
@@ -98,6 +105,10 @@ class Props {
 			hasTransparency: false,
     },
   });
+
+  banner = prop<boolean>({
+		default: false
+	});
 }
 
 @Options({
@@ -255,6 +266,14 @@ export default class StepSelectImage extends Vue.with(Props) {
   get canChooseFormat(): boolean {
     return this.modelValue.originalFormat !== ImageFormat.JPEG && !this.modelValue.hasTransparency;
   }
+
+  get isValidAspectRatio() {
+    if (!this.banner || !this.modelValue.image) {
+      return true;
+    }
+
+    return this.modelValue.image.width / this.modelValue.image.height >= SharedConstants.MIN_BANNER_ASPECT_RATIO;
+  }
 }
 </script>
 
@@ -264,7 +283,8 @@ export default class StepSelectImage extends Vue.with(Props) {
 }
 
 .step-select-image__not-image {
-	margin-top: 16px;
+	margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .step-select-image__conversion {

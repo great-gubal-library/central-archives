@@ -15,12 +15,20 @@
 
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
-import { Options, Vue } from 'vue-class-component';
+import SharedConstants from '@app/shared/SharedConstants';
+import { timeStamp } from 'console';
+import { Options, prop, Vue } from 'vue-class-component';
 import ThumbGallery from '../images/ThumbGallery.vue';
 
 interface DialogRef {
   show(): void;
   hide(): void;
+}
+
+class Props {
+	banner = prop<boolean>({
+		default: false
+	});
 }
 
 @Options({
@@ -29,7 +37,7 @@ interface DialogRef {
 	},
   emits: ['ok', 'hide'],
 })
-export default class ConfirmImageDeleteDialog extends Vue {
+export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
 	images: ImageSummaryDto[] = [];
 
 	async created() {
@@ -49,6 +57,10 @@ export default class ConfirmImageDeleteDialog extends Vue {
 			width: image.width,
 			height: image.height,
 		}));
+
+		if (this.banner) {
+			this.images = this.images.filter(image => image.width / image.height >= SharedConstants.MIN_BANNER_ASPECT_RATIO);
+		}
 	}
 
   show() {
@@ -67,7 +79,10 @@ export default class ConfirmImageDeleteDialog extends Vue {
     const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
 
     this.$q.dialog({
-      component: UploadDialog
+      component: UploadDialog,
+			componentProps: {
+				banner: this.banner
+			}
     }).onOk((image: ImageSummaryDto) => {
       this.onImageSelect(image);
     });

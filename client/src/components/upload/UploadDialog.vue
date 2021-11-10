@@ -11,6 +11,7 @@
 			<q-stepper class="upload-dialog__stepper" v-model="step" color="primary" animated>
 				<q-step :name="Step.SELECT_IMAGE" title="Select image" icon="folder_open" active-icon="folder_open" :done="step !== Step.SELECT_IMAGE">
 					<step-select-image
+            :banner="banner"
 						v-model="fileModel"
 					/>
 				</q-step>
@@ -61,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { Options, prop, Vue } from 'vue-class-component';
 import StepSelectImage from './StepSelectImage.vue';
 import StepThumbnail from './StepThumbnail.vue';
 import StepImageDetails from './StepImageDetails.vue';
@@ -84,6 +85,14 @@ interface DialogRef {
   hide(): void;
 }
 
+class Props {
+	banner = prop<boolean>({
+		default: false
+	});
+}
+
+const MIN_BANNER_ASPECT_RATIO = SharedConstants.MIN_BANNER_ASPECT_RATIO;
+
 @Options({
   components: {
     StepSelectImage,
@@ -92,7 +101,7 @@ interface DialogRef {
   },
   emits: ['ok', 'hide'],
 })
-export default class UploadDialog extends Vue {
+export default class UploadDialog extends Vue.with(Props) {
   readonly Step = Step;
 
   dragging = false;
@@ -199,7 +208,8 @@ export default class UploadDialog extends Vue {
       case Step.SELECT_IMAGE:
         return !!this.fileModel.image
             && !!this.fileModel.convertedFile
-            && this.fileModel.convertedFile.size <= SharedConstants.MAX_UPLOAD_SIZE;
+            && this.fileModel.convertedFile.size <= SharedConstants.MAX_UPLOAD_SIZE
+            && (!this.banner || (this.fileModel.image.width / this.fileModel.image.height >= MIN_BANNER_ASPECT_RATIO));
       case Step.THUMBNAIL:
         return this.thumbModel.left !== -1;
       case Step.IMAGE_DETAILS:
