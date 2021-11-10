@@ -1,5 +1,7 @@
+import { UserInfo } from '@app/auth/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, Image } from '@app/entity';
+import { hashFile } from '@app/security';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
@@ -17,13 +19,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
-import { UserInfo } from '../auth/user-info';
 import {
   ImageSanitizeError,
   ImageSanitizeResult,
   sanitizeImage
 } from '../common/image-lib';
-import { hashFile } from '../common/security';
 import { StorageService } from './storage.service';
 
 @Injectable()

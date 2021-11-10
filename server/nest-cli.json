@@ -6,7 +6,9 @@
   "compilerOptions": {
     "webpack": true,
     "tsConfigPath": "apps/chaosarchives/tsconfig.app.json",
-    "assets": ["templates/**"],
+    "assets": [
+      "templates/**"
+    ],
     "watchAssets": true
   },
   "generateOptions": {
@@ -47,6 +49,15 @@
       "sourceRoot": "libs/shared/src",
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    },
+    "security": {
+      "type": "library",
+      "root": "libs/security",
+      "entryFile": "index",
+      "sourceRoot": "libs/security/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/security/tsconfig.lib.json"
       }
     }
   }

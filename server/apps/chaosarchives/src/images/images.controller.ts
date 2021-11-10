@@ -14,9 +14,9 @@ import {
   Post, Put, Query, UploadedFile, UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CurrentUser } from '../auth/current-user.decorator';
-import { RoleRequired } from '../auth/role-required.decorator';
-import { UserInfo } from '../auth/user-info';
+import { CurrentUser } from '@app/auth/current-user.decorator';
+import { RoleRequired } from '@app/auth/role-required.decorator';
+import { UserInfo } from '@app/auth/user-info';
 import { ImagesService } from './images.service';
 import { PayloadTooLargeInterceptor } from './payload-too-large.interceptor';
 

@@ -16,10 +16,10 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from '../auth/current-user.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { PublicAuthService } from '../auth/public-auth.service';
-import { UserInfo } from '../auth/user-info';
+import { CurrentUser } from '@app/auth/current-user.decorator';
+import { JwtAuthGuard } from '@app/auth/jwt-auth.guard';
+import { PublicAuthService } from '@app/auth/public-auth.service';
+import { UserInfo } from '@app/auth/user-info';
 import { UserService } from './user.service';
 
 @Controller('user')

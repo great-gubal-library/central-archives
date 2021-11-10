@@ -3,10 +3,10 @@ import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { CurrentUser } from '../auth/current-user.decorator';
-import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
-import { RoleRequired } from '../auth/role-required.decorator';
-import { UserInfo } from '../auth/user-info';
+import { CurrentUser } from '@app/auth/current-user.decorator';
+import { OptionalJwtAuthGuard } from '@app/auth/optional-jwt-auth.guard';
+import { RoleRequired } from '@app/auth/role-required.decorator';
+import { UserInfo } from '@app/auth/user-info';
 import { StoriesService } from './stories.service';
 
 @Controller('stories')

@@ -1,9 +1,13 @@
+import { CurrentUser } from '@app/auth/current-user.decorator';
+import { PublicAuthService } from '@app/auth/public-auth.service';
+import { UserInfo } from '@app/auth/user-info';
 import { Character, Server, User } from '@app/entity';
+import { generateVerificationCode } from '@app/security';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
-import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
+import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import html from '@app/shared/html';
@@ -11,11 +15,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
-import { CurrentUser } from '../auth/current-user.decorator';
-import { PublicAuthService } from '../auth/public-auth.service';
-import { UserInfo } from '../auth/user-info';
 import { getLodestoneCharacter } from '../common/lodestone';
-import { generateVerificationCode } from '../common/security';
 
 @Injectable()
 export class CharactersService {

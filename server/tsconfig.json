@@ -21,6 +21,12 @@
       "jpegtran": [
         "types/jpegtran.d.ts"
       ],
+      "@app/auth": [
+        "libs/auth/src"
+      ],
+      "@app/auth/*": [
+        "libs/auth/src/*"
+      ],
       "@app/configuration": [
         "libs/configuration/src"
       ],
@@ -38,6 +44,12 @@
       ],
       "@app/shared/*": [
         "libs/shared/src/*"
+      ],
+      "@app/security": [
+        "libs/security/src"
+      ],
+      "@app/security/*": [
+        "libs/security/src/*"
       ]
     }
   }

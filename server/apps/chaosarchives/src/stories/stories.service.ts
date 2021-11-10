@@ -6,7 +6,7 @@ import html from '@app/shared/html';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, In, IsNull, Not, Repository } from 'typeorm';
-import { UserInfo } from '../auth/user-info';
+import { UserInfo } from '@app/auth/user-info';
 
 @Injectable()
 export class StoriesService {

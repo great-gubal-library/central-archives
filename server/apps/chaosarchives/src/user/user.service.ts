@@ -1,24 +1,21 @@
+import { UserInfo } from '@app/auth/user-info';
 import { serverConfiguration } from '@app/configuration';
-import { Character, Server, User } from '@app/entity';
+import { Character, User } from '@app/entity';
+import { generateVerificationCode, hashPassword } from '@app/security';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
-import { getRaceById } from '@app/shared/enums/race.enum';
 import { Role } from '@app/shared/enums/role.enum';
 import errors from '@app/shared/errors';
-import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, GoneException, HttpService, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import parse from 'node-html-parser';
 import { Connection, EntityManager, Repository } from 'typeorm';
-import { UserInfo } from '../auth/user-info';
 import { CharactersService } from '../characters/characters.service';
 import db from '../common/db';
-import { getLodestoneCharacter } from '../common/lodestone';
-import { generateVerificationCode, hashPassword } from '../common/security';
 import { MailService } from '../mail/mail.service';
 
 @Injectable()
