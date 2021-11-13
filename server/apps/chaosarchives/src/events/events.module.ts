@@ -1,4 +1,5 @@
 import { HttpModule, Module } from '@nestjs/common';
+import { CrescentMoonPublishingService } from './crescent-moon-publishing.service';
 import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
 
@@ -7,7 +8,7 @@ import { EventsService } from './events.service';
     HttpModule,   
   ],
   controllers: [EventsController],
-  providers: [EventsService]
+  providers: [EventsService, CrescentMoonPublishingService]
 })
 export class EventsModule {
 
