@@ -11,7 +11,7 @@
       </q-item-label>
       <q-slide-transition>
         <section class="event-item__details" v-if="expanded">
-          <div style="margin-bottom: 8px" class="flex">
+          <div class="event-item_button-bar">
             <q-btn
               class="event-item__open-link-button"
               label="Open link"
@@ -36,15 +36,12 @@
               </dd>
             </template>
           </dl>
-          <dl v-for="location in event.locations" :key="location.name">
-            <dt><q-icon name="place" /> Location</dt>
-            <dd>{{ location.name }}</dd>
-            <dt><q-icon name="home" /> Address</dt>
-            <dd>{{ location.address }}</dd>
-            <dt><q-icon name="public" /> World</dt>
-            <dd>{{ location.server }}</dd>
-            <div class="text-caption">{{ location.tags }}</div>
-          </dl>
+          <ul v-for="location in event.locations" :key="location.name">
+            <li><q-icon name="place" /> {{ location.name }}</li>
+            <li v-if="location.address"><q-icon name="home" /> {{ location.address }}</li>
+            <li v-if="location.server"><q-icon name="public" /> {{ location.server }}</li>
+            <li v-if="location.tags" class="event-item__tags text-caption">{{ location.tags }}</li>
+          </ul>
         </section>
       </q-slide-transition>
     </q-item-section>
@@ -108,15 +105,24 @@ export default class EventItem extends Vue.with(Props) {
   overflow: visible;
 }
 
+.event-item_button-bar {
+	display: flex;
+	margin-bottom: 8px;
+}
+
 .event-item__open-link-button {
 	flex-grow: 1;
 }
 
-.event-item dl {
+.event-item dl, .event-item ul {
   margin: 0 0 8px 0;
   padding: 8px;
   background: rgba(0, 32, 116, 0.2);
   overflow: hidden;
+}
+
+.event-item ul {
+	list-style-type: none;
 }
 
 .event-item dt {
@@ -127,7 +133,21 @@ export default class EventItem extends Vue.with(Props) {
   margin-left: 0;
 }
 
-.event-item dd:not(:last-child) {
-  margin-bottom: 8px;
+.event-item li {
+	margin-left: 18px;
+}
+
+.event-item li i {
+	position: absolute;
+	margin-left: -18px;
+	margin-top: 4px;
+}
+
+.event-item dd:not(:last-child), .event-item li:not(:last-child) {
+  padding-bottom: 8px;
+}
+
+.event-item .event-item__tags {
+	margin-left: 0;
 }
 </style>
