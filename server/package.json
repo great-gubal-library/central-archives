@@ -41,6 +41,7 @@
     "class-validator": "^0.13.1",
     "config": "^3.3.6",
     "handlebars": "^4.7.7",
+    "html-entities": "^2.3.2",
     "ioredis": "^4.27.8",
     "jpegtran": "^2.0.0",
     "jsdom": "^17.0.0",

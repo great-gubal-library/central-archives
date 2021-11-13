@@ -1,6 +1,8 @@
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
+import utils from '../common/utils';
+import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { CrescentMoonPublishingService } from './crescent-moon-publishing.service';
 
 @Injectable()
@@ -13,6 +15,7 @@ export class EventsService {
 		@InjectRedis()
 		private readonly redisService: Redis,
 		private readonly cmpService: CrescentMoonPublishingService,
+		private readonly ccService: ChocoboChronicleService,
 	) { }
 
 	async getEvents(): Promise<EventDto[]> {
@@ -23,7 +26,14 @@ export class EventsService {
 		}
 
 		// Not cached - fetch and cache
-		const events = (await this.cmpService.fetchEvents()).slice(0, this.MAX_RESULTS);
+		const [cmpEvents, ccEvents] = await Promise.all([
+			this.cmpService.fetchEvents(),
+			this.ccService.fetchEvents(),
+		]);
+		
+		const events = [ ...cmpEvents, ...ccEvents ]
+				.sort((e1, e2) => utils.compareNumbers(e1.date, e2.date))
+				.slice(0, this.MAX_RESULTS);
 		this.redisService.set('events', JSON.stringify(events), 'ex', this.CACHE_DURATION_SEC); // Intentionally no await
 		return events;
 	}

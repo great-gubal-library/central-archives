@@ -30,5 +30,6 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-continue': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    'prefer-destructuring': 'off',
   },
 };
