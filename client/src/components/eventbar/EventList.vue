@@ -12,10 +12,10 @@
       :href="event.link"
     >
       <q-item-section>
-        <q-item-label>{{ event.name }}<template v-if="event.location"> — {{ event.location }}</template></q-item-label>
+        <q-item-label>{{ event.name }}</q-item-label>
         <q-item-label caption>
-          {{ formatDateServer(event.date) }}
-          <q-tooltip>{{ formatDateLocal(event.date) }}</q-tooltip>
+          {{ formatDateServer(event.startDate) }}
+          <q-tooltip>{{ formatDateLocal(event.startDate) }}</q-tooltip>
         </q-item-label>
       </q-item-section>
     </q-item>
@@ -45,7 +45,7 @@ export default class EventList extends Vue {
     // Show only events from today and later
     this.events = (await this.$api.getEvents()).filter(
       (event) =>
-        DateTime.fromMillis(event.date)
+        DateTime.fromMillis(event.startDate)
           .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
           .startOf('day') >= today
     );

@@ -1,3 +1,4 @@
+import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import SharedConstants from '@app/shared/SharedConstants';
 import { HttpService, Injectable, Logger } from '@nestjs/common';
@@ -73,13 +74,17 @@ export class CrescentMoonPublishingService {
 				}
 
 				const locationLinks = linkedDoc.querySelectorAll('.grid-col-desk-2 .elementor-heading-title a');
-				const location = locationLinks.map(a => a.textContent.trim()).join(', ');
+				const locations: EventLocationDto[] = locationLinks.map(a => ({
+					name: a.textContent.trim(),
+					address: '',
+				}));
 
 				return {
 					name,
-					location,
+					locations,
 					link: href,
-					date: date!.toMillis(),
+					startDate: date!.toMillis(),
+					endDate: null,
 				};
 			} catch (e) {
 				this.log.error(e);
@@ -90,7 +95,7 @@ export class CrescentMoonPublishingService {
 		const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day').toMillis();
 
 		return (result.filter(event => event !== null) as EventDto[])
-			.filter(event => event.date >= startOfDay && !event.name.includes('OOC'))
-			.sort((e1, e2) => utils.compareNumbers(e1.date, e2.date));
+			.filter(event => event.startDate >= startOfDay && !event.name.includes('OOC'))
+			.sort((e1, e2) => utils.compareNumbers(e1.startDate, e2.startDate));
 	}
 }

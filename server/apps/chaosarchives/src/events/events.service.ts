@@ -32,7 +32,7 @@ export class EventsService {
 		]);
 		
 		const events = [ ...cmpEvents, ...ccEvents ]
-				.sort((e1, e2) => utils.compareNumbers(e1.date, e2.date))
+				.sort((e1, e2) => utils.compareNumbers(e1.startDate, e2.startDate))
 				.slice(0, this.MAX_RESULTS);
 		this.redisService.set('events', JSON.stringify(events), 'ex', this.CACHE_DURATION_SEC); // Intentionally no await
 		return events;
