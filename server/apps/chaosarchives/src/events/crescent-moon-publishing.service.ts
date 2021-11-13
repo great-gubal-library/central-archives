@@ -77,6 +77,8 @@ export class CrescentMoonPublishingService {
 				const locations: EventLocationDto[] = locationLinks.map(a => ({
 					name: a.textContent.trim(),
 					address: '',
+					server: '',
+					tags: '',
 				}));
 
 				return {
