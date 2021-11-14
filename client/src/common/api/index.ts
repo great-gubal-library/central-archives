@@ -2,7 +2,7 @@ import { CharacterContentDto } from '@app/shared/dto/characters/character-conten
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
-import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
@@ -47,8 +47,8 @@ export default class API {
     return this.transport.get<NewsDto[]>('main-page/news');
   }
 
-  async getEvents(): Promise<EventDto[]> {
-    return this.transport.get<EventDto[]>('events');
+  async getEvents(): Promise<EventSummaryDto[]> {
+    return this.transport.get<EventSummaryDto[]>('events');
   }
 
   // Character profile

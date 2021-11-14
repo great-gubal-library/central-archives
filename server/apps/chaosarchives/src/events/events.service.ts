@@ -1,5 +1,5 @@
 import { Event, EventLocation, Server } from '@app/entity';
-import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import SharedConstants from '@app/shared/SharedConstants';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -26,7 +26,7 @@ export class EventsService {
 		private readonly redisService: Redis,
 	) { }
 
-	async getEvents(refreshExternal = false): Promise<{ events: EventDto[], eventsUpToDate: boolean }> {
+	async getEvents(refreshExternal = false): Promise<{ events: EventSummaryDto[], eventsUpToDate: boolean }> {
 		const eventsTimestamp = await this.redisService.get('eventsTimestamp');
 		let eventsUpToDate = false;
 
@@ -62,7 +62,7 @@ export class EventsService {
 		};
 	}
 
-	private async getEventsFromDatabase(): Promise<EventDto[]> {
+	private async getEventsFromDatabase(): Promise<EventSummaryDto[]> {
 		const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day');
 		const events = await this.eventRepo.find({
 			where: {
@@ -76,7 +76,7 @@ export class EventsService {
 		return events.map(event => this.toEventDto(event));
 	}
 
-	private async saveEvents(events: EventDto[]): Promise<void> {
+	private async saveEvents(events: EventSummaryDto[]): Promise<void> {
 		if (events.length === 0) {
 			return;
 		}
@@ -159,7 +159,7 @@ export class EventsService {
 		});
 	}
 
-	private toEventDto(event: Event): EventDto {
+	private toEventDto(event: Event): EventSummaryDto {
 		return {
 			id: event.id,
 			title: event.title,

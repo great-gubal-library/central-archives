@@ -59,12 +59,12 @@
 
 <script lang="ts">
 import { prop, Vue } from 'vue-class-component';
-import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
 import SharedConstants from '@app/shared/SharedConstants';
 
 class Props {
-  event = prop<EventDto>({
+  event = prop<EventSummaryDto>({
     required: true,
   });
 }

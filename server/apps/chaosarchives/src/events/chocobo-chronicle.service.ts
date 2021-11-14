@@ -1,5 +1,5 @@
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
-import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { HttpService, Injectable, Logger } from '@nestjs/common';
@@ -20,7 +20,7 @@ export class ChocoboChronicleService {
 		private httpService: HttpService,
 	) { }
 
-	async fetchEvents(): Promise<EventDto[]> {
+	async fetchEvents(): Promise<EventSummaryDto[]> {
 		const response = await this.httpService.get<ChocoboChronicleEventsDto>(this.EVENTS_API_URL).toPromise();
 		const events = response.data.events;
     const today = DateTime.now()
@@ -28,7 +28,7 @@ export class ChocoboChronicleService {
       .startOf('day')
 			.toMillis();
 
-		return events.map(event => (<EventDto>{
+		return events.map(event => (<EventSummaryDto>{
 			id: -1,
 			title: this.processTitle(event.title),
 			startDateTime: this.parseDate(event.utc_start_date),

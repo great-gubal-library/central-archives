@@ -1,5 +1,5 @@
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
-import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { HttpService, Injectable, Logger } from '@nestjs/common';
@@ -26,7 +26,7 @@ export class CrescentMoonPublishingService {
 		private httpService: HttpService,
 	) { }
 
-	async fetchEvents(): Promise<EventDto[]> {
+	async fetchEvents(): Promise<EventSummaryDto[]> {
 		const response = await this.httpService.get<string>(this.EVENTS_SITE).toPromise();
 		const doc = parse(response.data);
 
@@ -34,7 +34,7 @@ export class CrescentMoonPublishingService {
 		const calendarItems = doc.querySelectorAll('.jet-listing-calendar .jet-calendar-week__day .jet-engine-listing-overlay-wrap');
 
 		// Query linked pages in parallel
-		const result: (EventDto|null)[] = await Promise.all(calendarItems.map(async calendarItem => {
+		const result: (EventSummaryDto|null)[] = await Promise.all(calendarItems.map(async calendarItem => {
 			const name = calendarItem.querySelector('.jet-listing-dynamic-field__content').textContent;
 			const href = calendarItem.getAttribute('data-url');
 
@@ -101,7 +101,7 @@ export class CrescentMoonPublishingService {
 		
 		const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day').toMillis();
 
-		return (result.filter(event => event !== null) as EventDto[])
+		return (result.filter(event => event !== null) as EventSummaryDto[])
 			.filter(event => event.startDateTime >= startOfDay && !event.title.includes('OOC'))
 			.sort((e1, e2) => utils.compareNumbers(e1.startDateTime, e2.startDateTime));
 	}

@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { DateTime } from 'luxon';
 import SharedConstants from '@app/shared/SharedConstants';
 import EventItem from './EventItem.vue';
@@ -19,19 +19,17 @@ import EventItem from './EventItem.vue';
   }
 })
 export default class EventList extends Vue {
-  events: EventDto[] = [];
+  events: EventSummaryDto[] = [];
 
   async created() {
     const today = DateTime.now()
       .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
-      .startOf('day');
+      .startOf('day')
+      .toMillis();
 
     // Show only events from today and later
     this.events = (await this.$api.getEvents()).filter(
-      (event) =>
-        DateTime.fromMillis(event.startDateTime)
-          .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
-          .startOf('day') >= today
+      (event) => event.startDateTime >= today
     );
   }
 }
