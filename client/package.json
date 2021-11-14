@@ -24,7 +24,6 @@
     "luxon": "^2.0.2",
     "markdown-loader": "^6.0.0",
     "quasar": "^2.0.4",
-    "quasar-ui-qdatetimepicker": "^2.0.0-rc.1",
     "reflect-metadata": "^0.1.13",
     "sanitize-html": "^2.5.1",
     "vue-class-component": "^8.0.0-rc.1",

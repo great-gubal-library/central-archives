@@ -5532,11 +5532,6 @@ quasar-app-extension-vuelidate-rules@^0.4.0:
   dependencies:
     "@vuelidate/validators" "^2.0.0-alpha.18"
 
-quasar-ui-qdatetimepicker@^2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/quasar-ui-qdatetimepicker/-/quasar-ui-qdatetimepicker-2.0.0-rc.1.tgz#b968fb94ad9683834ce78565d85e4e7615169b6f"
-  integrity sha512-9bfjPGkbBLnxr1z0DjI3Ilc6Mn+q/1FKaBe/Jvh9gT3C0J5Vb69UOP1JOYyAw73i80og0GWwhXonMGbK7xZuFw==
-
 quasar@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.0.4.tgz#f25241bdcd313ad001ec2470d4a8ec286724fbe1"
