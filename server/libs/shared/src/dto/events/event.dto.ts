@@ -1,4 +1,4 @@
-import { IsBoolean, isBoolean, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
+import { IsBoolean, isBoolean, IsNumber, IsOptional, IsString, IsUrl, MinLength } from "class-validator";
 
 export class EventDto {
 	@IsString()
@@ -23,6 +23,7 @@ export class EventDto {
 	endDateTime: number|null;
 
 	@IsString()
+	@IsOptional()
 	link: string;
 
 	@IsString()

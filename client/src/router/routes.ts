@@ -166,7 +166,7 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/edit-event',
+    path: '/edit-event/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditEvent.vue') }],
     meta: {

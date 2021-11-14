@@ -40,7 +40,7 @@ export class Event extends BasicEntity {
 	
 	@Column({
     type: 'datetime',
-    nullable: false,
+    nullable: true,
   })
   endDateTime: Date|null;
 

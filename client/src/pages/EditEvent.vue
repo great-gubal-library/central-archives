@@ -16,9 +16,12 @@
             <q-input
               v-model="event.locationName"
               label="Name"
+              :rules="[
+                $rules.required('This field is required.'),
+              ]"
             />          
             <q-input
-              v-model="event.locationName"
+              v-model="event.locationAddress"
               label="Address"
             >
               <template v-slot:prepend>
@@ -31,13 +34,16 @@
               class="page-edit-event__server-select"
               v-model="event.locationServer"
               :options="serverOptions"
+              :rules="[
+                $rules.required('This field is required.'),
+              ]"
             >
               <template v-slot:prepend>
                 <q-icon name="public" />
               </template>
             </q-select>
             <q-input
-              v-model="event.locationName"
+              v-model="event.locationTags"
               label="Tags"
             />
           </section>     
@@ -102,21 +108,26 @@
 
 <script lang="ts">
 import { EventDto } from '@app/shared/dto/events/event.dto';
-import { StoryType } from '@app/shared/enums/story-type.enum';
 import errors from '@app/shared/errors';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import { useQuasar } from 'quasar';
+import { store } from 'quasar/wrappers';
 import { useApi } from 'src/boot/axios';
-import { displayOptions } from 'src/boot/display';
 import EventView from 'src/components/event/EventView.vue';
+import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
 
 const $api = useApi();
 const $q = useQuasar();
 const $router = useRouter();
+const $store = useStore();
 
 async function load(params: RouteParams): Promise<{event: EventDto, eventId: number}|null> {
+  if (!$store.getters.characterId) {
+    throw new Error();
+  }
+
 	const id = parseInt(params.id as string, 10);
 
 	if (!id) {
@@ -203,9 +214,9 @@ export default class PageEditEvent extends Vue {
         locationServer: 'Omega',
         locationTags: '',
       });
-      this.loaded = true;
     }
 
+    this.loaded = true;
     this.event = new EventDto(this.eventBackup);
   }
 
@@ -222,7 +233,8 @@ export default class PageEditEvent extends Vue {
 
     try {
       if (!this.eventId) {
-        const { id } = await this.$api.createEvent(this.event);
+        const characterId = this.$store.getters.characterId!;
+        const { id } = await this.$api.createEvent(this.event, { characterId });
         this.eventId = id;
       } else {
         await this.$api.editEvent(this.eventId, this.event);

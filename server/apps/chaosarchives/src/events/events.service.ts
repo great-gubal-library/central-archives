@@ -1,15 +1,17 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Event, EventLocation, Server } from '@app/entity';
+import { Character, Event, EventLocation, Server } from '@app/entity';
+import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSource } from '@app/shared/enums/event-source.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime, Duration } from 'luxon';
-import { Connection, In, MoreThanOrEqual, Repository } from 'typeorm';
+import { Connection, EntityManager, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import utils from '../common/utils';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { CrescentMoonPublishingService } from './crescent-moon-publishing.service';
@@ -60,6 +62,92 @@ export class EventsService {
 			locationServer: location ? location.server.name : '',
 			locationTags: location ? location.tags : '',
 		});
+	}
+
+  async createEvent(eventDto: EventDto, characterId: number, user: UserInfo): Promise<IdWrapper> {
+    const eventEntity = await this.connection.transaction(async em => {
+			const character = await em.getRepository(Character).findOne({
+				id: characterId,
+				user: {
+					id: user.id
+				},
+				verifiedAt: Not(IsNull())
+			});
+
+			if (!character) {
+				throw new BadRequestException('Invalid character ID');
+			}
+
+			const event = new Event();
+			event.locations = [];
+			event.owner = character;
+			event.source = EventSource.WEBSITE;
+			await this.updateEventInternal(em, event, eventDto);
+			return event;
+		});
+
+		return { id: eventEntity.id };
+  }
+
+  async updateEvent(eventId: number, eventDto: EventDto, user: UserInfo): Promise<void> {
+    await this.connection.transaction(async em => {
+			const event = await em.getRepository(Event).findOne({
+				where: {
+					id: eventId,
+					owner: {
+						user: {
+							id: user.id
+						}
+					},
+				},
+				relations: [ 'owner', 'locations', 'locations.server' ]
+			});
+
+			if (!event) {
+				throw new NotFoundException('Event not found');
+			}
+
+			await this.updateEventInternal(em, event, eventDto);
+		});
+  }
+
+	private async updateEventInternal(em: EntityManager, eventEntity: Event, eventDto: EventDto): Promise<void> {
+		const event = eventEntity;
+		event.title = eventDto.title;
+		event.startDateTime = new Date(eventDto.startDateTime);
+		event.endDateTime = eventDto.endDateTime ? new Date(eventDto.endDateTime) : null;
+		event.details = html.sanitize(eventDto.details);
+		event.oocDetails = html.sanitize(eventDto.oocDetails);
+		event.link = eventDto.link; // TODO: Validate
+		event.contact = eventDto.contact;
+
+		let location: EventLocation;
+
+		if (event.locations.length > 0) {
+			location = event.locations[0];
+		} else {
+			location = new EventLocation();
+			location.event = event;
+			event.locations.push(location);
+		}
+
+		location.name = eventDto.locationName;
+		location.address = eventDto.locationAddress;
+		location.tags = eventDto.locationTags;
+
+		const server = await em.getRepository(Server).findOne({
+			where: {
+				name: eventDto.locationServer
+			}
+		});
+
+		if (!server) {
+			throw new BadRequestException(`Server ${eventDto.locationServer} not found`);
+		}
+
+		location.server = server;
+
+		await em.getRepository(Event).save(event);
 	}
 
 	async getEvents(refreshExternal = false): Promise<EventSummariesDto> {

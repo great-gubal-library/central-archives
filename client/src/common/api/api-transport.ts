@@ -85,12 +85,12 @@ export default class APITransport {
 		return (await this.axios.get<R>(path, this.getAuthConfig(queryParams))).data;
 	}
 
-	async authPost<R>(path: string, data: unknown): Promise<R> {
-		return (await this.axios.post<R>(path, data, this.getAuthConfig())).data;
+	async authPost<R>(path: string, data: unknown, queryParams?: QueryParams): Promise<R> {
+		return (await this.axios.post<R>(path, data, this.getAuthConfig(queryParams))).data;
 	}
 
-	async authPut<R>(path: string, data: unknown): Promise<R> {
-		return (await this.axios.put<R>(path, data, this.getAuthConfig())).data;
+	async authPut<R>(path: string, data: unknown, queryParams?: QueryParams): Promise<R> {
+		return (await this.axios.put<R>(path, data, this.getAuthConfig(queryParams))).data;
 	}
 
 	async authDelete<R>(path: string, queryParams?: QueryParams): Promise<R> {
