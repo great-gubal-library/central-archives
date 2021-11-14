@@ -106,24 +106,12 @@
     >
       <event-list />
       <q-list dense dark>
-        <q-item clickable v-ripple tag="a" target="_blank" href="https://crescentmoonpublishing.com/events/">
+        <q-item clickable v-ripple tag="a" target="_blank" href="https://chocobochronicle.co.uk/events/month/">
           <q-item-section>
             <q-item-label>Event archive</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
-      <!--
-      <q-list dense dark>
-        <q-item-label header>
-          Friend activity
-        </q-item-label>
-        <q-item v-for="event in friendActivity" clickable v-ripple :key="event.title">
-          <q-item-section>
-            <q-item-label>{{event.title}}</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      -->
     </q-drawer>
 
     <q-page-container>
