@@ -58,21 +58,14 @@
 </template>
 
 <script lang="ts">
-import { prop, Vue } from 'vue-class-component';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
-import { DateTime, DateTimeFormatOptions } from 'luxon';
-import SharedConstants from '@app/shared/SharedConstants';
+import { prop, Vue } from 'vue-class-component';
 
 class Props {
   event = prop<EventSummaryDto>({
     required: true,
   });
 }
-
-const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = Object.freeze({
-  dateStyle: 'long',
-  timeStyle: 'short',
-});
 
 export default class EventItem extends Vue.with(Props) {
   expanded = false;
@@ -86,20 +79,11 @@ export default class EventItem extends Vue.with(Props) {
   }
 
   formatDateServer(date: number) {
-    return (
-      DateTime.fromMillis(date).toLocaleString(
-        Object.assign(
-          {
-            timeZone: SharedConstants.FFXIV_SERVER_TIMEZONE,
-          },
-          BASIC_DATE_FORMAT_OPTIONS
-        )
-      ) + ' ST'
-    );
+    return this.$display.formatDateTimeServer(date);
   }
 
   formatDateLocal(date: number) {
-    return DateTime.fromMillis(date).toLocaleString(BASIC_DATE_FORMAT_OPTIONS) + ' LT';
+    return this.$display.formatDateTimeLocal(date);
   }
 }
 </script>

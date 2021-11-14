@@ -5,6 +5,7 @@ import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
+import { EventDto } from '@app/shared/dto/events/event.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
@@ -47,10 +48,6 @@ export default class API {
     return this.transport.get<NewsDto[]>('main-page/news');
   }
 
-  async getEvents(params: { refresh: boolean }): Promise<EventSummariesDto> {
-    return this.transport.get<EventSummariesDto>('events', params);
-  }
-
   // Character profile
   async getCharacterProfile(name: string, server: string): Promise<CharacterProfileDto> {
     return this.transport.tokenGet<CharacterProfileDto>(`characters/profile/${server}/${name}`);
@@ -74,6 +71,15 @@ export default class API {
 
   async getCharacterContent(id: number): Promise<CharacterContentDto> {
     return this.transport.get<CharacterContentDto>(`characters/${id}/content`);
+  }
+
+  // Events
+  async getEvents(params: { refresh: boolean }): Promise<EventSummariesDto> {
+    return this.transport.get<EventSummariesDto>('events', params);
+  }
+
+  async getEvent(id: number): Promise<EventDto> {
+    return this.transport.tokenGet<EventDto>(`events/${id}`);
   }
 
   // Stories

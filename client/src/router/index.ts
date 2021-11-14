@@ -42,10 +42,14 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
       title = title(to);
     }
 
-    // nextTick is necessary here to properly record browser history
-    void nextTick(() => {
-      document.title = (title ? `${title as string} — ` : '') + 'Chaos Archives';
-    });
+    if (typeof title === 'string') {
+      const titleString = title;
+
+      // nextTick is necessary here to properly record browser history
+      void nextTick(() => {
+        document.title = (titleString ? `${titleString} — ` : '') + 'Chaos Archives';
+      });
+    }
   });
 
   return router;

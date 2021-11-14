@@ -1,7 +1,8 @@
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { Race } from '@app/shared/enums/race.enum';
 import { StoryType } from '@app/shared/enums/story-type.enum';
-import { DateTime } from 'luxon';
+import SharedConstants from '@app/shared/SharedConstants';
+import { DateTime, DateTimeFormatOptions } from 'luxon';
 import { boot } from 'quasar/wrappers';
 
 // This boot file adds a $display property to all Vue components, containing human-readable display names
@@ -12,6 +13,11 @@ declare module '@vue/runtime-core' {
     $display: Display;
   }
 }
+
+const BASIC_DATE_FORMAT_OPTIONS: DateTimeFormatOptions = Object.freeze({
+  dateStyle: 'long',
+  timeStyle: 'short',
+});
 
 class Display {
 	readonly races: { [k: string]: string } = {
@@ -45,14 +51,28 @@ class Display {
 			unit: [ 'years', 'months', 'days', 'hours', 'minutes' ]
 		}) || '';
 
-		console.log(`"${result}"`);
 		return result === '0 minutes ago' ? 'Just now' : result;
 	}
 
 	formatDate(timestamp: number) {
 		return DateTime.fromMillis(timestamp).toLocaleString({
 			dateStyle: 'long',
-		});
+		}, { locale: 'en-GB' });
+	}
+
+	formatDateTimeServer(timestamp: number) {
+		return DateTime.fromMillis(timestamp).toLocaleString(
+        Object.assign(
+          {
+            timeZone: SharedConstants.FFXIV_SERVER_TIMEZONE,
+          },
+          BASIC_DATE_FORMAT_OPTIONS
+        ), { locale: 'en-GB' }
+      ) + ' ST';
+	}
+
+	formatDateTimeLocal(timestamp: number) {
+		return DateTime.fromMillis(timestamp).toLocaleString(BASIC_DATE_FORMAT_OPTIONS, { locale: 'en-GB' }) + ' LT';
 	}
 
 	formatFileSize(fileSize: number) {

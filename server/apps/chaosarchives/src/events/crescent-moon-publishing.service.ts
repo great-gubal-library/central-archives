@@ -6,6 +6,7 @@ import { HttpService, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 import utils from '../common/utils';
+import { ExternalEvent } from './model/external-event';
 
 
 @Injectable()
@@ -26,7 +27,7 @@ export class CrescentMoonPublishingService {
 		private httpService: HttpService,
 	) { }
 
-	async fetchEvents(): Promise<EventSummaryDto[]> {
+	async fetchEvents(): Promise<ExternalEvent[]> {
 		const response = await this.httpService.get<string>(this.EVENTS_SITE).toPromise();
 		const doc = parse(response.data);
 
@@ -87,6 +88,7 @@ export class CrescentMoonPublishingService {
 				return {
 					id: -1,
 					title: name,
+					details: '',
 					locations,
 					link: href,
 					startDateTime: date!.toMillis(),
@@ -101,7 +103,7 @@ export class CrescentMoonPublishingService {
 		
 		const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day').toMillis();
 
-		return (result.filter(event => event !== null) as EventSummaryDto[])
+		return (result.filter(event => event !== null) as ExternalEvent[])
 			.filter(event => event.startDateTime >= startOfDay && !event.title.includes('OOC'))
 			.sort((e1, e2) => utils.compareNumbers(e1.startDateTime, e2.startDateTime));
 	}

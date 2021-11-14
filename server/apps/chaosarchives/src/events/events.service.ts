@@ -1,15 +1,19 @@
+import { UserInfo } from '@app/auth/model/user-info';
 import { Event, EventLocation, Server } from '@app/entity';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
+import { EventDto } from '@app/shared/dto/events/event.dto';
+import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime, Duration } from 'luxon';
 import { Connection, In, MoreThanOrEqual, Repository } from 'typeorm';
 import utils from '../common/utils';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { CrescentMoonPublishingService } from './crescent-moon-publishing.service';
+import { ExternalEvent } from './model/external-event';
 
 @Injectable()
 export class EventsService {
@@ -26,6 +30,37 @@ export class EventsService {
 		@InjectRedis()
 		private readonly redisService: Redis,
 	) { }
+
+	async getEvent(id: number, user?: UserInfo): Promise<EventDto> {
+		// TODO: optimize query
+		const event = await this.eventRepo.findOne({
+			where: {
+				id,
+			},
+			relations: [ 'owner', 'owner.user', 'locations', 'locations.server' ]
+		});
+
+		if (!event) {
+			throw new NotFoundException('Event not found');
+		}
+
+		const location = event.locations.length > 0 ? event.locations[0] : null;
+
+		return new EventDto({
+			title: event.title,
+			mine: !!event.owner && event.owner.user.id === user?.id,
+			details: event.details,
+			oocDetails: event.oocDetails,
+			startDateTime: event.startDateTime.getTime(),
+			endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
+			link: event.externalSourceLink || event.link,
+			contact: event.contact,
+			locationName: location ? location.name : '',
+			locationAddress: location ? location.address : '',
+			locationServer: location ? location.server.name : '',
+			locationTags: location ? location.tags : '',
+		});
+	}
 
 	async getEvents(refreshExternal = false): Promise<EventSummariesDto> {
 		const eventsTimestamp = await this.redisService.get('eventsTimestamp');
@@ -71,13 +106,13 @@ export class EventsService {
 				hidden: false,
 			},
 			take: this.MAX_RESULTS,
-			relations: [ 'locations' ]
+			relations: [ 'locations', 'locations.server' ]
 		});
 
 		return events.map(event => this.toEventDto(event));
 	}
 
-	private async saveEvents(events: EventSummaryDto[]): Promise<void> {
+	private async saveEvents(events: ExternalEvent[]): Promise<void> {
 		if (events.length === 0) {
 			return;
 		}
@@ -119,6 +154,7 @@ export class EventsService {
 				});
 
 				event.title = eventDto.title;
+				event.details = html.sanitize(eventDto.details);
 				event.startDateTime = new Date(eventDto.startDateTime);
 				event.endDateTime = eventDto.endDateTime ? new Date(eventDto.endDateTime) : null;
 				event.source = eventDto.source;

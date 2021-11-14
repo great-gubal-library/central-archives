@@ -5,6 +5,9 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Index.vue') }],
+    meta: {
+      title: ''
+    }
   },
 
   // Top navigation links
@@ -126,9 +129,6 @@ const routes: RouteRecordRaw[] = [
     path: '/story/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Story.vue') }],
-    meta: {
-      title: 'Story'
-    },
   },
 
   { 
@@ -149,15 +149,19 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Events
+  {
+    path: '/event/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Event.vue') }],
+  },
+
   // Images
 
   { 
     path: '/image/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Image.vue') }],
-    meta: {
-      title: 'Image'
-    },
   },
 
   { 

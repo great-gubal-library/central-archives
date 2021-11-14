@@ -1,5 +1,4 @@
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
-import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { HttpService, Injectable, Logger } from '@nestjs/common';
@@ -7,6 +6,7 @@ import { decode } from 'html-entities';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 import { ChocoboChronicleEventsDto } from './dto/chocobo-chronicle-events.dto';
+import { ExternalEvent } from './model/external-event';
 
 @Injectable()
 export class ChocoboChronicleService {
@@ -20,7 +20,7 @@ export class ChocoboChronicleService {
 		private httpService: HttpService,
 	) { }
 
-	async fetchEvents(): Promise<EventSummaryDto[]> {
+	async fetchEvents(): Promise<ExternalEvent[]> {
 		const response = await this.httpService.get<ChocoboChronicleEventsDto>(this.EVENTS_API_URL).toPromise();
 		const events = response.data.events;
     const today = DateTime.now()
@@ -28,9 +28,10 @@ export class ChocoboChronicleService {
       .startOf('day')
 			.toMillis();
 
-		return events.map(event => (<EventSummaryDto>{
+		return events.map(event => (<ExternalEvent>{
 			id: -1,
 			title: this.processTitle(event.title),
+			details: event.description,
 			startDateTime: this.parseDate(event.utc_start_date),
 			endDateTime: this.parseDate(event.utc_end_date),
 			image: event.image.url,
