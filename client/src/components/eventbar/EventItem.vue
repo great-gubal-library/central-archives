@@ -16,12 +16,20 @@
         <section class="event-item__details" v-if="expanded">
           <div class="event-item_button-bar">
             <q-btn
+              v-if="event.link"
               class="event-item__open-link-button"
               label="Open link"
               icon="launch"
               type="a"
               target="_blank"
               :href="event.link"
+            />
+            <q-btn
+              v-else
+              class="event-item__open-link-button"
+              label="View"
+              icon="event"
+              :to="`/event/${event.id}`"
             />
             <q-btn flat icon="expand_less" @click.stop="collapse" />
           </div>
