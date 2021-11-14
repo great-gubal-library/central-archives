@@ -39,12 +39,14 @@ export class Event extends BasicEntity {
   startDateTime: Date;
 	
 	@Column({
+    type: 'datetime',
     nullable: false,
   })
-  endDateTime: Date;
+  endDateTime: Date|null;
 
   @Column({
     nullable: false,
+    default: ''
   })
   link: string;
 
@@ -60,7 +62,16 @@ export class Event extends BasicEntity {
     nullable: false,
   })
   source: EventSource;
+	
+	@Column({
+    nullable: false,
+    default: false
+  })
+  hidden: boolean;
 
-	@OneToMany(() => EventLocation, 'event')
+	@OneToMany(() => EventLocation, 'event', {
+    cascade: true,
+    orphanedRowAction: 'delete'
+  })
 	locations: EventLocation[];
 }

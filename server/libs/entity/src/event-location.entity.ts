@@ -16,7 +16,7 @@ export class EventLocation extends BasicEntity {
   @Column({
     nullable: false,
   })
-  location: string;
+  address: string;
 
   @Column({
     nullable: false,

@@ -1,5 +1,6 @@
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSource } from '@app/shared/enums/event-source.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { HttpService, Injectable, Logger } from '@nestjs/common';
 import { decode } from 'html-entities';
@@ -28,13 +29,15 @@ export class ChocoboChronicleService {
 			.toMillis();
 
 		return events.map(event => (<EventDto>{
-			name: this.processTitle(event.title),
-			startDate: this.parseDate(event.utc_start_date),
-			endDate: this.parseDate(event.utc_end_date),
+			id: -1,
+			title: this.processTitle(event.title),
+			startDateTime: this.parseDate(event.utc_start_date),
+			endDateTime: this.parseDate(event.utc_end_date),
 			image: event.image.url,
 			link: event.url,
 			locations: this.parseLocations(event.description),
-		})).filter(event => event.startDate >= today);
+			source: EventSource.CHOCOBO_CHRONICLE,
+		})).filter(event => event.startDateTime >= today);
 	}
 
 	private processTitle(title: string): string {
@@ -61,6 +64,7 @@ export class ChocoboChronicleService {
 			const tags = divs[7].textContent.trim();
 
 			return {
+				id: -1,
 				name,
 				address,
 				server,

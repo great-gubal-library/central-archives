@@ -1,9 +1,12 @@
-import { EventLocationDto } from "./event-location.dto";
+import { EventSource } from '@app/shared/enums/event-source.enum';
+import { EventLocationDto } from './event-location.dto';
 
 export interface EventDto {
-	name: string,
-	startDate: number,
-	endDate: number|null,
-	link: string,
-	locations: EventLocationDto[]
+  id: number;
+  title: string;
+  startDateTime: number;
+  endDateTime: number | null;
+  link: string;
+	source: EventSource;
+  locations: EventLocationDto[];
 }

@@ -8,6 +8,6 @@ export class EventsController {
 
 	@Get('/')
 	async getEvents(): Promise<EventDto[]> {
-		return this.eventsService.getEvents();
+		return (await this.eventsService.getEvents()).events;
 	}
 }

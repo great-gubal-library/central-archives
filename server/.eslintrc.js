@@ -31,5 +31,6 @@ module.exports = {
     'no-continue': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     'prefer-destructuring': 'off',
+    'no-plusplus': 'off',
   },
 };

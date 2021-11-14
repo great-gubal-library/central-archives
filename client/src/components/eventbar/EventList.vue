@@ -1,7 +1,7 @@
 <template>
   <q-list class="event-list" dark>
     <q-item-label header> Events </q-item-label>
-    <event-item v-for="event in events" :key="event.name" :event="event" />
+    <event-item v-for="event in events" :key="event.title" :event="event" />
     <q-separator dark />
   </q-list>
 </template>
@@ -29,7 +29,7 @@ export default class EventList extends Vue {
     // Show only events from today and later
     this.events = (await this.$api.getEvents()).filter(
       (event) =>
-        DateTime.fromMillis(event.startDate)
+        DateTime.fromMillis(event.startDateTime)
           .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
           .startOf('day') >= today
     );

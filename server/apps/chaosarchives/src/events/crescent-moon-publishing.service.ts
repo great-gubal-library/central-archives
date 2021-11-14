@@ -1,10 +1,12 @@
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventSource } from '@app/shared/enums/event-source.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { HttpService, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 import utils from '../common/utils';
+
 
 @Injectable()
 export class CrescentMoonPublishingService {
@@ -75,6 +77,7 @@ export class CrescentMoonPublishingService {
 
 				const locationLinks = linkedDoc.querySelectorAll('.grid-col-desk-2 .elementor-heading-title a');
 				const locations: EventLocationDto[] = locationLinks.map(a => ({
+					id: -1,
 					name: a.textContent.trim(),
 					address: '',
 					server: '',
@@ -82,11 +85,13 @@ export class CrescentMoonPublishingService {
 				}));
 
 				return {
-					name,
+					id: -1,
+					title: name,
 					locations,
 					link: href,
-					startDate: date!.toMillis(),
-					endDate: null,
+					startDateTime: date!.toMillis(),
+					endDateTime: null,
+					source: EventSource.CRESCENT_MOON_PUBLISHING,
 				};
 			} catch (e) {
 				this.log.error(e);
@@ -97,7 +102,7 @@ export class CrescentMoonPublishingService {
 		const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day').toMillis();
 
 		return (result.filter(event => event !== null) as EventDto[])
-			.filter(event => event.startDate >= startOfDay && !event.name.includes('OOC'))
-			.sort((e1, e2) => utils.compareNumbers(e1.startDate, e2.startDate));
+			.filter(event => event.startDateTime >= startOfDay && !event.title.includes('OOC'))
+			.sort((e1, e2) => utils.compareNumbers(e1.startDateTime, e2.startDateTime));
 	}
 }

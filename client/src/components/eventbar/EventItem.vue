@@ -2,13 +2,13 @@
   <q-item class="event-item" :clickable="!expanded" @click="expand">
     <q-item-section>
       <q-item-label>
-				<template v-if="!expanded">{{ event.name }}</template>
-				<div class="event-item__expanded-label" v-else @click.stop="collapse">{{ event.name }}</div>
+				<template v-if="!expanded">{{ event.title }}</template>
+				<div class="event-item__expanded-label" v-else @click.stop="collapse">{{ event.title }}</div>
 				</q-item-label>
       <q-item-label caption>
         <template v-if="!expanded">
-          {{ formatDateServer(event.startDate) }}
-          <q-tooltip>{{ formatDateLocal(event.startDate) }}</q-tooltip>
+          {{ formatDateServer(event.startDateTime) }}
+          <q-tooltip>{{ formatDateLocal(event.startDateTime) }}</q-tooltip>
         </template>
         <template v-else>&nbsp;</template>
       </q-item-label>
@@ -28,14 +28,14 @@
           <dl>
             <dt><q-icon name="schedule" /> Starts</dt>
             <dd>
-              {{ formatDateServer(event.startDate) }}
-              <q-tooltip>{{ formatDateLocal(event.startDate) }}</q-tooltip>
+              {{ formatDateServer(event.startDateTime) }}
+              <q-tooltip>{{ formatDateLocal(event.startDateTime) }}</q-tooltip>
             </dd>
-            <template v-if="event.endDate">
+            <template v-if="event.endDateTime">
               <dt><q-icon name="schedule" /> Ends</dt>
               <dd>
-                {{ formatDateServer(event.endDate) }}
-                <q-tooltip>{{ formatDateLocal(event.endDate) }}</q-tooltip>
+                {{ formatDateServer(event.endDateTime) }}
+                <q-tooltip>{{ formatDateLocal(event.endDateTime) }}</q-tooltip>
               </dd>
             </template>
           </dl>
