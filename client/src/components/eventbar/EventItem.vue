@@ -40,9 +40,15 @@
             </template>
           </dl>
           <ul v-for="location in event.locations" :key="location.name">
-            <li><q-icon name="place" /> {{ location.name }}</li>
-            <li v-if="location.address"><q-icon name="home" /> {{ location.address }}</li>
-            <li v-if="location.server"><q-icon name="public" /> {{ location.server }}</li>
+            <li class="event-item__location_name">{{ location.name }}</li>
+            <li v-if="location.address" class="event-item__icon-row">
+              <q-icon name="place" />
+              <div class="event-item__icon-row-text">{{ location.address }}</div>
+            </li>
+            <li v-if="location.server" class="event-item__icon-row">
+              <q-icon name="public" />
+              <div class="event-item__icon-row-text">{{ location.server }}</div>
+            </li>
             <li v-if="location.tags" class="event-item__tags text-caption">{{ location.tags }}</li>
           </ul>
         </section>
@@ -132,25 +138,28 @@ export default class EventItem extends Vue.with(Props) {
   font-weight: bold;
 }
 
-.event-item dd {
-  margin-left: 0;
+.event-item dd, .event-item li {
+	margin-left: 0;
 }
 
-.event-item li {
-	margin-left: 18px;
+.event-item__location_name {
+  font-weight: bold;
 }
 
-.event-item li i {
-	position: absolute;
-	margin-left: -18px;
-	margin-top: 4px;
+.event-item__icon-row {
+  display: flex;
+}
+
+.event-item__icon-row i {
+  padding-top: 4px;
+  padding-right: 4px;
+}
+
+.event-item__icon-row-text {
+  flex-grow: 1;
 }
 
 .event-item dd:not(:last-child), .event-item li:not(:last-child) {
   padding-bottom: 8px;
-}
-
-.event-item .event-item__tags {
-	margin-left: 0;
 }
 </style>
