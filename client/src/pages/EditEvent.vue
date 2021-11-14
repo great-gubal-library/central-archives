@@ -325,6 +325,8 @@ export default class PageEditEvent extends Vue {
           },
         ],
       });
+
+      void this.$store.dispatch('updateEvents');
     } catch (e) {
       this.$q.notify({
         message: errors.getMessage(e),

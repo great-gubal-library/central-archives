@@ -1,7 +1,7 @@
 <template>
   <q-list class="event-list" dark>
     <q-item-label header> Events </q-item-label>
-    <event-item v-for="event in events" :key="event.title" :event="event" />
+    <event-item v-for="event in $store.state.events" :key="event.title" :event="event" />
     <q-separator dark />
   </q-list>
 </template>
@@ -33,9 +33,10 @@ export default class EventList extends Vue {
       .startOf('day')
       .toMillis();
 
-    this.events = result.events.filter(
+    const events = result.events.filter(
       (event) => event.startDateTime >= today
     );
+    this.$store.commit('setEvents', events);
 
     if (!result.eventsUpToDate) {
       // Update events later without blocking page load

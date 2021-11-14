@@ -1,14 +1,17 @@
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto'
+import { EventDto } from '@app/shared/dto/events/event.dto'
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto'
 import { SessionDto } from '@app/shared/dto/user/session.dto'
 import { Role } from '@app/shared/enums/role.enum'
 import { LocalStorage } from 'quasar'
 import { store } from 'quasar/wrappers'
+import { useApi } from 'src/boot/axios'
 import { InjectionKey } from 'vue'
 import {
   createStore,
   Store as VuexStore
 } from 'vuex'
+import state from './module-example/state'
 
 /*
  * If not building with SSR mode, you can
@@ -28,6 +31,7 @@ export interface StoreUser {
 
 export interface StateInterface {
   user: StoreUser | null;
+  events: EventDto[];
 }
 
 export interface GettersInterface {
@@ -56,6 +60,11 @@ export default store(function (/* { ssrContext } */) {
   $store = createStore<StateInterface>({
     modules: {
       // example
+    },
+
+    state: {
+      user: null,
+      events: [],
     },
 
     mutations: {
@@ -105,6 +114,18 @@ export default store(function (/* { ssrContext } */) {
 
         const { name, server, avatar } = characterData;
         Object.assign(state.user.characters.get(state.user.currentCharacterId), { name, server, avatar });
+      },
+
+      setEvents(state, events: EventDto[]) {
+        state.events = events;
+      }
+    },
+
+    actions: {
+      async updateEvents() {
+        const api = useApi();
+        const events = (await api.getEvents({ refresh: false })).events;
+        this.commit('setEvents', events);
       }
     },
 
