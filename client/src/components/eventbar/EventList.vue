@@ -22,15 +22,25 @@ export default class EventList extends Vue {
   events: EventSummaryDto[] = [];
 
   async created() {
+    // Show only events from today and later
+    await this.loadEvents(false);
+  }
+
+  private async loadEvents(refresh: boolean) {
+    const result = await this.$api.getEvents({ refresh });
     const today = DateTime.now()
       .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
       .startOf('day')
       .toMillis();
 
-    // Show only events from today and later
-    this.events = (await this.$api.getEvents()).filter(
+    this.events = result.events.filter(
       (event) => event.startDateTime >= today
     );
+
+    if (!result.eventsUpToDate) {
+      // Update events later without blocking page load
+      void this.loadEvents(true);
+    }
   }
 }
 </script>

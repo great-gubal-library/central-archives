@@ -1,22 +1,22 @@
+import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
-import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
+import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { ImagesFilterDto } from '@app/shared/dto/image/images-filter.dto';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
-import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
+import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import APITransport from './api-transport';
 import UserAPI from './user-api';
-import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
-import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 
 export default class API {
   private readonly transport = new APITransport();
@@ -47,8 +47,8 @@ export default class API {
     return this.transport.get<NewsDto[]>('main-page/news');
   }
 
-  async getEvents(): Promise<EventSummaryDto[]> {
-    return this.transport.get<EventSummaryDto[]>('events');
+  async getEvents(params: { refresh: boolean }): Promise<EventSummariesDto> {
+    return this.transport.get<EventSummariesDto>('events', params);
   }
 
   // Character profile

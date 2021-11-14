@@ -1,4 +1,5 @@
 import { Event, EventLocation, Server } from '@app/entity';
+import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import SharedConstants from '@app/shared/SharedConstants';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
@@ -26,7 +27,7 @@ export class EventsService {
 		private readonly redisService: Redis,
 	) { }
 
-	async getEvents(refreshExternal = false): Promise<{ events: EventSummaryDto[], eventsUpToDate: boolean }> {
+	async getEvents(refreshExternal = false): Promise<EventSummariesDto> {
 		const eventsTimestamp = await this.redisService.get('eventsTimestamp');
 		let eventsUpToDate = false;
 
@@ -34,15 +35,15 @@ export class EventsService {
 			const date = DateTime.fromMillis(parseInt(eventsTimestamp, 10));
 
 			if (DateTime.now().diff(date).toMillis() <= this.CACHE_DURATION_SHORT_MS) {
-				eventsUpToDate = false;
+				eventsUpToDate = true;
 			}
 		}
 
 		if (!refreshExternal || eventsUpToDate) {
-			// return {
-			// 	events: await this.getEventsFromDatabase(),
-			// 	eventsUpToDate
-			// };
+			return {
+				events: await this.getEventsFromDatabase(),
+				eventsUpToDate
+			};
 		}
 
 		// Not cached - fetch and cache
