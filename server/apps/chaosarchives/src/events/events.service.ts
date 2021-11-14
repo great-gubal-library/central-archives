@@ -193,6 +193,10 @@ export class EventsService {
 				startDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
 				hidden: false,
 			},
+			order: {
+				startDateTime: 'ASC',
+				createdAt: 'ASC'
+			},
 			take: this.MAX_RESULTS,
 			relations: [ 'locations', 'locations.server' ]
 		});
