@@ -7,15 +7,33 @@
           <section class="page-edit-event__form-controls">
             <q-input
               v-model="event.title"
-              label="Title"
+              label="Title *"
               :rules="[
                 $rules.required('This field is required.'),
               ]"
             />
+            <q-date-time-picker
+              label="Start date/time *"
+              v-model="startDateTime"
+              :displayValue="startDateTimeDisplay"
+              mode="datetime"
+              format24h
+              :rules="[
+                $rules.required('This field is required.'),
+              ]"
+            />
+            <q-date-time-picker
+              label="End date/time"
+              v-model="endDateTime"
+              :displayValue="endDateTimeDisplay"
+              mode="datetime"
+              format24h
+              clearable
+            />
             <h6>Location</h6>
             <q-input
               v-model="event.locationName"
-              label="Name"
+              label="Name *"
               :rules="[
                 $rules.required('This field is required.'),
               ]"
@@ -111,12 +129,15 @@ import { EventDto } from '@app/shared/dto/events/event.dto';
 import errors from '@app/shared/errors';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import { useQuasar } from 'quasar';
-import { store } from 'quasar/wrappers';
 import { useApi } from 'src/boot/axios';
 import EventView from 'src/components/event/EventView.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
+import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker';
+import '@toby.mosque/quasar-ui-qdatetimepicker/dist/index.css'; // Temp, move somewhere
+import { DateTime } from 'luxon/src/luxon';
+import SharedConstants from '@app/shared/SharedConstants';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -158,6 +179,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 
 @Options({
   components: {
+    QDateTimePicker,
     HtmlEditor,
     EventView,
   },
@@ -189,6 +211,9 @@ export default class PageEditEvent extends Vue {
   event = new EventDto();
   eventBackup = new EventDto();
 
+  startDateTime = '';
+  endDateTime: string|null = null;
+
   preview = false;
   loaded = false;
   saving = false;
@@ -199,6 +224,9 @@ export default class PageEditEvent extends Vue {
 		if (content) {
 			this.eventId = content.eventId;
 			this.eventBackup = new EventDto(content.event);
+      this.startDateTime = DateTime.fromMillis(content.event.startDateTime, {
+        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+      }).toISO().substring(0, 16);
     } else {
       this.eventBackup = new EventDto({
         mine: true,
@@ -214,10 +242,51 @@ export default class PageEditEvent extends Vue {
         locationServer: 'Omega',
         locationTags: '',
       });
+      this.startDateTime = '';
     }
 
     this.loaded = true;
     this.event = new EventDto(this.eventBackup);
+
+    if (this.event.endDateTime) {
+      this.endDateTime = DateTime.fromMillis(this.event.endDateTime, {
+        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+      }).toISO().substring(0, 16);
+    } else {
+      this.endDateTime = null;
+    }
+  }
+
+  get startDateTimeMillis() {
+    return DateTime.fromISO(this.startDateTime, {
+      zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+    }).toMillis();
+  }
+
+  get startDateTimeDisplay() {
+    if (!this.startDateTime) {
+      return '';
+    }
+
+    return this.$display.formatDateTimeServer(this.startDateTimeMillis);
+  }
+
+  get endDateTimeMillis() {
+    if (!this.endDateTime) {
+      return null;
+    }
+
+    return DateTime.fromISO(this.endDateTime, {
+      zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+    }).toMillis();
+  }
+
+  get endDateTimeDisplay() {
+    if (!this.endDateTime) {
+      return '';
+    }
+
+    return this.$display.formatDateTimeServer(this.endDateTimeMillis!);
   }
 
   revert() {
@@ -232,6 +301,9 @@ export default class PageEditEvent extends Vue {
     this.saving = true;
 
     try {
+      this.event.startDateTime = this.startDateTimeMillis;
+      this.event.endDateTime = this.endDateTimeMillis;
+
       if (!this.eventId) {
         const characterId = this.$store.getters.characterId!;
         const { id } = await this.$api.createEvent(this.event, { characterId });

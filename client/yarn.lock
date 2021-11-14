@@ -1163,6 +1163,11 @@
   resolved "https://registry.yarnpkg.com/@tinymce/tinymce-vue/-/tinymce-vue-4.0.4.tgz#b47934f2d1e106ac9af7fa9ba0316a8c96ed314c"
   integrity sha512-nLd96QK8P53dCm+oF6j2D5AXoZ9MCZyjybt7B98wXo2csfKd2Ozbjv9dlnRKCdEe/JZBG4KbwBEjXlwsaAGEvg==
 
+"@toby.mosque/quasar-ui-qdatetimepicker@^2.0.0-rc.3":
+  version "2.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@toby.mosque/quasar-ui-qdatetimepicker/-/quasar-ui-qdatetimepicker-2.0.0-rc.3.tgz#5346671650222e652b3175171845ef5e9ce3be34"
+  integrity sha512-wO3lfAYQf7tiC0sPDYKtU+NOjrGhYX3CVznPsFkd6ODhulERSnFU9fPxcEoqGE9zlapUeBrDtdQK6F1GYSbGbQ==
+
 "@trysound/sax@0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.1.1.tgz#3348564048e7a2d7398c935d466c0414ebb6a669"
@@ -5526,6 +5531,11 @@ quasar-app-extension-vuelidate-rules@^0.4.0:
   integrity sha512-QY4BNlDXeTzsCIyiZCmnQp20DacmslzgEdQOt0uJdced2Z9g4TBHrp8a8rbU1PjzsBQBihbQh20UXxNtHSVrwQ==
   dependencies:
     "@vuelidate/validators" "^2.0.0-alpha.18"
+
+quasar-ui-qdatetimepicker@^2.0.0-rc.1:
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/quasar-ui-qdatetimepicker/-/quasar-ui-qdatetimepicker-2.0.0-rc.1.tgz#b968fb94ad9683834ce78565d85e4e7615169b6f"
+  integrity sha512-9bfjPGkbBLnxr1z0DjI3Ilc6Mn+q/1FKaBe/Jvh9gT3C0J5Vb69UOP1JOYyAw73i80og0GWwhXonMGbK7xZuFw==
 
 quasar@^2.0.4:
   version "2.0.4"
