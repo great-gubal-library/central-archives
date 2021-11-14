@@ -156,6 +156,24 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Event.vue') }],
   },
 
+  {
+    path: '/create-event',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditEvent.vue') }],
+    meta: {
+      title: 'Create Event'
+    },
+  },
+
+  {
+    path: '/edit-event',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditEvent.vue') }],
+    meta: {
+      title: 'Edit Event'
+    },
+  },
+
   // Images
 
   { 

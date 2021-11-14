@@ -82,6 +82,14 @@ export default class API {
     return this.transport.tokenGet<EventDto>(`events/${id}`);
   }
 
+  async createEvent(event: EventDto): Promise<IdWrapper> {
+    return this.transport.authPost<IdWrapper>('events', event);
+  }
+
+  async editEvent(id: number, event: EventDto): Promise<void> {
+    return this.transport.authPut<void>(`events/${id}`, event);
+  }
+
   // Stories
   async getStories(params: { characterId?: number }): Promise<StorySummaryDto[]> {
     return this.transport.get<StorySummaryDto[]>('stories', params);
