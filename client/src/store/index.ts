@@ -11,7 +11,6 @@ import {
   createStore,
   Store as VuexStore
 } from 'vuex'
-import state from './module-example/state'
 
 /*
  * If not building with SSR mode, you can

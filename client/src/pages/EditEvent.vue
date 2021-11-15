@@ -2,7 +2,7 @@
   <q-page class="page-edit-event">
     <template v-if="loaded">
       <h2>{{ eventId ? 'Edit Event' : 'Create New Event' }}</h2>
-      <q-form @submit="onSubmit">
+      <q-form ref="form" @submit="onSubmit">
         <template v-if="!preview">
           <section class="page-edit-event__form-controls">
             <q-input
@@ -13,10 +13,12 @@
               ]"
             />
             <q-date-time-picker
+            v-if="startDateTimeVisible"
               label="Start date/time *"
               v-model="startDateTime"
-              :displayValue="startDateTimeDisplay"
+              :display-value="startDateTimeDisplay"
               mode="datetime"
+              first-day-of-week="1"
               format24h
               :rules="[
                 $rules.required('This field is required.'),
@@ -25,8 +27,9 @@
             <q-date-time-picker
               label="End date/time"
               v-model="endDateTime"
-              :displayValue="endDateTimeDisplay"
+              :display-value="endDateTimeDisplay"
               mode="datetime"
+              first-day-of-week="1"
               format24h
               clearable
             />
@@ -189,7 +192,19 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 	},
 	async beforeRouteUpdate(to) {
 		(this as PageEditEvent).setContent(await load(to.params));
-	}
+	},
+  watch: {
+    startDateTime: {
+      handler(newValue: string, oldValue: string) {
+        // Workaround for validation message bug. Forces the date/time picker to be re-rendered on value change,
+        // thus resetting validation error messages.
+        if (newValue !== oldValue) {
+          (this as PageEditEvent).startDateTimeVisible = false;
+          void (this as PageEditEvent).$nextTick(() => (this as PageEditEvent).startDateTimeVisible = true);
+        }
+      }
+    }
+  }
 })
 export default class PageEditEvent extends Vue {
   readonly previewOptions = [
@@ -211,7 +226,8 @@ export default class PageEditEvent extends Vue {
   event = new EventDto();
   eventBackup = new EventDto();
 
-  startDateTime = '';
+  startDateTimeVisible = true;
+  startDateTime: string|null = null;
   endDateTime: string|null = null;
 
   preview = false;
@@ -242,7 +258,7 @@ export default class PageEditEvent extends Vue {
         locationServer: 'Omega',
         locationTags: '',
       });
-      this.startDateTime = '';
+      this.startDateTime = null;
     }
 
     this.loaded = true;
@@ -258,6 +274,10 @@ export default class PageEditEvent extends Vue {
   }
 
   get startDateTimeMillis() {
+    if (!this.startDateTime) {
+      return null;
+    }
+
     return DateTime.fromISO(this.startDateTime, {
       zone: SharedConstants.FFXIV_SERVER_TIMEZONE
     }).toMillis();
@@ -268,7 +288,7 @@ export default class PageEditEvent extends Vue {
       return '';
     }
 
-    return this.$display.formatDateTimeServer(this.startDateTimeMillis);
+    return this.$display.formatDateTimeServer(this.startDateTimeMillis!);
   }
 
   get endDateTimeMillis() {
@@ -288,7 +308,7 @@ export default class PageEditEvent extends Vue {
 
     return this.$display.formatDateTimeServer(this.endDateTimeMillis!);
   }
-
+  
   revert() {
     this.confirmRevert = true;
   }
@@ -301,7 +321,7 @@ export default class PageEditEvent extends Vue {
     this.saving = true;
 
     try {
-      this.event.startDateTime = this.startDateTimeMillis;
+      this.event.startDateTime = this.startDateTimeMillis!; // Guaranteed non-null if we get here
       this.event.endDateTime = this.endDateTimeMillis;
 
       if (!this.eventId) {
