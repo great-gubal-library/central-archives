@@ -68,7 +68,7 @@
             </q-select>
             <q-input
               v-model="event.locationTags"
-              label="Tags"
+              label="Location tags"
             />
           </section>     
           <h6>Details</h6>
@@ -283,6 +283,10 @@ export default class PageEditEvent extends Vue {
   }
 
   setStartDateTime(value: string) {
+    if (!value) {
+      return;
+    }
+
     this.event.startDateTime = DateTime.fromISO(value, {
       zone: SharedConstants.FFXIV_SERVER_TIMEZONE
     }).toMillis();
@@ -307,9 +311,9 @@ export default class PageEditEvent extends Vue {
   }
 
   setEndDateTime(value: string) {
-    this.event.endDateTime = DateTime.fromISO(value, {
+    this.event.endDateTime = value ? DateTime.fromISO(value, {
       zone: SharedConstants.FFXIV_SERVER_TIMEZONE
-    }).toMillis();
+    }).toMillis() : null;
   }
 
   get endDateTimeDisplay() {
