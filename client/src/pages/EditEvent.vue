@@ -13,7 +13,7 @@
               ]"
             />
             <q-date-time-picker
-            v-if="startDateTimeVisible"
+              v-if="startDateTimeVisible"
               label="Start date/time *"
               v-model="startDateTime"
               :display-value="startDateTimeDisplay"
