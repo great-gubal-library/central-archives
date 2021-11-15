@@ -308,13 +308,22 @@ export default class PageEditEvent extends Vue {
 
     return this.$display.formatDateTimeServer(this.endDateTimeMillis!);
   }
-  
+
   revert() {
     this.confirmRevert = true;
   }
 
   onConfirmRevert() {
-    this.event = new EventDto(this.eventBackup);
+    // We use setContent instead of just reassigning from backup
+    // because startDateTime and endDateTime are not part of this.event but are part of form model
+    if (this.eventId) {
+      this.setContent({
+        event: this.eventBackup,
+        eventId: this.eventId
+      });
+    } else {
+      this.setContent(null);
+    }
   }
 
   async onSubmit() {
