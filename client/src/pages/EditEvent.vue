@@ -15,7 +15,8 @@
             <q-date-time-picker
               v-if="startDateTimeVisible"
               label="Start date/time *"
-              v-model="startDateTime"
+              :model-value="startDateTime"
+              @update:model-value="setStartDateTime"
               :display-value="startDateTimeDisplay"
               mode="datetime"
               first-day-of-week="1"
@@ -25,8 +26,10 @@
               ]"
             />
             <q-date-time-picker
+              v-if="endDateTimeVisible"
               label="End date/time"
-              v-model="endDateTime"
+              :model-value="endDateTime"
+              @update:model-value="setEndDateTime"
               :display-value="endDateTimeDisplay"
               mode="datetime"
               first-day-of-week="1"
@@ -203,6 +206,15 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
           void (this as PageEditEvent).$nextTick(() => (this as PageEditEvent).startDateTimeVisible = true);
         }
       }
+    },
+    endDateTime: {
+      handler(newValue: string, oldValue: string) {
+        // Workaround for display bugs with the clear button
+        if (newValue !== oldValue) {
+          (this as PageEditEvent).endDateTimeVisible = false;
+          void (this as PageEditEvent).$nextTick(() => (this as PageEditEvent).endDateTimeVisible = true);
+        }
+      }
     }
   }
 })
@@ -227,8 +239,7 @@ export default class PageEditEvent extends Vue {
   eventBackup = new EventDto();
 
   startDateTimeVisible = true;
-  startDateTime: string|null = null;
-  endDateTime: string|null = null;
+  endDateTimeVisible = true;
 
   preview = false;
   loaded = false;
@@ -240,13 +251,10 @@ export default class PageEditEvent extends Vue {
 		if (content) {
 			this.eventId = content.eventId;
 			this.eventBackup = new EventDto(content.event);
-      this.startDateTime = DateTime.fromMillis(content.event.startDateTime, {
-        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
-      }).toISO().substring(0, 16);
     } else {
       this.eventBackup = new EventDto({
         mine: true,
-        startDateTime: Date.now(),
+        startDateTime: null as unknown as number,
         endDateTime: null,
         title: '',
         details: '',
@@ -258,55 +266,58 @@ export default class PageEditEvent extends Vue {
         locationServer: 'Omega',
         locationTags: '',
       });
-      this.startDateTime = null;
     }
 
     this.loaded = true;
     this.event = new EventDto(this.eventBackup);
-
-    if (this.event.endDateTime) {
-      this.endDateTime = DateTime.fromMillis(this.event.endDateTime, {
-        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
-      }).toISO().substring(0, 16);
-    } else {
-      this.endDateTime = null;
-    }
   }
 
-  get startDateTimeMillis() {
-    if (!this.startDateTime) {
+  get startDateTime() {
+    if (!this.event.startDateTime) {
       return null;
     }
 
-    return DateTime.fromISO(this.startDateTime, {
+    return DateTime.fromMillis(this.event.startDateTime, {
+        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+      }).toISO().substring(0, 16);
+  }
+
+  setStartDateTime(value: string) {
+    this.event.startDateTime = DateTime.fromISO(value, {
       zone: SharedConstants.FFXIV_SERVER_TIMEZONE
     }).toMillis();
   }
 
   get startDateTimeDisplay() {
-    if (!this.startDateTime) {
+    if (!this.event.startDateTime) {
       return '';
     }
 
-    return this.$display.formatDateTimeServer(this.startDateTimeMillis!);
+    return this.$display.formatDateTimeServer(this.event.startDateTime);
   }
 
-  get endDateTimeMillis() {
-    if (!this.endDateTime) {
+  get endDateTime() {
+    if (!this.event.endDateTime) {
       return null;
     }
 
-    return DateTime.fromISO(this.endDateTime, {
+    return DateTime.fromMillis(this.event.endDateTime, {
+        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+      }).toISO().substring(0, 16);
+  }
+
+  setEndDateTime(value: string) {
+    this.event.endDateTime = DateTime.fromISO(value, {
       zone: SharedConstants.FFXIV_SERVER_TIMEZONE
     }).toMillis();
   }
 
   get endDateTimeDisplay() {
-    if (!this.endDateTime) {
+    if (!this.event.endDateTime) {
       return '';
     }
 
-    return this.$display.formatDateTimeServer(this.endDateTimeMillis!);
+    return this.$display.formatDateTimeServer(this.event.endDateTime);
   }
 
   revert() {
@@ -330,9 +341,6 @@ export default class PageEditEvent extends Vue {
     this.saving = true;
 
     try {
-      this.event.startDateTime = this.startDateTimeMillis!; // Guaranteed non-null if we get here
-      this.event.endDateTime = this.endDateTimeMillis;
-
       if (!this.eventId) {
         const characterId = this.$store.getters.characterId!;
         const { id } = await this.$api.createEvent(this.event, { characterId });

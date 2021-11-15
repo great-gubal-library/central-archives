@@ -1,7 +1,7 @@
 <template>
 	<div class="event-view">
 		<h2>{{event.title}}</h2>
-		<template v-if="event.title">
+		<template v-if="event.title && event.startDateTime">
 			<p>
 				<strong>Starts:</strong> {{$display.formatDateTimeServer(event.startDateTime)}}
 				<span class="event-view__local-time">({{$display.formatDateTimeLocal(event.startDateTime)}})</span>
