@@ -39,7 +39,7 @@ const FONTS = [
 const FONT_OPTION = FONTS.map(font => `${font}=${font},sans-serif`).join(';');
 
 const TINYMCE_PLUGINS = [
-  'code advlist autolink lists link image charmap',
+  'code advlist autolink lists link image charmap hr',
   'searchreplace visualblocks',
   'table paste help wordcount'
 ];
@@ -48,8 +48,8 @@ const TINYMCE_OPTIONS = {
   inline: true,
   toolbar:
     'undo redo | formatselect | bold italic | \
-    alignleft aligncenter alignright alignjustify | \
-    image gallery upload link | bullist numlist | removeformat',
+    alignleft aligncenter alignright | \
+    image gallery upload link hr | bullist numlist | removeformat',
   toolbar_mode: 'wrap',
   toolbar_persist: true,
   menu: {
