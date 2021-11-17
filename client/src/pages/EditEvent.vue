@@ -15,8 +15,7 @@
             <q-date-time-picker
               v-if="startDateTimeVisible"
               label="Start date/time *"
-              :model-value="startDateTime"
-              @update:model-value="setStartDateTime"
+              v-model="startDateTime"
               :display-value="startDateTimeDisplay"
               mode="datetime"
               first-day-of-week="1"
@@ -28,8 +27,7 @@
             <q-date-time-picker
               v-if="endDateTimeVisible"
               label="End date/time"
-              :model-value="endDateTime"
-              @update:model-value="setEndDateTime"
+              v-model="endDateTime"
               :display-value="endDateTimeDisplay"
               mode="datetime"
               first-day-of-week="1"
@@ -202,8 +200,10 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
         // Workaround for validation message bug. Forces the date/time picker to be re-rendered on value change,
         // thus resetting validation error messages.
         if (newValue !== oldValue) {
-          (this as PageEditEvent).startDateTimeVisible = false;
-          void (this as PageEditEvent).$nextTick(() => (this as PageEditEvent).startDateTimeVisible = true);
+          const that = this as PageEditEvent;
+          that.event.startDateTime = that.toMillis(newValue)!;
+          that.startDateTimeVisible = false;
+          void that.$nextTick(() => that.startDateTimeVisible = true);
         }
       }
     },
@@ -211,8 +211,10 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
       handler(newValue: string, oldValue: string) {
         // Workaround for display bugs with the clear button
         if (newValue !== oldValue) {
-          (this as PageEditEvent).endDateTimeVisible = false;
-          void (this as PageEditEvent).$nextTick(() => (this as PageEditEvent).endDateTimeVisible = true);
+          const that = this as PageEditEvent;
+          that.event.endDateTime = that.toMillis(newValue)!;
+          that.endDateTimeVisible = false;
+          void that.$nextTick(() => that.endDateTimeVisible = true);
         }
       }
     }
@@ -237,6 +239,9 @@ export default class PageEditEvent extends Vue {
 	eventId: number|null = null;
   event = new EventDto();
   eventBackup = new EventDto();
+
+  startDateTime: string|null = null;
+  endDateTime: string|null = null;
 
   startDateTimeVisible = true;
   endDateTimeVisible = true;
@@ -270,58 +275,56 @@ export default class PageEditEvent extends Vue {
 
     this.loaded = true;
     this.event = new EventDto(this.eventBackup);
+    this.startDateTime = this.fromMillis(this.event.startDateTime);
+    this.endDateTime = this.fromMillis(this.event.endDateTime);
   }
 
-  get startDateTime() {
-    if (!this.event.startDateTime) {
+  private fromMillis(value: number|null): string|null {
+    if (!value) {
+      return null;
+    } else {
+      return DateTime.fromMillis(value, {
+        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+      }).toISO().substring(0, 16);
+    }
+  }
+
+  private toMillis(value: string|null): number|null {
+    if (!value) {
       return null;
     }
 
-    return DateTime.fromMillis(this.event.startDateTime, {
-        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
-      }).toISO().substring(0, 16);
-  }
-
-  setStartDateTime(value: string) {
-    if (!value) {
-      return;
-    }
-
-    this.event.startDateTime = DateTime.fromISO(value, {
+    return DateTime.fromISO(value, {
       zone: SharedConstants.FFXIV_SERVER_TIMEZONE
     }).toMillis();
   }
 
+  get startDateTimeMillis(): number|null {
+    return this.toMillis(this.startDateTime);
+  }
+
   get startDateTimeDisplay() {
-    if (!this.event.startDateTime) {
+    const millis = this.startDateTimeMillis;
+
+    if (!millis) {
       return '';
     }
 
-    return this.$display.formatDateTimeServer(this.event.startDateTime);
+    return this.$display.formatDateTimeServer(millis);
   }
 
-  get endDateTime() {
-    if (!this.event.endDateTime) {
-      return null;
-    }
-
-    return DateTime.fromMillis(this.event.endDateTime, {
-        zone: SharedConstants.FFXIV_SERVER_TIMEZONE
-      }).toISO().substring(0, 16);
-  }
-
-  setEndDateTime(value: string) {
-    this.event.endDateTime = value ? DateTime.fromISO(value, {
-      zone: SharedConstants.FFXIV_SERVER_TIMEZONE
-    }).toMillis() : null;
+  get endDateTimeMillis(): number|null {
+    return this.toMillis(this.endDateTime);
   }
 
   get endDateTimeDisplay() {
-    if (!this.event.endDateTime) {
+    const millis = this.endDateTimeMillis;
+
+    if (!millis) {
       return '';
     }
 
-    return this.$display.formatDateTimeServer(this.event.endDateTime);
+    return this.$display.formatDateTimeServer(millis);
   }
 
   revert() {
