@@ -6,7 +6,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { Body, Controller, Get, Param, ParseBoolPipe, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseBoolPipe, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { EventsService } from './events.service';
 
 @Controller('events')
@@ -42,5 +42,14 @@ export class EventsController {
     @CurrentUser() user: UserInfo,
   ): Promise<void> {
     return this.eventsService.updateEvent(id, event, user);
+  }
+
+  @Delete('/:id')
+  @RoleRequired(Role.USER)
+  async deleteEvent(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: UserInfo,
+  ): Promise<void> {
+    return this.eventsService.deleteEvent(id, user);
   }
 }

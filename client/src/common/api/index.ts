@@ -90,6 +90,10 @@ export default class API {
     return this.transport.authPut<void>(`events/${id}`, event);
   }
 
+  async deleteEvent(id: number): Promise<void> {
+    return this.transport.authDelete<void>(`events/${id}`);
+  }
+
   // Stories
   async getStories(params: { characterId?: number }): Promise<StorySummaryDto[]> {
     return this.transport.get<StorySummaryDto[]>('stories', params);

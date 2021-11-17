@@ -1,8 +1,9 @@
 <template>
   <q-page class="page-event">
-		<p v-if="event.mine">
+		<section v-if="event.mine" class="page-event__edit-bar">
 			<router-link :to="`/edit-event/${eventId}`">Edit event</router-link>
-		</p>
+			<q-btn flat color="negative" label="Delete event" @click="onDeleteClick" />
+		</section>
 		<event-view v-if="event.title" :event="event" />
 	</q-page>	
 </template>
@@ -72,5 +73,43 @@ export default class PageEvent extends Vue {
 		this.eventId = eventId;
 		this.event = event;
 	}
+
+	onDeleteClick() {
+		this.$q.dialog({
+        title: 'Confirm Delete',
+        message: `Do you want to delete the event “${this.event.title}”?`,
+				ok: {
+					label: 'Delete',
+					color: 'negative',
+					flat: true
+				},
+        cancel: 'Cancel',
+      }).onOk(async () => {
+        try {
+					await this.$api.deleteEvent(this.eventId);
+
+					this.$q.notify({
+						type: 'positive',
+						message: 'Event deleted.'
+					});
+
+					void this.$router.replace('/');
+					void this.$store.dispatch('updateEvents');
+				} catch (e) {
+					this.$q.notify({
+						type: 'negative',
+						message: errors.getMessage(e)
+					});
+				}
+      });
+	}
 }
 </script>
+
+<style lang="scss">
+.page-event__edit-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+</style>

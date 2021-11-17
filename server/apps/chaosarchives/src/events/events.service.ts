@@ -150,6 +150,29 @@ export class EventsService {
 		await em.getRepository(Event).save(event);
 	}
 
+	async deleteEvent(eventId: number, user: UserInfo): Promise<void> {
+		await this.connection.transaction(async em => {
+			const eventRepo = em.getRepository(Event);
+			const event = await eventRepo.findOne({
+				where: {
+					id: eventId,
+					owner: {
+						user: {
+							id: user.id
+						}
+					},
+				},
+				relations: [ 'owner' ]
+			});
+
+			if (!event) {
+				throw new NotFoundException('Event not found');
+			}
+
+			await eventRepo.softRemove(event);
+		});
+	}
+
 	async getEvents(refreshExternal = false): Promise<EventSummariesDto> {
 		const eventsTimestamp = await this.redisService.get('eventsTimestamp');
 		let eventsUpToDate = false;
