@@ -250,22 +250,6 @@ export default class PageEditCharacter extends Vue {
   padding-top: 0;
 }
 
-.page-edit-character__banner {
-  margin-bottom: 16px;
-}
-
-.page-edit-character__banner-placeholder {
-  background: #80a0c0;
-  color: white;
-  margin-bottom: 16px;
-}
-
-.page-edit-character__banner-placeholder div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .page-edit-character__preview {
   margin-bottom: 24px;
 }
