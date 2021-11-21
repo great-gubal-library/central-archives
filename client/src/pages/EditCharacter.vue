@@ -4,12 +4,15 @@
       <h2>Edit Profile</h2>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
+          <q-banner v-if="!character.active" class="bg-dark text-white">
+            This character has been renamed in-game, and you have created a new profile for the renamed character. This character is now inactive. You can no longer update their info from Lodestone.
+          </q-banner>
           <div class="page-edit-character__lodestone-info">
             <section class="page-edit-character__form-controls">
               <q-input :model-value="character.name" label="Name" readonly />
               <q-input :model-value="$display.races[character.race]" label="Race" readonly />
             </section>
-            <section>
+            <section v-if="character.active">
               <q-btn outline color="secondary" @click="onRefreshClick" style="max-width: 140px"
                 ><i class="material-icons q-icon">refresh</i>Refresh from Lodestone</q-btn
               >

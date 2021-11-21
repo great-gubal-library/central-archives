@@ -63,6 +63,7 @@ export class CharactersService {
       server: character.server.name,
       avatar: character.avatar,
       lodestoneId: character.lodestoneId,
+      active: character.active || false,
       appearance: character.appearance,
       background: character.background,
       occupation: character.occupation,
@@ -180,6 +181,10 @@ export class CharactersService {
 			if (!characterEntity) {
 				throw new NotFoundException('Character not found');
 			}
+
+      if (!characterEntity.active) {
+        throw new ConflictException('You cannot refresh inactive characters from Lodestone');
+      }
 
       const lodestoneInfo = await getLodestoneCharacter(characterEntity.lodestoneId);
 

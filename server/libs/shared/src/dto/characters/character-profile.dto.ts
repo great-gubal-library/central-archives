@@ -25,6 +25,10 @@ export class CharacterProfileDto {
   @IsNumber()
   lodestoneId: number;
 
+  @IsBoolean()
+  @IsOptional()
+  active: boolean;
+
   // RP fields
 	
   @IsString()
