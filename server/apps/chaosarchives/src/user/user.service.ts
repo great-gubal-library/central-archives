@@ -125,7 +125,7 @@ export class UserService {
     await this.connection.transaction(async (em) => {
       const characterRepo = em.getRepository(Character);
       const character = await characterRepo.findOne({
-        lodestoneId: verifyData.lodestoneId,
+        id: verifyData.id,
         user: {
           id: user.id,
         },
@@ -140,7 +140,7 @@ export class UserService {
       }
 
       const characterData = await this.parseLodestoneProfile(
-        verifyData.lodestoneId,
+        character.lodestoneId,
       );
 
       if (!characterData) {

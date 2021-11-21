@@ -162,14 +162,14 @@ export default class PageVerify extends Vue {
 
 	private async refreshLodestoneStatus() {
 		try {
-			const lodestoneId = this.$store.getters.character!.lodestoneId;
+			const characterId = this.$store.getters.characterId;
 			const verificationCode = this.verificationStatus.characterVerificationCode;
 
-			if (!lodestoneId || !verificationCode) {
+			if (!characterId || !verificationCode) {
 				return;
 			}
 
-			await this.$api.user.verifyCharacter({ lodestoneId });
+			await this.$api.user.verifyCharacter({ id: characterId });
 			// If we get here, this means character verification succeeded.
 			this.verificationStatus = await this.$api.user.getVerificationStatus(this.$store.getters.characterId!);
 		} catch (e) {
