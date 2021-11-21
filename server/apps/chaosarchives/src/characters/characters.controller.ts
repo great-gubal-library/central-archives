@@ -1,18 +1,19 @@
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
+import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
+import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
+import { UserInfo } from '@app/auth/model/user-info';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
+import { CharacterRegistrationStatusResultDto } from '@app/shared/dto/characters/character-registration-status-result.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
-import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
-import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
-import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
-import { UserInfo } from '@app/auth/model/user-info';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ImagesService } from '../images/images.service';
 import { StoriesService } from '../stories/stories.service';
 import { CharactersService } from './characters.service';
@@ -81,5 +82,15 @@ export class CharactersController {
     @CurrentUser() user: UserInfo,
   ): Promise<ImageDto[]> {
     return this.imagesService.getMyImages(characterId, user);
+  }
+
+  @Get('registration-status')
+  @UseGuards(OptionalJwtAuthGuard)
+  async getRegistrationStatus(
+    @Query('name') name: string,
+    @Query('lodestoneId', ParseIntPipe) lodestoneId: number,
+    @CurrentUser() user?: UserInfo,
+  ): Promise<CharacterRegistrationStatusResultDto> {
+    return this.charactersService.getRegistrationStatus(name, lodestoneId, user);
   }
 }

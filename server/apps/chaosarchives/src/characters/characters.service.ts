@@ -7,9 +7,11 @@ import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
+import { CharacterRegistrationStatusResultDto } from '@app/shared/dto/characters/character-registration-status-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
+import { CharacterRegistrationStatus } from '@app/shared/enums/character-registration-status.enum';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
@@ -335,5 +337,30 @@ export class CharactersService {
       verificationCode: generateVerificationCode(),
       active: true
     });
+  }
+
+  async getRegistrationStatus(name: string, lodestoneId: number, user?: UserInfo): Promise<CharacterRegistrationStatusResultDto> {
+    const existingCharacter = await this.characterRepo.findOne({
+      where: {
+        lodestoneId,
+        active: true,
+      },
+      relations: [ 'user' ],
+      select: [ 'id', 'name', 'user' ]
+    });
+
+    let status: CharacterRegistrationStatus;
+
+    if (!existingCharacter) {
+      status = CharacterRegistrationStatus.UNCLAIMED;
+    } else if (!user || existingCharacter.user.id !== user.id) {
+      status = CharacterRegistrationStatus.CLAIMED_BY_ANOTHER_USER;
+    } else if (existingCharacter.name !== name) {
+      status = CharacterRegistrationStatus.RENAMED;
+    } else {
+      status = CharacterRegistrationStatus.ALREADY_REGISTERED;
+    }
+
+    return { status };
   }
 }

@@ -2,6 +2,7 @@ import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character
 import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
+import { CharacterRegistrationStatusResultDto } from '@app/shared/dto/characters/character-registration-status-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
@@ -71,6 +72,10 @@ export default class API {
 
   async getCharacterContent(id: number): Promise<CharacterContentDto> {
     return this.transport.get<CharacterContentDto>(`characters/${id}/content`);
+  }
+
+  async getCharacterRegistrationStatus(params: { name: string, lodestoneId: number }): Promise<CharacterRegistrationStatusResultDto> {
+    return this.transport.tokenGet<CharacterRegistrationStatusResultDto>('characters/registration-status', params);
   }
 
   // Events
