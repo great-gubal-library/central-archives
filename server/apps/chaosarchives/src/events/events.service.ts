@@ -1,5 +1,6 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character, Event, EventLocation, Server } from '@app/entity';
+import { Character, Event, EventLocation, Image, Server } from '@app/entity';
+import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
@@ -13,6 +14,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime, Duration } from 'luxon';
 import { Connection, EntityManager, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import utils from '../common/utils';
+import { ImagesService } from '../images/images.service';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { CrescentMoonPublishingService } from './crescent-moon-publishing.service';
 import { ExternalEvent } from './model/external-event';
@@ -26,6 +28,7 @@ export class EventsService {
 	constructor(
 		private readonly cmpService: CrescentMoonPublishingService,
 		private readonly ccService: ChocoboChronicleService,
+		private readonly imagesService: ImagesService,
 		private readonly connection: Connection,
 		@InjectRepository(Event)
 		private readonly eventRepo: Repository<Event>,
@@ -39,7 +42,7 @@ export class EventsService {
 			where: {
 				id,
 			},
-			relations: [ 'owner', 'owner.user', 'locations', 'locations.server' ]
+			relations: [ 'owner', 'owner.user', 'locations', 'locations.server', 'banner', 'banner.owner' ]
 		});
 
 		if (!event) {
@@ -47,6 +50,7 @@ export class EventsService {
 		}
 
 		const location = event.locations.length > 0 ? event.locations[0] : null;
+		const banner = await event.banner;
 
 		return new EventDto({
 			title: event.title,
@@ -57,6 +61,12 @@ export class EventsService {
 			endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
 			link: event.externalSourceLink || event.link,
 			contact: event.contact,
+			banner: !banner ? null : new BannerDto({
+				id: banner.id,
+				url: this.imagesService.getUrl(banner),
+				width: banner.width,
+				height: banner.height
+			}),
 			locationName: location ? location.name : '',
 			locationAddress: location ? location.address : '',
 			locationServer: location ? location.server.name : '',
@@ -120,6 +130,27 @@ export class EventsService {
 		event.oocDetails = html.sanitize(eventDto.oocDetails);
 		event.link = eventDto.link; // TODO: Validate
 		event.contact = eventDto.contact;
+
+		if (eventDto.banner && eventDto.banner.id) {
+			const banner = await em.getRepository(Image).findOne({
+				where: {
+					id: eventDto.banner.id,
+					owner: event.owner
+				}
+			});
+
+			if (!banner) {
+				throw new BadRequestException('Banner not found');
+			}
+
+			if (banner.width / banner.height < SharedConstants.MIN_BANNER_ASPECT_RATIO) {
+				throw new BadRequestException('Banner is too tall for its width');
+			}
+
+			event.banner = Promise.resolve(banner);
+		} else {
+			event.banner = Promise.resolve(null as unknown as Image);
+		}
 
 		let location: EventLocation;
 

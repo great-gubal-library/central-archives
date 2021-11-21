@@ -68,7 +68,8 @@
               v-model="event.locationTags"
               label="Location tags"
             />
-          </section>     
+          </section>
+          <banner-edit-section v-model="event.banner" />
           <h6>Details</h6>
           <html-editor v-model="event.details" />
           <h6>OOC Details</h6>
@@ -142,6 +143,7 @@ import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepi
 import '@toby.mosque/quasar-ui-qdatetimepicker/dist/index.css'; // Temp, move somewhere
 import { DateTime } from 'luxon/src/luxon';
 import SharedConstants from '@app/shared/SharedConstants';
+import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -185,6 +187,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
   components: {
     QDateTimePicker,
     HtmlEditor,
+    BannerEditSection,
     EventView,
   },
 	async beforeRouteEnter(to, _, next) {
@@ -266,6 +269,7 @@ export default class PageEditEvent extends Vue {
         oocDetails: '',
         link: '',
         contact: '',
+        banner: null,
         locationName: '',
         locationAddress: '',
         locationServer: 'Omega',

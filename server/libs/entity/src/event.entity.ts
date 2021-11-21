@@ -1,12 +1,13 @@
 import { EventSource } from '@app/shared/enums/event-source.enum';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { BasicEntity } from "./basic.entity";
-import { Character } from "./character.entity";
-import { EventLocation } from "./event-location.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BasicEntity } from './basic.entity';
+import { Character } from './character.entity';
+import { EventLocation } from './event-location.entity';
+import { Image } from './image.entity';
 
 @Entity()
 export class Event extends BasicEntity {
-	@PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
@@ -17,14 +18,14 @@ export class Event extends BasicEntity {
   @Column({
     type: 'mediumtext',
     nullable: false,
-    default: ''
+    default: '',
   })
   details: string;
 
   @Column({
     type: 'mediumtext',
     nullable: false,
-    default: ''
+    default: '',
   })
   oocDetails: string;
 
@@ -32,52 +33,57 @@ export class Event extends BasicEntity {
     nullable: true,
   })
   owner: Character;
-	
-	@Column({
-    nullable: false,
-  })
-  startDateTime: Date;
-	
-	@Column({
-    type: 'datetime',
-    nullable: true,
-  })
-  endDateTime: Date|null;
 
   @Column({
     nullable: false,
-    default: ''
+  })
+  startDateTime: Date;
+
+  @Column({
+    type: 'datetime',
+    nullable: true,
+  })
+  endDateTime: Date | null;
+
+  @Column({
+    nullable: false,
+    default: '',
   })
   link: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
   contact: string;
 
   @Column({
     nullable: true,
-		unique: true,
+    unique: true,
   })
   externalSourceLink: string;
 
-	@Column({
-		type: 'enum',
-		enum: EventSource,
+  @Column({
+    type: 'enum',
+    enum: EventSource,
     nullable: false,
   })
   source: EventSource;
-	
-	@Column({
+
+  @Column({
     nullable: false,
-    default: false
+    default: false,
   })
   hidden: boolean;
 
-	@OneToMany(() => EventLocation, 'event', {
-    cascade: true,
-    orphanedRowAction: 'delete'
+  @ManyToOne(() => Image, {
+    lazy: true,
   })
-	locations: EventLocation[];
+  banner: Promise<Image>;
+
+  @OneToMany(() => EventLocation, 'event', {
+    cascade: true,
+    orphanedRowAction: 'delete',
+  })
+  locations: EventLocation[];
 }

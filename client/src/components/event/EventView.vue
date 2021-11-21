@@ -1,5 +1,6 @@
 <template>
 	<div class="event-view">
+		<banner-view :banner="event.banner" />
 		<h2>{{event.title}}</h2>
 		<template v-if="event.title && event.startDateTime">
 			<p>
@@ -37,7 +38,8 @@
 <script lang="ts">
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import html from '@app/shared/html';
-import { prop, Vue } from 'vue-class-component';
+import { Options, prop, Vue } from 'vue-class-component';
+import BannerView from '../common/BannerView.vue';
 
 class Props {
 	event = prop<EventDto>({
@@ -49,6 +51,11 @@ class Props {
 	});
 }
 
+@Options({
+	components: {
+		BannerView,
+	},
+})
 export default class EventView extends Vue.with(Props) {
 	get details() {
 		return html.sanitize(this.event.details);

@@ -1,4 +1,6 @@
-import { IsBoolean, isBoolean, IsNumber, IsOptional, IsString, IsUrl, MinLength } from "class-validator";
+import { Type } from "class-transformer";
+import { IsBoolean, isBoolean, IsNumber, IsOptional, IsString, IsUrl, MinLength, ValidateNested } from "class-validator";
+import { BannerDto } from "../characters/banner.dto";
 
 export class EventDto {
 	@IsString()
@@ -28,6 +30,11 @@ export class EventDto {
 
 	@IsString()
 	contact: string;
+
+  @Type(() => BannerDto)
+  @ValidateNested()
+  @IsOptional()
+  banner: BannerDto|null;
 
 	@IsString()
 	locationName: string;
