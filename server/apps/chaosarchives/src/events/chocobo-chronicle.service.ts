@@ -56,21 +56,30 @@ export class ChocoboChronicleService {
 		const doc = parse(description);
 		const tableColumns = doc.querySelectorAll('td');
 
-		return tableColumns.map(column => {
-			// Here's hoping they won't change the layout and break everything...
-			const divs = column.querySelectorAll('div');
-			const name = divs[0].textContent.trim();
-			const server = divs[3].textContent.trim();
-			const address = divs[5].textContent.trim();
-			const tags = divs[7].textContent.trim();
+		try {
+			return tableColumns.map(column => {
+					try {
+					// Here's hoping they won't change the layout and break everything...
+					const divs = column.querySelectorAll('div');
+					const name = divs[0].textContent.trim();
+					const server = divs[3].textContent.trim();
+					const address = divs[5].textContent.trim();
+					const tags = divs[7].textContent.trim();
 
-			return {
-				id: -1,
-				name,
-				address,
-				server,
-				tags,
-			};
-		});
+					return {
+						id: -1,
+						name,
+						address,
+						server,
+						tags,
+					};
+				} catch (e) {
+					this.log.error(`Error parsing HTML: ${column.outerHTML}`, (e as Error).stack);
+					throw e;
+				}
+			});
+		} catch (e) {
+			return [];
+		}		
 	}
 }
