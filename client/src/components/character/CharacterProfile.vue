@@ -3,12 +3,7 @@
     <p v-if="!preview && character.mine">
       <router-link to="/edit-character">Edit profile</router-link>
     </p>
-    <q-img
-      v-if="character.banner"
-      class="character-profile__banner"
-      :src="character.banner.url"
-      :initial-ratio="character.banner.width / character.banner.height"
-    />
+    <banner-view :banner="character.banner" />
     <header class="character-profile__header">
       <div class="layout__filler">
         <q-avatar v-if="character.showAvatar" round>
@@ -73,6 +68,7 @@
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
+import BannerView from '../common/BannerView.vue';
 import CharacterDetail from './CharacterDetail.vue';
 import CharacterDetailsBox from './CharacterDetailsBox.vue';
 
@@ -90,6 +86,7 @@ class Props {
   components: {
     CharacterDetail,
     CharacterDetailsBox,
+    BannerView,
   },
 })
 export default class CharacterProfile extends Vue.with(Props) {
@@ -117,17 +114,6 @@ export default class CharacterProfile extends Vue.with(Props) {
 
 <style lang="scss">
 @import url($extraGoogleFonts);
-
-.character-profile__banner {
-  color: white;
-  margin-bottom: 16px;
-}
-
-.character-profile__banner div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .character-profile__header {
   display: flex;

@@ -44,35 +44,7 @@
               with headers.
             </p>
           </section>
-          <section>
-            <h6>Banner</h6>
-            <p class="text-caption">
-              Banners can be no taller than 4:1 width:height. For example, 500&times;100 and 400&times;100 are fine, but
-              not 300&times;100.
-            </p>
-            <q-responsive v-if="!character.banner" class="page-edit-character__banner-placeholder" :ratio="4 / 1">
-              <div>No banner</div>
-            </q-responsive>
-            <q-img
-              v-else
-              class="page-edit-character__banner"
-              :src="character.banner.url"
-              :width="character.banner.width"
-              :height="character.banner.height"
-            />
-            <div class="text-right">
-              <q-btn
-                v-if="character.banner"
-                flat
-                label="Remove"
-                icon="remove"
-                color="negative"
-                @click="onBannerRemoveClick"
-              />&nbsp;
-              <q-btn flat label="Select" icon="collections" color="secondary" @click="onBannerSelectClick" />&nbsp;
-              <q-btn flat label="Upload" icon="upload" color="secondary" @click="onBannerUploadClick" />
-            </div>
-          </section>
+          <banner-edit-section v-model="character.banner" />
           <section class="page-edit-character__form-controls">
             <h6>Names</h6>
             <q-input v-model="character.title" label="Title" />
@@ -150,6 +122,7 @@ import { useApi } from 'src/boot/axios';
 import { useQuasar } from 'quasar';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
+import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -174,6 +147,7 @@ async function load(): Promise<CharacterProfileDto> {
   components: {
     HtmlEditor,
     CharacterProfile,
+    BannerEditSection,
   },
   async beforeRouteEnter(_, __, next) {
     const character = await load();
@@ -213,50 +187,6 @@ export default class PageEditCharacter extends Vue {
         const { name, race, server, avatar } = characterData;
         Object.assign(this.character, { name, race, server, avatar });
       });
-  }
-
-  async onBannerSelectClick() {
-    const GalleryDialog = (await import('components/common/GalleryDialog.vue')).default;
-
-    this.$q
-      .dialog({
-        component: GalleryDialog,
-        componentProps: {
-          banner: true,
-        },
-      })
-      .onOk((image: ImageSummaryDto) => {
-        this.character.banner = new BannerDto({
-          id: image.id,
-          url: image.url,
-          width: image.width,
-          height: image.height,
-        });
-      });
-  }
-
-  async onBannerUploadClick() {
-    const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
-
-    this.$q
-      .dialog({
-        component: UploadDialog,
-        componentProps: {
-          banner: true,
-        },
-      })
-      .onOk((image: ImageSummaryDto) => {
-        this.character.banner = new BannerDto({
-          id: image.id,
-          url: image.url,
-          width: image.width,
-          height: image.height,
-        });
-      });
-  }
-
-  onBannerRemoveClick() {
-    this.character.banner = null;
   }
 
   onRevertClick() {
