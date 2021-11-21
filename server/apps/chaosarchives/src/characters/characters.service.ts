@@ -16,6 +16,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
+import db from '../common/db';
 import { getLodestoneCharacter } from '../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
@@ -220,30 +221,41 @@ export class CharactersService {
 	}
   
   async addAccountCharacter(request: AddCharacterRequestDto, user: UserInfo): Promise<SessionCharacterDto> {
-    const result = this.connection.transaction(async em => {
-      const userEntity = await em.getRepository(User).findOne(user.id, {
-        select: [ 'id' ]
+    try {
+      const result = await this.connection.transaction(async em => {
+        const userEntity = await em.getRepository(User).findOne(user.id, {
+          select: [ 'id' ]
+        });
+
+        if (!userEntity) {
+          throw new ConflictException();
+        }
+
+        const character = await this.saveCharacterForUser(em, userEntity, request.lodestoneId);
+
+        return {
+          id: character.id,
+          name: character.name,
+          server: character.server.name,
+          avatar: character.avatar,
+          lodestoneId: character.lodestoneId,
+          race: character.race,
+          verified: false
+        };
       });
 
-      if (!userEntity) {
-        throw new ConflictException();
+      await this.publicAuthService.notifyUserChanged(user.id);
+      return result;
+    } catch (e) {
+      if (db.isQueryFailedError(e)) {
+        if (e.code === 'ER_DUP_ENTRY') {
+          throw new ConflictException('This character has already been registered');
+        }
       }
 
-      const character = await this.saveCharacterForUser(em, userEntity, request.lodestoneId);
-
-      return {
-        id: character.id,
-        name: character.name,
-        server: character.server.name,
-        avatar: character.avatar,
-        lodestoneId: character.lodestoneId,
-        race: character.race,
-        verified: false
-      };
-    });
-
-    await this.publicAuthService.notifyUserChanged(user.id);
-    return result;
+      // default
+      throw e;
+    }
   }
 
   // Utility methods
@@ -251,6 +263,20 @@ export class CharactersService {
 
   // Also used in UserService
   async saveCharacterForUser(em: EntityManager, user: User, lodestoneId: number): Promise<Character> {
+    const characterRepo = em.getRepository(Character);
+    const otherCharacter = await characterRepo.findOne({
+      where: {
+        lodestoneId,
+        active: true,
+      },
+      relations: [ 'user' ],
+      select: [ 'id', 'name', 'user' ]
+    });
+
+    if (otherCharacter && otherCharacter.user.id !== user.id) {
+        throw new ConflictException('This character is already claimed by another user');
+    }
+
     const characterInfo = await getLodestoneCharacter(lodestoneId);
 
     if (!characterInfo) {
@@ -260,6 +286,16 @@ export class CharactersService {
     if (characterInfo.Character.DC !== SharedConstants.DATACENTER) {
       throw new BadRequestException('This character is from the wrong datacenter');
     }
+
+    if (otherCharacter && otherCharacter.name === characterInfo.Character.Name) {
+      throw new BadRequestException(
+        'You have already registered this character. To update their Lodestone info, ' +
+        'use the "Refresh from Lodestone" button in the character profile editor instead.');
+    }
+
+    // If we get here, either the Lodestone ID isn't registered yet,
+    // or it is, but the character has a different name (indicating a name change).
+    // We allow this: the user can make a new character profile for the new name.
 
     const server = await em.getRepository(Server).findOne({
       name: characterInfo.Character.Server,
@@ -275,7 +311,16 @@ export class CharactersService {
       throw new BadRequestException('Invalid race');
     }
 
-    return em.getRepository(Character).save({
+    // Set all previously existing characters with this Lodestone ID as inactive
+    await characterRepo.update({
+      lodestoneId: characterInfo.Character.ID,
+      user,
+      active: true,
+    }, {
+      active: null
+    });
+
+    return characterRepo.save({
       lodestoneId: characterInfo.Character.ID,
       name: characterInfo.Character.Name,
       race,
@@ -283,6 +328,7 @@ export class CharactersService {
       user,
       avatar: characterInfo.Character.Avatar,
       verificationCode: generateVerificationCode(),
+      active: true
     });
   }
 }

@@ -7,6 +7,7 @@ import { Image } from './image.entity';
 
 @Entity()
 @Unique(['name', 'server'])
+@Unique(['lodestoneId', 'active'])
 export class Character extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,6 +16,13 @@ export class Character extends BasicEntity {
     nullable: false,
   })
   lodestoneId: number;
+
+  @Column({
+    type: 'boolean',
+    nullable: true,
+    default: true,
+  })
+  active: boolean|null;
 
   @Column({
     nullable: false,
