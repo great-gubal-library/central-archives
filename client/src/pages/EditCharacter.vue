@@ -24,25 +24,25 @@
                 <q-checkbox v-model="character.showAvatar" label="Show avatar" />
               </template>
             </q-field>
-            <p class="text-caption">Displays the character avatar to the left of their name.</p>
+            <div class="text-caption">Displays the character avatar to the left of their name.</div>
             <q-field class="page-edit-character__checkbox" borderless>
               <template v-slot:control>
                 <q-checkbox v-model="character.showInfoboxes" label="Show infoboxes" />
               </template>
             </q-field>
-            <p class="text-caption">
+            <div class="text-caption">
               Displays character information in infoboxes. If unchecked, all infoboxes will be hidden from the public
               profile page.
-            </p>
+            </div>
             <q-field class="page-edit-character__checkbox" borderless>
               <template v-slot:control>
                 <q-checkbox v-model="character.combinedDescription" label="Merge appearance and background" />
               </template>
             </q-field>
-            <p class="text-caption">
+            <div class="text-caption">
               Uses a single "Description" field with no header instead of separate "Outward appearance" and "Background"
               with headers.
-            </p>
+            </div>
           </section>
           <banner-edit-section v-model="character.banner" />
           <section class="page-edit-character__form-controls">
