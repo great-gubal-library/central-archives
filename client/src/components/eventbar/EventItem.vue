@@ -1,10 +1,10 @@
 <template>
   <q-item class="event-item" :clickable="!expanded" @click="expand">
     <q-item-section>
-      <q-item-label>
+      <q-item-label :class="{ 'event-item__label_original': !event.link }">
 				<template v-if="!expanded">{{ event.title }}</template>
 				<div class="event-item__expanded-label" v-else @click.stop="collapse">{{ event.title }}</div>
-				</q-item-label>
+      </q-item-label>
       <q-item-label caption>
         <template v-if="!expanded">
           {{ formatDateServer(event.startDateTime) }}
@@ -97,6 +97,10 @@ export default class EventItem extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
+.event-item__label_original {
+  font-weight: bold;
+}
+
 .event-item__expanded-label {
 	cursor: pointer;
 }
