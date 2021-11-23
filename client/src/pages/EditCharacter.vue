@@ -115,17 +115,15 @@
 
 <script lang="ts">
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
+import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import errors from '@app/shared/errors';
+import CharacterProfile from 'components/character/CharacterProfile.vue';
+import { useQuasar } from 'quasar';
+import { useApi } from 'src/boot/axios';
+import BannerEditSection from 'src/components/common/BannerEditSection.vue';
+import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import HtmlEditor from '../components/common/HtmlEditor.vue';
-import CharacterProfile from 'components/character/CharacterProfile.vue';
-import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
-import { useStore } from 'src/store';
-import { useApi } from 'src/boot/axios';
-import { useQuasar } from 'quasar';
-import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
-import { BannerDto } from '@app/shared/dto/characters/banner.dto';
-import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 
 const $api = useApi();
 const $q = useQuasar();
