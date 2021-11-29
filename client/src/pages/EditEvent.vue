@@ -86,10 +86,13 @@
             label="Contact"
           />
           <h6>Announcements</h6>
+          <p>You can let the Chaos Archives Discord bot announce the event on the <tt>#rp-event-announcements</tt> channel some time before the event starts. You can add as many announcements as you like.</p>
           <template v-for="(_, index) in event.announcements" :key="index">
             <event-announcement-editor v-model="event.announcements[index]" @remove="removeAnnouncement(index)" />
           </template>
-          <q-btn flat color="secondary" icon="add" label="Add announcement" @click="addAnnouncement" />
+          <div class="page-edit-event__button-bar" style="justify-content: end">
+            <q-btn flat color="secondary" icon="add" label="Add announcement" @click="addAnnouncement" />
+          </div>
         </template>
         <section v-else class="page-edit-event__preview">
           <event-view :event="event" :preview="true" />
