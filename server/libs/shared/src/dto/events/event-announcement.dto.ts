@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class EventAnnouncementDto {
 	@IsNumber()
@@ -7,6 +7,9 @@ export class EventAnnouncementDto {
 
 	@IsNumber()
 	minutesBefore: number;
+
+	@IsString()
+	content: string;
 
 	constructor(properties?: Readonly<EventAnnouncementDto>) {
     if (properties) {

@@ -87,7 +87,8 @@ export class EventsService {
 		return new EventEditDto({ ...properties,
 			announcements: announcements.map(announcement => new EventAnnouncementDto({
 				id: announcement.id,
-				minutesBefore: announcement.minutesBefore
+				minutesBefore: announcement.minutesBefore,
+				content: announcement.content,
 			}))
 		});
 	}
@@ -202,15 +203,16 @@ export class EventsService {
 		const announcements = (await event.notifications)
 				.filter(notification => dtoAnnouncementIds.includes(notification.id));
 		
-		for (const dtoNotification of eventDto.announcements) {
-			let announcement = announcements.find(n => n.id === dtoNotification.id);
+		for (const dtoAnnouncement of eventDto.announcements) {
+			let announcement = announcements.find(n => n.id === dtoAnnouncement.id);
 
 			if (!announcement) {
 				announcement = new EventAnnouncement();
 				announcements.push(announcement);
 			}
 
-			announcement.minutesBefore = dtoNotification.minutesBefore;
+			announcement.content = dtoAnnouncement.content;
+			announcement.minutesBefore = dtoAnnouncement.minutesBefore;
 			announcement.notifyAt = DateTime.fromJSDate(event.startDateTime)
 					.minus({ minutes: announcement.minutesBefore })
 					.toJSDate();

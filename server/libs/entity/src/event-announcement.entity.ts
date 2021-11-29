@@ -20,5 +20,10 @@ export class EventAnnouncement extends BasicEntity {
 	@Column({
     nullable: false,
   })
+	content: string;
+
+	@Column({
+    nullable: false,
+  })
 	notifyAt: Date;
 }

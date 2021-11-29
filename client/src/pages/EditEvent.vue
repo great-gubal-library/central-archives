@@ -342,7 +342,8 @@ export default class PageEditEvent extends Vue {
 
   addAnnouncement() {
     this.event.announcements.push(new EventAnnouncementDto({
-      minutesBefore: 15
+      minutesBefore: 15,
+      content: '',
     }));
   }
 
