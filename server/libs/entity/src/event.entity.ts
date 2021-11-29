@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'ty
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { EventLocation } from './event-location.entity';
+import { EventNotification } from './event-notification.entity';
 import { Image } from './image.entity';
 
 @Entity()
@@ -86,4 +87,11 @@ export class Event extends BasicEntity {
     orphanedRowAction: 'delete',
   })
   locations: EventLocation[];
+
+  @OneToMany(() => EventNotification, 'event', {
+    cascade: true,
+    orphanedRowAction: 'delete',
+    lazy: true,
+  })
+  notifications: Promise<EventNotification[]>;
 }

@@ -1,4 +1,4 @@
-import { Character, Event, EventLocation, Image, Server, Story, StoryTag, User } from '@app/entity';
+import { Character, Event, EventLocation, EventNotification, Image, Server, Story, StoryTag, User } from '@app/entity';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import config from 'config';
 import { DbConfigInterface } from './interfaces/db-config.interface';
@@ -17,6 +17,7 @@ export const dbConfiguration: TypeOrmModuleOptions = {
     Character,
     Event,
     EventLocation,
+    EventNotification,
     Image,
     Server,
     Story,
