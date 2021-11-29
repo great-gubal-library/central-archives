@@ -130,27 +130,27 @@
 </template>
 
 <script lang="ts">
-import { EventDto } from '@app/shared/dto/events/event.dto';
+import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import errors from '@app/shared/errors';
+import SharedConstants from '@app/shared/SharedConstants';
+import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker';
+import '@toby.mosque/quasar-ui-qdatetimepicker/dist/index.css'; // Temp, move somewhere
 import HtmlEditor from 'components/common/HtmlEditor.vue';
+import { DateTime } from 'luxon/src/luxon';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
+import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import EventView from 'src/components/event/EventView.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
-import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker';
-import '@toby.mosque/quasar-ui-qdatetimepicker/dist/index.css'; // Temp, move somewhere
-import { DateTime } from 'luxon/src/luxon';
-import SharedConstants from '@app/shared/SharedConstants';
-import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 
 const $api = useApi();
 const $q = useQuasar();
 const $router = useRouter();
 const $store = useStore();
 
-async function load(params: RouteParams): Promise<{event: EventDto, eventId: number}|null> {
+async function load(params: RouteParams): Promise<{event: EventEditDto, eventId: number}|null> {
   if (!$store.getters.characterId) {
     throw new Error();
   }
@@ -162,7 +162,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 	}
 
 	try {
-		const event = await $api.getEvent(id);
+		const event = await $api.getEventForEdit(id);
 		document.title = `${event.title} — Chaos Archives`;
 		return { event, eventId: id };
 	} catch (e) {
@@ -240,8 +240,8 @@ export default class PageEditEvent extends Vue {
   ];
 
 	eventId: number|null = null;
-  event = new EventDto();
-  eventBackup = new EventDto();
+  event = new EventEditDto();
+  eventBackup = new EventEditDto();
 
   startDateTime: string|null = null;
   endDateTime: string|null = null;
@@ -255,12 +255,12 @@ export default class PageEditEvent extends Vue {
 
   confirmRevert = false;
 
-  setContent(content: { event: EventDto, eventId: number }|null) {
+  setContent(content: { event: EventEditDto, eventId: number }|null) {
 		if (content) {
 			this.eventId = content.eventId;
-			this.eventBackup = new EventDto(content.event);
+			this.eventBackup = new EventEditDto(content.event);
     } else {
-      this.eventBackup = new EventDto({
+      this.eventBackup = new EventEditDto({
         mine: true,
         startDateTime: null as unknown as number,
         endDateTime: null,
@@ -274,11 +274,12 @@ export default class PageEditEvent extends Vue {
         locationAddress: '',
         locationServer: 'Omega',
         locationTags: '',
+        notifications: []
       });
     }
 
     this.loaded = true;
-    this.event = new EventDto(this.eventBackup);
+    this.event = new EventEditDto(this.eventBackup);
     this.startDateTime = this.fromMillis(this.event.startDateTime);
     this.endDateTime = this.fromMillis(this.event.endDateTime);
   }
@@ -360,7 +361,7 @@ export default class PageEditEvent extends Vue {
         await this.$api.editEvent(this.eventId, this.event);
       }
 
-      this.eventBackup = new EventDto(this.event);
+      this.eventBackup = new EventEditDto(this.event);
 
       this.$q.notify({
         message: 'Event saved.',

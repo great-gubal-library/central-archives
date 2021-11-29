@@ -5,6 +5,7 @@ import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-
 import { CharacterRegistrationStatusResultDto } from '@app/shared/dto/characters/character-registration-status-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
@@ -85,6 +86,10 @@ export default class API {
 
   async getEvent(id: number): Promise<EventDto> {
     return this.transport.tokenGet<EventDto>(`events/${id}`);
+  }
+
+  async getEventForEdit(id: number): Promise<EventEditDto> {
+    return this.transport.authGet<EventEditDto>(`events/${id}`, { edit: true });
   }
 
   async createEvent(event: EventDto, params: { characterId: number }): Promise<IdWrapper> {
