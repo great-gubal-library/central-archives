@@ -37,4 +37,5 @@ s3:
 
 discord:
   botToken: 'INSERT_TOKEN_HERE'
+  serverId: 'INSERT_ID_HERE'
   announcementChannel: 'INSERT_ID_HERE'
