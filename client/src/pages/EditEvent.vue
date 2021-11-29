@@ -85,6 +85,11 @@
             v-model="event.contact"
             label="Contact"
           />
+          <h6>Announcements</h6>
+          <template v-for="(_, index) in event.notifications" :key="index">
+            <event-announcement-editor v-model="event.notifications[index]" @remove="removeAnnouncement(index)" />
+          </template>
+          <q-btn flat color="secondary" icon="add" label="Add announcement" @click="addAnnouncement" />
         </template>
         <section v-else class="page-edit-event__preview">
           <event-view :event="event" :preview="true" />
@@ -144,6 +149,8 @@ import EventView from 'src/components/event/EventView.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
+import EventAnnouncementEditor from 'components/event/EventAnnouncementEditor.vue';
+import { EventNotificationDto } from '@app/shared/dto/events/event-notification.dto';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -189,6 +196,7 @@ async function load(params: RouteParams): Promise<{event: EventEditDto, eventId:
     HtmlEditor,
     BannerEditSection,
     EventView,
+    EventAnnouncementEditor,
   },
 	async beforeRouteEnter(to, _, next) {
 		const content = await load(to.params);
@@ -330,6 +338,16 @@ export default class PageEditEvent extends Vue {
     }
 
     return this.$display.formatDateTimeServer(millis);
+  }
+
+  addAnnouncement() {
+    this.event.notifications.push(new EventNotificationDto({
+      minutesBefore: 15
+    }));
+  }
+
+  removeAnnouncement(index: number) {
+    this.event.notifications.splice(index, 1);
   }
 
   revert() {

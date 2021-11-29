@@ -4,9 +4,9 @@ import { EventNotificationDto } from "./event-notification.dto";
 import { EventDto } from "./event.dto";
 
 export class EventEditDto extends EventDto {
-	@IsArray()
-	@Type(() => Event)
+	@Type(() => EventNotificationDto)
 	@ValidateNested({ each: true })
+	@IsArray()
 	notifications: EventNotificationDto[];
 
 	constructor(properties?: Readonly<EventEditDto>) {
