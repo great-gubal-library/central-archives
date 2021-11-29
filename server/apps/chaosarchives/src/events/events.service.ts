@@ -213,7 +213,7 @@ export class EventsService {
 
 			announcement.content = dtoAnnouncement.content;
 			announcement.minutesBefore = dtoAnnouncement.minutesBefore;
-			announcement.notifyAt = DateTime.fromJSDate(event.startDateTime)
+			announcement.postAt = DateTime.fromJSDate(event.startDateTime)
 					.minus({ minutes: announcement.minutesBefore })
 					.toJSDate();
 		}

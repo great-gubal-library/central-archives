@@ -25,5 +25,5 @@ export class EventAnnouncement extends BasicEntity {
 	@Column({
     nullable: false,
   })
-	notifyAt: Date;
+	postAt: Date;
 }
