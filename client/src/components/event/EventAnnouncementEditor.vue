@@ -16,11 +16,11 @@
 </template>
 
 <script lang="ts">
-import { EventNotificationDto } from '@app/shared/dto/events/event-notification.dto';
+import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
 import { Options, prop, Vue } from 'vue-class-component';
 
 class Props {
-	modelValue = prop<EventNotificationDto>({
+	modelValue = prop<EventAnnouncementDto>({
 		required: true
 	});
 }

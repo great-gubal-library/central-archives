@@ -3,7 +3,7 @@ import { BasicEntity } from "./basic.entity";
 import { Event } from './event.entity';
 
 @Entity()
-export class EventNotification extends BasicEntity {
+export class EventAnnouncement extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

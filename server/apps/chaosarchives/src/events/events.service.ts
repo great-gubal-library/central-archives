@@ -1,9 +1,9 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character, Event, EventLocation, EventNotification, Image, Server } from '@app/entity';
+import { Character, Event, EventAnnouncement, EventLocation, Image, Server } from '@app/entity';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
-import { EventNotificationDto } from '@app/shared/dto/events/event-notification.dto';
+import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
@@ -53,10 +53,10 @@ export class EventsService {
 
 		const location = event.locations.length > 0 ? event.locations[0] : null;
 		const banner = await event.banner;
-		let notifications: EventNotification[] = [];
+		let announcements: EventAnnouncement[] = [];
 
 		if (edit) {
-			notifications = await event.notifications;
+			announcements = await event.notifications;
 		}
 
 		const properties = {
@@ -85,9 +85,9 @@ export class EventsService {
 		}
 
 		return new EventEditDto({ ...properties,
-			notifications: notifications.map(notification => new EventNotificationDto({
-				id: notification.id,
-				minutesBefore: notification.minutesBefore
+			announcements: announcements.map(announcement => new EventAnnouncementDto({
+				id: announcement.id,
+				minutesBefore: announcement.minutesBefore
 			}))
 		});
 	}
@@ -197,26 +197,26 @@ export class EventsService {
 
 		location.server = server;
 
-		// Update notifications; O(n^2) filters used for code clarity, since number of notifications is small
-		const dtoNotificationIds = eventDto.notifications.map(notification => notification.id).filter(id => !!id);
-		const notifications = (await event.notifications)
-				.filter(notification => dtoNotificationIds.includes(notification.id));
+		// Update announcements; O(n^2) filters used for code clarity, since number of notifications is small
+		const dtoAnnouncementIds = eventDto.announcements.map(notification => notification.id).filter(id => !!id);
+		const announcements = (await event.notifications)
+				.filter(notification => dtoAnnouncementIds.includes(notification.id));
 		
-		for (const dtoNotification of eventDto.notifications) {
-			let notification = notifications.find(n => n.id === dtoNotification.id);
+		for (const dtoNotification of eventDto.announcements) {
+			let announcement = announcements.find(n => n.id === dtoNotification.id);
 
-			if (!notification) {
-				notification = new EventNotification();
-				notifications.push(notification);
+			if (!announcement) {
+				announcement = new EventAnnouncement();
+				announcements.push(announcement);
 			}
 
-			notification.minutesBefore = dtoNotification.minutesBefore;
-			notification.notifyAt = DateTime.fromJSDate(event.startDateTime)
-					.minus({ minutes: notification.minutesBefore })
+			announcement.minutesBefore = dtoNotification.minutesBefore;
+			announcement.notifyAt = DateTime.fromJSDate(event.startDateTime)
+					.minus({ minutes: announcement.minutesBefore })
 					.toJSDate();
 		}
 
-		event.notifications = Promise.resolve(notifications);
+		event.notifications = Promise.resolve(announcements);
 		await em.getRepository(Event).save(event);
 	}
 

@@ -86,8 +86,8 @@
             label="Contact"
           />
           <h6>Announcements</h6>
-          <template v-for="(_, index) in event.notifications" :key="index">
-            <event-announcement-editor v-model="event.notifications[index]" @remove="removeAnnouncement(index)" />
+          <template v-for="(_, index) in event.announcements" :key="index">
+            <event-announcement-editor v-model="event.announcements[index]" @remove="removeAnnouncement(index)" />
           </template>
           <q-btn flat color="secondary" icon="add" label="Add announcement" @click="addAnnouncement" />
         </template>
@@ -136,11 +136,13 @@
 
 <script lang="ts">
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
+import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
 import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker';
 import '@toby.mosque/quasar-ui-qdatetimepicker/dist/index.css'; // Temp, move somewhere
 import HtmlEditor from 'components/common/HtmlEditor.vue';
+import EventAnnouncementEditor from 'components/event/EventAnnouncementEditor.vue';
 import { DateTime } from 'luxon/src/luxon';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
@@ -149,8 +151,6 @@ import EventView from 'src/components/event/EventView.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
-import EventAnnouncementEditor from 'components/event/EventAnnouncementEditor.vue';
-import { EventNotificationDto } from '@app/shared/dto/events/event-notification.dto';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -282,7 +282,7 @@ export default class PageEditEvent extends Vue {
         locationAddress: '',
         locationServer: 'Omega',
         locationTags: '',
-        notifications: []
+        announcements: []
       });
     }
 
@@ -341,13 +341,13 @@ export default class PageEditEvent extends Vue {
   }
 
   addAnnouncement() {
-    this.event.notifications.push(new EventNotificationDto({
+    this.event.announcements.push(new EventAnnouncementDto({
       minutesBefore: 15
     }));
   }
 
   removeAnnouncement(index: number) {
-    this.event.notifications.splice(index, 1);
+    this.event.announcements.splice(index, 1);
   }
 
   revert() {

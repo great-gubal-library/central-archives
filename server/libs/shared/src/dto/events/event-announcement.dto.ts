@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional } from "class-validator";
 
-export class EventNotificationDto {
+export class EventAnnouncementDto {
 	@IsNumber()
 	@IsOptional()
 	id?: number;
@@ -8,7 +8,7 @@ export class EventNotificationDto {
 	@IsNumber()
 	minutesBefore: number;
 
-	constructor(properties?: Readonly<EventNotificationDto>) {
+	constructor(properties?: Readonly<EventAnnouncementDto>) {
     if (properties) {
       Object.assign(this, properties);
     }

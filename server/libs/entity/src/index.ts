@@ -2,7 +2,7 @@ export { BasicEntity } from './basic.entity';
 export { Character } from './character.entity';
 export { Event } from './event.entity';
 export { EventLocation } from './event-location.entity';
-export { EventNotification } from './event-notification.entity';
+export { EventAnnouncement } from './event-announcement.entity';
 export { Image } from './image.entity';
 export { Server } from './server.entity';
 export { Story } from './story.entity';

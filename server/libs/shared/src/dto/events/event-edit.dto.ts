@@ -1,13 +1,13 @@
 import { Type } from "class-transformer";
 import { IsArray, ValidateNested } from "class-validator";
-import { EventNotificationDto } from "./event-notification.dto";
+import { EventAnnouncementDto } from "./event-announcement.dto";
 import { EventDto } from "./event.dto";
 
 export class EventEditDto extends EventDto {
-	@Type(() => EventNotificationDto)
+	@Type(() => EventAnnouncementDto)
 	@ValidateNested({ each: true })
 	@IsArray()
-	notifications: EventNotificationDto[];
+	announcements: EventAnnouncementDto[];
 
 	constructor(properties?: Readonly<EventEditDto>) {
 		super();
