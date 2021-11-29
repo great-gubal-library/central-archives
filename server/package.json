@@ -40,6 +40,8 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "config": "^3.3.6",
+    "discord-nestjs": "^1.2.1",
+    "discord.js": "^13.3.1",
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.2",
     "ioredis": "^4.27.8",

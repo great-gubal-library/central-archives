@@ -59,6 +59,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/security/tsconfig.lib.json"
       }
+    },
+    "steward": {
+      "type": "application",
+      "root": "apps/steward",
+      "entryFile": "main",
+      "sourceRoot": "apps/steward/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/steward/tsconfig.app.json"
+      }
     }
   }
 }

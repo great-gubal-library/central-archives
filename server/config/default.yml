@@ -34,3 +34,7 @@ s3:
   publicRootUrl: 'https://publicservername.tld'
   accessKeyId: 'MY_ACCESS_KEY'
   secretAccessKey: 'MY_SECRET_ACCESS_KEY'
+
+discord:
+  botToken: 'INSERT_TOKEN_HERE'
+  announcementChannel: 'INSERT_ID_HERE'
