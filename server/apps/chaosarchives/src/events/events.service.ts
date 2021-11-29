@@ -1,7 +1,9 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character, Event, EventLocation, Image, Server } from '@app/entity';
+import { Character, Event, EventLocation, EventNotification, Image, Server } from '@app/entity';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
+import { EventNotificationDto } from '@app/shared/dto/events/event-notification.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
@@ -36,7 +38,7 @@ export class EventsService {
 		private readonly redisService: Redis,
 	) { }
 
-	async getEvent(id: number, user?: UserInfo): Promise<EventDto> {
+	async getEvent(id: number, edit: boolean, user?: UserInfo): Promise<EventDto> {
 		// TODO: optimize query
 		const event = await this.eventRepo.findOne({
 			where: {
@@ -51,8 +53,13 @@ export class EventsService {
 
 		const location = event.locations.length > 0 ? event.locations[0] : null;
 		const banner = await event.banner;
+		let notifications: EventNotification[] = [];
 
-		return new EventDto({
+		if (edit) {
+			notifications = await event.notifications;
+		}
+
+		const properties = {
 			title: event.title,
 			mine: !!event.owner && event.owner.user.id === user?.id,
 			details: event.details,
@@ -71,10 +78,21 @@ export class EventsService {
 			locationAddress: location ? location.address : '',
 			locationServer: location ? location.server.name : '',
 			locationTags: location ? location.tags : '',
+		};
+
+		if (!edit) {
+			return new EventDto(properties);
+		}
+
+		return new EventEditDto({ ...properties,
+			notifications: notifications.map(notification => new EventNotificationDto({
+				id: notification.id,
+				minutesBefore: notification.minutesBefore
+			}))
 		});
 	}
 
-  async createEvent(eventDto: EventDto, characterId: number, user: UserInfo): Promise<IdWrapper> {
+  async createEvent(eventDto: EventEditDto, characterId: number, user: UserInfo): Promise<IdWrapper> {
     const eventEntity = await this.connection.transaction(async em => {
 			const character = await em.getRepository(Character).findOne({
 				id: characterId,
@@ -90,6 +108,7 @@ export class EventsService {
 
 			const event = new Event();
 			event.locations = [];
+			event.notifications = Promise.resolve([]);
 			event.owner = character;
 			event.source = EventSource.WEBSITE;
 			await this.updateEventInternal(em, event, eventDto);
@@ -99,7 +118,7 @@ export class EventsService {
 		return { id: eventEntity.id };
   }
 
-  async updateEvent(eventId: number, eventDto: EventDto, user: UserInfo): Promise<void> {
+  async updateEvent(eventId: number, eventDto: EventEditDto, user: UserInfo): Promise<void> {
     await this.connection.transaction(async em => {
 			const event = await em.getRepository(Event).findOne({
 				where: {
@@ -121,7 +140,7 @@ export class EventsService {
 		});
   }
 
-	private async updateEventInternal(em: EntityManager, eventEntity: Event, eventDto: EventDto): Promise<void> {
+	private async updateEventInternal(em: EntityManager, eventEntity: Event, eventDto: EventEditDto): Promise<void> {
 		const event = eventEntity;
 		event.title = eventDto.title;
 		event.startDateTime = new Date(eventDto.startDateTime);
@@ -178,6 +197,26 @@ export class EventsService {
 
 		location.server = server;
 
+		// Update notifications; O(n^2) filters used for code clarity, since number of notifications is small
+		const dtoNotificationIds = eventDto.notifications.map(notification => notification.id).filter(id => !!id);
+		const notifications = (await event.notifications)
+				.filter(notification => dtoNotificationIds.includes(notification.id));
+		
+		for (const dtoNotification of eventDto.notifications) {
+			let notification = notifications.find(n => n.id === dtoNotification.id);
+
+			if (!notification) {
+				notification = new EventNotification();
+				notifications.push(notification);
+			}
+
+			notification.minutesBefore = dtoNotification.minutesBefore;
+			notification.notifyAt = DateTime.fromJSDate(event.startDateTime)
+					.minus({ minutes: notification.minutesBefore })
+					.toJSDate();
+		}
+
+		event.notifications = Promise.resolve(notifications);
 		await em.getRepository(Event).save(event);
 	}
 

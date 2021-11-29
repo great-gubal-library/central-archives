@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsBoolean, isBoolean, IsNumber, IsOptional, IsString, IsUrl, MinLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
 import { BannerDto } from "../characters/banner.dto";
 
 export class EventDto {
