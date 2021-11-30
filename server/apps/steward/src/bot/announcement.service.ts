@@ -1,3 +1,4 @@
+import { serverConfiguration } from '@app/configuration';
 import { EventAnnouncement } from '@app/entity';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -47,7 +48,8 @@ export class AnnouncementService {
 		for (const announcement of announcements) {
 			const remainingMS = announcement.postAt.getTime() - now;
 			const announcementEventId = announcement.event.id;
-			const content = announcement.content;
+			const eventUrl = `${serverConfiguration.frontendRoot}/event/${announcementEventId}`;
+			const content = `${announcement.content}\n\n${eventUrl}`;
 			
 			const timerId = setTimeout(async () => {
 				this.unregisterTimer(announcementEventId, timerId);
