@@ -1,10 +1,13 @@
 import { discordConfiguration } from "@app/configuration/discord.config";
 import { Injectable, Logger } from "@nestjs/common";
 import { DiscordClientProvider, Once } from "discord-nestjs";
+import { TextChannel } from "discord.js";
 
 @Injectable()
 export class BotGateway {
 	private readonly logger = new Logger(BotGateway.name);
+
+	private ready = false;
 
   constructor(private readonly discordProvider: DiscordClientProvider) {}
 
@@ -17,16 +20,25 @@ export class BotGateway {
 		this.logger.log(
       `Logged in as ${client.user!.tag}`,
     );
+		this.ready = true;
   }
 
 	async sendAnnouncement(message: string): Promise<void> {
+		if (!this.ready) {
+			throw new Error('Discord bot still initializing');
+		}
+
 		const client = this.discordProvider.getClient();
 		const [ channel, guild ] = await Promise.all([
 			client.channels.fetch(discordConfiguration.announcementChannel),
 			client.guilds.fetch(discordConfiguration.serverId),
 		]);
 
-		if (!channel || !channel.isText()) {
+		if (!channel) {
+			throw new Error('Channel not found');
+		}
+
+		if (!channel.isText()) {
 			throw new Error('Cannot send messages to a non-text channel');
 		}
 		
