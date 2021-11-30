@@ -1,6 +1,6 @@
 # The jpegtran-bin dependency tries to build from source (and fails) under node:lts-alpine,
 # so we use node:lts-slim instead.
-FROM node:lts-slim
+FROM node:16-slim
 WORKDIR /usr/src/app
 
 RUN npm install -g @nestjs/cli
