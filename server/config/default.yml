@@ -3,7 +3,7 @@ server:
   frontendRoot: 'http://localhost:8080'
   maxUploadSpacePerUserMiB: 200
   stewardWebhookPort: 8112
-  stewardWebhookUrl: 'http://localhost:8112'
+  stewardWebhookUrl: 'http://steward:8112'
 
 db:
   type: 'mariadb'
