@@ -1,7 +1,6 @@
 import { discordConfiguration } from "@app/configuration/discord.config";
 import { Injectable, Logger } from "@nestjs/common";
 import { DiscordClientProvider, Once } from "discord-nestjs";
-import { TextChannel } from "discord.js";
 
 @Injectable()
 export class BotGateway {
@@ -13,9 +12,6 @@ export class BotGateway {
 
 	@Once({ event: 'ready' })
   async onReady(): Promise<void> {
-		// await this.sendAnnouncement('Hello, @Lintian#3278!');
-		// await this.sendAnnouncement('Hello, @{Lintian Wintermist [Argent Dawn]}!');
-		// await this.sendAnnouncement('Hello, @rp-social!');
 		const client = this.discordProvider.getClient();
 		this.logger.log(
       `Logged in as ${client.user!.tag}`,
