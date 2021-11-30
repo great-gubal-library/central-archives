@@ -3,4 +3,6 @@ export interface ServerConfigInterface {
 	frontendRoot: string,
 	maxUploadSizeKiB: number,
 	maxUploadSpacePerUserMiB: number,
+	stewardWebhookPort: number,
+	stewardWebhookUrl: string,
 }

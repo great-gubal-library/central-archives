@@ -1,6 +1,7 @@
 import { discordConfiguration } from "@app/configuration/discord.config";
 import { Module } from "@nestjs/common";
 import { DiscordModule, TransformPipe, ValidationPipe } from "discord-nestjs";
+import { AnnouncementService } from "./announcement.service";
 import { BotGateway } from "./bot.gateway";
 
 @Module({
@@ -14,6 +15,7 @@ import { BotGateway } from "./bot.gateway";
 			})
 		})
 	],
-	providers: [ BotGateway ]
+	providers: [ AnnouncementService, BotGateway ],
+	exports: [ AnnouncementService ],
 })
 export class BotModule { }

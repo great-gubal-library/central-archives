@@ -1,9 +1,10 @@
 import { UserInfo } from '@app/auth/model/user-info';
+import { serverConfiguration } from '@app/configuration';
 import { Character, Event, EventAnnouncement, EventLocation, Image, Server } from '@app/entity';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
-import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
+import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
@@ -11,7 +12,7 @@ import { EventSource } from '@app/shared/enums/event-source.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime, Duration } from 'luxon';
 import { Connection, EntityManager, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
@@ -23,6 +24,8 @@ import { ExternalEvent } from './model/external-event';
 
 @Injectable()
 export class EventsService {
+	private readonly logger = new Logger(EventsService.name);
+
 	private readonly CACHE_DURATION_SHORT_MS = Duration.fromObject({ minutes: 5 }).toMillis();
 
 	private readonly MAX_RESULTS = 10;
@@ -36,6 +39,7 @@ export class EventsService {
 		private readonly eventRepo: Repository<Event>,
 		@InjectRedis()
 		private readonly redisService: Redis,
+		private readonly httpService: HttpService,
 	) { }
 
 	async getEvent(id: number, edit: boolean, user?: UserInfo): Promise<EventDto> {
@@ -116,11 +120,12 @@ export class EventsService {
 			return event;
 		});
 
+		this.notifySteward(eventEntity); // no await
 		return { id: eventEntity.id };
   }
 
   async updateEvent(eventId: number, eventDto: EventEditDto, user: UserInfo): Promise<void> {
-    await this.connection.transaction(async em => {
+    const eventEntity = await this.connection.transaction(async em => {
 			const event = await em.getRepository(Event).findOne({
 				where: {
 					id: eventId,
@@ -138,8 +143,11 @@ export class EventsService {
 			}
 
 			await this.updateEventInternal(em, event, eventDto);
+			return event;
 		});
-  }
+
+		this.notifySteward(eventEntity); // no await
+	}
 
 	private async updateEventInternal(em: EntityManager, eventEntity: Event, eventDto: EventEditDto): Promise<void> {
 		const event = eventEntity;
@@ -223,7 +231,7 @@ export class EventsService {
 	}
 
 	async deleteEvent(eventId: number, user: UserInfo): Promise<void> {
-		await this.connection.transaction(async em => {
+		const eventEntity = await this.connection.transaction(async em => {
 			const eventRepo = em.getRepository(Event);
 			const event = await eventRepo.findOne({
 				where: {
@@ -242,7 +250,23 @@ export class EventsService {
 			}
 
 			await eventRepo.softRemove(event);
+			return event;
 		});
+
+		this.notifySteward(eventEntity); // no await
+	}
+
+	private async notifySteward(event: Event): Promise<void> {
+		try {
+			this.logger.debug(`Notifying Steward about event ${event.id} change`);
+			await this.httpService.post(serverConfiguration.stewardWebhookUrl, { eventId: event.id }).toPromise();
+		} catch (e) {
+			if (e instanceof Error) {
+				this.logger.error(e.message, e.stack);
+			} else {
+				this.logger.error(e);
+			}
+		}
 	}
 
 	async getEvents(refreshExternal = false): Promise<EventSummariesDto> {
