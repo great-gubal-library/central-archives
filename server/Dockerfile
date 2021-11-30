@@ -17,6 +17,6 @@ RUN yarn install
 
 COPY . .
 
-RUN nest build chaosarchives
+RUN nest build chaosarchives && nest build steward
 
 CMD ["node", "dist/apps/chaosarchives/main.js"]

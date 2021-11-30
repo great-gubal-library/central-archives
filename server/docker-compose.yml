@@ -27,6 +27,21 @@ services:
       - MARIADB_DATABASE=chaosarchives
       - TZ=UTC
 
+  steward:
+    build: ./
+    image: chaosarchives
+    restart: always
+    init: true
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    command: node dist/apps/steward/main.js
+    expose:
+      - 8112
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+
   chaosarchives:
     build: ./
     image: chaosarchives
@@ -35,6 +50,11 @@ services:
     links:
       - mariadb
       - redis
+      - steward
+    depends_on:
+      - mariadb
+      - redis
+      - steward
     environment:
       - NODE_ENV=${NODE_ENV:-production}
     ports:
