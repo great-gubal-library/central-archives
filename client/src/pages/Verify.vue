@@ -123,12 +123,22 @@ export default class PageVerify extends Vue {
 
   resendingEmail = false;
 
+  private refreshTimerId: NodeJS.Timeout|null = null;
+
   async created() {
     if (this.$store.getters.realRole === Role.UNVERIFIED) {
       this.verifyingAccount = true;
     }
 
     await this.refresh();
+  }
+
+  unmounted() {
+    // We're leaving the page, so stop the refresh timer.
+    if (this.refreshTimerId !== null) {
+      clearTimeout(this.refreshTimerId);
+      this.refreshTimerId = null;
+    }
   }
 
   private async refresh() {
@@ -143,7 +153,7 @@ export default class PageVerify extends Vue {
     }
 
     if (!this.verificationStatus.emailVerified || !this.verificationStatus.characterVerified) {
-      setTimeout(() => void this.refresh(), REFRESH_INTERVAL);
+      this.refreshTimerId = setTimeout(() => void this.refresh(), REFRESH_INTERVAL);
     } else {
       // Update user role
       const session = await this.$api.user.getSession();
