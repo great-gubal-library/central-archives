@@ -28,4 +28,17 @@ export class MailService {
 			}
 		});
 	}
+
+  async sendNewEmailVerificationMail(email: string, name: string, confirmLink: string): Promise<void> {
+		return this.mailerService.sendMail({
+			to: email,
+			subject: 'Confirm your new email',
+			template: './confirm-new-email',
+			context: {
+				name,
+				confirmLink,
+				newEmail: email
+			}
+		});
+	}
 }

@@ -2,12 +2,14 @@ import { AuthService } from '@app/auth/auth.service';
 import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
+import { ChangeEmailRequestDto } from '@app/shared/dto/user/change-email-request.dto';
 import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-request.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
+import { UserEmailInfoDto } from '@app/shared/dto/user/user-email.info.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
@@ -111,5 +113,17 @@ export class UserController {
   @Post('change-password')
   async changePassword(@Body() request: ChangePasswordRequestDto, @CurrentUser() user: UserInfo): Promise<void> {
     await this.userService.changePassword(request, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('email')
+  async getEmail(@CurrentUser() user: UserInfo): Promise<UserEmailInfoDto> {
+    return this.userService.getEmail(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-email')
+  async changeEmail(@Body() request: ChangeEmailRequestDto, @CurrentUser() user: UserInfo): Promise<void> {
+    await this.userService.changeEmail(request, user);
   }
 }

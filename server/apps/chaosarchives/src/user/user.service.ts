@@ -1,11 +1,14 @@
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, User } from '@app/entity';
 import { checkPassword, generateVerificationCode, hashPassword } from '@app/security';
+import { ChangeEmailRequestDto } from '@app/shared/dto/user/change-email-request.dto';
 import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-request.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
+import { UserEmailInfoDto } from '@app/shared/dto/user/user-email.info.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
@@ -308,17 +311,50 @@ export class UserService {
     }
   }
 
-  async changePassword(request: ChangePasswordRequestDto, user: UserInfo): Promise<void> {
+  async changePassword(request: ChangePasswordRequestDto, userInfo: UserInfo): Promise<void> {
     await this.connection.transaction(async (em) => {
       const userRepo = em.getRepository(User);
-      const userEntity = (await userRepo.findOne(user.id))!;
+      const user = (await userRepo.findOne(userInfo.id))!;
 
-      if (!(await checkPassword(request.currentPassword, userEntity.passwordHash))) {
+      if (!(await checkPassword(request.currentPassword, user.passwordHash))) {
         throw new BadRequestException('Invalid current password');
       }
 
-      userEntity.passwordHash = await hashPassword(request.newPassword);
-      await userRepo.save(userEntity);
+      user.passwordHash = await hashPassword(request.newPassword);
+      await userRepo.save(user);
     });
+  }
+
+  async getEmail(@CurrentUser() user: UserInfo): Promise<UserEmailInfoDto> {
+    const userData = (await this.userRepo.findOne(user.id, {
+      select: [ 'email' ],
+    }))!;
+
+    return {
+      email: userData.email
+    };
+  }
+  
+  async changeEmail(request: ChangeEmailRequestDto, @CurrentUser() userInfo: UserInfo): Promise<void> {
+    const { userEntity, characterName } = await this.connection.transaction(async (em) => {
+      const userRepo = em.getRepository(User);
+      const user = (await userRepo.findOne(userInfo.id))!;
+
+      if (!(await checkPassword(request.currentPassword, user.passwordHash))) {
+        throw new BadRequestException('Invalid current password');
+      }
+
+      user.newEmail = request.newEmail;
+      user.newEmailVerificationCode = generateVerificationCode();
+      await userRepo.save(user);
+
+      return {
+        userEntity: user,
+        characterName: userInfo.characters[0].name
+      };
+    });
+
+    const link = `${serverConfiguration.frontendRoot}/confirm-new-email/${userEntity.newEmailVerificationCode}`;
+    await this.mailService.sendNewEmailVerificationMail(request.newEmail, characterName, link);
   }
 }

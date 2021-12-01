@@ -35,5 +35,17 @@ export class User extends BasicEntity {
     type: 'varchar',
     nullable: true
   })
-  verificationCode!: string|null;
+  verificationCode: string|null;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  newEmail: string|null;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  newEmailVerificationCode: string|null;
 }

@@ -1,9 +1,11 @@
+import { ChangeEmailRequestDto } from '@app/shared/dto/user/change-email-request.dto';
 import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-request.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
+import { UserEmailInfoDto } from '@app/shared/dto/user/user-email.info.dto';
 import { UserLogInDto } from '@app/shared/dto/user/user-log-in.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
 import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
@@ -66,5 +68,13 @@ export default class UserAPI {
 
   async changePassword(request: ChangePasswordRequestDto): Promise<void> {
     await this.transport.authPost<void>('change-password', request);
+  }
+
+  async getEmail(): Promise<UserEmailInfoDto> {
+    return this.transport.authGet<UserEmailInfoDto>('email');
+  }
+
+  async changeEmail(request: ChangeEmailRequestDto): Promise<void> {
+    await this.transport.authPost<void>('change-email', request);
   }
 }
