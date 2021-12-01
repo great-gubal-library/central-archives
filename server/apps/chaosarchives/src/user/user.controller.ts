@@ -126,4 +126,10 @@ export class UserController {
   async changeEmail(@Body() request: ChangeEmailRequestDto, @CurrentUser() user: UserInfo): Promise<void> {
     await this.userService.changeEmail(request, user);
   }
+
+  @Post('confirm-new-email')
+  async confirmNewEmail(@Body() confirmEmailData: UserConfirmEmailDto): Promise<void> {
+    const userId = await this.userService.confirmNewEmail(confirmEmailData.code);
+    await this.publicAuthService.notifyUserChanged(userId);
+  }
 }

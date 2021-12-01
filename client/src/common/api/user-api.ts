@@ -26,7 +26,7 @@ export default class UserAPI {
   }
 
   async confirmEmail(confirmData: UserConfirmEmailDto): Promise<void> {
-    await this.transport.post<UserSignUpResponseDto>(
+    await this.transport.post<void>(
       'confirm-email',
       confirmData
     );
@@ -76,5 +76,12 @@ export default class UserAPI {
 
   async changeEmail(request: ChangeEmailRequestDto): Promise<void> {
     await this.transport.authPost<void>('change-email', request);
+  }
+
+  async confirmNewEmail(confirmData: UserConfirmEmailDto): Promise<void> {
+    await this.transport.post<void>(
+      'confirm-new-email',
+      confirmData
+    );
   }
 }

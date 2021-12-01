@@ -344,6 +344,10 @@ export class UserService {
         throw new BadRequestException('Invalid current password');
       }
 
+      if ((await userRepo.count({ email: request.newEmail })) > 0) {
+        throw new ConflictException('This email is already in use by another user');
+      }
+
       user.newEmail = request.newEmail;
       user.newEmailVerificationCode = generateVerificationCode();
       await userRepo.save(user);
@@ -356,5 +360,35 @@ export class UserService {
 
     const link = `${serverConfiguration.frontendRoot}/confirm-new-email/${userEntity.newEmailVerificationCode}`;
     await this.mailService.sendNewEmailVerificationMail(request.newEmail, characterName, link);
+  }
+
+  async confirmNewEmail(newEmailVerificationCode: string): Promise<number> {
+    return this.connection.transaction(async (em) => {
+      const userRepo = em.getRepository(User);
+      const user = await userRepo.findOne({
+        newEmailVerificationCode,
+      });
+
+      if (!user) {
+        throw new NotFoundException('Invalid verification code');
+      }
+
+      if (!user.newEmail) {
+        throw new ConflictException('No email change was requested');
+      }
+
+      // We not only verify the new email, but if the user was unverified, we mark them as verified, too.
+      user.email = user.newEmail;
+      user.newEmailVerificationCode = null;
+      user.verificationCode = null;
+
+      if (user.verifiedAt === null) {
+        user.verifiedAt = new Date();
+      }
+
+      await userRepo.save(user);
+      await this.updatePostVerifyRole(em, user);
+      return user.id;
+    });
   }
 }
