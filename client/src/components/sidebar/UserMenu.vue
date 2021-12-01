@@ -100,6 +100,11 @@
         </q-item>
       </template>
       <q-separator dark />
+      <q-item clickable v-ripple to="/my-account">
+        <q-item-section>
+          <q-item-label>My account</q-item-label>
+        </q-item-section>
+      </q-item>
       <q-item clickable v-ripple @click="logOut">
         <q-item-section>
           <q-item-label>Log out</q-item-label>

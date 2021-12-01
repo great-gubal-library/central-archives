@@ -1,3 +1,4 @@
+import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-request.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
@@ -61,5 +62,9 @@ export default class UserAPI {
 
   async resendConfirmationEmail(): Promise<void> {
     await this.transport.authPost<void>('resend-confirmation-email', {});
+  }
+
+  async changePassword(request: ChangePasswordRequestDto): Promise<void> {
+    await this.transport.authPost<void>('change-password', request);
   }
 }

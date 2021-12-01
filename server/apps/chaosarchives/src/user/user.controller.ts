@@ -1,3 +1,8 @@
+import { AuthService } from '@app/auth/auth.service';
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
+import { UserInfo } from '@app/auth/model/user-info';
+import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-request.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
@@ -16,10 +21,6 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
-import { AuthService } from '@app/auth/auth.service';
-import { UserInfo } from '@app/auth/model/user-info';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -104,5 +105,11 @@ export class UserController {
   @Post('reset-password')
   async resetPassword(@Body() request: ResetPasswordRequestDto): Promise<void> {
     await this.userService.resetPassword(request);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  async changePassword(@Body() request: ChangePasswordRequestDto, @CurrentUser() user: UserInfo): Promise<void> {
+    await this.userService.changePassword(request, user);
   }
 }

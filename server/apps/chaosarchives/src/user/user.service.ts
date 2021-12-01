@@ -1,7 +1,8 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, User } from '@app/entity';
-import { generateVerificationCode, hashPassword } from '@app/security';
+import { checkPassword, generateVerificationCode, hashPassword } from '@app/security';
+import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-request.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
 import { SessionDto } from '@app/shared/dto/user/session.dto';
@@ -85,13 +86,9 @@ export class UserService {
   }
 
   async resendConfirmationEmail(user: UserInfo): Promise<void> {
-    const userEntity = await this.userRepo.findOne(user.id, {
+    const userEntity = (await this.userRepo.findOne(user.id, {
       select: [ 'id', 'email', 'verificationCode' ]
-    });
-
-    if (!userEntity) {
-      throw new BadRequestException(`User ${user.id} not found`);
-    }
+    }))!;
 
     if (userEntity.verifiedAt) {
       throw new ConflictException('Email already verified');
@@ -309,5 +306,19 @@ export class UserService {
     if (!verified) {
       await this.confirmEmail(request.verificationCode);
     }
+  }
+
+  async changePassword(request: ChangePasswordRequestDto, user: UserInfo): Promise<void> {
+    await this.connection.transaction(async (em) => {
+      const userRepo = em.getRepository(User);
+      const userEntity = (await userRepo.findOne(user.id))!;
+
+      if (!(await checkPassword(request.currentPassword, userEntity.passwordHash))) {
+        throw new BadRequestException('Invalid current password');
+      }
+
+      userEntity.passwordHash = await hashPassword(request.newPassword);
+      await userRepo.save(userEntity);
+    });
   }
 }
