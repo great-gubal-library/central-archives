@@ -56,6 +56,10 @@ export default class UserAPI {
   }
 
   async verifyCharacter(characterData: VerifyCharacterDto): Promise<void> {
-    return this.transport.authPost<void>('verify-character', characterData);
+    await this.transport.authPost<void>('verify-character', characterData);
+  }
+
+  async resendConfirmationEmail(): Promise<void> {
+    await this.transport.authPost<void>('resend-confirmation-email', {});
   }
 }

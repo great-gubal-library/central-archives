@@ -65,11 +65,6 @@ export class UserService {
     }
   }
 
-  private async sendVerificationMail(user: User, name: string): Promise<void> {
-    const link = `${serverConfiguration.frontendRoot}/confirm-email/${user.verificationCode}`;
-    await this.mailService.sendUserVerificationMail(user.email, name, link);
-  }
-
   async confirmEmail(verificationCode: string): Promise<number> {
     return this.connection.transaction(async (em) => {
       const userRepo = em.getRepository(User);
@@ -87,6 +82,38 @@ export class UserService {
       await this.updatePostVerifyRole(em, user);
       return user.id;
     });
+  }
+
+  async resendConfirmationEmail(user: UserInfo): Promise<void> {
+    const userEntity = await this.userRepo.findOne(user.id, {
+      select: [ 'id', 'email', 'verificationCode' ]
+    });
+
+    if (!userEntity) {
+      throw new BadRequestException(`User ${user.id} not found`);
+    }
+
+    if (userEntity.verifiedAt) {
+      throw new ConflictException('Email already verified');
+    }
+
+    const characterData = await this.characterRepo.findOne({
+      where: {
+        user: userEntity
+      },
+      select: [ 'id', 'name' ],
+    });
+
+    if (!characterData) {
+      throw new ConflictException('User has no character? This should be impossible');
+    }
+
+    await this.sendVerificationMail(userEntity, characterData.name);
+  }
+
+  private async sendVerificationMail(user: User, name: string): Promise<void> {
+    const link = `${serverConfiguration.frontendRoot}/confirm-email/${user.verificationCode}`;
+    await this.mailService.sendUserVerificationMail(user.email, name, link);
   }
 
   toSession(userInfo: UserInfo): SessionDto {

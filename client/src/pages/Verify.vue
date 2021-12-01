@@ -1,32 +1,26 @@
 <template>
   <q-page>
-    <template
-      v-if="
-        !verificationStatus.emailVerified ||
-        !verificationStatus.characterVerified
-      "
-    >
+    <template v-if="!verificationStatus.emailVerified || !verificationStatus.characterVerified">
       <template v-if="verifyingAccount">
         <h2>Account Verification</h2>
         <p>
-          Before you can post your own content on Chaos Archives, you will need to
-          verify your email address and ownership of your character.
+          Before you can post your own content on Chaos Archives, you will need to verify your email address and
+          ownership of your character.
         </p>
       </template>
       <template v-else>
         <h2>Character Verification</h2>
         <p>
-          Before you can post content on Chaos Archives under this character's name, you will need to
-          verify your ownership.
+          Before you can post content on Chaos Archives under this character's name, you will need to verify your
+          ownership.
         </p>
       </template>
     </template>
     <template v-else>
       <h2>Verification Complete</h2>
       <p>
-        Congratulations! Your email address and character have been successfully
-        verified. You may now fill in your character profile and post content on
-        Chaos Archives.
+        Congratulations! Your email address and character have been successfully verified. You may now fill in your
+        character profile and post content on Chaos Archives.
       </p>
     </template>
     <q-card class="page-verify__card" v-if="verifyingAccount">
@@ -46,9 +40,16 @@
         <template v-else>
           <p>
             Your email address
-            <strong>{{ verificationStatus.email }}</strong> still needs to be
-            confirmed. Check your inbox for the confirmation link.
+            <strong>{{ verificationStatus.email }}</strong> still needs to be confirmed. Check your inbox for the
+            confirmation link.
           </p>
+          <p>If you have not received your confirmation email, click the button below:</p>
+          <q-btn
+            color="secondary"
+            label="Resend confirmation email"
+            :loading="resendingEmail"
+            @click="resendConfirmationEmail"
+          />
         </template>
       </q-card-section>
     </q-card>
@@ -63,45 +64,36 @@
         <template v-if="verificationStatus.characterVerified">
           <p>
             Your character
-            <strong>{{ $store.getters.character?.name }}</strong> has been
-            verified.
+            <strong>{{ $store.getters.character?.name }}</strong> has been verified.
           </p>
         </template>
         <template v-else>
           <p>
             You need to confirm that
-            <strong>{{ $store.getters.character?.name }}</strong> is your
-            character by editing their character profile on Lodestone. To
-            confirm your ownership of your character, follow these steps:
+            <strong>{{ $store.getters.character?.name }}</strong> is your character by editing their character profile
+            on Lodestone. To confirm your ownership of your character, follow these steps:
           </p>
           <ol>
             <li>
               Open
               <a :href="lodestoneCharacterLink" target="_blank"
-                >{{ $store.getters.character?.name }}'s page on Lodestone <q-icon class="external-link-icon" name="launch" /></a
+                >{{ $store.getters.character?.name }}'s page on Lodestone
+                <q-icon class="external-link-icon" name="launch" /></a
               >.
             </li>
-            <li>
-              Edit the "Character Profile" section below your character
-              portrait.
-            </li>
+            <li>Edit the "Character Profile" section below your character portrait.</li>
             <li>
               Paste the code below anywhere into your character profile.
-              <q-input
-                readonly
-								filled
-								dense
-                :model-value="verificationStatus.characterVerificationCode"
-              >
+              <q-input readonly filled dense :model-value="verificationStatus.characterVerificationCode">
                 <template v-slot:append>
                   <q-btn flat dense icon="content_copy" title="Copy to clipboard" @click="copyVerificationCode" />
                 </template>
               </q-input>
             </li>
-						<li>Click Confirm to preview your changes.</li>
+            <li>Click Confirm to preview your changes.</li>
             <li><strong>Click Confirm again</strong> to save your changes.</li>
           </ol>
-					<p>This page should update automatically when it detects the code in your character profile.</p>
+          <p>This page should update automatically when it detects the code in your character profile.</p>
         </template>
       </q-card-section>
     </q-card>
@@ -129,6 +121,8 @@ export default class PageVerify extends Vue {
 
   verifyingAccount = false;
 
+  resendingEmail = false;
+
   async created() {
     if (this.$store.getters.realRole === Role.UNVERIFIED) {
       this.verifyingAccount = true;
@@ -138,70 +132,86 @@ export default class PageVerify extends Vue {
   }
 
   private async refresh() {
-		try {
-			this.verificationStatus = await this.$api.user.getVerificationStatus(this.$store.getters.characterId!);
+    try {
+      this.verificationStatus = await this.$api.user.getVerificationStatus(this.$store.getters.characterId!);
 
-			if (!this.verificationStatus.characterVerified) {
-				await this.refreshLodestoneStatus();
-			}
-		} catch (e) {
-			console.log(e);
-		}
+      if (!this.verificationStatus.characterVerified) {
+        await this.refreshLodestoneStatus();
+      }
+    } catch (e) {
+      console.log(e);
+    }
 
-    if (
-      !this.verificationStatus.emailVerified ||
-      !this.verificationStatus.characterVerified
-    ) {
+    if (!this.verificationStatus.emailVerified || !this.verificationStatus.characterVerified) {
       setTimeout(() => void this.refresh(), REFRESH_INTERVAL);
     } else {
-			// Update user role
-			const session = await this.$api.user.getSession();
-			this.$store.commit('setUser', session);
-		}
+      // Update user role
+      const session = await this.$api.user.getSession();
+      this.$store.commit('setUser', session);
+    }
   }
 
-	private async refreshLodestoneStatus() {
-		try {
-			const characterId = this.$store.getters.characterId;
-			const verificationCode = this.verificationStatus.characterVerificationCode;
+  private async refreshLodestoneStatus() {
+    try {
+      const characterId = this.$store.getters.characterId;
+      const verificationCode = this.verificationStatus.characterVerificationCode;
 
-			if (!characterId || !verificationCode) {
-				return;
-			}
+      if (!characterId || !verificationCode) {
+        return;
+      }
 
-			await this.$api.user.verifyCharacter({ id: characterId });
-			// If we get here, this means character verification succeeded.
-			this.verificationStatus = await this.$api.user.getVerificationStatus(this.$store.getters.characterId!);
-		} catch (e) {
+      await this.$api.user.verifyCharacter({ id: characterId });
+      // If we get here, this means character verification succeeded.
+      this.verificationStatus = await this.$api.user.getVerificationStatus(this.$store.getters.characterId!);
+    } catch (e) {
       if (errors.getStatusCode(e) !== 404) {
         console.log(e);
       }
-		}
-	}
+    }
+  }
 
   get lodestoneCharacterLink() {
     const lodestoneId = this.$store.getters.character!.lodestoneId || -1; // guaranteed to exist
     return `https://eu.finalfantasyxiv.com/lodestone/character/${lodestoneId}/`;
   }
 
-	async copyVerificationCode() {
-		if (!this.verificationStatus.characterVerificationCode) {
-			return;
-		}
+  async copyVerificationCode() {
+    if (!this.verificationStatus.characterVerificationCode) {
+      return;
+    }
 
-		try {
-			await copyToClipboard(this.verificationStatus.characterVerificationCode);
-			this.$q.notify({
-				type: 'positive',
-				message: 'Character verification code copied to clipboard.'
-			});
-		} catch (e) {
-			this.$q.notify({
-				type: 'negative',
-				message: 'Error copying to clipboard.'
-			});
-		}
-	}
+    try {
+      await copyToClipboard(this.verificationStatus.characterVerificationCode);
+      this.$q.notify({
+        type: 'positive',
+        message: 'Character verification code copied to clipboard.',
+      });
+    } catch (e) {
+      this.$q.notify({
+        type: 'negative',
+        message: 'Error copying to clipboard.',
+      });
+    }
+  }
+
+  async resendConfirmationEmail() {
+    this.resendingEmail = true;
+
+    try {
+      await this.$api.user.resendConfirmationEmail();
+      this.$q.notify({
+        type: 'positive',
+        message: 'Email sent. Check your inbox.',
+      });
+    } catch (e) {
+      this.$q.notify({
+        type: 'negative',
+        message: errors.getMessage(e),
+      });
+    } finally {
+      this.resendingEmail = false;
+    }
+  }
 }
 </script>
 

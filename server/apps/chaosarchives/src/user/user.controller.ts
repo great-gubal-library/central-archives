@@ -54,6 +54,12 @@ export class UserController {
     await this.publicAuthService.notifyUserChanged(userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('resend-confirmation-email')
+  async resendConfirmationEmail(@CurrentUser() user: UserInfo): Promise<void> {
+    await this.userService.resendConfirmationEmail(user);
+  }
+
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@CurrentUser() user: UserInfo): Promise<LoginResponseDto> {
