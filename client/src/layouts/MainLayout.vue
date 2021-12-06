@@ -153,12 +153,12 @@ export default class MainLayout extends Vue {
   readonly DRAWER_WIDTH = 250;
 
   readonly navbarLinks = [
+    { label: 'About', to: '/about' },
     { label: 'Rules', to: '/rules' },
     { label: 'Contact', to: '/contact' },
   ];
 
   readonly siteLinks = [
-    { label: 'About', to: '/about' },
     { label: 'Profiles', to: '/profiles' },
     { label: 'Stories', to: '/stories' },
     { label: 'Artwork', to: '/gallery/artwork' },
