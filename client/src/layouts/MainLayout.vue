@@ -128,6 +128,9 @@
         </div>
       </q-toolbar>
     </q-footer>
+
+    <div class="layout__bg-left"></div>
+    <div class="layout__bg-right"></div>
   </q-layout>
 </template>
 
@@ -338,6 +341,59 @@ export default class MainLayout extends Vue {
 
     .q-drawer--right {
       right: calc((100% - #{$max-layout-width}) / 2);
+    }
+  }
+
+  .layout__bg-left, .layout__bg-right {
+    position: fixed;
+    top: 0;
+    width: calc((100% - 1284px) / 2);
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .layout__bg-left {
+    left: 0;
+    background-image: url(assets/bg_left_1x.jpg);
+    background-position: 100% 50%;
+  }
+
+  .layout__bg-right {
+    right: 0;
+    background-image: url(assets/bg_right_1x.jpg);
+    background-position: 0% 50%;
+  }
+
+  html.webp .layout__bg-left {
+    background-image: url(assets/bg_left_1x.webp);
+  }
+
+  html.webp .layout__bg-right {
+    background-image: url(assets/bg_right_1x.webp);
+  }
+
+  @media screen and(-webkit-device-pixel-ratio: 2) {
+    .layout__bg-left {
+      background-image: url(assets/bg_left_2x.jpg);
+    }
+
+    .layout__bg-right {
+      background-image: url(assets/bg_right_2x.jpg);
+    }
+
+    html.webp .layout__bg-left {
+      background-image: url(assets/bg_left_2x.webp);
+    }
+
+    html.webp .layout__bg-right {
+      background-image: url(assets/bg_right_2x.webp);
+    }
+  }
+
+  @media screen and (max-width: $breakpoint-sm) {
+    .layout__bg-left, .layout__bg-right {
+      display: none;
     }
   }
 </style>
