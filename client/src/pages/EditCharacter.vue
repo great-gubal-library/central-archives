@@ -71,10 +71,14 @@
           </template>
           <section class="page-edit-character__form-controls">
             <h6>Carrd integration</h6>
+            <p class="text-caption">Leave blank if you don't have a Carrd profile or don't want to it on your page.</p>
             <q-input
-              v-model="character.carrdProfile"
+              :modelValue="character.carrdProfile"
+              @update:modelValue="setCarrdProfileLink"
               label="Carrd profile"
-              hint="Leave blank if you don't have a Carrd profile or don't want to it on your page."
+              :rules="[
+                (val) => /^[A-Za-z0-9-]*$/.test(val) || 'Copy the part before .carrd.co in your Carrd profile here.'
+              ]"
             >
               <template v-slot:prepend>
                 <q-icon name="link" />
@@ -230,6 +234,16 @@ export default class PageEditCharacter extends Vue {
     const name = this.$store.getters.character?.name || '';
     const server = this.$store.getters.character?.server || '';
     void this.$router.push(`/${server}/${name.replace(' ', '_')}`);
+  }
+
+  setCarrdProfileLink(newValue: string) {
+    const urlMatch = /https:\/\/([^.]+)\.carrd\.co/.exec(newValue);
+
+    if (!urlMatch) {
+      this.character.carrdProfile = newValue;
+    } else {
+      this.character.carrdProfile = urlMatch[1];
+    }
   }
 }
 </script>
