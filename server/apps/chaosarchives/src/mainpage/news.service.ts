@@ -57,7 +57,10 @@ export class NewsService {
 		// Parse RSS feed
 		const page = await this.httpService.get<string>(this.NEWS_SITE).toPromise();
 		const doc = new JSDOM(page.data, { contentType: 'application/rss+xml' }).window.document;
-		const newsItems = Array.from(doc.querySelectorAll('item'));
+		const newsItems = Array.from(doc.querySelectorAll('item'))
+				.filter(item => !this.isOOC(item.querySelector('title')!.textContent!));
+		
+		console.log('newsItems', newsItems);
 		
 		return Promise.all(newsItems.slice(0, 3).map(async item => {
 			const title = item.querySelector('title')!.textContent!; // Guaranteed to exist
@@ -93,5 +96,12 @@ export class NewsService {
 				};
 			}
 		}));
+	}
+
+	private isOOC(title: string) {
+		return title.includes('OOC')
+			|| title.includes('(ooc)')
+			|| title.includes('Final Fantasy')
+			|| title.includes('XIV');
 	}
 }
