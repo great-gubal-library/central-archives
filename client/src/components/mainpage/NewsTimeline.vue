@@ -33,14 +33,17 @@
       <div class="row justify-center">
         <div class="col news-timeline__image-container">
           <q-img
+            v-if="entry.image"
             :src="entry.image"
-            :initial-ratio="768 / 432"
+            :initial-ratio="750 / 422"
             loading="eager"    
-          >
-            <div v-if="!entry.image" class="absolute-full text-subtitle2 flex flex-center">
-              No picture
-            </div>
-          </q-img>
+          />
+          <q-img
+            v-else
+            src="~/assets/news_thumbnail.jpg"
+            :initial-ratio="750 / 422"
+            loading="eager"    
+          />
         </div>
         <div class="col" style="padding-left: 6px; min-width: 300px">
           {{ entry.content }}
