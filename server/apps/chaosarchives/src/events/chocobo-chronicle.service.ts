@@ -43,7 +43,7 @@ export class ChocoboChronicleService {
 
 	private processTitle(title: string): string {
 		// Cut oddly formatted date from event title for aesthetic reasons
-		return decode(title).replace(/ – \d{4} – \d{2} – \d{2}/, '');
+		return decode(title).replace(/ (– )?\d{4} – \d{2} – \d{2}/, '');
 	}
 
 	private parseDate(date: string): number {
