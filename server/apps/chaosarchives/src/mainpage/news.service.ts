@@ -60,8 +60,6 @@ export class NewsService {
 		const newsItems = Array.from(doc.querySelectorAll('item'))
 				.filter(item => !this.isOOC(item.querySelector('title')!.textContent!));
 		
-		console.log('newsItems', newsItems);
-		
 		return Promise.all(newsItems.slice(0, 3).map(async item => {
 			const title = item.querySelector('title')!.textContent!; // Guaranteed to exist
 			const author = item.getElementsByTagName('dc:creator')[0].textContent!; // Guaranteed to exist
@@ -76,14 +74,14 @@ export class NewsService {
 				// Get image URL from linked page
 				const linkedPage = await this.httpService.get<string>(link).toPromise();
 				const linkedDoc = parse(linkedPage.data);
-				const image = linkedDoc.querySelector('.attachment-medium_large');
+				const images = linkedDoc.querySelectorAll('.elementor-col-50 .elementor-widget-image img');
 
 				return {
 					title,
 					author,
 					content,
 					link,
-					image: image ? image.getAttribute('data-src')! : '',
+					image: images.length >= 2 ? images[1].getAttribute('data-src')! : '',
 				};
 			} catch (e) {
 				// Fallback in case we can't get the image URL
