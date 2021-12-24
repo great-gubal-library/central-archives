@@ -43,6 +43,11 @@ export class CrescentMoonPublishingService {
 				return null;
 			}
 
+			if (name.includes('Tavern') && name.includes('Roulette')) {
+				// Ignore Tavern Roulette events on CMP: Chocobo Chronicle is authoritative
+				return null;
+			}
+
 			try {
 				const linkedPage = await this.httpService.get<string>(href).toPromise();
 				const linkedDoc = parse(linkedPage.data);

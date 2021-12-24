@@ -289,13 +289,12 @@ export class EventsService {
 		}
 
 		// Not cached - fetch and cache
-		// CMP events are disabled for now until we can test them with the new event system again
-		const [/* cmpEvents, */ ccEvents] = await Promise.all([
-			// this.cmpService.fetchEvents(),
+		const [ cmpEvents, ccEvents] = await Promise.all([
+			this.cmpService.fetchEvents(),
 			this.ccService.fetchEvents(),
 		]);
 		
-		const events = [ /* ...cmpEvents, */ ...ccEvents ]
+		const events = [ ...cmpEvents, ...ccEvents ]
 				.sort((e1, e2) => utils.compareNumbers(e1.startDateTime, e2.startDateTime));
 		await this.saveEvents(events);
 		await this.redisService.set('eventsTimestamp', Date.now().toString());
