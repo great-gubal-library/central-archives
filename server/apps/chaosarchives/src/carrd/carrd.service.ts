@@ -71,6 +71,9 @@ export class CarrdService {
 				if (href.startsWith(baseUrl)) {
 					// Some Carrd profiles actually have absolute links to their own address. Relativize them.
 					link.setAttribute('href', href.replace(baseUrl, ''));
+				} else if (href.startsWith('assets/')) {
+					// Sometimes gallery images are implemented as <a href> to asset images
+					link.setAttribute('href', this.rewriteUrl(baseUrl, href));
 				} else if (this.ABSOLUTE_URL_REGEX.test(href)) {
 					// Open external links in new tabs
 					link.setAttribute('target', '_blank');
