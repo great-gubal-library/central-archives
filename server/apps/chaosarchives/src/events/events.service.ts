@@ -396,7 +396,6 @@ export class EventsService {
 					const server = serversByName.get(locationDto.server);
 
 					if (!server) {
-						console.log(location);
 						throw new BadRequestException(`World server not found: ${server}`);
 					}
 
