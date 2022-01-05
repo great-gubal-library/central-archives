@@ -9,7 +9,7 @@
       </p>
 			<q-card-actions align="right">
 				<q-btn flat color="primary" label="Cancel" @click="onCancelClick" />
-				<q-btn flat color="negative" :label="!forceConfirming ? 'Delete' : 'Force Delete'" @click="onDeleteClick" />
+				<q-btn flat color="negative" :label="!forceConfirming ? 'Delete' : 'Delete Anyway'" @click="onDeleteClick" />
 			</q-card-actions>
 			<q-inner-loading v-if="deleting" />
     </q-card>
