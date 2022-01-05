@@ -81,14 +81,21 @@ export class CrescentMoonPublishingService {
 					return null;
 				}
 
-				const locationLinks = linkedDoc.querySelectorAll('.grid-col-desk-2 .elementor-heading-title a');
-				const locations: EventLocationDto[] = locationLinks.map(a => ({
-					id: -1,
-					name: a.textContent.trim(),
-					address: '',
-					server: '',
-					tags: '',
-				}));
+				const locationColumns = linkedDoc.querySelectorAll('.grid-col-desk-2 .elementor-column-wrap');
+				const locations: EventLocationDto[] = locationColumns.map(column => {
+					const a = column.querySelector('.elementor-heading-title a');
+					const data = column.querySelectorAll('.elementor-widget-jet-listing-dynamic-field');
+					const server = data[0].textContent.trim();
+					const address = data.slice(1).map(el => el.textContent.trim()).join(', ');
+
+					return {
+						id: -1,
+						name: a.textContent.trim(),
+						address,
+						server,
+						tags: '',
+					};
+				});
 
 				return {
 					id: -1,

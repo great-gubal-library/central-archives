@@ -343,7 +343,10 @@ export class EventsService {
 			}
 
 			const savedEvents: Event[] = [];
-			const serverNames = new Set(events.map(event => event.locations.map(location => location.server)).flat());
+			const serverNames = new Set(events
+				.map(event => event.locations.map(location => location.server))
+				.flat()
+				.filter(serverName => !!serverName));
 			const serversByName = new Map<string, Server>();
 
 			if (serverNames.size > 0) {
@@ -393,6 +396,7 @@ export class EventsService {
 					const server = serversByName.get(locationDto.server);
 
 					if (!server) {
+						console.log(location);
 						throw new BadRequestException(`World server not found: ${server}`);
 					}
 
