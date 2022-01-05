@@ -144,8 +144,8 @@ export default class API {
     return this.transport.authPost<ImageSummaryDto>('images', formData);
   }
 
-  async deleteImage(id: number): Promise<void> {
-    await this.transport.authDelete<void>(`images/${id}`);
+  async deleteImage(id: number, force: boolean): Promise<void> {
+    await this.transport.authDelete<void>(`images/${id}`, { force });
   }
 
   async saveImage(id: number, details: ImageDescriptionDto): Promise<void> {

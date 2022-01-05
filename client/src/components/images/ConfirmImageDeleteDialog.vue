@@ -3,10 +3,13 @@
     <q-card class="confirm-image-delete-dialog">
 			<h5>Confirm Image Deletion</h5>
 			<q-img :src="image.url" fit="contain" />
-			Are you sure you want to delete this image? <strong>This operation cannot be undone.</strong>
+			<p>Are you sure you want to delete this image? <strong>This operation cannot be undone.</strong></p>
+      <p v-if="forceConfirming">
+        <strong>{{forceConfirmMessage}}.</strong> Do you still want to delete it and unlink it from every page that uses it as a banner?
+      </p>
 			<q-card-actions align="right">
 				<q-btn flat color="primary" label="Cancel" @click="onCancelClick" />
-				<q-btn flat color="negative" label="Delete" @click="onDeleteClick" />
+				<q-btn flat color="negative" :label="!forceConfirming ? 'Delete' : 'Force Delete'" @click="onDeleteClick" />
 			</q-card-actions>
 			<q-inner-loading v-if="deleting" />
     </q-card>
@@ -33,6 +36,8 @@ class Props {
   emits: ['ok', 'hide'],
 })
 export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
+  forceConfirming = false;
+  forceConfirmMessage = '';
 	deleting = false;
 
   show() {
@@ -55,15 +60,21 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
 		try {
       this.deleting = true;
 
-			await this.$api.deleteImage(this.image.id);
+			await this.$api.deleteImage(this.image.id, this.forceConfirming);
 
       this.$emit('ok');
     	this.hide();
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+      if (errors.getStatusCode(e) === 409) {
+        // Conflict: used as a banner
+        this.forceConfirming = true;
+        this.forceConfirmMessage = errors.getMessage(e);
+      } else {
+        this.$q.notify({
+          message: errors.getMessage(e),
+          type: 'negative',
+        });
+      }
     } finally {
       this.deleting = false;
     }

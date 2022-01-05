@@ -1,6 +1,6 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
-import { Character, Image } from '@app/entity';
+import { Character, Event, Image } from '@app/entity';
 import { hashFile } from '@app/security';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
@@ -18,7 +18,8 @@ import {
   ServiceUnavailableException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, IsNull, Not, Repository } from 'typeorm';
+import { Connection, FindConditions, IsNull, Not, Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import {
   ImageSanitizeError,
   ImageSanitizeResult,
@@ -316,8 +317,8 @@ export class ImagesService {
     });
   }
 
-  async deleteImage(id: number, user: UserInfo): Promise<void> {
-		await this.connection.transaction(async em => {
+  async deleteImage(id: number, force: boolean, user: UserInfo): Promise<void> {
+		const imageEntity = await this.connection.transaction(async em => {
       const imageRepo = em.getRepository(Image);
       const image = await imageRepo
         .createQueryBuilder('image')
@@ -332,15 +333,50 @@ export class ImagesService {
         throw new NotFoundException('Image not found');
       }
 
-      // Delete from storage
-      await Promise.all([
-        this.storageService.deleteFile(`${image.owner.id}/${image.hash}/${image.filename}`),
-        this.storageService.deleteFile(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
-      ]);
+      if (!force) {
+        // Check if the image is used as a banner, and if yes, refuse to delete
+
+        if (await em.getRepository(Character).count({
+          banner: Promise.resolve(image),
+        }) > 0) {
+          throw new ConflictException('This image is in use as a character banner');
+        }
+
+        if (await em.getRepository(Event).count({
+          banner: Promise.resolve(image),
+        }) > 0) {
+          throw new ConflictException('This image is in use as an event banner');
+        }
+      } else {
+        // Unlink as a banner
+
+        await em.getRepository(Character).update({
+          banner: {
+            id: image.id,
+          },
+        } as FindConditions<Character>, {
+          banner: null
+        } as unknown as QueryDeepPartialEntity<Character>);
+
+        await em.getRepository(Event).update({
+          banner: {
+            id: image.id,
+          },
+        } as FindConditions<Event>, {
+          banner: null
+        } as unknown as QueryDeepPartialEntity<Event>);
+      }
 
       // Delete from the database
       await imageRepo.remove(image);
+      return image;
     });
+
+    // Delete from storage only if transaction succeeds
+    await Promise.all([
+      this.storageService.deleteFile(`${imageEntity.owner.id}/${imageEntity.hash}/${imageEntity.filename}`),
+      this.storageService.deleteFile(`${imageEntity.owner.id}/${imageEntity.hash}/thumb_${imageEntity.filename}`),
+    ]);
   }
 
   getUrl(image: Image): string {
