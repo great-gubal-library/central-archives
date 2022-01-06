@@ -7,7 +7,7 @@
 				Posted by <router-link :to="authorLink">{{ image.author }}</router-link> on {{ date }}
 				</div>
 				<div class="page-image__category">
-					{{ $display.imageCategories[image.category] }}
+					<router-link :to="`/gallery/${image.category}`">{{ $display.imageCategories[image.category] }}</router-link>
 				</div>
 			</section>
 			<a :href="image.url" :title="image.title" target="_blank"><q-img :src="image.url" :ratio="image.width / image.height" /></a>
