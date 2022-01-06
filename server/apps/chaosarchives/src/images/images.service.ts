@@ -305,7 +305,7 @@ export class ImagesService {
       const image = await em.getRepository(Image)
         .createQueryBuilder('image')
         .innerJoinAndSelect('image.owner', 'character')
-        .innerJoinAndSelect('image.event', 'event')
+        .leftJoinAndSelect('image.event', 'event')
         .innerJoinAndSelect('character.user', 'user')
         .where('image.id = :id', { id } )
         .andWhere('user.id = :userId', { userId: user.id })
