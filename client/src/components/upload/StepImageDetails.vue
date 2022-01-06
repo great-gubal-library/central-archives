@@ -24,6 +24,29 @@
           height="200px"
           @update:model-value="onModelUpdated"
         />
+        <q-select
+          class="step-select-image__event-link"
+          v-model="modelValue.event"
+          :display-value="modelValue.event ? modelValue.event.title : null"
+          :options="eventOptions"
+          :option-label="(option) => `${option.title} (${$display.formatDate(option.startDateTime)})`"
+          hide-dropdown-icon
+          use-input
+          clearable
+          input-debounce="200"
+          label="Event link"
+          hint="Start typing, and we will attempt to find the event."
+          @filter="onEventFilter"
+          @update:model-value="onModelUpdated"
+        >
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No results
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
       </section>
     </q-slide-transition>
     <q-input
@@ -38,29 +61,6 @@
       “made by me” or similar. Do not post copyrighted content without
       permission.
     </div>
-    <q-select
-      class="step-select-image__event-link"
-      v-model="modelValue.event"
-      :display-value="modelValue.event ? modelValue.event.title : null"
-      :options="eventOptions"
-      :option-label="(option) => `${option.title} (${$display.formatDate(option.startDateTime)})`"
-      hide-dropdown-icon
-      use-input
-      clearable
-      input-debounce="200"
-      label="Event link"
-      hint="Start typing, and we will attempt to find the event."
-      @filter="onEventFilter"
-      @update:model-value="onModelUpdated"
-    >
-      <template v-slot:no-option>
-        <q-item>
-          <q-item-section class="text-grey">
-            No results
-          </q-item-section>
-        </q-item>
-      </template>
-    </q-select>
   </q-form>
 </template>
 
@@ -149,6 +149,10 @@ export default class StepImageDetails extends Vue.with(Props) {
 .step-image-details__description-label {
   margin-top: 8px;
   margin-bottom: 8px;
+}
+
+.step-image-details__event-link {
+  margin-top: 8px;
 }
 
 .step-image-details__credits {
