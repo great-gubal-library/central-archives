@@ -14,4 +14,6 @@ export interface ImageDto {
   createdAt: number;
   author: string;
   authorServer: string;
+  eventId: number|null;
+  eventTitle: string|null;
 }

@@ -18,7 +18,7 @@ import {
   ServiceUnavailableException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, FindConditions, IsNull, Not, Repository } from 'typeorm';
+import { Connection, EntityManager, FindConditions, IsNull, Not, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import {
   ImageSanitizeError,
@@ -51,16 +51,19 @@ export class ImagesService {
       createdAt: image.createdAt!.getTime(),
       author: image.owner.name,
       authorServer: image.owner.server.name,
-      credits: image.credits
+      credits: image.credits,
+      eventId: image.event ? image.event.id : null,
+      eventTitle: image.event ? image.event.title : null,
     };
   }
 
   async getImage(id: number): Promise<ImageDto> {
     const image = await this.imageRepo.createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
+      .leftJoinAndSelect('image.event', 'event')
       .leftJoinAndSelect('character.server', 'server')
       .where('image.id = :id', { id })
-      .select(['image', 'character.id', 'character.name', 'server.name'])
+      .select(['image', 'character.id', 'character.name', 'server.name', 'event.id', 'event.title' ])
       .getOne();
 
     if (!image || image.category === ImageCategory.UNLISTED) {
@@ -122,10 +125,11 @@ export class ImagesService {
 
     const images = await this.imageRepo.createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
+      .leftJoinAndSelect('image.event', 'event')
       .leftJoinAndSelect('character.server', 'server')
       .where('character.id = :characterId', { characterId })
       .orderBy('image.createdAt', 'DESC')
-      .select(['image', 'character.id', 'character.name', 'server.name'])
+      .select(['image', 'character.id', 'character.name', 'server.name', 'event.id', 'event.title'])
       .getMany();
 
     return images.map(image => this.toImageDto(image));
@@ -245,7 +249,8 @@ export class ImagesService {
         }
 
         // Save image in database
-        const image = await em.getRepository(Image).save({
+        const image = new Image();
+        Object.assign(image, {
           owner: character,
           width,
           height,
@@ -258,6 +263,9 @@ export class ImagesService {
           credits: request.credits,
           format,
         });
+        
+        this.assignImageEvent(em, image, request);
+        await em.getRepository(Image).save(image);
 
         return {
           id: image.id,
@@ -292,10 +300,11 @@ export class ImagesService {
       const image = await em.getRepository(Image)
         .createQueryBuilder('image')
         .innerJoinAndSelect('image.owner', 'character')
+        .innerJoinAndSelect('image.event', 'event')
         .innerJoinAndSelect('character.user', 'user')
         .where('image.id = :id', { id } )
         .andWhere('user.id = :userId', { userId: user.id })
-        .select([ 'image' ])
+        .select([ 'image', 'event' ])
         .getOne();
 
       if (!image) {
@@ -313,8 +322,25 @@ export class ImagesService {
       image.description = html.sanitize(request.description);
       image.credits = request.credits;
 
+      this.assignImageEvent(em, image, request);
       await imageRepo.save(image);
     });
+  }
+
+  private async assignImageEvent(em: EntityManager, image: Image, request: ImageDescriptionDto) {
+    if (!request.eventId) {
+      // eslint-disable-next-line no-param-reassign
+      image.event = null;
+    } else if (!image.event || request.eventId !== image.event.id) {
+      const event = await em.getRepository(Event).findOne(request.eventId);
+
+      if (!event) {
+        throw new BadRequestException('Event not found');
+      }
+
+      // eslint-disable-next-line no-param-reassign
+      image.event = event;
+    }
   }
 
   async deleteImage(id: number, force: boolean, user: UserInfo): Promise<void> {

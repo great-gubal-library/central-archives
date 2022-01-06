@@ -12,14 +12,12 @@ import {
   BadRequestException,
   Body,
   Controller, Delete, Get,
-  Param,
-  ParseBoolPipe,
-  ParseIntPipe,
+  Param, ParseIntPipe,
   Post, Put, Query, UploadedFile, UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsOptional } from 'class-validator';
 import { ImagesService } from './images.service';
 import { PayloadTooLargeInterceptor } from './payload-too-large.interceptor';
 

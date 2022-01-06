@@ -3,6 +3,7 @@ import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
+import { Event } from './event.entity';
 
 @Entity()
 @Unique(['hash', 'owner'])
@@ -72,4 +73,9 @@ export class Image extends BasicEntity {
     nullable: false,
   })
   format: ImageFormat;
+
+  @ManyToOne(() => Event, {
+    nullable: true,
+  })
+  event: Event|null;
 }

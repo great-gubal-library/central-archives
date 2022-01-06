@@ -1,6 +1,6 @@
 import { ImageCategory } from "@app/shared/enums/image-category.enum";
 import { Type } from "class-transformer";
-import { IsEnum, IsNumber, IsString, MinLength } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
 
 export class ImageUploadRequestDto {
 	@Type(() => Number)
@@ -19,6 +19,11 @@ export class ImageUploadRequestDto {
 	@IsString()
 	@MinLength(1)
 	readonly credits: string;
+
+	@Type(() => Number)
+	@IsNumber()
+	@IsOptional()
+	readonly eventId?: number;
 
 	@Type(() => Number)
 	@IsNumber()

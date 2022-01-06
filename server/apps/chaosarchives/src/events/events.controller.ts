@@ -40,6 +40,12 @@ export class EventsController {
     return this.eventsService.getEvents(refresh);
   }
 
+  @Get('/search')
+  @RoleRequired(Role.USER)
+  async search(@Query('query') query: string): Promise<EventSearchResultDto[]> {
+    return this.eventsService.search(query);
+  }
+
   @Get('/:id')
   @UseGuards(OptionalJwtAuthGuard)
   async getEvent(
@@ -48,12 +54,6 @@ export class EventsController {
     @CurrentUser() user?: UserInfo,
   ): Promise<EventDto> {
     return this.eventsService.getEvent(id, queryParams.edit || false, user);
-  }
-
-  @Get('/search')
-  @RoleRequired(Role.USER)
-  async search(@Query('query') query: string): Promise<EventSearchResultDto[]> {
-    return this.eventsService.search(query);
   }
 
   @Post()
