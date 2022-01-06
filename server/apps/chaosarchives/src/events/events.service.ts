@@ -5,6 +5,7 @@ import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
+import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
@@ -16,6 +17,7 @@ import { BadRequestException, HttpService, Injectable, Logger, NotFoundException
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime, Duration } from 'luxon';
 import { Connection, EntityManager, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
+import { Contains } from '../common/db';
 import utils from '../common/utils';
 import { ImagesService } from '../images/images.service';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
@@ -426,4 +428,20 @@ export class EventsService {
 			}))
 		};
 	}
+
+	async search(query: string): Promise<EventSearchResultDto[]> {
+    const results = await this.eventRepo.find({
+			where: {
+				title: Contains(query)
+			},
+			take: 10,
+			select: [ 'id', 'title', 'startDateTime' ]
+		});
+
+		return results.map(event => ({
+			id: event.id,
+			title: event.title,
+			startDateTime: event.startDateTime.getTime(),
+		}));
+  }
 }

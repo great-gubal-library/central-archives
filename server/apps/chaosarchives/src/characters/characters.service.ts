@@ -18,7 +18,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
-import db from '../common/db';
+import { isQueryFailedError } from '../common/db';
 import { getLodestoneCharacter } from '../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
@@ -254,7 +254,7 @@ export class CharactersService {
       await this.publicAuthService.notifyUserChanged(user.id);
       return result;
     } catch (e) {
-      if (db.isQueryFailedError(e)) {
+      if (isQueryFailedError(e)) {
         if (e.code === 'ER_DUP_ENTRY') {
           throw new ConflictException('This character has already been registered');
         }

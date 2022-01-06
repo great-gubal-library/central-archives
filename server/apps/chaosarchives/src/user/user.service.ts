@@ -19,7 +19,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import parse from 'node-html-parser';
 import { Connection, EntityManager, Repository } from 'typeorm';
 import { CharactersService } from '../characters/characters.service';
-import db from '../common/db';
+import { isQueryFailedError } from '../common/db';
 import { MailService } from '../mail/mail.service';
 
 @Injectable()
@@ -58,7 +58,7 @@ export class UserService {
         characterVerificationCode: characterEntity.verificationCode!, // set by saveCharacterForUser
       };
     } catch (e) {
-      if (db.isQueryFailedError(e)) {
+      if (isQueryFailedError(e)) {
         if (e.code === 'ER_DUP_ENTRY') {
           throw new ConflictException('This email or character has already been used');
         }

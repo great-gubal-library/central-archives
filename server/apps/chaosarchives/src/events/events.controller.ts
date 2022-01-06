@@ -4,6 +4,7 @@ import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
+import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { Role } from '@app/shared/enums/role.enum';
@@ -47,6 +48,12 @@ export class EventsController {
     @CurrentUser() user?: UserInfo,
   ): Promise<EventDto> {
     return this.eventsService.getEvent(id, queryParams.edit || false, user);
+  }
+
+  @Get('/search')
+  @RoleRequired(Role.USER)
+  async search(@Query('query') query: string): Promise<EventSearchResultDto[]> {
+    return this.eventsService.search(query);
   }
 
   @Post()

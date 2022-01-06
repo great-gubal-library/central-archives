@@ -1,10 +1,11 @@
-import { QueryFailedError } from "typeorm";
+import { FindOperator, Like, QueryFailedError } from "typeorm";
 
-const db = {
-	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-	isQueryFailedError(err: any): err is QueryFailedError & { code: string } {
-		return err instanceof QueryFailedError;
-	}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function isQueryFailedError(err: any): err is QueryFailedError & { code: string } {
+	return err instanceof QueryFailedError;
 }
 
-export default db;
+export function Contains(substring: string): FindOperator<string> {
+	const escapedString = substring.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_');
+	return Like(`%${escapedString}%`);
+}
