@@ -66,7 +66,7 @@ export default class RefreshCharacterDialog extends Vue.with(Props) {
 		this.loading = true;
 
 		try {
-			const result = await this.$api.refreshCharacter({ id: this.characterId });
+			const result = await this.$api.characters.refreshCharacter({ id: this.characterId });
 			const characterId = this.$store.getters.characterId;
 
 			if (characterId && this.characterId === characterId) {

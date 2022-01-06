@@ -121,7 +121,7 @@ export default class PageEditStory extends Vue {
 
     if (id) {
       this.loaded = false;
-      this.storyBackup = await this.$api.getStory(id);
+      this.storyBackup = await this.$api.stories.getStory(id);
       this.loaded = true;
     } else {
       this.storyBackup = new StoryDto({
@@ -153,10 +153,10 @@ export default class PageEditStory extends Vue {
 
     try {
       if (!this.story.id) {
-        const { id } = await this.$api.createStory(this.story);
+        const { id } = await this.$api.stories.createStory(this.story);
         this.story.id = id;
       } else {
-        await this.$api.editStory(this.story);
+        await this.$api.stories.editStory(this.story);
       }
 
       this.storyBackup = new StoryDto(this.story);

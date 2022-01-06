@@ -46,7 +46,7 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
 			return;
 		}
 
-		this.images = (await this.$api.getMyImages(characterId)).map(image => ({
+		this.images = (await this.$api.characters.getMyImages(characterId)).map(image => ({
 			id: image.id,
 			title: image.title,
 			filename: image.filename,

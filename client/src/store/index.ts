@@ -123,7 +123,7 @@ export default store(function (/* { ssrContext } */) {
     actions: {
       async updateEvents() {
         const api = useApi();
-        const events = (await api.getEvents({ refresh: false })).events;
+        const events = (await api.events.getEvents({ refresh: false })).events;
         this.commit('setEvents', events);
       }
     },

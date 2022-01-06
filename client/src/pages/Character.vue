@@ -53,13 +53,13 @@ async function load(params: RouteParams): Promise<Content> {
 		name = name.replace('_', ' ');
 
 		try {
-			const character = await $api.getCharacterProfile(name, server);
+			const character = await $api.characters.getCharacterProfile(name, server);
 
 			return {
 				name,
 				server,
 				character,
-				content: await $api.getCharacterContent(character.id),
+				content: await $api.characters.getCharacterContent(character.id),
 				notFound: false
 			}
 		} catch (e) {

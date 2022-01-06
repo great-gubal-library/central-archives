@@ -138,7 +138,7 @@ async function load(): Promise<CharacterProfileDto> {
   const server = $store.getters.character?.server || '';
 
   try {
-    return await $api.getCharacterProfile(name, server);
+    return await $api.characters.getCharacterProfile(name, server);
   } catch (e) {
     $q.notify({
       type: 'negative',
@@ -206,7 +206,7 @@ export default class PageEditCharacter extends Vue {
     this.saving = true;
 
     try {
-      await this.$api.saveCharacter(this.character);
+      await this.$api.characters.saveCharacter(this.character);
       this.characterBackup = new CharacterProfileDto(this.character);
 
       this.$q.notify({

@@ -42,7 +42,7 @@ async function load(params: RouteParams): Promise<ImageDto> {
 	}
 
 	try {
-		const image = await $api.getImage(id);
+		const image = await $api.images.getImage(id);
 		document.title = `${image.title} — Chaos Archives`;
 		return image;
 	} catch (e) {

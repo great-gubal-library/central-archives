@@ -172,7 +172,7 @@ async function load(params: RouteParams): Promise<{event: EventEditDto, eventId:
 	}
 
 	try {
-		const event = await $api.getEventForEdit(id);
+		const event = await $api.events.getEventForEdit(id);
 		document.title = `${event.title} — Chaos Archives`;
 		return { event, eventId: id };
 	} catch (e) {
@@ -377,10 +377,10 @@ export default class PageEditEvent extends Vue {
     try {
       if (!this.eventId) {
         const characterId = this.$store.getters.characterId!;
-        const { id } = await this.$api.createEvent(this.event, { characterId });
+        const { id } = await this.$api.events.createEvent(this.event, { characterId });
         this.eventId = id;
       } else {
-        await this.$api.editEvent(this.eventId, this.event);
+        await this.$api.events.editEvent(this.eventId, this.event);
       }
 
       this.eventBackup = new EventEditDto(this.event);

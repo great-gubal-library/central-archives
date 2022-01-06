@@ -29,7 +29,7 @@ async function load(params: RouteParams): Promise<StoryDto> {
 	}
 
 	try {
-		const story = await $api.getStory(id);
+		const story = await $api.stories.getStory(id);
 		document.title = `${story.title} — Chaos Archives`;
 		return story;
 	} catch (e) {

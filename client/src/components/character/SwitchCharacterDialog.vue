@@ -89,7 +89,7 @@ export default class ConfirmImageDeleteDialog extends Vue {
 		this.submitting = true;
 
 		try {
-			const character = await this.$api.addAccountCharacter({ lodestoneId: this.newCharacter.lodestoneId });
+			const character = await this.$api.characters.addAccountCharacter({ lodestoneId: this.newCharacter.lodestoneId });
 
 			this.$q.notify({
         message: 'Character added successfully. You will need to verify it.',

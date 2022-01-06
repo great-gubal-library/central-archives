@@ -18,7 +18,7 @@ const $q = useQuasar();
 
 async function load(): Promise<CharacterSummaryDto[]> {
 	try {
-		return await $api.getCharacterProfiles();
+		return await $api.characters.getCharacterProfiles();
 	} catch (e) {
 		$q.notify({
 			type: 'negative',

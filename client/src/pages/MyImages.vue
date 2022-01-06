@@ -35,7 +35,7 @@ async function load(): Promise<ImageDto[]> {
 	}
 
   try {
-    return await $api.getMyImages(characterId);
+    return await $api.characters.getMyImages(characterId);
   } catch (e) {
     $q.notify({
       type: 'negative',

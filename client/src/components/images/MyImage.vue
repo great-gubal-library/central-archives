@@ -93,7 +93,7 @@ export default class MyImage extends Vue.with(Props) {
 		try {
       this.saving = true;
 
-      await this.$api.saveImage(this.image.id, this.imageDescription);
+      await this.$api.images.saveImage(this.image.id, this.imageDescription);
 			Object.assign(this.image, this.imageDescription);
 			this.editing = false;
 			this.$emit('saved', this.image);

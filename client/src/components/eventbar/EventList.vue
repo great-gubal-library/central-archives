@@ -27,7 +27,7 @@ export default class EventList extends Vue {
   }
 
   private async loadEvents(refresh: boolean) {
-    const result = await this.$api.getEvents({ refresh });
+    const result = await this.$api.events.getEvents({ refresh });
     const today = DateTime.now()
       .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
       .startOf('day')

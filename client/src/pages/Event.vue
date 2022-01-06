@@ -30,7 +30,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 	}
 
 	try {
-		const event = await $api.getEvent(id);
+		const event = await $api.events.getEvent(id);
 		document.title = `${event.title} — Chaos Archives`;
 		return { event, eventId: id };
 	} catch (e) {
@@ -86,7 +86,7 @@ export default class PageEvent extends Vue {
         cancel: 'Cancel',
       }).onOk(async () => {
         try {
-					await this.$api.deleteEvent(this.eventId);
+					await this.$api.events.deleteEvent(this.eventId);
 
 					this.$q.notify({
 						type: 'positive',

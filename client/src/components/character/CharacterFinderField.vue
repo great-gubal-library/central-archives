@@ -118,7 +118,7 @@ export default class CharacterFinderField extends Vue.with(Props) {
     if (character) {
       this.$emit('update:model-value', character);
 
-			this.registrationStatus = (await this.$api.getCharacterRegistrationStatus({
+			this.registrationStatus = (await this.$api.characters.getCharacterRegistrationStatus({
 				name: character.name,
 				lodestoneId: character.lodestoneId,
 			})).status;

@@ -273,7 +273,7 @@ export default class UploadDialog extends Vue.with(Props) {
 
     // Converts if necessary, otherwise leaves the original file intact
 
-    return this.$api.uploadImage({
+    return this.$api.images.uploadImage({
       characterId,
       title: this.detailsModel.title,
       description: this.detailsModel.description,

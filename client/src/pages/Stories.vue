@@ -23,7 +23,7 @@ const $q = useQuasar();
 	},
   async beforeRouteEnter(_, __, next) {
     try {
-      const stories = await $api.getStories({});
+      const stories = await $api.stories.getStories({});
       next(vm => (vm as PageCharacters).setContent(stories));
     } catch (e) {
       console.log(e);

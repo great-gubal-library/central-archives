@@ -60,7 +60,7 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
 		try {
       this.deleting = true;
 
-			await this.$api.deleteImage(this.image.id, this.forceConfirming);
+			await this.$api.images.deleteImage(this.image.id, this.forceConfirming);
 
       this.$emit('ok');
     	this.hide();
