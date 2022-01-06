@@ -38,10 +38,34 @@
       “made by me” or similar. Do not post copyrighted content without
       permission.
     </div>
+    <q-select
+      class="step-select-image__event-link"
+      v-model="modelValue.event"
+      :display-value="modelValue.event ? modelValue.event.title : null"
+      :options="eventOptions"
+      :option-label="(option) => `${option.title} (${$display.formatDate(option.startDateTime)})`"
+      hide-dropdown-icon
+      use-input
+      clearable
+      input-debounce="200"
+      label="Event link"
+      hint="Start typing, and we will attempt to find the event."
+      @filter="onEventFilter"
+      @update:model-value="onModelUpdated"
+    >
+      <template v-slot:no-option>
+        <q-item>
+          <q-item-section class="text-grey">
+            No results
+          </q-item-section>
+        </q-item>
+      </template>
+    </q-select>
   </q-form>
 </template>
 
 <script lang="ts">
+import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import { QForm } from 'quasar';
@@ -55,6 +79,7 @@ class Props {
 }
 
 @Options({
+  name: 'StepImageDetails',
   components: {
     HtmlEditor,
   },
@@ -64,6 +89,9 @@ export default class StepImageDetails extends Vue.with(Props) {
   readonly ImageCategory = ImageCategory;
 
   categories: { label: string; value: ImageCategory }[];
+
+  eventOptions: EventSearchResultDto[] = [];
+  eventOptionsSearchString = '';
 
   categoryHints = {
     [ImageCategory.UNLISTED]:
@@ -81,6 +109,31 @@ export default class StepImageDetails extends Vue.with(Props) {
       })
     );
   }
+
+  async onEventFilter(value: string, update: () => void, abort: () => void) {
+    value = value.trim();
+
+    if (!value) {
+      abort();
+      return;
+    }
+
+    try {
+      this.eventOptionsSearchString = value;
+      const results = await this.$api.events.searchEvents(value);
+
+      if (this.eventOptionsSearchString !== value) {
+        // Too late
+        return;
+      }
+
+      this.eventOptions = results;      
+      update();
+    } catch (e) {
+      abort();
+      throw e;
+    }
+	}
 
 	onModelUpdated() {
 		this.$emit('update:model-value', this.modelValue);

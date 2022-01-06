@@ -18,7 +18,7 @@
 				</template>
 				<template v-else>
 					<a class="thumb-link" :href="image.url" target="_blank"><img :src="image.thumbUrl" /></a>
-					<step-image-details v-model="imageDescription" />
+					<step-image-details v-model="imageDetails" />
 				</template>
 			</q-card-section>
 			<q-card-actions v-if="editing" align="right">
@@ -30,13 +30,14 @@
 </template>
 
 <script lang="ts">
-import { Options, prop, Vue } from 'vue-class-component';
-import { ImageDto } from '@app/shared/dto/image/image.dto';
-import html from '@app/shared/html';
-import { ImageCategory } from '@app/shared/enums/image-category.enum';
-import StepImageDetails from '../upload/StepImageDetails.vue';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
+import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import errors from '@app/shared/errors';
+import html from '@app/shared/html';
+import { Options, prop, Vue } from 'vue-class-component';
+import { ImageDetailsModel } from '../upload/image-details-model';
+import StepImageDetails from '../upload/StepImageDetails.vue';
 
 class Props {
 	image = prop<ImageDto>({
@@ -53,7 +54,7 @@ class Props {
 })
 export default class MyImage extends Vue.with(Props) {
 	readonly ImageCategory = ImageCategory;
-	imageDescription = new ImageDescriptionDto();
+	imageDetails = {} as ImageDetailsModel;
 	editing = false;
 	saving = false;
 
@@ -62,8 +63,8 @@ export default class MyImage extends Vue.with(Props) {
 	}
 
 	get isValid() {
-		return (this.imageDescription.category === ImageCategory.UNLISTED || !!this.imageDescription.title)
-      && !!this.imageDescription.credits;
+		return (this.imageDetails.category === ImageCategory.UNLISTED || !!this.imageDetails.title)
+      && !!this.imageDetails.credits;
 	}
 
 	async onDeleteClick() {
@@ -80,12 +81,17 @@ export default class MyImage extends Vue.with(Props) {
 	}
 
 	onEditClick() {
-		this.imageDescription = new ImageDescriptionDto({
+		this.imageDetails = {
 			title: this.image.title,
 			description: this.image.description,
 			category: this.image.category,
-			credits: this.image.credits
-		});
+			credits: this.image.credits,
+			event: this.image.eventId ? {
+				id: this.image.eventId,
+				title: this.image.eventTitle!,
+				startDateTime: -1
+			} : null
+		};
 		this.editing = true;
 	}
 
@@ -93,8 +99,27 @@ export default class MyImage extends Vue.with(Props) {
 		try {
       this.saving = true;
 
-      await this.$api.images.saveImage(this.image.id, this.imageDescription);
-			Object.assign(this.image, this.imageDescription);
+			const imageDescriptionDto = new ImageDescriptionDto({
+				title: this.imageDetails.title,
+				description: this.imageDetails.description,
+				category: this.imageDetails.category,
+				credits: this.imageDetails.credits,
+			});
+
+			if (this.imageDetails.event) {
+				Object.assign(imageDescriptionDto, { eventId: this.imageDetails.event.id });
+			}
+
+      await this.$api.images.saveImage(this.image.id, imageDescriptionDto);
+			Object.assign(this.image, imageDescriptionDto);
+			
+			if (this.imageDetails.event) {
+				this.image.eventTitle = this.imageDetails.event.title;
+			} else {
+				this.image.eventId = null;
+				this.image.eventTitle = null;
+			}
+
 			this.editing = false;
 			this.$emit('saved', this.image);
 

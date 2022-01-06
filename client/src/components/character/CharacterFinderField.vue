@@ -9,7 +9,6 @@
 					:option-label="(option) => `${option.name} (${option.server})`"
 					hide-dropdown-icon
 					use-input
-					emit-value
 					input-debounce="200"
 					label="Character name"
 					:hint="modelValue.server ? '' : 'Start typing, and we will attempt to find your character.'"

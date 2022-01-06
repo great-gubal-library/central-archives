@@ -73,6 +73,7 @@ import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
+import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 
 enum Step {
   SELECT_IMAGE = 'SELECT_IMAGE',
@@ -127,6 +128,7 @@ export default class UploadDialog extends Vue.with(Props) {
     title: '',
 		description: '',
     credits: '',
+    event: null,
   };
 
   show() {
@@ -272,8 +274,7 @@ export default class UploadDialog extends Vue.with(Props) {
     }
 
     // Converts if necessary, otherwise leaves the original file intact
-
-    return this.$api.images.uploadImage({
+    const imageDto: ImageUploadRequestDto = {
       characterId,
       title: this.detailsModel.title,
       description: this.detailsModel.description,
@@ -282,7 +283,13 @@ export default class UploadDialog extends Vue.with(Props) {
       thumbLeft: this.thumbModel.left,
       thumbTop: this.thumbModel.top,
       thumbWidth: this.thumbModel.width,
-    }, convertedFile, filename);
+    };
+
+    if (this.detailsModel.event) {
+      Object.assign(imageDto, { eventId: this.detailsModel.event.id });
+    }
+
+    return this.$api.images.uploadImage(imageDto, convertedFile, filename);
   }
 
   onCancelClick() {
