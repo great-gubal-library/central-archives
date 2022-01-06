@@ -8,6 +8,10 @@ export class ImagesFilterDto {
 
 	@IsNumber()
 	@IsOptional()
+	eventId?: number;
+
+	@IsNumber()
+	@IsOptional()
 	limit?: number;
 
 	@IsEnum(ImageCategory)

@@ -3,12 +3,14 @@ import { serverConfiguration } from '@app/configuration';
 import { Character, Event, EventAnnouncement, EventLocation, Image, Server } from '@app/entity';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { BaseEventDto } from '@app/shared/dto/events/base-event.dto';
 import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
@@ -44,7 +46,7 @@ export class EventsService {
 		private readonly httpService: HttpService,
 	) { }
 
-	async getEvent(id: number, edit: boolean, user?: UserInfo): Promise<EventDto> {
+	async getEvent(id: number, edit: boolean, user?: UserInfo): Promise<BaseEventDto> {
 		// TODO: optimize query
 		const event = await this.eventRepo.findOne({
 			where: {
@@ -60,9 +62,12 @@ export class EventsService {
 		const location = event.locations.length > 0 ? event.locations[0] : null;
 		const banner = await event.banner;
 		let announcements: EventAnnouncement[] = [];
+		let images: ImageSummaryDto[] = [];
 
 		if (edit) {
 			announcements = await event.notifications;
+		} else {
+			images = await this.imagesService.getImages({ eventId: id });
 		}
 
 		const properties = {
@@ -87,7 +92,9 @@ export class EventsService {
 		};
 
 		if (!edit) {
-			return new EventDto(properties);
+			return new EventDto({ ...properties,
+				images
+			});
 		}
 
 		return new EventEditDto({ ...properties,

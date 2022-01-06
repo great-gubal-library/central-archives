@@ -5,6 +5,10 @@
 			<q-btn flat color="negative" label="Delete event" @click="onDeleteClick" />
 		</section>
 		<event-view v-if="event.title" :event="event" />
+		<template v-if="event.images && event.images.length > 0">
+			<h3>Images related to this event</h3>
+			<thumb-gallery :images="event.images" />
+		</template>
 	</q-page>	
 </template>
 
@@ -14,6 +18,7 @@ import errors from '@app/shared/errors';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import EventView from 'src/components/event/EventView.vue';
+import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
 
@@ -55,6 +60,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 	name: 'PageEvent',
 	components: {
 		EventView,
+		ThumbGallery,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const { event, eventId } = await load(to.params);

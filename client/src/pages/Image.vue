@@ -15,7 +15,10 @@
 				<section class="page-image__description" v-html="description"></section>
 				<hr />
 			</template>
-			<section class="page-image__credits"><strong>Credits:</strong> {{image.credits}}</section>
+			<section class="page-image__credits">
+				<p><strong>Credits:</strong> {{image.credits}}</p>
+				<p v-if="image.eventId"><strong>Event:</strong> <router-link :to="`/event/${image.eventId}`">{{image.eventTitle}}</router-link></p>
+			</section>
 		</template>
 	</q-page>	
 </template>

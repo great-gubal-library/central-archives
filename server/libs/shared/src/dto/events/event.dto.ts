@@ -1,54 +1,15 @@
-import { Type } from "class-transformer";
-import { IsBoolean, IsNumber, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
-import { BannerDto } from "../characters/banner.dto";
+import { IsOptional } from "class-validator";
+import { ImageSummaryDto } from "../image/image-summary.dto";
+import { BaseEventDto } from "./base-event.dto";
 
-export class EventDto {
-	@IsString()
-	@MinLength(1)
-	title: string;
-
-	@IsBoolean()
+export class EventDto extends BaseEventDto {
+	// Read only
 	@IsOptional()
-	mine: boolean;
-
-	@IsString()
-	details: string;
-
-	@IsString()
-	oocDetails: string;
-
-	@IsNumber()
-	startDateTime: number;
-
-	@IsNumber()
-	@IsOptional()
-	endDateTime: number|null;
-
-	@IsString()
-	@IsOptional()
-	link: string;
-
-	@IsString()
-	contact: string;
-
-  @Type(() => BannerDto)
-  @ValidateNested()
-  @IsOptional()
-  banner: BannerDto|null;
-
-	@IsString()
-	locationName: string;
-
-	@IsString()
-	locationAddress: string;
-
-	@IsString()
-	locationServer: string;
-
-	@IsString()
-	locationTags: string;
+	images: ImageSummaryDto[];
 
 	constructor(properties?: Readonly<EventDto>) {
+		super();
+
     if (properties) {
       Object.assign(this, properties);
     }

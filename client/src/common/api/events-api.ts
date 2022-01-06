@@ -1,5 +1,6 @@
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
+import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import APITransport from './api-transport';
@@ -23,15 +24,19 @@ export default class EventsAPI {
     return this.transport.authGet<EventEditDto>(`${id}`, { edit: true });
   }
 
-  async createEvent(event: EventDto, params: { characterId: number }): Promise<IdWrapper> {
+  async createEvent(event: EventEditDto, params: { characterId: number }): Promise<IdWrapper> {
     return this.transport.authPost<IdWrapper>('', event, params);
   }
 
-  async editEvent(id: number, event: EventDto): Promise<void> {
+  async editEvent(id: number, event: EventEditDto): Promise<void> {
     return this.transport.authPut<void>(`${id}`, event);
   }
 
   async deleteEvent(id: number): Promise<void> {
     return this.transport.authDelete<void>(`${id}`);
+  }
+
+  async searchEvents(query: string): Promise<EventSearchResultDto[]> {
+    return this.transport.authGet<EventSearchResultDto[]>('search', { query });
   }
 }

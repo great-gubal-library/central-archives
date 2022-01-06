@@ -74,12 +74,17 @@ export class ImagesService {
   }
 
   async getImages(filter: ImagesFilterDto): Promise<ImageSummaryDto[]> {
-    const { characterId, limit, category } = filter;
+    const { characterId, eventId, limit, category } = filter;
     const query = this.imageRepo.createQueryBuilder('image')
-      .leftJoinAndSelect('image.owner', 'character');
+      .leftJoinAndSelect('image.owner', 'character')
+      .leftJoinAndSelect('image.event', 'event');
 
     if (characterId) {
       query.andWhere('character.id = :characterId', { characterId });
+    }
+
+    if (eventId) {
+      query.andWhere('event.id = :eventId', { eventId });
     }
 
     if (category) {
