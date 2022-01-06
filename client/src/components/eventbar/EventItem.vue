@@ -1,5 +1,5 @@
 <template>
-  <q-item class="event-item" :clickable="!expanded" @click="expand">
+  <q-item class="event-item" :clickable="!expanded" :to="event.link ? null : `/event/${event.id}`" @click="event.link ? expand() : null">
     <q-item-section>
       <q-item-label :class="{ 'event-item__label_original': !event.link }">
 				<template v-if="!expanded">{{ event.title }}</template>
