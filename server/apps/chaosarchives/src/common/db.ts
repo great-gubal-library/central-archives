@@ -5,7 +5,11 @@ export function isQueryFailedError(err: any): err is QueryFailedError & { code: 
 	return err instanceof QueryFailedError;
 }
 
+export function escapeForLike(substring: string): string {
+	return substring.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_');
+}
+
 export function Contains(substring: string): FindOperator<string> {
-	const escapedString = substring.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_');
+	const escapedString = escapeForLike(substring);
 	return Like(`%${escapedString}%`);
 }

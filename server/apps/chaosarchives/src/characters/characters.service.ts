@@ -5,11 +5,13 @@ import { Character, Image, Server, User } from '@app/entity';
 import { generateVerificationCode } from '@app/security';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
+import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-profile-filter.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { CharacterRegistrationStatusResultDto } from '@app/shared/dto/characters/character-registration-status-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { CharacterRegistrationStatus } from '@app/shared/enums/character-registration-status.enum';
 import { getRaceById } from '@app/shared/enums/race.enum';
@@ -18,7 +20,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
-import { isQueryFailedError } from '../common/db';
+import { escapeForLike, isQueryFailedError } from '../common/db';
 import { getLodestoneCharacter } from '../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
@@ -151,20 +153,42 @@ export class CharactersService {
 		});
   }
 
-  async getCharacterList(): Promise<CharacterSummaryDto[]> {
-		const characters = await this.characterRepo.createQueryBuilder('character')
+  async getCharacterList(filter: CharacterProfileFilterDto): Promise<PagingResultDto<CharacterSummaryDto>> {
+		const query = this.characterRepo.createQueryBuilder('character')
 			.where('character.verifiedAt IS NOT NULL')
 			.orderBy('character.name', 'ASC')
 			.innerJoinAndSelect('character.server', 'server')
-			.select([ 'character.name', 'character.race', 'character.avatar', 'server.name' ])
-			.getMany();
+			.select([ 'character.name', 'character.race', 'character.avatar', 'server.name' ]);
 
-		return characters.map(character => ({
+    if (filter.searchQuery) {
+      query.andWhere(`character.name LIKE :searchQuery`, { searchQuery:  `%${escapeForLike(filter.searchQuery)}%` });
+    }
+
+    if (filter.race) {
+      query.andWhere('character.race = :race', { race: filter.race });
+    }
+
+    const total = await query.getCount();
+
+    if (filter.offset) {
+      query.offset(filter.offset);
+    }
+
+    if (filter.limit) {
+      query.limit(filter.limit);
+    }
+    
+    const characters = await query.getMany();
+
+		return {
+      total,
+      data: characters.map(character => ({
 				name: character.name,
 				race: character.race,
 				avatar: character.avatar,
 				server: character.server.name,
-			}));
+			}))
+    };
 	}
 
   async refreshCharacter(characterId: IdWrapper, user: UserInfo): Promise<CharacterRefreshResultDto> {

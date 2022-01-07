@@ -5,11 +5,13 @@ import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
+import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-profile-filter.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { CharacterRegistrationStatusResultDto } from '@app/shared/dto/characters/character-registration-status-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
@@ -43,8 +45,8 @@ export class CharactersController {
   }
 
   @Get()
-  async getCharacterList(): Promise<CharacterSummaryDto[]> {
-    return this.charactersService.getCharacterList();
+  async getCharacterList(@Query() filter: CharacterProfileFilterDto): Promise<PagingResultDto<CharacterSummaryDto>> {
+    return this.charactersService.getCharacterList(filter);
   }
 
   @Post()
