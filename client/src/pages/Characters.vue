@@ -43,6 +43,14 @@
           </q-avatar>
         </q-td>
       </template>
+      <template v-slot:body-cell-name="props">
+        <q-td :props="props">
+          {{props.row.name}}
+					<template v-if="props.row.occupation">
+						<br /><span class="page-characters__column-occupation">{{props.row.occupation}}</span>
+					</template>
+        </q-td>
+      </template>
     </q-table>
   </q-page>
 </template>
@@ -189,7 +197,7 @@ export default class PageCharacters extends Vue {
   background: #f8f8f8;
 }
 
-.page-characters__column-race {
+.page-characters__column-race, .page-characters__column-occupation {
   color: #808080;
 }
 </style>

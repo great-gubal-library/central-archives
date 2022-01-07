@@ -158,10 +158,11 @@ export class CharactersService {
 			.where('character.verifiedAt IS NOT NULL')
 			.orderBy('character.name', 'ASC')
 			.innerJoinAndSelect('character.server', 'server')
-			.select([ 'character.name', 'character.race', 'character.avatar', 'server.name' ]);
+			.select([ 'character.name', 'character.occupation', 'character.race', 'character.avatar', 'server.name' ]);
 
     if (filter.searchQuery) {
-      query.andWhere(`character.name LIKE :searchQuery`, { searchQuery:  `%${escapeForLike(filter.searchQuery)}%` });
+      query.andWhere(`(character.name LIKE :searchQuery OR character.occupation LIKE :searchQuery)`,
+        { searchQuery:  `%${escapeForLike(filter.searchQuery)}%` });
     }
 
     if (filter.race) {
@@ -184,6 +185,7 @@ export class CharactersService {
       total,
       data: characters.map(character => ({
 				name: character.name,
+        occupation: character.occupation,
 				race: character.race,
 				avatar: character.avatar,
 				server: character.server.name,
