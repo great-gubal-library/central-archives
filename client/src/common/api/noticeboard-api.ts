@@ -18,8 +18,8 @@ export default class NoticeboardAPI {
     return this.transport.tokenGet<NoticeboardItemDto>(`${id}`);
   }
 
-  async createNoticeboardItem(noticeboardItem: NoticeboardItemDto): Promise<IdWrapper> {
-    return this.transport.authPost<IdWrapper>('', noticeboardItem);
+  async createNoticeboardItem(noticeboardItem: NoticeboardItemDto, postOnDiscord: boolean): Promise<IdWrapper> {
+    return this.transport.authPost<IdWrapper>('', noticeboardItem, { postOnDiscord });
   }
 
   async editNoticeboardItem(noticeboardItem: NoticeboardItemDto): Promise<void> {

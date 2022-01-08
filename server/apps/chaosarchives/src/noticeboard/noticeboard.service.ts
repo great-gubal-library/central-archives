@@ -45,7 +45,7 @@ export class NoticeboardService {
     });
   }
 
-  async createNoticeboardItem(noticeboardItemDto: NoticeboardItemDto & { id: undefined }, user: UserInfo): Promise<IdWrapper> {
+  async createNoticeboardItem(noticeboardItemDto: NoticeboardItemDto & { id: undefined }, postOnDiscord: boolean, user: UserInfo): Promise<IdWrapper> {
     const noticeboardItemEntity = await this.connection.transaction(async (em) => {
       const character = await em.getRepository(Character).findOne({
         where: {
@@ -80,7 +80,9 @@ export class NoticeboardService {
       return noticeboardItemRepo.save(noticeboardItem);
     });
 
-    this.notifySteward(noticeboardItemEntity); // no await
+    if (postOnDiscord) {
+      this.notifySteward(noticeboardItemEntity); // no await
+    }
 
     return {
       id: noticeboardItemEntity.id,

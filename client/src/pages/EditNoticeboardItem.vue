@@ -18,6 +18,10 @@
           />
           <h6>Content *</h6>
           <html-editor v-model="noticeboardItem.content" />
+          <template v-if="!noticeboardItem.id">
+            <q-checkbox v-model="postOnDiscord" label="Post on Discord (on #ic-billboard-and-rumours)" />
+            <div class="text-caption">Only limited formatting — bold, italic, and blockquotes — will carry over to Discord. You will be unable to edit the Discord post after creating the noticeboard item.</div>
+          </template>
         </template>
         <section v-else class="page-edit-noticeboard-item__preview">
           <noticeboard-item-view :noticeboard-item="noticeboardItem" :preview="true" />
@@ -98,6 +102,7 @@ export default class PageEditNoticeboardItem extends Vue {
 
   noticeboardItem = new NoticeboardItemDto();
   noticeboardItemBackup = new NoticeboardItemDto();
+  postOnDiscord = true;
   preview = false;
   loaded = false;
   saving = false;
@@ -146,7 +151,7 @@ export default class PageEditNoticeboardItem extends Vue {
 
     try {
       if (!this.noticeboardItem.id) {
-        const { id } = await this.$api.noticeboard.createNoticeboardItem(this.noticeboardItem);
+        const { id } = await this.$api.noticeboard.createNoticeboardItem(this.noticeboardItem, this.postOnDiscord);
         this.noticeboardItem.id = id;
       } else {
         await this.$api.noticeboard.editNoticeboardItem(this.noticeboardItem);
