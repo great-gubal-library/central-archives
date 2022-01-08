@@ -6,4 +6,5 @@ export interface DbConfigInterface {
 	password: string,
 	database: string,
 	synchronize: boolean,
+	logging: boolean,
 }

@@ -11,7 +11,6 @@ export const dbConfiguration: TypeOrmModuleOptions = {
   username: dbConfig.username,
   password: dbConfig.password,
   database: dbConfig.database,
-  logging: true,
   timezone: 'Z',
   entities: [
     Character,
@@ -26,6 +25,7 @@ export const dbConfiguration: TypeOrmModuleOptions = {
     User,
   ],
   synchronize: dbConfig.synchronize,
+  logging: dbConfig.logging,
   keepConnectionAlive: true,
 };
 
