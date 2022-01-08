@@ -268,7 +268,7 @@ export class EventsService {
 	private async notifySteward(event: Event): Promise<void> {
 		try {
 			this.logger.debug(`Notifying Steward about event ${event.id} change`);
-			await this.httpService.post(serverConfiguration.stewardWebhookUrl, { eventId: event.id }).toPromise();
+			await this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/event`, { eventId: event.id }).toPromise();
 		} catch (e) {
 			if (e instanceof Error) {
 				this.logger.error(e.message, e.stack);

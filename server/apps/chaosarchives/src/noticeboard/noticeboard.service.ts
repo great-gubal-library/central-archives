@@ -1,18 +1,22 @@
 import { UserInfo } from '@app/auth/model/user-info';
+import { serverConfiguration } from '@app/configuration';
 import { Character, NoticeboardItem } from '@app/entity';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { NoticeboardItemSummaryDto } from '@app/shared/dto/noticeboard/noticeboard-item-summary.dto';
 import { NoticeboardItemDto } from '@app/shared/dto/noticeboard/noticeboard-item.dto';
 import html from '@app/shared/html';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class NoticeboardService {
+	private readonly logger = new Logger(NoticeboardService.name);
+
   constructor(
     private connection: Connection,
     @InjectRepository(NoticeboardItem) private noticeboardItemRepo: Repository<NoticeboardItem>,
+		private readonly httpService: HttpService,
   ) {}
 
   async getNoticeboardItem(id: number, user?: UserInfo): Promise<NoticeboardItemDto> {
@@ -42,7 +46,7 @@ export class NoticeboardService {
   }
 
   async createNoticeboardItem(noticeboardItemDto: NoticeboardItemDto & { id: undefined }, user: UserInfo): Promise<IdWrapper> {
-    const storyEntity = await this.connection.transaction(async (em) => {
+    const noticeboardItemEntity = await this.connection.transaction(async (em) => {
       const character = await em.getRepository(Character).findOne({
         where: {
           name: noticeboardItemDto.author,
@@ -76,8 +80,10 @@ export class NoticeboardService {
       return noticeboardItemRepo.save(noticeboardItem);
     });
 
+    this.notifySteward(noticeboardItemEntity); // no await
+
     return {
-      id: storyEntity.id,
+      id: noticeboardItemEntity.id,
     };
   }
 
@@ -151,4 +157,17 @@ export class NoticeboardService {
       location: noticeboardItem.location,
     }));
   }
+
+	private async notifySteward(noticeboardItem: NoticeboardItem): Promise<void> {
+		try {
+			this.logger.debug(`Notifying Steward about noticeboard ${noticeboardItem.id} creation`);
+			await this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/noticeboard`, { noticeboardItemId: noticeboardItem.id }).toPromise();
+		} catch (e) {
+			if (e instanceof Error) {
+				this.logger.error(e.message, e.stack);
+			} else {
+				this.logger.error(e);
+			}
+		}
+	}
 }

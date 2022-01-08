@@ -20,13 +20,21 @@ export class BotGateway {
   }
 
 	async sendAnnouncement(message: string): Promise<void> {
+		return this.send(message, discordConfiguration.announcementChannel);
+	}
+
+	async sendNoticeboardItem(message: string): Promise<void> {
+		return this.send(message, discordConfiguration.noticeboardChannel);
+	}
+
+	private async send(message: string, channelId: string): Promise<void> {
 		if (!this.ready) {
 			throw new Error('Discord bot still initializing');
 		}
 
 		const client = this.discordProvider.getClient();
 		const [ channel, guild ] = await Promise.all([
-			client.channels.fetch(discordConfiguration.announcementChannel),
+			client.channels.fetch(channelId),
 			client.guilds.fetch(discordConfiguration.serverId),
 		]);
 

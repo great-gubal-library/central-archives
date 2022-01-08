@@ -1,7 +1,11 @@
 import { serverConfiguration } from '@app/configuration';
-import { EventAnnouncement } from '@app/entity';
-import { Injectable, Logger } from '@nestjs/common';
+import { EventAnnouncement, NoticeboardItem } from '@app/entity';
+import { noticeboardLocations } from '@app/shared/enums/noticeboard-location.enum';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import escape from 'escape-html';
+import { NodeHtmlMarkdown } from 'node-html-markdown';
+import sanitizeHtml from 'sanitize-html';
 import { Repository } from 'typeorm';
 import { BotGateway } from './bot.gateway';
 
@@ -14,9 +18,37 @@ export class AnnouncementService {
   constructor(
     private readonly botGateway: BotGateway,
     @InjectRepository(EventAnnouncement) private eventAnnouncementRepo: Repository<EventAnnouncement>,
+		@InjectRepository(NoticeboardItem) private noticeboardItemRepo: Repository<NoticeboardItem>,
   ) {
     this.load();
   }
+
+	async postNoticeboardItem(noticeboardItemId: number): Promise<void> {
+		const noticeboardItem = await this.noticeboardItemRepo.findOne(noticeboardItemId, {
+			relations: [ 'owner' ],
+		});
+
+		if (!noticeboardItem) {
+			throw new NotFoundException(`Noticeboard item with id ${noticeboardItemId} not found.`);
+		}
+
+		const subtitle = `${noticeboardLocations[noticeboardItem.location]} — by ${noticeboardItem.owner.name}`
+		const content = `<strong>${escape(noticeboardItem.title)}</strong><br><em>${escape(subtitle)}</em><br><br>${noticeboardItem.content}`;
+		const contentHtml = sanitizeHtml(content, {
+			allowedTags: [ 'b', 'i', 'strong', 'em', 'code', 'tt', 'blockquote', 'p', 'br' ]
+		});
+		const contentMarkdown = NodeHtmlMarkdown.translate(contentHtml);
+
+		try {
+			await this.botGateway.sendNoticeboardItem(contentMarkdown);
+		} catch (e) {
+			if (e instanceof Error) {
+				this.logger.error(e.message, e.stack);
+			} else {
+				this.logger.error(e);
+			}
+		}
+	}
 
   async refresh(eventId: number): Promise<void> {
     const eventTimers = this.timers.get(eventId);
