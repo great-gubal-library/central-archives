@@ -7,6 +7,7 @@
       :rows="profiles"
       :row-key="name"
       v-model:pagination="pagination"
+			wrap-cells
       @row-click="onRowClick"
       @request="onPageRequest"
     >
@@ -45,7 +46,7 @@
       </template>
       <template v-slot:body-cell-name="props">
         <q-td :props="props">
-          {{props.row.name}}
+          <span class="page-characters__column-name">{{props.row.name}}</span>
 					<template v-if="props.row.occupation">
 						<br /><span class="page-characters__column-occupation">{{props.row.occupation}}</span>
 					</template>
@@ -195,6 +196,10 @@ export default class PageCharacters extends Vue {
 
 .page-characters__table tbody tr:nth-child(even) {
   background: #f8f8f8;
+}
+
+.page-characters__column-name {
+  font-size: $body-font-size;
 }
 
 .page-characters__column-race, .page-characters__column-occupation {
