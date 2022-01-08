@@ -17,13 +17,13 @@
             label="type"
             :options="typeOptions"
           />
-          <h6>Content</h6>
-          <html-editor v-model="story.content" />
           <q-input
             :model-value="tags"
             @update:model-value="onTagsChanged"
             label="Tags (comma-separated)"
           />
+          <h6>Content</h6>
+          <html-editor v-model="story.content" />
         </template>
         <section v-else class="page-edit-story__preview">
           <story-view :story="story" :preview="true" />
