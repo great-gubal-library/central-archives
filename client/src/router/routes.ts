@@ -184,6 +184,24 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/NoticeboardItem.vue') }],
   },
 
+  { 
+    path: '/create-noticeboard-item',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditNoticeboardItem.vue') }],
+    meta: {
+      title: 'Create Noticeboard Item'
+    },
+  },
+
+  { 
+    path: '/edit-noticeboard-item/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditNoticeboardItem.vue') }],
+    meta: {
+      title: 'Edit Noticeboard Item'
+    },
+  },
+
   
   // Events
   {

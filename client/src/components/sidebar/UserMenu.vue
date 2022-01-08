@@ -79,6 +79,15 @@
             <q-item-label>New event</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item
+          clickable
+          v-ripple
+          to="/create-noticeboard-item"
+        >
+          <q-item-section>
+            <q-item-label>New noticeboard item</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-separator dark />
         <q-item
           clickable
