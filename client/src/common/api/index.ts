@@ -4,6 +4,7 @@ import APITransport from './api-transport';
 import CharactersAPI from './characters-api';
 import EventsAPI from './events-api';
 import ImagesAPI from './images-api';
+import NoticeboardAPI from './noticeboard-api';
 import StoriesAPI from './stories-api';
 import UserAPI from './user-api';
 
@@ -19,6 +20,7 @@ export default class API {
   readonly events = new EventsAPI(this.transport);
   readonly images = new ImagesAPI(this.transport);
   readonly stories = new StoriesAPI(this.transport);
+  readonly noticeboard = new NoticeboardAPI(this.transport);
 
   // Access token management
 

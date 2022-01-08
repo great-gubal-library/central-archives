@@ -168,6 +168,16 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Noticeboard
+  { 
+    path: '/noticeboard',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Noticeboard.vue') }],
+    meta: {
+      title: 'Noticeboard'
+    },
+  },
+
   // Events
   {
     path: '/event/:id',

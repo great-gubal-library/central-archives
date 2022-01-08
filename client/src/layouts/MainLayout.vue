@@ -163,9 +163,9 @@ export default class MainLayout extends Vue {
     { label: 'Stories', to: '/stories' },
     { label: 'Artwork', to: '/gallery/artwork' },
     { label: 'Screenshots', to: '/gallery/screenshot' },
+    { label: 'Noticeboard', to: '/noticeboard' },
     // { label: 'Free Companies', to: '' },
     // { label: 'Venues', to: '' },
-    // { label: 'Noticeboard', to: '' },
   ];
 
   readonly createContentLinks = [

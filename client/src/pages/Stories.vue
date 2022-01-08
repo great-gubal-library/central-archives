@@ -17,14 +17,14 @@ const $api = useApi();
 const $q = useQuasar();
 
 @Options({
-	name: 'PageCharacters',
+	name: 'PageStories',
 	components: {
 		StoryList
 	},
   async beforeRouteEnter(_, __, next) {
     try {
       const stories = await $api.stories.getStories({});
-      next(vm => (vm as PageCharacters).setContent(stories));
+      next(vm => (vm as PageStories).setContent(stories));
     } catch (e) {
       console.log(e);
       $q.notify({
@@ -34,7 +34,7 @@ const $q = useQuasar();
     }
   }
 })
-export default class PageCharacters extends Vue {
+export default class PageStories extends Vue {
 	stories: StorySummaryDto[] = [];
 
 	setContent(stories: StorySummaryDto[]) {
