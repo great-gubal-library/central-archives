@@ -33,11 +33,18 @@ export class AnnouncementService {
 		}
 
 		const subtitle = `${noticeboardLocations[noticeboardItem.location]} — by ${noticeboardItem.owner.name}`
+		const link = `${serverConfiguration.frontendRoot}/noticeboard/${noticeboardItem.id}`;
 		const content = `<strong>${escape(noticeboardItem.title)}</strong><br><em>${escape(subtitle)}</em><br><br>${noticeboardItem.content}`;
 		const contentHtml = sanitizeHtml(content, {
 			allowedTags: [ 'b', 'i', 'strong', 'em', 'code', 'tt', 'blockquote', 'p', 'br' ]
 		});
-		const contentMarkdown = NodeHtmlMarkdown.translate(contentHtml);
+		let contentMarkdown = NodeHtmlMarkdown.translate(contentHtml);
+
+		if (!contentMarkdown.endsWith('\n')) {
+			contentMarkdown += '\n';
+		}
+
+		contentMarkdown += `\n${link}`;
 
 		try {
 			await this.botGateway.sendNoticeboardItem(contentMarkdown);
