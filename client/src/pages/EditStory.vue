@@ -20,7 +20,6 @@
           <h6>Content</h6>
           <html-editor v-model="story.content" />
           <q-input
-            filled
             :model-value="tags"
             @update:model-value="onTagsChanged"
             label="Tags (comma-separated)"
