@@ -178,6 +178,13 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/noticeboard/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/NoticeboardItem.vue') }],
+  },
+
+  
   // Events
   {
     path: '/event/:id',

@@ -43,10 +43,11 @@ class Props {
 }
 
 @Options({
+  name: 'StoryView',
   components: {
   }
 })
-export default class CharacterProfile extends Vue.with(Props) {
+export default class StoryView extends Vue.with(Props) {
   get content(): string {
     return html.sanitize(this.story.content);
   }
