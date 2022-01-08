@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { NoticeboardItemSummaryDto } from '@app/shared/dto/stories/story-summary.dto';
+import { NoticeboardItemSummaryDto } from '@app/shared/dto/noticeboard/noticeboard-item-summary.dto';
 import errors from '@app/shared/errors';
 import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
 import { useQuasar } from 'quasar';
