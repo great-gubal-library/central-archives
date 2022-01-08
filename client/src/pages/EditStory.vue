@@ -6,7 +6,7 @@
         <template v-if="!preview">
           <q-input
             v-model="story.title"
-            label="Title"
+            label="Title *"
             :rules="[
               $rules.required('This field is required.'),
             ]"
@@ -22,7 +22,7 @@
             @update:model-value="onTagsChanged"
             label="Tags (comma-separated)"
           />
-          <h6>Content</h6>
+          <h6>Content *</h6>
           <html-editor v-model="story.content" />
         </template>
         <section v-else class="page-edit-story__preview">
