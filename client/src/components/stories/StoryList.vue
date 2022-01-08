@@ -25,17 +25,18 @@
 
 <script lang="ts">
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
-import { Options, Vue } from 'vue-class-component';
+import { prop, Options, Vue } from 'vue-class-component';
+
+class Props {
+  stories = prop<StorySummaryDto[]>({
+    required: true
+  });
+}
 
 @Options({
-  props: {
-    stories: {
-      type: Object as () => StorySummaryDto[],
-      required: true,
-    },
-  },
+  name: 'StoryList',
 })
-export default class NewProfileList extends Vue {
+export default class StoryList extends Vue.with(Props) {
   getLink(story: StorySummaryDto) {
     return `/story/${story.id}`
   }

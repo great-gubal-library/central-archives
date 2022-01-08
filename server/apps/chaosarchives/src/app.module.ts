@@ -11,6 +11,7 @@ import { EventsModule } from './events/events.module';
 import { ImagesModule } from './images/images.module';
 import { MailModule } from './mail/mail.module';
 import { MainPageModule } from './mainpage/main-page.module';
+import { NoticeboardModule } from './noticeboard/noticeboard.module';
 import { StoriesModule } from './stories/stories.module';
 import { UserModule } from './user/user.module';
 
@@ -27,6 +28,7 @@ import { UserModule } from './user/user.module';
     CarrdModule,
     StoriesModule,
     ImagesModule,
+    NoticeboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

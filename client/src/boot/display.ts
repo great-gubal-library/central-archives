@@ -1,4 +1,5 @@
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
+import { NoticeboardLocation } from '@app/shared/enums/noticeboard-location.enum';
 import { Race } from '@app/shared/enums/race.enum';
 import { StoryType } from '@app/shared/enums/story-type.enum';
 import SharedConstants from '@app/shared/SharedConstants';
@@ -36,6 +37,16 @@ class Display {
 		[StoryType.IC_HAPPENING]: 'IC Happening',
 		[StoryType.CONCEPTUAL]: 'Conceptual',
 	};
+
+	readonly noticeboardLocations: { [k: string]: string } = {
+		[NoticeboardLocation.MULTIPLE_LOCATIONS]: 'Multiple Locations',
+		[NoticeboardLocation.VESPER_BAY]: 'Vesper Bay',
+		[NoticeboardLocation.LIMSA_LOMINSA]: 'Limsa Lominsa',
+		[NoticeboardLocation.GRIDANIA]: 'Gridania',
+		[NoticeboardLocation.ULDAH]: "Ul'dah",
+		[NoticeboardLocation.ISHGARD]: 'Ishgard',
+	};
+
 
 	readonly imageCategories: { [k: string]: string } = {
 		[ImageCategory.UNLISTED]: 'Unlisted',

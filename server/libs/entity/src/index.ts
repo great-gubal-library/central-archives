@@ -4,6 +4,7 @@ export { Event } from './event.entity';
 export { EventLocation } from './event-location.entity';
 export { EventAnnouncement } from './event-announcement.entity';
 export { Image } from './image.entity';
+export { NoticeboardItem } from './noticeboard-item.entity';
 export { Server } from './server.entity';
 export { Story } from './story.entity';
 export { StoryTag } from './story-tag.entity';

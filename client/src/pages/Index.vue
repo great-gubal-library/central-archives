@@ -9,23 +9,10 @@
       <h5><router-link to="/gallery/artwork">New artwork</router-link></h5>
       <thumb-gallery :images="content.newArtwork" />
     </section>
-    <!--
     <section>
-      <h5>Noticeboard</h5>
-      <q-markup-table dense>
-        <tbody class="index__table">
-          <tr v-for="(adventure, index) in noticeboard" :key="index">
-            <td>
-              <div>{{adventure.title}}</div>
-              <div style="margin-top: -8px"><small style="color: #888">{{adventure.author}}</small></div>
-            </td>
-            <td>{{adventure.location}}</td>
-            <td>{{adventure.date}}</td>
-          </tr>
-        </tbody>
-      </q-markup-table>
+      <h5><router-link to="/noticeboard">Noticeboard</router-link></h5>
+      <noticeboard-item-list :noticeboardItems="content.newNoticeboardItems" />
     </section>
-    -->
     <section>
       <h5><router-link to="/profiles">New profiles</router-link></h5>
       <character-name-list :profiles="content.newProfiles" />
@@ -54,6 +41,7 @@ import { Vue, Options } from 'vue-class-component';
 import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
 import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
 import StoryList from 'components/stories/StoryList.vue';
+import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
 import ThumbGallery from 'components/images/ThumbGallery.vue';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { useApi } from 'src/boot/axios';
@@ -81,6 +69,7 @@ async function load(): Promise<MainPageContentDto> {
     NewsTimeline,
     CharacterNameList,
     StoryList,
+    NoticeboardItemList,
     ThumbGallery,
   },
   async beforeRouteEnter(_, __, next) {
@@ -96,6 +85,7 @@ export default class PageIndex extends Vue {
     newStories: [],
     newArtwork: [],
     newScreenshots: [],
+    newNoticeboardItems: [],
   };
 
   loaded = false;

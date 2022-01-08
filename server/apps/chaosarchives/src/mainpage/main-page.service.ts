@@ -31,6 +31,7 @@ export class MainPageService {
 			newArtwork,
 			newScreenshots,
 			newStories: [], // Will be loaded by StoriesService instead
+			newNoticeboardItems: [], // Will be loaded by NoticeboardService instead
 			news: [], // Will be loaded by NewsService instead
 			newsUpToDate: false,
 		};
