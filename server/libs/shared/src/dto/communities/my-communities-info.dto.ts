@@ -1,5 +1,5 @@
 import { CommunityFCSummaryDto } from "./community-fc-summary.dto";
 
-export interface MyCommunitiesInfo {
+export interface MyCommunitiesInfoDto {
 	freeCompany: CommunityFCSummaryDto | null;
 }

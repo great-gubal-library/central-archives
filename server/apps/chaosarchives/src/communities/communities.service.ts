@@ -2,7 +2,7 @@ import { UserInfo } from '@app/auth/model/user-info';
 import { Character, FreeCompany, Server } from '@app/entity';
 import { CharacterIdWrapper } from '@app/shared/dto/common/character-id-wrapper.dto';
 import { CommunityFCSummaryDto } from '@app/shared/dto/communities/community-fc-summary.dto';
-import { MyCommunitiesInfo } from '@app/shared/dto/communities/my-communities-info.dto';
+import { MyCommunitiesInfoDto } from '@app/shared/dto/communities/my-communities-info.dto';
 import { ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI from '@xivapi/js';
@@ -15,7 +15,7 @@ export class CommunitiesService {
 		@InjectRepository(Character) private characterRepo: Repository<Character>,
 		) {}
 
-	async getCommunitiesInfo(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<MyCommunitiesInfo> {
+	async getCommunitiesInfo(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<MyCommunitiesInfoDto> {
 		const character = await this.characterRepo.findOne({
 			where: {
 				id: characterIdWrapper.characterId,

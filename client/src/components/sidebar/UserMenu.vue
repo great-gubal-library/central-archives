@@ -64,6 +64,15 @@
         <q-item
           clickable
           v-ripple
+          to="/my-communities"
+        >
+          <q-item-section>
+            <q-item-label>My communities/FC</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
           to="/create-story"
         >
           <q-item-section>

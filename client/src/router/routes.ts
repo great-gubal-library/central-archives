@@ -254,6 +254,17 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Communities
+
+  { 
+    path: '/my-communities',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/MyCommunities.vue') }],
+    meta: {
+      title: 'My Communities'
+    },
+  },
+
   // Free Companies
 
   { 

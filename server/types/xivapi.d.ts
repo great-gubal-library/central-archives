@@ -33,6 +33,7 @@ declare module '@xivapi/js' {
       Race: number;
       Server: string;
       FreeCompanyId: string|null;
+      FreeCompanyName: string|null;
     };
   }
 

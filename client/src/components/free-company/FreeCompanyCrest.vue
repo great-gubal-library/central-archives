@@ -8,7 +8,7 @@
 import { prop, Vue, Options } from 'vue-class-component';
 
 class Props {
-	images = prop<Array<String>>({
+	images = prop<Array>({
 		required: true
 	});
 }

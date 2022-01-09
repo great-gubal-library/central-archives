@@ -3,7 +3,7 @@ import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
 import { UserInfo } from '@app/auth/model/user-info';
 import { CharacterIdWrapper } from '@app/shared/dto/common/character-id-wrapper.dto';
 import { CommunityFCSummaryDto } from '@app/shared/dto/communities/community-fc-summary.dto';
-import { MyCommunitiesInfo } from '@app/shared/dto/communities/my-communities-info.dto';
+import { MyCommunitiesInfoDto } from '@app/shared/dto/communities/my-communities-info.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CommunitiesService } from './communities.service';
@@ -14,7 +14,7 @@ export class CommunitiesController {
 
 	@Get('my-communities')
 	@RoleRequired(Role.USER)
-	async getCommunitiesInfo(@Query() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<MyCommunitiesInfo> {
+	async getCommunitiesInfo(@Query() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<MyCommunitiesInfoDto> {
 		return this.communitiesService.getCommunitiesInfo(characterIdWrapper, user);
 	}
 

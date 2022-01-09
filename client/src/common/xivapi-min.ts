@@ -1,4 +1,4 @@
-import { CharacterInfo, CharacterSearchEntry, PagedResult } from '@xivapi/js';
+import { CharacterInfo, CharacterSearchEntry, FreeCompanyInfo, PagedResult } from '@xivapi/js';
 import axios from 'axios';
 
 const XIVAPI_ROOT = 'https://xivapi.com';
@@ -28,6 +28,13 @@ const minXIVAPI = {
 			})).data;
 		}
   },
+	freecompany: {
+		async get(id: string, options?: { data: 'FCM' }): Promise<FreeCompanyInfo> {
+			return (await axios.get<FreeCompanyInfo>(`${XIVAPI_ROOT}/freecompany/${id}`, {
+				params: options
+			})).data;
+		}
+	}
 };
 
 export default minXIVAPI;
