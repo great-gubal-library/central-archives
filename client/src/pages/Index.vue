@@ -17,7 +17,7 @@
       <h5><router-link to="/profiles">New profiles</router-link></h5>
       <character-name-list :profiles="content.newProfiles" />
     </section>
-    <section>
+    <section v-if="content.newFreeCompanies.length > 0">
       <h5><router-link to="/profiles">New Free Companies</router-link></h5>
       <free-company-name-list :free-companies="content.newFreeCompanies" />
     </section>
