@@ -80,7 +80,7 @@ export default class PageMyCommunities extends Vue {
 	async onSetFCFromLodestoneClick() {
 		const lodestoneId = this.$store.getters.character!.lodestoneId;
 		const characterInfo = await minXIVAPI.character.get(lodestoneId);
-		const fcName = characterInfo.Character.FreeCompanyName;
+		const fcName = characterInfo.Character.FreeCompanyName!;
 
 		let message;
 

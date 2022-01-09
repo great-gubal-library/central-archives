@@ -6,6 +6,7 @@ import { MyCommunitiesInfoDto } from '@app/shared/dto/communities/my-communities
 import { ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI from '@xivapi/js';
+import { DateTime } from 'luxon';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 
 @Injectable()
@@ -111,7 +112,8 @@ export class CommunitiesService {
 				
 				fc.crest = fcLodestoneInfo.FreeCompany.Crest.join(',');
 				fc.server = server;
-				fcRepo.save(fc);
+				fc.foundedAt = DateTime.fromSeconds(fcLodestoneInfo.FreeCompany.Formed).toJSDate();
+				await fcRepo.save(fc);
 			} else {
 				fc = existingFC;
 
@@ -121,7 +123,7 @@ export class CommunitiesService {
 					}
 
 					fc.leader = character;
-					fcRepo.save(fc);
+					await fcRepo.save(fc);
 				}
 			}
 

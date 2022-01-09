@@ -40,6 +40,11 @@ export class FreeCompany extends BasicEntity {
   server: Server;
 
   @Column({
+    nullable: false
+  })
+  foundedAt: Date;
+
+  @Column({
     nullable: true
   })
   claimedAt: Date;

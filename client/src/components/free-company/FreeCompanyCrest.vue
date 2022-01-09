@@ -4,11 +4,11 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import { prop, Vue, Options } from 'vue-class-component';
 
 class Props {
-	images = prop<Array>({
+	images = prop<string[]>({
 		required: true
 	});
 }

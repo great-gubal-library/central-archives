@@ -1,6 +1,5 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character, FreeCompany, Image } from '@app/entity';
-import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { FreeCompany, Image } from '@app/entity';
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
 import SharedConstants from '@app/shared/SharedConstants';
@@ -108,6 +107,7 @@ export class FreeCompaniesService {
 			id: fc.id,
 			mine: !!fc.leader && !!user && user.characters.some(ch => ch.id === fc.leader!.id),
 			claimed: !!fc.claimedAt,
+			foundedAt: fc.foundedAt.getTime(),
 			name: fc.name,
 			server: fc.server.name,
 			tag: fc.tag,

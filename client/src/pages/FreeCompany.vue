@@ -31,7 +31,7 @@ const $router = useRouter();
 interface Content {
 	name: string;
 	server: string;
-	freeCompany: FreeCompanyDto;
+	fc: FreeCompanyDto;
 	members: PagingResultDto<CharacterSummaryDto>;
 	notFound: boolean;
 }
@@ -63,7 +63,7 @@ async function load(params: RouteParams): Promise<Content> {
 					name,
 					server,
 					fc: new FreeCompanyDto(),
-					members: [],
+					members: { data: [], total: 0 },
 					notFound: true
 				}
 			} else {
@@ -83,11 +83,11 @@ async function load(params: RouteParams): Promise<Content> {
 	},
 	async beforeRouteEnter(to, _, next) {
 		const content = await load(to.params);
-		next(vm => (vm as PageCharacter).setContent(content));
+		next(vm => (vm as PageFreeCompany).setContent(content));
 	},
 	async beforeRouteUpdate(to) {
 		const content = await load(to.params);
-		(this as PageCharacter).setContent(content);
+		(this as PageFreeCompany).setContent(content);
 	}
 })
 export default class PageFreeCompany extends Vue {

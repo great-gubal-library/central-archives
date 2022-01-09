@@ -12,6 +12,9 @@ export class FreeCompanyDto {
   @IsBoolean()
   claimed: boolean;
 
+  @IsNumber()
+  foundedAt: number;
+
   @IsString()
   name: string;
 

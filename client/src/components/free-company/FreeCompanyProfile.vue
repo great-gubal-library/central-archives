@@ -16,6 +16,7 @@
     </header>
     <character-details-box class="free-company-profile__infobox">
       <character-detail label="World" :value="freeCompany.server" v-if="freeCompany.server" />
+      <character-detail label="Founded" :value="$display.formatDate(freeCompany.foundedAt)" v-if="freeCompany.foundedAt" />
       <character-detail label="Website" :value="freeCompany.website" :link="freeCompany.website" v-if="freeCompany.website" />
       <character-detail label="Goal" :value="freeCompany.goal" v-if="freeCompany.goal" />
       <character-detail label="Status" :value="freeCompany.status" v-if="freeCompany.status" />

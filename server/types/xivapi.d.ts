@@ -41,6 +41,7 @@ declare module '@xivapi/js' {
     FreeCompany: {
       ID: number;
       Crest: string[];
+      Formed: number;
       Name: string;
       Server: string;
       Tag: string;      
