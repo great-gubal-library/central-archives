@@ -15,6 +15,7 @@ import { NoticeboardModule } from './noticeboard/noticeboard.module';
 import { StoriesModule } from './stories/stories.module';
 import { UserModule } from './user/user.module';
 import { CommunitiesModule } from './communities/communities.module';
+import { FreeCompaniesModule } from './free-companies/free-companies.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CommunitiesModule } from './communities/communities.module';
     ImagesModule,
     NoticeboardModule,
     CommunitiesModule,
+    FreeCompaniesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

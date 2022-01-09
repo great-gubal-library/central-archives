@@ -164,7 +164,7 @@ export default class MainLayout extends Vue {
     { label: 'Artwork', to: '/gallery/artwork' },
     { label: 'Screenshots', to: '/gallery/screenshot' },
     { label: 'Noticeboard', to: '/noticeboard' },
-    // { label: 'Free Companies', to: '' },
+    { label: 'Free Companies', to: '/free-companies' },
     // { label: 'Venues', to: '' },
   ];
 

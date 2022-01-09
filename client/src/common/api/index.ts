@@ -3,6 +3,7 @@ import { NewsDto } from '@app/shared/dto/news/news.dto';
 import APITransport from './api-transport';
 import CharactersAPI from './characters-api';
 import EventsAPI from './events-api';
+import FreeCompaniesAPI from './free-companies-api';
 import ImagesAPI from './images-api';
 import NoticeboardAPI from './noticeboard-api';
 import StoriesAPI from './stories-api';
@@ -18,6 +19,7 @@ export default class API {
   readonly user = new UserAPI(this.transport);
   readonly characters = new CharactersAPI(this.transport);
   readonly events = new EventsAPI(this.transport);
+  readonly freeCompanies = new FreeCompaniesAPI(this.transport);
   readonly images = new ImagesAPI(this.transport);
   readonly stories = new StoriesAPI(this.transport);
   readonly noticeboard = new NoticeboardAPI(this.transport);

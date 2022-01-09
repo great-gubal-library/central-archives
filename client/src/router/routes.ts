@@ -254,6 +254,17 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Free Companies
+
+  { 
+    path: '/free-companies',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/FreeCompanies.vue') }],
+    meta: {
+      title: 'Free Companies'
+    },
+  },
+
   // Characters
   {
     path: '/profiles',
