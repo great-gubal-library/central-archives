@@ -276,6 +276,17 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  {
+    path: '/fc/:server([A-Z][a-z]+)/:fc([^/]+)',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/FreeCompany.vue') }],
+    meta: {
+      title(route: RouteLocationNormalized): string {
+        return (route.params.fc as string).replace('_', ' ');
+      }
+    },
+  },
+
   // Characters
   {
     path: '/profiles',

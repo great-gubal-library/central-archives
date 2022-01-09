@@ -1,4 +1,5 @@
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
+import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
 import APITransport from './api-transport';
 
 export default class FreeCompaniesAPI {
@@ -10,5 +11,9 @@ export default class FreeCompaniesAPI {
 
 	async getFreeCompanies(): Promise<FreeCompanySummaryDto[]> {
 		return this.transport.get<FreeCompanySummaryDto[]>('');
+	}
+
+	async getFreeCompany(name: string, server: string): Promise<FreeCompanyDto> {
+		return this.transport.tokenGet<FreeCompanyDto>(`profile/${server}/${name}`);
 	}
 }

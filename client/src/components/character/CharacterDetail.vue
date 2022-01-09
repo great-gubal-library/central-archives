@@ -1,7 +1,11 @@
 <template>
   <div class="character-detail" v-show="value">
     <div class="character-detail__label">{{label}}</div>
-    <div class="character-detail__value">{{value}}</div>
+    <div class="character-detail__value">
+      <template v-if="link"><a :href="link">{{value}}</a></template>
+      <template v-else-if="routerLink"><router-link :to="routerLink">{{value}}</router-link></template>
+      <template v-else>{{value}}</template>
+    </div>
   </div>
 </template>
 
@@ -15,6 +19,16 @@ class Props {
 
   value = prop<string>({
     required: true,
+  });
+
+  link = prop<string>({
+    required: false,
+    default: ''
+  });
+
+  routerLink = prop<string>({
+    required: false,
+    default: ''
   });
 }
 

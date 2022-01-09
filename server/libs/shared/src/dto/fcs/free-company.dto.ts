@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { BannerDto } from '../characters/banner.dto';
 
 export class FreeCompanyDto {
@@ -8,6 +8,9 @@ export class FreeCompanyDto {
 
   @IsBoolean()
   mine: boolean;
+
+  @IsBoolean()
+  claimed: boolean;
 
   @IsString()
   name: string;
@@ -18,8 +21,8 @@ export class FreeCompanyDto {
   @IsString()
   server: string;
 
-  @IsString()
-  crest: string;
+  @IsArray()
+  crest: string[];
 
   @IsString()
   lodestoneId: string;
