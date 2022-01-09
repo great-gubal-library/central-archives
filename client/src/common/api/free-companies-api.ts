@@ -16,4 +16,8 @@ export default class FreeCompaniesAPI {
 	async getFreeCompany(name: string, server: string): Promise<FreeCompanyDto> {
 		return this.transport.tokenGet<FreeCompanyDto>(`profile/${server}/${name}`);
 	}
+
+	async saveFreeCompany(fc: FreeCompanyDto): Promise<void> {
+		await this.transport.authPut<void>(`/${fc.id}`, fc);
+	}
 }

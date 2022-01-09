@@ -10,7 +10,7 @@
 					<p class="page-my-communities__fc-name">
 						<router-link :to="fcLink">{{communities.freeCompany.name}}</router-link>
 						<template v-if="communities.freeCompany.isLeader">
-						— Leader <router-link to="edit-free-company">(Edit Free Company)</router-link>
+						— Leader <router-link :to="editFCLink">(Edit Free Company)</router-link>
 						</template>
 					</p>
 					<p v-if="communities.freeCompany.goal"><strong>Goal:</strong> {{communities.freeCompany.goal}}</p>
@@ -66,6 +66,11 @@ export default class PageMyCommunities extends Vue {
 	get fcLink() {
 		const fc = this.communities.freeCompany;
 		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(' ', '_')}`;
+	}
+
+	get editFCLink() {
+		const fc = this.communities.freeCompany;
+		return fc == null ? null : `/edit-free-company/${fc.server}/${fc.name.replace(' ', '_')}`;
 	}
 
 	setContent(communities: MyCommunitiesInfoDto) {

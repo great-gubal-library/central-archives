@@ -1,7 +1,7 @@
 <template>
   <div class="free-company-profile">
     <p v-if="!preview && freeCompany.mine">
-      <router-link to="/edit-free-company">Edit Free Company</router-link>
+      <router-link :to="editFCLink">Edit Free Company</router-link>
     </p>
     <banner-view :banner="freeCompany.banner" />
     <header class="free-company-profile__header">
@@ -14,7 +14,7 @@
       </div>
       <div class="layout__filler"></div>
     </header>
-    <character-details-box v-if="freeCompany.showInfoboxes">
+    <character-details-box class="free-company-profile__infobox">
       <character-detail label="World" :value="freeCompany.server" v-if="freeCompany.server" />
       <character-detail label="Website" :value="freeCompany.website" :link="freeCompany.website" v-if="freeCompany.website" />
       <character-detail label="Goal" :value="freeCompany.goal" v-if="freeCompany.goal" />
@@ -69,6 +69,11 @@ class Props {
   },
 })
 export default class CharacterProfile extends Vue.with(Props) {
+	get editFCLink() {
+		const fc = this.freeCompany;
+		return `/edit-free-company/${fc.server}/${fc.name.replace(' ', '_')}`;
+	}
+
   get description(): string {
     return html.sanitize(this.freeCompany.description);
   }
@@ -118,7 +123,7 @@ export default class CharacterProfile extends Vue.with(Props) {
   margin-top: 24px;
 }
 
-.free-company-profile__personality-box {
+.free-company-profile__infobox {
   margin-bottom: 24px;
 }
 

@@ -287,6 +287,15 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/edit-free-company/:server([A-Z][a-z]+)/:fc([^/]+)',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditFreeCompany.vue') }],
+    meta: {
+      title: 'Edit Free Company'
+    },
+  },
+
   // Characters
   {
     path: '/profiles',

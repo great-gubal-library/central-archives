@@ -84,7 +84,7 @@ export class FreeCompany extends BasicEntity {
   @ManyToOne(() => Image, {
     lazy: true,
   })
-  banner: Promise<Image>;
+  banner: Promise<Image|null>;
 
   getCrest(): string[] {
     return this.crest.split(',');
