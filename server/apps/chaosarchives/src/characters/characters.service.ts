@@ -177,6 +177,10 @@ export class CharactersService {
       query.andWhere('character.race = :race', { race: filter.race });
     }
 
+    if (filter.freeCompanyId) {
+      query.andWhere('character.freeCompany.id = :freeCompanyId', { freeCompanyId: filter.freeCompanyId });
+    }
+
     const total = await query.getCount();
 
     if (filter.offset) {
