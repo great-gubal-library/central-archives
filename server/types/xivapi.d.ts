@@ -32,7 +32,21 @@ declare module '@xivapi/js' {
       Name: string;
       Race: number;
       Server: string;
+      FreeCompanyId: string|null;
     };
+  }
+
+  interface FreeCompanyInfo {
+    FreeCompany: {
+      ID: number;
+      Crest: string[];
+      Name: string;
+      Server: string;
+      Tag: string;      
+    };
+    FreeCompanyMembers: {
+      ID: number;
+    }[];
   }
 
   export default class XIVAPI {
@@ -45,6 +59,13 @@ declare module '@xivapi/js' {
         name: string,
         options?: { server: string },
       ): Promise<PagedResult<CharacterSearchEntry>>;
-    };
+    }
+
+    freecompany: {
+      get(
+        lodestoneId: string,
+        options?: { data: 'FCM' },
+      ): Promise<FreeCompanyInfo>;
+    }
   }
 }

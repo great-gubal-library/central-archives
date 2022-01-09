@@ -14,6 +14,7 @@ import { MainPageModule } from './mainpage/main-page.module';
 import { NoticeboardModule } from './noticeboard/noticeboard.module';
 import { StoriesModule } from './stories/stories.module';
 import { UserModule } from './user/user.module';
+import { CommunitiesModule } from './communities/communities.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UserModule } from './user/user.module';
     StoriesModule,
     ImagesModule,
     NoticeboardModule,
+    CommunitiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

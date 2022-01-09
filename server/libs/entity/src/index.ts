@@ -3,6 +3,7 @@ export { Character } from './character.entity';
 export { Event } from './event.entity';
 export { EventLocation } from './event-location.entity';
 export { EventAnnouncement } from './event-announcement.entity';
+export { FreeCompany } from './free-company.entity';
 export { Image } from './image.entity';
 export { NoticeboardItem } from './noticeboard-item.entity';
 export { Server } from './server.entity';

@@ -42,10 +42,12 @@ export class CharactersService {
       .createQueryBuilder('character')
       .innerJoinAndSelect('character.server', 'server')
       .innerJoinAndSelect('character.user', 'user')
+      .leftJoinAndSelect('character.freeCompany', 'freeCompany')
+      .leftJoinAndSelect('freeCompany.server', 'fcServer')
       .where('character.verifiedAt IS NOT NULL')
       .andWhere('character.name = :name', { name })
       .andWhere('server.name = :server', { server })
-      .select(['character', 'server.name', 'user.id'])
+      .select(['character', 'server.name', 'user.id', 'freeCompany', 'fcServer.name' ])
       .getOne();
 
     if (!character) {
@@ -58,6 +60,8 @@ export class CharactersService {
     if (banner) {
       banner.owner = character; // hack, needed to determine URL - TypeORM won't load banner.owner by itself
     }
+
+    const freeCompany = await character.freeCompany;
 
     return {
       id: character.id,
@@ -90,6 +94,10 @@ export class CharactersService {
       showAvatar: character.showAvatar,
       showInfoboxes: character.showInfoboxes,
       combinedDescription: character.combinedDescription,
+      freeCompany: !freeCompany ? null : {
+        name: freeCompany.name,
+        server: freeCompany.server.name
+      },
     };
   }
 

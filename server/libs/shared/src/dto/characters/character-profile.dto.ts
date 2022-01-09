@@ -2,6 +2,7 @@ import { Race } from '@app/shared/enums/race.enum';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { BannerDto } from './banner.dto';
+import { CharacterFreeCompanyDto } from './character-free-company.dto';
 
 export class CharacterProfileDto {
   @IsNumber()
@@ -83,6 +84,8 @@ export class CharacterProfileDto {
 
   @IsBoolean()
   combinedDescription: boolean;
+
+  freeCompany: CharacterFreeCompanyDto|null;
 	
 	constructor(properties?: Readonly<CharacterProfileDto>) {
     if (properties) {

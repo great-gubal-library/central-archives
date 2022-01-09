@@ -82,6 +82,7 @@ export default class PageIndex extends Vue {
     news: [],
     newsUpToDate: false,
     newProfiles: [],
+    newFreeCompanies: [],
     newStories: [],
     newArtwork: [],
     newScreenshots: [],

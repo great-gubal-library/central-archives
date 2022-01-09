@@ -1,4 +1,5 @@
 import { Character } from '@app/entity';
+import { FreeCompany } from '@app/entity/free-company.entity';
 import { HttpModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImagesModule } from '../images/images.module';
@@ -10,7 +11,7 @@ import { NewsService } from './news.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Character]),
+    TypeOrmModule.forFeature([Character, FreeCompany]),
     StoriesModule,
     ImagesModule,
     NoticeboardModule,

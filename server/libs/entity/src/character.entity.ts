@@ -1,9 +1,10 @@
 import { Race } from '@app/shared/enums/race.enum';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
+import { FreeCompany } from './free-company.entity';
+import { Image } from './image.entity';
 import { Server } from './server.entity';
 import { User } from './user.entity';
-import { Image } from './image.entity';
 
 @Entity()
 @Unique(['name', 'server'])
@@ -165,4 +166,9 @@ export class Character extends BasicEntity {
     lazy: true,
   })
   banner: Promise<Image>;
+
+  @ManyToOne(() => FreeCompany, {
+    lazy: true,
+  })
+  freeCompany: Promise<FreeCompany|null>;
 }
