@@ -24,6 +24,7 @@
       <character-detail label="Age" :value="character.age" v-if="character.age" />
       <character-detail label="Birthplace" :value="character.birthplace" v-if="character.birthplace" />
       <character-detail label="Residence" :value="character.residence" v-if="character.residence" />
+      <character-detail label="Free&nbsp;Company" :value="character.freeCompany.name" :router-link="fcLink" v-if="character.freeCompany" />
     </character-details-box>
     <template v-if="character.appearance">
       <h3 v-if="!character.combinedDescription">Outward appearance</h3>
@@ -90,6 +91,11 @@ class Props {
   },
 })
 export default class CharacterProfile extends Vue.with(Props) {
+  get fcLink() {
+    const fc = this.character.freeCompany;
+		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(' ', '_')}`;
+  }
+
   get appearance(): string {
     return html.sanitize(this.character.appearance);
   }

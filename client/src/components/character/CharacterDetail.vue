@@ -58,7 +58,7 @@ export default class CharacterDetail extends Vue.with(Props) {
 .character-detail__label {
   flex-basis: 0;
   flex-grow: 1;
-  min-width: 90px;
+  min-width: 110px;
   font-weight: bold;
 }
 
