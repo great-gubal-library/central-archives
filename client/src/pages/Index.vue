@@ -16,18 +16,10 @@
     <section>
       <h5><router-link to="/profiles">New profiles</router-link></h5>
       <character-name-list :profiles="content.newProfiles" />
-      <!--
-      <div class="index__profile-fc-col">
-        <h5>New free companies</h5>
-        <q-markup-table dense>
-          <tbody class="index__table">
-            <tr v-for="(fc, index) in newFCs" :key="index">
-              <td>{{fc.name}}</td>
-            </tr>
-          </tbody>
-        </q-markup-table>
-      </div>
-      -->
+    </section>
+    <section>
+      <h5><router-link to="/profiles">New Free Companies</router-link></h5>
+      <free-company-name-list :free-companies="content.newFreeCompanies" />
     </section>
     <section v-if="content.newScreenshots.length > 0">
       <h5><router-link to="/gallery/screenshot">New screenshots</router-link></h5>
@@ -40,6 +32,7 @@
 import { Vue, Options } from 'vue-class-component';
 import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
 import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
+import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
 import StoryList from 'components/stories/StoryList.vue';
 import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
 import ThumbGallery from 'components/images/ThumbGallery.vue';
@@ -68,6 +61,7 @@ async function load(): Promise<MainPageContentDto> {
   components: {
     NewsTimeline,
     CharacterNameList,
+    FreeCompanyNameList,
     StoryList,
     NoticeboardItemList,
     ThumbGallery,
