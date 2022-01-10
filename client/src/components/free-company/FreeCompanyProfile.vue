@@ -27,9 +27,6 @@
     <template v-if="freeCompany.description">
       <section class="free-company-profile__appearance-background" v-html="description"></section>
     </template>
-    <template v-else>
-      No description.
-    </template>
     <iframe
       v-if="freeCompany.carrdProfile"
       v-iframe-resize
@@ -39,6 +36,9 @@
       class="free-company-profile__carrd-iframe"
     >
     </iframe>
+    <template v-if="!freeCompany.description && !freeCompany.carrdProfile">
+      No description.
+    </template>
   </div>
 </template>
 
