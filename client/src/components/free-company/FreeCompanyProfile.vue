@@ -36,7 +36,7 @@
       class="free-company-profile__carrd-iframe"
     >
     </iframe>
-    <template v-if="!freeCompany.description && !freeCompany.carrdProfile">
+    <template v-if="freeCompany.claimed && !freeCompany.description && !freeCompany.carrdProfile">
       No description.
     </template>
   </div>
