@@ -81,6 +81,18 @@ export class FreeCompany extends BasicEntity {
 
   @Column({
     nullable: false,
+    default: ''
+  })
+	areaOfOperations: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	recruitingOfficers: string;
+
+  @Column({
+    nullable: false,
     width: 100,
     default: ''
   })

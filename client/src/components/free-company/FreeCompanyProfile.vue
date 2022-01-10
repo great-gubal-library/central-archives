@@ -20,6 +20,8 @@
       <character-detail label="Website" :value="freeCompany.website" :link="freeCompany.website" v-if="freeCompany.website" />
       <character-detail label="Goal" :value="freeCompany.goal" v-if="freeCompany.goal" />
       <character-detail label="Status" :value="freeCompany.status" v-if="freeCompany.status" />
+      <character-detail label="Main area of operations" :value="freeCompany.areaOfOperations" v-if="freeCompany.areaOfOperations" />
+      <character-detail label="Recruiting officers" :value="freeCompany.recruitingOfficers" v-if="freeCompany.recruitingOfficers" />
     </character-details-box>
     <template v-if="!freeCompany.claimed">
       This Free Company's leader has not yet claimed it on Chaos Archives.

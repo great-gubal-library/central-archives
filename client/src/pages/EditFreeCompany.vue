@@ -15,6 +15,8 @@
             <q-input v-model="fc.website" label="Website" />
             <q-input v-model="fc.goal" label="Goal" />
             <q-input v-model="fc.status" label="Status" />
+            <q-input v-model="fc.areaOfOperations" label="Main area of operations" />
+            <q-input v-model="fc.recruitingOfficers" label="Recruiting officers" />
           </section>
           <h6>Description</h6>
           <html-editor v-model="fc.description" />

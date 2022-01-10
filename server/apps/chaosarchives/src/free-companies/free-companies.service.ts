@@ -72,6 +72,8 @@ export class FreeCompaniesService {
 			fc.goal = fcDto.goal;
 			fc.website = fcDto.website;
 			fc.status = fcDto.status;
+			fc.areaOfOperations = fcDto.areaOfOperations;
+			fc.recruitingOfficers = fcDto.recruitingOfficers;
 			fc.carrdProfile = fcDto.carrdProfile;
 
 			// Set banner
@@ -117,6 +119,8 @@ export class FreeCompaniesService {
 			crest: fc.getCrest(),
 			lodestoneId: fc.lodestoneId,
 			status: fc.status,
+			areaOfOperations: fc.areaOfOperations,
+			recruitingOfficers: fc.recruitingOfficers,
 			carrdProfile: fc.carrdProfile,
 			banner: !banner ? null : {
 				id: banner.id,

@@ -45,6 +45,12 @@ export class FreeCompanyDto {
   status: string;
 
   @IsString()
+  areaOfOperations: string;
+
+  @IsString()
+  recruitingOfficers: string;
+
+  @IsString()
   carrdProfile: string;
 
   @Type(() => BannerDto)
