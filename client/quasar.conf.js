@@ -126,6 +126,7 @@ module.exports = configure(function (ctx) {
         'Loading',
         'LoadingBar',
         'LocalStorage',
+        'Meta',
         'Notify',
       ]
     },

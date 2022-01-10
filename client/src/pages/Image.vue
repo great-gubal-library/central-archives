@@ -27,7 +27,7 @@
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
 import html from '@app/shared/html';
-import { useQuasar } from 'quasar';
+import { useQuasar, createMetaMixin } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
@@ -75,7 +75,23 @@ async function load(params: RouteParams): Promise<ImageDto> {
 	async beforeRouteUpdate(to) {
 		const image = await load(to.params);
 		(this as PageImage).setContent(image);
-	}
+	},
+	mixins: [
+		createMetaMixin(function() {
+			return {
+				meta: {
+					'ogImage': {
+						property: 'og:image',
+						content: (this as PageImage).image.url,
+					},
+					'twitterCard': {
+						property: 'twitter:card',
+						content: 'summary_large_image',
+					},
+				}
+			}
+		}),
+	],
 })
 export default class PageImage extends Vue {
 	image = {} as ImageDto;
