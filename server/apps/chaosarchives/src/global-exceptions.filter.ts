@@ -10,7 +10,7 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
     if (isQueryFailedError(e) && e.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD') {
 			response.status(HttpStatus.BAD_REQUEST).json({
 				statusCode: HttpStatus.BAD_REQUEST,
-				message: 'Emoji and other non-text characters are forbidden. Please remove them and try again.',
+				message: 'Sorry, emoji and other non-text characters are disabled. Please remove them and try again.',
 			});
 		} else {
 			response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
