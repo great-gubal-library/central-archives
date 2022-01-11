@@ -13,13 +13,15 @@
       <h5><router-link to="/noticeboard">Noticeboard</router-link></h5>
       <noticeboard-item-list :noticeboardItems="content.newNoticeboardItems" />
     </section>
-    <section>
-      <h5><router-link to="/profiles">New profiles</router-link></h5>
-      <character-name-list :profiles="content.newProfiles" />
-    </section>
-    <section v-if="content.newFreeCompanies.length > 0">
-      <h5><router-link to="/free-companies">New Free Companies</router-link></h5>
-      <free-company-name-list :free-companies="content.newFreeCompanies" />
+    <section class="page-index__profiles-and-fcs">
+      <section>
+        <h5><router-link to="/profiles">New profiles</router-link></h5>
+        <character-name-list :profiles="content.newProfiles" />
+      </section>
+      <section v-if="content.newFreeCompanies.length > 0">
+        <h5><router-link to="/free-companies">New Free Companies</router-link></h5>
+        <free-company-name-list :free-companies="content.newFreeCompanies" />
+      </section>
     </section>
     <section v-if="content.newScreenshots.length > 0">
       <h5><router-link to="/gallery/screenshot">New screenshots</router-link></h5>
@@ -101,5 +103,16 @@ export default class PageIndex extends Vue {
 </script>
 
 <style lang="scss">
+.page-index__profiles-and-fcs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -12px;
+}
 
+.page-index__profiles-and-fcs > section {
+  flex-basis: 0;
+  flex-grow: 1;
+  min-width: 300px;
+  padding-right: 12px;
+}
 </style>
