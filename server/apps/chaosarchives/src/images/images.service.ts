@@ -180,8 +180,8 @@ export class ImagesService {
           throw new BadRequestException('Invalid character ID');
         }
 
-        // Replace characters forbidden in Windows and Unix filenames
-        const filename = origFilename.replace(/[<>:"/\\|?*]/g, '_');
+        // Replace characters forbidden in Windows and Unix filenames and URLs
+        const filename = origFilename.replace(/[<>:"/\\|?*#]/g, '_');
 
         // Prepare and upload image
         let sanitizeResult: ImageSanitizeResult;
