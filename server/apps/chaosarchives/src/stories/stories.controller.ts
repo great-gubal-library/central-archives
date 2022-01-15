@@ -15,6 +15,11 @@ import { StoriesService } from './stories.service';
 export class StoriesController {
 	constructor(private storiesService: StoriesService) { }
 
+	@Get('tags')
+	async getTags(): Promise<string[]> {
+		return this.storiesService.getTags();
+	}
+
 	@Get(':id')
 	@UseGuards(OptionalJwtAuthGuard)
 	async getStory(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<StoryDto> {

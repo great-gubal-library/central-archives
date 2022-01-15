@@ -225,4 +225,15 @@ export class StoriesService {
       }))
     };
   }
+
+  async getTags(): Promise<string[]> {
+    const tags = await this.storyTagRepo
+      .createQueryBuilder('tag')
+      .distinct()
+      .orderBy({ 'tag.name': 'ASC' })
+      .select(['tag.name'])
+      .getMany();
+
+    return tags.map(tag => tag.name);
+  }
 }

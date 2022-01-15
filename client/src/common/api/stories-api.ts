@@ -27,4 +27,8 @@ export default class StoriesAPI {
   async editStory(story: StoryDto): Promise<void> {
     return this.transport.authPut<void>(`${story.id || -1}`, story);
   }
+
+  async getTags(): Promise<string[]> {
+    return this.transport.get<string[]>('tags');
+  }
 }

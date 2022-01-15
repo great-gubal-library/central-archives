@@ -34,15 +34,20 @@
 							/>
 						</label>
 					</q-form>
-					<q-form class="page-stories__filter">
-						<q-input
-							class="page-stories__filter-tag"
+					<label class="page-stories__filter-tag">
+						<span class="page-stories__tag-label">Tag:</span>
+						<q-select
+							class="page-stories__tag-select"
 							v-model="tag"
-							label="Tag"
-							debounce="200"
+							:display-value="tag"
+							:options="tagOptions"
+							use-input
+							emit-value
+							map-options
+							@filter="onTagFilter"
 							@update:model-value="refresh"
 						/>
-					</q-form>
+					</label>
 				</section>
       </template>
       <template v-slot:header-cell-avatar="props">
@@ -89,11 +94,14 @@ const $api = useApi();
 			filter.type = type;
 		}
 
-    const stories = await $api.stories.getStories(filter);
+    const [ stories, tags] = await Promise.all([
+			$api.stories.getStories(filter),
+			$api.stories.getTags(),
+		]);
     next((vm) => {
 			(vm as PageStories).tag = tag;
 			(vm as PageStories).type = type;
-			(vm as PageStories).setContent(stories);
+			(vm as PageStories).setContent(stories, tags);
 		});
   },
 })
@@ -108,6 +116,8 @@ export default class PageStories extends Vue {
   searchQuery = '';
   tag = '';
   type: StoryType|null = null;
+	tagOptions: {label: string, value: string}[] = [];
+	allTagOptions: {label: string, value: string}[] = [];
 
   get typeOptions() {
     return [
@@ -137,7 +147,18 @@ export default class PageStories extends Vue {
     ];
   }
 
-  setContent(stories: PagingResultDto<StorySummaryDto>) {
+  setContent(stories: PagingResultDto<StorySummaryDto>, tags: string[]) {
+		this.allTagOptions = [
+			{
+				label: '(All)',
+				value: '',
+			},
+			...tags.map(tag => ({
+				label: tag,
+				value: tag
+			}))
+		];
+
     this.stories = stories.data;
     this.pagination.rowsNumber = stories.total;
   }
@@ -145,6 +166,18 @@ export default class PageStories extends Vue {
   onRowClick(e: Event, story: StorySummaryDto) {
     void this.$router.push(`/story/${story.id}`);
   }
+
+	onTagFilter(value: string, update: () => void) {
+    value = value.trim();
+
+    if (!value) {
+			this.tagOptions = this.allTagOptions;
+    } else {
+			this.tagOptions = [ this.allTagOptions[0], ...this.allTagOptions.filter(tag => tag.value.toLowerCase().includes(value.toLowerCase())) ];
+		}
+
+		update();
+	}
 
 	refresh() {
 		void this.onPageRequest({ pagination: this.pagination });
@@ -198,12 +231,21 @@ export default class PageStories extends Vue {
   align-items: center;
 }
 
-.page-stories__type-label {
+.page-stories__type-label, .page-stories__tag-label {
   padding-right: 8px;
 }
 
 .page-stories__type-select {
   width: 150px;
+}
+
+.page-stories__filter-tag {
+	display: flex;
+  align-items: center;
+}
+
+.page-stories__tag-select {
+	flex-grow: 1;
 }
 
 .page-stories__table thead {
