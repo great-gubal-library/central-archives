@@ -62,15 +62,14 @@ import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { Race } from '@app/shared/enums/race.enum';
 import { useApi } from 'src/boot/axios';
-import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
 import { Options, Vue } from 'vue-class-component';
 import SharedConstants from '@app/shared/SharedConstants';
 
 const $api = useApi();
 
 @Options({
+  name: 'PageCharacters',
   components: {
-    CharacterNameList,
   },
   async beforeRouteEnter(_, __, next) {
     const profiles = await $api.characters.getCharacterProfiles({

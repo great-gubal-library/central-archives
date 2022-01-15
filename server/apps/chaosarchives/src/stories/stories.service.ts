@@ -187,22 +187,28 @@ export class StoriesService {
       .select(['story.id', 'character.name', 'story.title', 'story.createdAt'])
       .limit(filter.limit);
 
-    if (filter.characterId) {
-      query.where('character.id = :characterId', {
+      if (filter.searchQuery) {
+        query.andWhere('(story.title LIKE :searchQuery OR character.name LIKE :searchQuery)', {
+          searchQuery: `%${escapeForLike(filter.searchQuery)}%`
+        });
+      }
+  
+      if (filter.characterId) {
+      query.andWhere('character.id = :characterId', {
         characterId: filter.characterId,
       });
     }
 
     if (filter.tag) {
       query.innerJoinAndSelect('story.tags', 'tag');
-      query.where('tag.name = :tag', {
+      query.andWhere('tag.name = :tag', {
         tag: filter.tag,
       });
     }
 
-    if (filter.searchQuery) {
-      query.where('story.title LIKE :searchQuery', {
-        searchQuery: `%${escapeForLike(filter.searchQuery)}%`
+    if (filter.type) {
+      query.andWhere('story.type = :type', {
+        type: filter.type,
       });
     }
 

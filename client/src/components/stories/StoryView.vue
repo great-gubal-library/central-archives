@@ -11,12 +11,12 @@
         in
         <template v-for="(tag, index) in story.tags" :key="tag.name">
           <template v-if="index > 0">, </template>
-          <span>{{ tag }}</span>
+          <router-link :to="{ path: '/stories', query: { tag } }">{{ tag }}</router-link>
         </template>
       </template>
       </div>
       <div class="story-view__type">
-        {{ $display.storyTypes[story.type] }}
+        <router-link :to="{ path: '/stories', query: { type: story.type } }">{{ $display.storyTypes[story.type] }}</router-link>
       </div>
     </section>
     <hr />
