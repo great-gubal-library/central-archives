@@ -74,14 +74,18 @@ export class NewsService {
 				// Get image URL from linked page
 				const linkedPage = await this.httpService.get<string>(link).toPromise();
 				const linkedDoc = parse(linkedPage.data);
-				const images = linkedDoc.querySelectorAll('.elementor-col-50 .elementor-widget-image img');
+				let images = linkedDoc.querySelectorAll('.elementor-section:nth-child(3) .elementor-col-50:first-child img');
+
+				if (images.length === 0) {
+					images = linkedDoc.querySelectorAll('.elementor-col-50:first-child .elementor-widget-image img');
+				}
 
 				return {
 					title,
 					author,
 					content,
 					link,
-					image: images.length >= 2 ? images[1].getAttribute('data-src')! : '',
+					image: images.length > 0 ? images[0].getAttribute('data-src')! : '',
 				};
 			} catch (e) {
 				// Fallback in case we can't get the image URL

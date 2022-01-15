@@ -89,6 +89,7 @@ export default class NewsTimeline extends Vue {}
 }
 
 .news-timeline__image-container .q-img {
+  max-height: 150px;
   background: #80a0c0;
 }
 </style>
