@@ -4,4 +4,5 @@ export default Object.freeze({
 	PASSWORD_MIN_LENGTH: 8,
 	MAX_UPLOAD_SIZE: 1024 * 1024,
 	MIN_BANNER_ASPECT_RATIO: 4 / 1,
+	DEFAULT_ROWS_PER_PAGE: 20,
 })

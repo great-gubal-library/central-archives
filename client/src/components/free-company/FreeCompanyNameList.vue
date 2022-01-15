@@ -1,5 +1,5 @@
 <template>
-  <q-list class="free-company-name-list" bordered>
+  <q-list class="free-company-name-list striped-list" bordered>
     <q-item
       v-for="fc in freeCompanies"
       :key="`${fc.name}_${fc.server}`"
@@ -52,11 +52,4 @@ export default class FreeCompanyNameList extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
-.free-company-name-list .q-item {
-  background: $blue-1;
-}
-
-.free-company-name-list .q-item:nth-child(even) {
-  background: rgba($blue-2, 0.4);
-}
 </style>

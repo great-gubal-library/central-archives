@@ -1,5 +1,5 @@
 <template>
-  <div class="story-list">
+  <div class="story-list striped-list">
     <q-list v-if="stories.length" bordered>
       <q-item
         v-for="story in stories"
@@ -44,11 +44,5 @@ export default class StoryList extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
-.story-list .q-item {
-  background: $blue-1;
-}
 
-.story-list .q-item:nth-child(even) {
-  background: rgba($blue-2, 0.4);
-}
 </style>

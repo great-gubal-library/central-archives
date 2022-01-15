@@ -2,7 +2,7 @@
   <q-page class="page-characters">
     <h2>People of the Realm</h2>
     <q-table
-      class="page-characters__table"
+      class="page-characters__table striped-list"
       :columns="columns"
       :rows="profiles"
       :row-key="name"
@@ -64,8 +64,8 @@ import { Race } from '@app/shared/enums/race.enum';
 import { useApi } from 'src/boot/axios';
 import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
 import { Options, Vue } from 'vue-class-component';
+import SharedConstants from '@app/shared/SharedConstants';
 
-const DEFAULT_ROWS_PER_PAGE = 20;
 const $api = useApi();
 
 @Options({
@@ -74,7 +74,7 @@ const $api = useApi();
   },
   async beforeRouteEnter(_, __, next) {
     const profiles = await $api.characters.getCharacterProfiles({
-      limit: DEFAULT_ROWS_PER_PAGE,
+      limit: SharedConstants.DEFAULT_ROWS_PER_PAGE,
     });
     next((vm) => (vm as PageCharacters).setContent(profiles));
   },
@@ -192,10 +192,6 @@ export default class PageCharacters extends Vue {
 
 .page-characters__table th {
   font-family: $form-header-font;
-}
-
-.page-characters__table tbody tr:nth-child(even) {
-  background: #f8f8f8;
 }
 
 .page-characters__column-name {

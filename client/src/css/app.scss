@@ -136,6 +136,14 @@ ol li {
   transition: all 0.5s ease;
 }
 
+.striped-list .q-item, .striped-list tbody tr {
+	background: $striped-list-bg-odd;
+}
+
+.striped-list .q-item:nth-child(even), .striped-list thead tr, .striped-list tr:nth-child(even) {
+	background: $striped-list-bg-even;
+}
+
 // Mobile usability improvements
 @media screen and (max-width: $breakpoint-xs) {
 	h2 {

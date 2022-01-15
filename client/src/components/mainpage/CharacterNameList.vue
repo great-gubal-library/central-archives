@@ -1,5 +1,5 @@
 <template>
-  <q-list class="character-name-list" bordered>
+  <q-list class="character-name-list striped-list" bordered>
     <q-item
       v-for="profile in profiles"
       :key="`${profile.name}_${profile.server}`"
@@ -50,11 +50,4 @@ export default class CharacterNameList extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
-.character-name-list .q-item {
-  background: $blue-1;
-}
-
-.character-name-list .q-item:nth-child(even) {
-  background: rgba($blue-2, 0.4);
-}
 </style>

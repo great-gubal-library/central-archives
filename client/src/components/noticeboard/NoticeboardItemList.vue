@@ -1,5 +1,5 @@
 <template>
-  <div class="noticeboard-item-list">
+  <div class="noticeboard-item-list striped-list">
     <q-list v-if="noticeboardItems.length" bordered>
       <q-item
         v-for="noticeboardItem in noticeboardItems"
@@ -44,11 +44,4 @@ export default class NoticeboardItemList extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
-.noticeboard-item-list .q-item {
-  background: $blue-1;
-}
-
-.noticeboard-item-list .q-item:nth-child(even) {
-  background: rgba($blue-2, 0.4);
-}
 </style>
