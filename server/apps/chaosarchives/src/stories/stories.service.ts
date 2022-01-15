@@ -231,8 +231,8 @@ export class StoriesService {
       .createQueryBuilder('tag')
       .distinct()
       .orderBy({ 'tag.name': 'ASC' })
-      .select(['tag.name'])
-      .getMany();
+      .select('tag.name', 'name')
+      .getRawMany();
 
     return tags.map(tag => tag.name);
   }
