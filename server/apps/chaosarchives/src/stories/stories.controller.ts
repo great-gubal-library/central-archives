@@ -1,12 +1,14 @@
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
+import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
+import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
+import { UserInfo } from '@app/auth/model/user-info';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
+import { StoryFilterDto } from '@app/shared/dto/stories/story-filter.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
-import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
-import { UserInfo } from '@app/auth/model/user-info';
 import { StoriesService } from './stories.service';
 
 @Controller('stories')
@@ -43,7 +45,7 @@ export class StoriesController {
 	}
 
 	@Get()
-	async getStoryList(@Query('characterId') characterId?: string): Promise<StorySummaryDto[]> {
-		return this.storiesService.getStoryList(characterId ? { characterId : parseInt(characterId, 10) } : {});
+	async getStoryList(@Query() filter: StoryFilterDto): Promise<PagingResultDto<StorySummaryDto>> {
+		return this.storiesService.getStoryList(filter);
 	}
 }

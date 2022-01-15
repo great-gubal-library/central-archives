@@ -9,7 +9,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
-import APITransport from './api-transport';
+import APITransport, { QueryParams } from './api-transport';
 
 export default class CharactersAPI {
   private readonly transport: APITransport;
@@ -23,8 +23,7 @@ export default class CharactersAPI {
   }
 
   async getCharacterProfiles(filter?: CharacterProfileFilterDto): Promise<PagingResultDto<CharacterSummaryDto>> {
-    return this.transport.get<PagingResultDto<CharacterSummaryDto>>(
-      '', filter as { [k: string]: string|number|boolean });
+    return this.transport.get<PagingResultDto<CharacterSummaryDto>>('', filter as QueryParams);
   }
 
   async saveCharacter(character: CharacterProfileDto): Promise<void> {

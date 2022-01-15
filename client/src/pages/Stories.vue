@@ -23,8 +23,8 @@ const $q = useQuasar();
 	},
   async beforeRouteEnter(_, __, next) {
     try {
-      const stories = await $api.stories.getStories({});
-      next(vm => (vm as PageStories).setContent(stories));
+      const stories = await $api.stories.getStories({ limit: 99999 });
+      next(vm => (vm as PageStories).setContent(stories.data));
     } catch (e) {
       console.log(e);
       $q.notify({

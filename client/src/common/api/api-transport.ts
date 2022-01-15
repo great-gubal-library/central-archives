@@ -3,7 +3,7 @@ import { LocalStorage } from 'quasar';
 
 const API_PREFIX = '/api/internal/';
 
-type QueryParams = { [k: string]: string|number|boolean };
+export type QueryParams = { [k: string]: string|number|boolean };
 export default class APITransport {
   readonly prefix;
 

@@ -1,7 +1,9 @@
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
+import { StoryFilterDto } from '@app/shared/dto/stories/story-filter.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
-import APITransport from './api-transport';
+import APITransport, { QueryParams } from './api-transport';
 
 export default class StoriesAPI {
   private readonly transport: APITransport;
@@ -10,8 +12,8 @@ export default class StoriesAPI {
     this.transport = transport.atPath('stories');
   }
 
-  async getStories(params: { characterId?: number }): Promise<StorySummaryDto[]> {
-    return this.transport.get<StorySummaryDto[]>('', params);
+  async getStories(filter?: StoryFilterDto): Promise<PagingResultDto<StorySummaryDto>> {
+    return this.transport.get<PagingResultDto<StorySummaryDto>>('', filter as QueryParams);
   }
 
   async getStory(id: number): Promise<StoryDto> {

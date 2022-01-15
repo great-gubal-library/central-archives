@@ -1,12 +1,15 @@
+import { UserInfo } from '@app/auth/model/user-info';
 import { Character, Story, StoryTag } from '@app/entity';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
+import { StoryFilterDto } from '@app/shared/dto/stories/story-filter.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import html from '@app/shared/html';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, In, IsNull, Not, Repository } from 'typeorm';
-import { UserInfo } from '@app/auth/model/user-info';
+import { escapeForLike } from '../common/db';
 
 @Injectable()
 export class StoriesService {
@@ -176,28 +179,44 @@ export class StoriesService {
     });
   }
 
-  async getStoryList(params: { characterId?: number; limit?: number }): Promise<StorySummaryDto[]> {
+  async getStoryList(filter: StoryFilterDto): Promise<PagingResultDto<StorySummaryDto>> {
     const query = this.storyRepo
       .createQueryBuilder('story')
       .innerJoinAndSelect('story.owner', 'character')
       .orderBy('story.createdAt', 'DESC')
       .select(['story.id', 'character.name', 'story.title', 'story.createdAt'])
-      .limit(params.limit);
+      .limit(filter.limit);
 
-    if (params.characterId) {
+    if (filter.characterId) {
       query.where('character.id = :characterId', {
-        characterId: params.characterId,
+        characterId: filter.characterId,
       });
     }
 
-    const stories = await query.getMany();
+    if (filter.tag) {
+      query.innerJoinAndSelect('story.tags', 'tag');
+      query.where('tag.name = :tag', {
+        tag: filter.tag,
+      });
+    }
 
-    return stories.map((story) => ({
-      id: story.id,
-      title: story.title,
-      author: story.owner.name,
-      createdAt: story.createdAt!.getTime(),
-      type: story.type,
-    }));
+    if (filter.searchQuery) {
+      query.where('story.title LIKE :searchQuery', {
+        searchQuery: `%${escapeForLike(filter.searchQuery)}%`
+      });
+    }
+
+    const [ total, stories ] = await Promise.all([ query.getCount(),  query.getMany() ]);
+
+    return {
+      total,
+      data: stories.map((story) => ({
+        id: story.id,
+        title: story.title,
+        author: story.owner.name,
+        createdAt: story.createdAt!.getTime(),
+        type: story.type,
+      }))
+    };
   }
 }

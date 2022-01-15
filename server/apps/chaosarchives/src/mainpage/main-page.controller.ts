@@ -31,7 +31,7 @@ export class MainPageController {
 		
 		mainPageContent.news = newsResult.news;
     mainPageContent.newsUpToDate = newsResult.newsUpToDate;
-    mainPageContent.newStories = storyList;
+    mainPageContent.newStories = storyList.data;
     mainPageContent.newNoticeboardItems = noticeboardItemList;
 		return mainPageContent;
   }

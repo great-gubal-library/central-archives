@@ -74,7 +74,10 @@ export class CharactersController {
       this.imagesService.getImages({ characterId }),
     ]);
 
-    return { stories, images };
+    return {
+      stories: stories.data,
+      images,
+    };
   }
 
   @Get(':id/my-images')
