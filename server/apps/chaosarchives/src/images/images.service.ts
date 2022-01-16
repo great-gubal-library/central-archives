@@ -369,13 +369,17 @@ export class ImagesService {
         // Check if the image is used as a banner, and if yes, refuse to delete
 
         if (await em.getRepository(Character).count({
-          banner: Promise.resolve(image),
+          banner: {
+            id: image.id
+          } as FindConditions<Promise<Image>>,
         }) > 0) {
           throw new ConflictException('This image is in use as a character banner');
         }
 
         if (await em.getRepository(Event).count({
-          banner: Promise.resolve(image),
+          banner: {
+            id: image.id
+          } as FindConditions<Promise<Image>>,
         }) > 0) {
           throw new ConflictException('This image is in use as an event banner');
         }
