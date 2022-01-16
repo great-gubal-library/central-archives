@@ -131,6 +131,8 @@ export default class PageImage extends Vue {
 				type: 'positive',
 				message: 'Image deleted.'
 			});
+
+			void this.$router.push('/');
 		});
 	}
 }
