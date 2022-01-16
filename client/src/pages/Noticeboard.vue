@@ -11,6 +11,7 @@ import errors from '@app/shared/errors';
 import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
+import { notifyError } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();
@@ -27,10 +28,7 @@ const $q = useQuasar();
       next(vm => (vm as PageNoticeboard).setContent(noticeboardItems));
     } catch (e) {
       console.log(e);
-      $q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+      notifyError(e);
     }
   }
 })

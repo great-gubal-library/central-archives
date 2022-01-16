@@ -137,6 +137,7 @@ import { Options, Vue } from 'vue-class-component';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
+import { notifySuccess } from 'src/common/notify';
 
 @Options({
   
@@ -184,9 +185,7 @@ export default class UserMenu extends Vue {
   logOut() {
     this.$store.commit('setUser', null);
     this.$api.setAccessToken(null);
-    this.$q.notify({
-      message: 'You have been logged out.'
-    });
+    notifySuccess('You have been logged out.');
     void this.$router.push('/');
   }
 }

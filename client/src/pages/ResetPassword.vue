@@ -63,6 +63,7 @@
 <script lang="ts">
 import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Vue } from 'vue-class-component';
 
 export default class PageLogIn extends Vue {
@@ -98,15 +99,9 @@ export default class PageLogIn extends Vue {
 
       this.submitted = true;
 
-      this.$q.notify({
-        message: 'You password has been changed.',
-        type: 'positive'
-      });
+      notifySuccess('You password has been changed.');
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative'
-      });
+      notifyError(e);
     } finally {
       this.loading = false;
     }

@@ -129,6 +129,7 @@ import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import HtmlEditor from '../components/common/HtmlEditor.vue';
 import { RouteParams } from 'vue-router';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -142,10 +143,7 @@ async function load(params: RouteParams): Promise<CharacterProfileDto> {
   try {
     return await $api.characters.getCharacterProfile(character.name, character.server);
   } catch (e) {
-    $q.notify({
-      type: 'negative',
-      message: errors.getMessage(e),
-    });
+    notifyError(e);
     throw e;
   }
 }
@@ -211,22 +209,13 @@ export default class PageEditCharacter extends Vue {
       await this.$api.characters.saveCharacter(this.character);
       this.characterBackup = new CharacterProfileDto(this.character);
 
-      this.$q.notify({
-        message: 'Character saved.',
-        type: 'positive',
-        actions: [
-          {
-            label: 'View',
-            color: 'white',
-            handler: () => this.viewCharacter(),
-          },
-        ],
+      notifySuccess('Character saved.', {
+        label: 'View',
+        color: 'white',
+        handler: () => this.viewCharacter(),
       });
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+      notifyError(e);
     } finally {
       this.saving = false;
     }

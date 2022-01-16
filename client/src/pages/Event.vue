@@ -17,6 +17,7 @@ import { EventDto } from '@app/shared/dto/events/event.dto';
 import errors from '@app/shared/errors';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import EventView from 'src/components/event/EventView.vue';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { Options, Vue } from 'vue-class-component';
@@ -40,16 +41,10 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 		return { event, eventId: id };
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			$q.notify({
-				type: 'negative',
-				message: 'Event not found.'
-			});
+			notifyError('Event not found.');
 			void $router.replace('/');
 		} else {
-			$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+			notifyError(e);
 		}
 
 		throw e;
@@ -94,18 +89,11 @@ export default class PageEvent extends Vue {
         try {
 					await this.$api.events.deleteEvent(this.eventId);
 
-					this.$q.notify({
-						type: 'positive',
-						message: 'Event deleted.'
-					});
-
+					notifySuccess('Event deleted.');
 					void this.$router.replace('/');
 					void this.$store.dispatch('updateEvents');
 				} catch (e) {
-					this.$q.notify({
-						type: 'negative',
-						message: errors.getMessage(e)
-					});
+					notifyError(e);
 				}
       });
 	}

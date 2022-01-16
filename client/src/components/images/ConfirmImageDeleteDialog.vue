@@ -19,6 +19,7 @@
 <script lang="ts">
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
+import { notifyError } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 
 interface DialogRef {
@@ -70,10 +71,7 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
         this.forceConfirming = true;
         this.forceConfirmMessage = errors.getMessage(e);
       } else {
-        this.$q.notify({
-          message: errors.getMessage(e),
-          type: 'negative',
-        });
+        notifyError(e);
       }
     } finally {
       this.deleting = false;

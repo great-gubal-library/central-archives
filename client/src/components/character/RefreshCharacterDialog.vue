@@ -22,6 +22,7 @@
 
 <script lang="ts">
 import errors from '@app/shared/errors';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 
 interface DialogRef {
@@ -73,18 +74,11 @@ export default class RefreshCharacterDialog extends Vue.with(Props) {
 				this.$store.commit('updateCharacter', result);
 			}
 
-			this.$q.notify({
-        message: 'Character data refreshed.',
-        type: 'positive',
-      });
-
+			notifySuccess('Character data refreshed.');
 			this.$emit('ok', result);
 			this.hide();
 		} catch (e) {
-			this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+			notifyError(e);
 		} finally {
 			this.loading = false;
 		}

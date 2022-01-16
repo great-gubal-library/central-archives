@@ -13,6 +13,7 @@ import { useApi } from 'src/boot/axios';
 import { RouteParams, useRouter } from 'vue-router';
 import { Options, Vue } from 'vue-class-component';
 import ImageEditor from 'components/images/ImageEditor.vue';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -31,16 +32,10 @@ async function load(params: RouteParams): Promise<ImageDto> {
 		return image;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			$q.notify({
-				type: 'negative',
-				message: 'Image not found.'
-			});
+			notifyError('Image not found.');
 			void $router.replace('/');
 		} else {
-			$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+			notifyError(e);
 		}
 
 		throw e;
@@ -69,16 +64,10 @@ export default class PageEditImage extends Vue {
 	}
 
 	onSave() {
-		this.$q.notify({
-			message: 'Image saved.',
-			type: 'positive',
-			actions: [
-				{
-					label: 'View',
-					color: 'white',
-					handler: () => this.viewImage(),
-				},
-			],
+		notifySuccess('Image saved.', {
+			label: 'View',
+			color: 'white',
+			handler: () => this.viewImage(),
 		});
 	}
 

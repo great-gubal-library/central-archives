@@ -19,6 +19,7 @@ import { useQuasar } from 'quasar';
 import MyImage from 'components/images/MyImage.vue';
 import errors from '@app/shared/errors';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { notifyError } from 'src/common/notify';
 
 async function load(): Promise<ImageDto[]> {
 	const $api = useApi();
@@ -27,20 +28,14 @@ async function load(): Promise<ImageDto[]> {
   const characterId = $store.getters.characterId;
 
 	if (!characterId) {
-		$q.notify({
-      type: 'negative',
-      message: 'Unauthorized'
-    });
+		notifyError('Unauthorized');
 		throw new Error();
 	}
 
   try {
     return await $api.characters.getMyImages(characterId);
   } catch (e) {
-    $q.notify({
-      type: 'negative',
-      message: errors.getMessage(e)
-    });
+    notifyError(e);
     throw e;
   }
 }
@@ -58,10 +53,7 @@ async function load(): Promise<ImageDto[]> {
       next(vm => (vm as PageMyImages).setContent(images));
     } catch (e) {
       console.log(e);
-      $q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+      notifyError(e);
     }
   }
 })

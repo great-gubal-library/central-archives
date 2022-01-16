@@ -7,6 +7,7 @@
 <script lang="ts">
 import { Vue } from 'vue-class-component'
 import errors from '@app/shared/errors';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 export default class PageConfirmEmail extends Vue {
 	async mounted() {
@@ -23,15 +24,9 @@ export default class PageConfirmEmail extends Vue {
 		
 		try {
 			await this.$api.user.confirmEmail({ code: verificationToken });
-			this.$q.notify({
-				type: 'positive',
-				message: 'Your email address has been confirmed.'
-			});
+			notifySuccess('Your email address has been confirmed.');
 		} catch (e) {
-			this.$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+			notifyError(e);
 		} finally {
 			this.$q.loading.hide();
 

@@ -41,6 +41,7 @@ import ThumbGallery from 'components/images/ThumbGallery.vue';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
 import { useApi } from 'src/boot/axios';
 import { useQuasar } from 'quasar';
+import { notifyError } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -50,10 +51,7 @@ async function load(): Promise<MainPageContentDto> {
     return await $api.getMainPageContent();
   } catch (e) {
     console.log(e);
-    $q.notify({
-      type: 'negative',
-      message: 'Cannot retrieve main page'
-    });
+    notifyError('Cannot retrieve main page');
     throw e;
   }
 }

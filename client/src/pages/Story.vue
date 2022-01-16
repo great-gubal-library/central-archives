@@ -15,6 +15,7 @@ import { useApi } from 'src/boot/axios';
 import { useRouter } from 'vue-router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
+import { notifyError } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -34,16 +35,10 @@ async function load(params: RouteParams): Promise<StoryDto> {
 		return story;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			$q.notify({
-				type: 'negative',
-				message: 'Story not found.'
-			});
+			notifyError('Story not found.');
 			void $router.replace('/');
 		} else {
-			$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+			notifyError(e);
 		}
 
 		throw e;

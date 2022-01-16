@@ -75,6 +75,7 @@ import HtmlEditor from 'components/common/HtmlEditor.vue';
 import { displayOptions } from 'src/boot/display';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 @Options({
   name: 'PageEditNoticeboardItem',
@@ -159,22 +160,13 @@ export default class PageEditNoticeboardItem extends Vue {
 
       this.noticeboardItemBackup = new NoticeboardItemDto(this.noticeboardItem);
 
-      this.$q.notify({
-        message: 'Noticeboard item saved.',
-        type: 'positive',
-        actions: [
-          {
-            label: 'View',
-            color: 'white',
-            handler: () => this.viewNoticeboardItem(),
-          },
-        ],
+      notifySuccess('Noticeboard item saved.', {
+        label: 'View',
+        color: 'white',
+        handler: () => this.viewNoticeboardItem(),
       });
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+      notifyError(e);
     } finally {
       this.saving = false;
     }

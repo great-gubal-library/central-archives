@@ -33,6 +33,7 @@ import errors from '@app/shared/errors';
 import html from '@app/shared/html';
 import { useQuasar, createMetaMixin } from 'quasar';
 import { useApi } from 'src/boot/axios';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
 
@@ -54,16 +55,10 @@ async function load(params: RouteParams): Promise<ImageDto> {
 		return image;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			$q.notify({
-				type: 'negative',
-				message: 'Image not found.'
-			});
+			notifyError('Image not found.');
 			void $router.replace('/');
 		} else {
-			$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+			notifyError(e);
 		}
 
 		throw e;
@@ -127,11 +122,7 @@ export default class PageImage extends Vue {
 				image: this.image
 			}
 		}).onOk(() => {
-			this.$q.notify({
-				type: 'positive',
-				message: 'Image deleted.'
-			});
-
+			notifySuccess('Image deleted.');
 			void this.$router.push('/');
 		});
 	}

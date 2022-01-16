@@ -13,6 +13,7 @@ import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
+import { notifyError } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -28,10 +29,7 @@ const $q = useQuasar();
       next(vm => (vm as PageFreeCompanies).setContent(freeCompanies));
     } catch (e) {
       console.log(e);
-      $q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+      notifyError(e);
     }
   }
 })

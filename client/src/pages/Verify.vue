@@ -106,6 +106,7 @@ import { copyToClipboard } from 'quasar';
 import errors from '@app/shared/errors';
 import { Vue } from 'vue-class-component';
 import { Role } from '@app/shared/enums/role.enum';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 const REFRESH_INTERVAL = 5000;
 
@@ -192,15 +193,9 @@ export default class PageVerify extends Vue {
 
     try {
       await copyToClipboard(this.verificationStatus.characterVerificationCode);
-      this.$q.notify({
-        type: 'positive',
-        message: 'Character verification code copied to clipboard.',
-      });
+      notifySuccess('Character verification code copied to clipboard.');
     } catch (e) {
-      this.$q.notify({
-        type: 'negative',
-        message: 'Error copying to clipboard.',
-      });
+      notifyError(e);
     }
   }
 
@@ -209,15 +204,9 @@ export default class PageVerify extends Vue {
 
     try {
       await this.$api.user.resendConfirmationEmail();
-      this.$q.notify({
-        type: 'positive',
-        message: 'Email sent. Check your inbox.',
-      });
+      notifySuccess('Email sent. Check your inbox.');
     } catch (e) {
-      this.$q.notify({
-        type: 'negative',
-        message: errors.getMessage(e),
-      });
+      notifyError(e);
     } finally {
       this.resendingEmail = false;
     }

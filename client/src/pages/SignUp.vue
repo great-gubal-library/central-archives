@@ -81,6 +81,7 @@ import { Options, Vue } from 'vue-class-component';
 import errors from '@app/shared/errors';
 import { CharacterSearchModel } from 'src/components/character/character-search-model';
 import CharacterFinderField from 'src/components/character/CharacterFinderField.vue';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 @Options({
   components: {
@@ -119,17 +120,10 @@ export default class PageSignUp extends Vue {
       this.$api.setAccessToken(result.accessToken);
       this.$store.commit('setUser', result.session);
 
-      this.$q.notify({
-        message: 'Registration successful! Please check your inbox to confirm your email address.',
-        type: 'positive'
-      });
-
+      notifySuccess('Registration successful! Please check your inbox to confirm your email address.');
       this.signedUp = true; // hide form and show post-signup message
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative'
-      });
+      notifyError(e);
     } finally {
       this.loading = false;
     }

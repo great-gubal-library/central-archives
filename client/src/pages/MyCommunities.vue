@@ -36,6 +36,7 @@ import minXIVAPI from 'src/common/xivapi-min';
 import { useApi } from 'src/boot/axios';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -52,10 +53,7 @@ const $store = useStore();
       next(vm => (vm as PageMyCommunities).setContent(communities));
     } catch (e) {
       console.log(e);
-      $q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+      notifyError(e);
     }
   }
 })
@@ -108,15 +106,9 @@ export default class PageMyCommunities extends Vue {
 			const fc = await this.$api.communities.setFCFromLodestone($store.getters.characterId!);
 			this.communities.freeCompany = fc;
 
-			this.$q.notify({
-				type: 'positive',
-				message: 'Free Company set.'
-			});
+			notifySuccess('Free Company set.');
 		} catch (e) {
-			this.$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+			notifyError(e);
 		} finally {
 			this.loading = false;
 		}

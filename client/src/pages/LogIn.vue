@@ -49,6 +49,7 @@
 <script lang="ts">
 import { Vue } from 'vue-class-component';
 import errors from '@app/shared/errors';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 export default class PageLogIn extends Vue {
   private email = '';
@@ -65,19 +66,12 @@ export default class PageLogIn extends Vue {
         password: this.password,
       });
 
-      this.$q.notify({
-        message: 'You have successfully logged in.',
-        type: 'positive'
-      });
-
+      notifySuccess('You have successfully logged in.');
       this.$api.setAccessToken(result.accessToken);
       this.$store.commit('setUser', result.session);
       void this.$router.replace('/');
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative'
-      });
+      notifyError(e);
     } finally {
       this.loading = false;
     }

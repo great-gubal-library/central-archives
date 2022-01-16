@@ -23,6 +23,7 @@ import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
+import { notifyError } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -67,10 +68,7 @@ async function load(params: RouteParams): Promise<Content> {
 					notFound: true
 				}
 			} else {
-				$q.notify({
-					type: 'negative',
-					message: errors.getMessage(e)
-				});
+				notifyError(e);
 				throw e;
 			}
 		}

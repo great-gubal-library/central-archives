@@ -154,6 +154,7 @@ import EventView from 'src/components/event/EventView.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -177,16 +178,10 @@ async function load(params: RouteParams): Promise<{event: EventEditDto, eventId:
 		return { event, eventId: id };
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			$q.notify({
-				type: 'negative',
-				message: 'Event not found.'
-			});
+			notifyError('Event not found.');
 			void $router.replace('/');
 		} else {
-			$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+			notifyError(errors.getMessage(e));
 		}
 
 		throw e;
@@ -385,24 +380,15 @@ export default class PageEditEvent extends Vue {
 
       this.eventBackup = new EventEditDto(this.event);
 
-      this.$q.notify({
-        message: 'Event saved.',
-        type: 'positive',
-        actions: [
-          {
-            label: 'View',
-            color: 'white',
-            handler: () => this.viewEvent(),
-          },
-        ],
+      notifySuccess('Event saved.', {
+        label: 'View',
+        color: 'white',
+        handler: () => this.viewEvent(),
       });
 
       void this.$store.dispatch('updateEvents');
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+      notifyError(e);
     } finally {
       this.saving = false;
     }

@@ -25,6 +25,7 @@ import CharacterProfile from 'components/character/CharacterProfile.vue';
 import StoryList from 'components/stories/StoryList.vue';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
+import { notifyError } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
 import ThumbGallery from '../components/images/ThumbGallery.vue';
@@ -72,10 +73,7 @@ async function load(params: RouteParams): Promise<Content> {
 					notFound: true
 				}
 			} else {
-				$q.notify({
-					type: 'negative',
-					message: errors.getMessage(e)
-				});
+				notifyError(e);
 				throw e;
 			}
 		}

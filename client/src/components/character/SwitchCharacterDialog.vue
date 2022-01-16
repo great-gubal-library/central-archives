@@ -25,6 +25,7 @@
 <script lang="ts">
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import errors from '@app/shared/errors';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import CharacterNameList from '../mainpage/CharacterNameList.vue';
 import { CharacterSearchModel } from './character-search-model';
@@ -91,18 +92,11 @@ export default class ConfirmImageDeleteDialog extends Vue {
 		try {
 			const character = await this.$api.characters.addAccountCharacter({ lodestoneId: this.newCharacter.lodestoneId });
 
-			this.$q.notify({
-        message: 'Character added successfully. You will need to verify it.',
-        type: 'positive'
-      });
-
+			notifySuccess('Character added successfully. You will need to verify it.');
 			this.$store.commit('addCharacter', character);
 			this.onCharacterSelect(character);
 		} catch (e) {
-			this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative'
-      });
+			notifyError(e);
 		} finally {
 			this.submitting = false;
 		}

@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import errors from '@app/shared/errors';
+import { notifySuccess, notifyError } from 'src/common/notify';
 import { QInput } from 'quasar';
 import { Options, Vue } from 'vue-class-component';
 
@@ -86,17 +86,10 @@ export default class ChangeEmail extends Vue {
 				newEmail: this.newEmail,
 			});
 
-			this.$q.notify({
-        message: this.successMessage,
-        type: 'positive'
-      });
-
+			notifySuccess(this.successMessage);
 			this.success = true;
 		} catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative'
-      });
+      notifyError(e);
     } finally {
       this.loading = false;
     }

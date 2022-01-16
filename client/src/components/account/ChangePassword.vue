@@ -42,6 +42,7 @@
 <script lang="ts">
 import errors from '@app/shared/errors';
 import { QInput } from 'quasar';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 
 @Options({
@@ -66,15 +67,9 @@ export default class ChangePassword extends Vue {
 				newPassword: this.newPassword,
 			});
 
-			this.$q.notify({
-        message: 'Password has been changed.',
-        type: 'positive'
-      });
+			notifySuccess('Password has been changed.');
 		} catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative'
-      });
+      notifyError(e);
     } finally {
       this.loading = false;
     }

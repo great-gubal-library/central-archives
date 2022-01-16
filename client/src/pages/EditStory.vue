@@ -75,6 +75,7 @@ import errors from '@app/shared/errors';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import StoryView from 'components/stories/StoryView.vue';
 import { displayOptions } from 'src/boot/display';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 
@@ -160,22 +161,13 @@ export default class PageEditStory extends Vue {
 
       this.storyBackup = new StoryDto(this.story);
 
-      this.$q.notify({
-        message: 'Story saved.',
-        type: 'positive',
-        actions: [
-          {
-            label: 'View',
-            color: 'white',
-            handler: () => this.viewStory(),
-          },
-        ],
+      notifySuccess('Story saved.', {
+        label: 'View',
+        color: 'white',
+        handler: () => this.viewStory(),
       });
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+      notifyError(e);
     } finally {
       this.saving = false;
     }

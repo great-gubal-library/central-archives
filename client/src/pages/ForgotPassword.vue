@@ -46,6 +46,7 @@
 
 <script lang="ts">
 import errors from '@app/shared/errors';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Vue } from 'vue-class-component';
 
 export default class PageLogIn extends Vue {
@@ -68,15 +69,9 @@ export default class PageLogIn extends Vue {
 
       this.submitted = true;
 
-      this.$q.notify({
-        message: 'Password reset link sent.',
-        type: 'positive',
-      });
+      notifySuccess('Password reset link sent.');
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+      notifyError(e);
     } finally {
       this.loading = false;
     }

@@ -8,6 +8,7 @@
 import { Vue } from 'vue-class-component'
 import errors from '@app/shared/errors';
 import { Role } from '@app/shared/enums/role.enum';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 export default class PageConfirmEmail extends Vue {
 	async mounted() {
@@ -24,15 +25,9 @@ export default class PageConfirmEmail extends Vue {
 		
 		try {
 			await this.$api.user.confirmNewEmail({ code: verificationToken });
-			this.$q.notify({
-				type: 'positive',
-				message: 'Your new email address has been confirmed.'
-			});
+			notifySuccess('Your new email address has been confirmed.');
 		} catch (e) {
-			this.$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
+			notifyError(e);
 		} finally {
 			this.$q.loading.hide();
 

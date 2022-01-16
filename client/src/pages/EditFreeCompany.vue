@@ -78,6 +78,7 @@ import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import { Options, Vue } from 'vue-class-component';
 import HtmlEditor from '../components/common/HtmlEditor.vue';
 import { RouteParams } from 'vue-router';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 const $api = useApi();
 const $q = useQuasar();
@@ -89,10 +90,7 @@ async function load(params: RouteParams): Promise<FreeCompanyDto> {
   try {
     return await $api.freeCompanies.getFreeCompany(name.replace(/_/g, ' '), server);
   } catch (e) {
-    $q.notify({
-      type: 'negative',
-      message: errors.getMessage(e),
-    });
+    notifyError(errors.getMessage(e));
     throw e;
   }
 }
@@ -145,22 +143,13 @@ export default class PageEditFreeCompany extends Vue {
       await this.$api.freeCompanies.saveFreeCompany(this.fc);
       this.fcBackup = new FreeCompanyDto(this.fc);
 
-      this.$q.notify({
-        message: 'Free Company saved.',
-        type: 'positive',
-        actions: [
-          {
-            label: 'View',
-            color: 'white',
-            handler: () => this.viewFreeCompany(),
-          },
-        ],
+      notifySuccess('Free Company saved.', {
+        label: 'View',
+        color: 'white',
+        handler: () => this.viewFreeCompany(),
       });
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+      notifyError(e);
     } finally {
       this.saving = false;
     }

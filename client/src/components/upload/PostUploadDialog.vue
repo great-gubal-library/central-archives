@@ -25,6 +25,7 @@
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { copyToClipboard } from 'quasar';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 
 interface DialogRef {
@@ -61,15 +62,9 @@ export default class PostUploadDialog extends Vue.with(Props) {
 	async copyUrl() {
 		try {
 			await copyToClipboard(this.image.url);
-			this.$q.notify({
-				type: 'positive',
-				message: 'Image URL copied to clipboard.'
-			});
+			notifySuccess('Image URL copied to clipboard.');
 		} catch (e) {
-			this.$q.notify({
-				type: 'negative',
-				message: 'Error copying image URL to clipboard.'
-			});
+			notifyError('Error copying image URL to clipboard.');
 		}
 	}
 }

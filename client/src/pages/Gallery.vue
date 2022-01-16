@@ -11,6 +11,7 @@ import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import errors from '@app/shared/errors';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
+import { notifyError } from 'src/common/notify';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams, useRouter } from 'vue-router';
@@ -30,11 +31,7 @@ async function load(params: RouteParams): Promise<{ category: ImageCategory, ima
 	try {
 		return { category, images: await $api.images.getImages({ category }) };
 	} catch (e) {
-		$q.notify({
-				type: 'negative',
-				message: errors.getMessage(e)
-			});
-
+		notifyError(e);
 		throw e;
 	}
 }

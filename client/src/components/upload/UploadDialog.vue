@@ -74,6 +74,7 @@ import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
+import { notifyError, notifySuccess } from 'src/common/notify';
 
 enum Step {
   SELECT_IMAGE = 'SELECT_IMAGE',
@@ -248,18 +249,11 @@ export default class UploadDialog extends Vue.with(Props) {
 
       const imageDto = await this.upload();
 
-      this.$q.notify({
-        message: 'Image uploaded.',
-        type: 'positive',
-      });
-
+      notifySuccess('Image uploaded.');
       this.$emit('ok', imageDto);
       this.hide();
     } catch (e) {
-      this.$q.notify({
-        message: errors.getMessage(e),
-        type: 'negative',
-      });
+      notifyError(e);
     } finally {
       this.uploading = false;
     }
