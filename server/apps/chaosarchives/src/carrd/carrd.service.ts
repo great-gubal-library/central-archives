@@ -34,7 +34,7 @@ export class CarrdService {
 	}
 
 	async getCharacterPreviewCarrdPage(carrdProfile: string): Promise<string> {
-		const baseUrl = `https://${carrdProfile}.carrd.co/`;
+		const baseUrl = carrdProfile.includes('.') ? `https://${carrdProfile}/` : `https://${carrdProfile}.carrd.co/`;
 		const html = (await this.httpService.get(baseUrl).toPromise()).data;
 		const doc = parse(html);
 

@@ -6,6 +6,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
+import { checkCarrdProfile } from '../common/api-checks';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
@@ -74,7 +75,7 @@ export class FreeCompaniesService {
 			fc.status = fcDto.status;
 			fc.areaOfOperations = fcDto.areaOfOperations;
 			fc.recruitingOfficers = fcDto.recruitingOfficers;
-			fc.carrdProfile = fcDto.carrdProfile;
+			fc.carrdProfile = checkCarrdProfile(fcDto.carrdProfile, user);
 
 			// Set banner
 			if (fcDto.banner && fcDto.banner.id) {

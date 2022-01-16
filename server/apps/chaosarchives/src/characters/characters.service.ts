@@ -20,6 +20,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
+import { checkCarrdProfile } from '../common/api-checks';
 import { escapeForLike, isQueryFailedError } from '../common/db';
 import { getLodestoneCharacter } from '../common/lodestone';
 import { ImagesService } from '../images/images.service';
@@ -130,7 +131,7 @@ export class CharactersService {
 				loves: character.loves,
 				hates: character.hates,
 				motivation: character.motivation,
-        carrdProfile: character.carrdProfile,
+        carrdProfile: checkCarrdProfile(character.carrdProfile, user),
         showAvatar: character.showAvatar,
         showInfoboxes: character.showInfoboxes,
         combinedDescription: character.combinedDescription,

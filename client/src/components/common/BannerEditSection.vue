@@ -29,7 +29,8 @@
 	</section>
 </template>
 
-<script lang="ts">import { BannerDto } from '@app/shared/dto/characters/banner.dto';
+<script lang="ts">
+import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { Options, prop, Vue } from 'vue-class-component';
 

@@ -5,7 +5,8 @@
       <q-form @submit="onSubmit">
         <template v-if="!preview">
           <q-banner v-if="!character.active" class="bg-dark text-white">
-            This character has been renamed in-game, and you have created a new profile for the renamed character. This character is now inactive. You can no longer update their info from Lodestone.
+            This character has been renamed in-game, and you have created a new profile for the renamed character. This
+            character is now inactive. You can no longer update their info from Lodestone.
           </q-banner>
           <div class="page-edit-character__lodestone-info">
             <section class="page-edit-character__form-controls">
@@ -69,23 +70,11 @@
             <h6>Background</h6>
             <html-editor v-model="character.background" />
           </template>
-          <section class="page-edit-character__form-controls">
-            <h6>Carrd integration</h6>
-            <p class="text-caption">Leave blank if you don't have a Carrd profile or don't want to it on your page.</p>
-            <q-input
-              :modelValue="character.carrdProfile"
-              @update:modelValue="setCarrdProfileLink"
-              label="Carrd profile"
-              :rules="[
-                (val) => /^[A-Za-z0-9-]*$/.test(val) || 'Copy the part before .carrd.co in your Carrd profile here.'
-              ]"
-            >
-              <template v-slot:prepend>
-                <q-icon name="link" />
-              </template>
-              <template v-slot:after> .carrd.co </template>
-            </q-input>
-          </section>
+          <carrd-edit-section
+            class="page-edit-character__form-controls"
+            entity-type="character"
+            v-model="character.carrdProfile"
+          />
         </template>
         <section v-else class="page-edit-character__preview">
           <character-profile :character="character" :preview="true" />
@@ -120,19 +109,17 @@
 <script lang="ts">
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
-import errors from '@app/shared/errors';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
+import CarrdEditSection from 'src/components/common/CarrdEditSection.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
-import HtmlEditor from '../components/common/HtmlEditor.vue';
 import { RouteParams } from 'vue-router';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import HtmlEditor from '../components/common/HtmlEditor.vue';
 
 const $api = useApi();
-const $q = useQuasar();
 
 async function load(params: RouteParams): Promise<CharacterProfileDto> {
   const id = parseInt(params.id as string, 10);
@@ -153,6 +140,7 @@ async function load(params: RouteParams): Promise<CharacterProfileDto> {
     HtmlEditor,
     CharacterProfile,
     BannerEditSection,
+    CarrdEditSection,
   },
   async beforeRouteEnter(to, _, next) {
     const character = await load(to.params);
@@ -225,16 +213,6 @@ export default class PageEditCharacter extends Vue {
     const name = this.character.name || '';
     const server = this.character.server || '';
     void this.$router.push(`/${server}/${name.replace(/ /g, '_')}`);
-  }
-
-  setCarrdProfileLink(newValue: string) {
-    const urlMatch = /https:\/\/([^.]+)\.carrd\.co/.exec(newValue);
-
-    if (!urlMatch) {
-      this.character.carrdProfile = newValue;
-    } else {
-      this.character.carrdProfile = urlMatch[1];
-    }
   }
 }
 </script>

@@ -20,23 +20,11 @@
           </section>
           <h6>Description</h6>
           <html-editor v-model="fc.description" />
-          <section class="page-edit-free-company__form-controls">
-            <h6>Carrd integration</h6>
-            <p class="text-caption">Leave blank if you don't have a Carrd profile or don't want to it on your page.</p>
-            <q-input
-              :modelValue="fc.carrdProfile"
-              @update:modelValue="setCarrdProfileLink"
-              label="Carrd profile"
-              :rules="[
-                (val) => /^[A-Za-z0-9-]*$/.test(val) || 'Copy the part before .carrd.co in your Carrd profile here.'
-              ]"
-            >
-              <template v-slot:prepend>
-                <q-icon name="link" />
-              </template>
-              <template v-slot:after> .carrd.co </template>
-            </q-input>
-          </section>
+          <carrd-edit-section
+            class="page-edit-free-company__form-controls"
+            entity-type="Free Company"
+            v-model="fc.carrdProfile"
+          />
         </template>
         <section v-else class="page-edit-free-company__preview">
           <free-company-profile :free-company="fc" :preview="true" />
@@ -70,18 +58,17 @@
 
 <script lang="ts">
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
-import FreeCompanyProfile from 'components/free-company/FreeCompanyProfile.vue';
 import errors from '@app/shared/errors';
-import { useQuasar } from 'quasar';
+import FreeCompanyProfile from 'components/free-company/FreeCompanyProfile.vue';
 import { useApi } from 'src/boot/axios';
-import BannerEditSection from 'src/components/common/BannerEditSection.vue';
-import { Options, Vue } from 'vue-class-component';
-import HtmlEditor from '../components/common/HtmlEditor.vue';
-import { RouteParams } from 'vue-router';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import BannerEditSection from 'src/components/common/BannerEditSection.vue';
+import CarrdEditSection from 'src/components/common/CarrdEditSection.vue';
+import { Options, Vue } from 'vue-class-component';
+import { RouteParams } from 'vue-router';
+import HtmlEditor from '../components/common/HtmlEditor.vue';
 
 const $api = useApi();
-const $q = useQuasar();
 
 async function load(params: RouteParams): Promise<FreeCompanyDto> {
   const name = params.fc as string;
@@ -100,6 +87,7 @@ async function load(params: RouteParams): Promise<FreeCompanyDto> {
     HtmlEditor,
     FreeCompanyProfile,
     BannerEditSection,
+    CarrdEditSection,
   },
   async beforeRouteEnter(to, __, next) {
     const fc = await load(to.params);
@@ -159,16 +147,6 @@ export default class PageEditFreeCompany extends Vue {
     const name = this.fc.name || '';
     const server = this.fc.server || '';
     void this.$router.push(`/fc/${server}/${name.replace(/ /g, '_')}`);
-  }
-
-  setCarrdProfileLink(newValue: string) {
-    const urlMatch = /https:\/\/([^.]+)\.carrd\.co/.exec(newValue);
-
-    if (!urlMatch) {
-      this.fc.carrdProfile = newValue;
-    } else {
-      this.fc.carrdProfile = urlMatch[1];
-    }
   }
 }
 </script>
