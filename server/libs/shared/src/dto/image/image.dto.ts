@@ -2,6 +2,7 @@ import { ImageCategory } from "@app/shared/enums/image-category.enum";
 
 export interface ImageDto {
   id: number;
+  mine: boolean;
   url: string;
   thumbUrl: string;
   filename: string;

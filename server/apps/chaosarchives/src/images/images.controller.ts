@@ -1,5 +1,6 @@
 import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
+import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
@@ -13,7 +14,7 @@ import {
   Body,
   Controller, Delete, Get,
   Param, ParseIntPipe,
-  Post, Put, Query, UploadedFile, UseInterceptors
+  Post, Put, Query, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Transform } from 'class-transformer';
@@ -41,8 +42,9 @@ export class ImagesController {
   }
 
   @Get(':id')
-  async getImage(@Param('id', ParseIntPipe) id: number): Promise<ImageDto> {
-    return this.imageService.getImage(id);
+  @UseGuards(OptionalJwtAuthGuard)
+  async getImage(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<ImageDto> {
+    return this.imageService.getImage(id, user);
   }
 
   @Post()

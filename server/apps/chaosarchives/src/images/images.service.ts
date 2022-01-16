@@ -37,9 +37,10 @@ export class ImagesService {
   ) {}
 
 
-  private toImageDto(image: Image): ImageDto {
+  private toImageDto(image: Image, user?: UserInfo): ImageDto {
     return {
       id: image.id,
+      mine: !!user && user.characters.some(character => character.id === image.owner.id),
       url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
       thumbUrl: this.storageService.getUrl(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
       filename: image.filename,
@@ -57,7 +58,7 @@ export class ImagesService {
     };
   }
 
-  async getImage(id: number): Promise<ImageDto> {
+  async getImage(id: number, user?: UserInfo): Promise<ImageDto> {
     const image = await this.imageRepo.createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
       .leftJoinAndSelect('image.event', 'event')
@@ -70,7 +71,7 @@ export class ImagesService {
       throw new NotFoundException('Image not found');
     }
 
-    return this.toImageDto(image);
+    return this.toImageDto(image, user);
   }
 
   async getImages(filter: ImagesFilterDto): Promise<ImageSummaryDto[]> {
@@ -137,7 +138,7 @@ export class ImagesService {
       .select(['image', 'character.id', 'character.name', 'server.name', 'event.id', 'event.title'])
       .getMany();
 
-    return images.map(image => this.toImageDto(image));
+    return images.map(image => this.toImageDto(image, user));
   }
 
   async uploadImage(

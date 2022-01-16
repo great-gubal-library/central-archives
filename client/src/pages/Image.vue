@@ -1,5 +1,9 @@
 <template>
   <q-page class="page-image">
+		<section v-if="image.mine" class="page-image__edit-bar">
+			<router-link :to="`/edit-image/${image.id}`">Edit image</router-link>
+			<q-btn flat color="negative" label="Delete image" @click="onDeleteClick" />
+		</section>
 		<h2>{{image.title}}</h2>
 		<template v-if="image.id">
 			<section class="text-caption page-image__subtitle row">
@@ -113,10 +117,32 @@ export default class PageImage extends Vue {
     const character = this.image.author.replace(/ /g, '_');
     return `/${server}/${character}`;
   }
+
+	async onDeleteClick() {
+		const ConfirmImageDeleteDialog = (await import('components/images/ConfirmImageDeleteDialog.vue')).default;
+
+		this.$q.dialog({
+			component: ConfirmImageDeleteDialog,
+			componentProps: {
+				image: this.image
+			}
+		}).onOk(() => {
+			this.$q.notify({
+				type: 'positive',
+				message: 'Image deleted.'
+			});
+		});
+	}
 }
 </script>
 
 <style lang="scss">
+.page-image__edit-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
 .page-image__description {
 	margin-top: 24px;
 	margin-bottom: 24px;

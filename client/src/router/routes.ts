@@ -254,6 +254,15 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/edit-image/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditImage.vue') }],
+    meta: {
+      title: 'Edit Image'
+    },
+  },
+
   // Communities
 
   { 
