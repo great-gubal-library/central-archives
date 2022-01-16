@@ -31,20 +31,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Options } from 'vue-class-component';
-import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
-import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
-import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
-import StoryList from 'components/stories/StoryList.vue';
-import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
-import ThumbGallery from 'components/images/ThumbGallery.vue';
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
+import ThumbGallery from 'components/images/ThumbGallery.vue';
+import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
+import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
+import StoryList from 'components/stories/StoryList.vue';
 import { useApi } from 'src/boot/axios';
-import { useQuasar } from 'quasar';
 import { notifyError } from 'src/common/notify';
+import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
+import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
+import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();
-const $q = useQuasar();
 
 async function load(): Promise<MainPageContentDto> {
   try {

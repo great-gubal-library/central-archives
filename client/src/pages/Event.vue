@@ -15,7 +15,6 @@
 <script lang="ts">
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import errors from '@app/shared/errors';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import EventView from 'src/components/event/EventView.vue';

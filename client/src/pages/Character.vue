@@ -23,7 +23,6 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import errors from '@app/shared/errors';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
 import StoryList from 'components/stories/StoryList.vue';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import { useRouter } from 'src/router';

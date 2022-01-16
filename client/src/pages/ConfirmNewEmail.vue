@@ -5,10 +5,9 @@
 </template>
 
 <script lang="ts">
-import { Vue } from 'vue-class-component'
-import errors from '@app/shared/errors';
 import { Role } from '@app/shared/enums/role.enum';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import { Vue } from 'vue-class-component';
 
 export default class PageConfirmEmail extends Vue {
 	async mounted() {

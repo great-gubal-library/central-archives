@@ -40,7 +40,6 @@
 </template>
 
 <script lang="ts">
-import errors from '@app/shared/errors';
 import { QInput } from 'quasar';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';

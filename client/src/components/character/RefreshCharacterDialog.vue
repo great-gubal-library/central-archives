@@ -21,7 +21,6 @@
 </template>
 
 <script lang="ts">
-import errors from '@app/shared/errors';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 

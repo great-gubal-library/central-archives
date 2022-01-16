@@ -24,7 +24,6 @@
 
 <script lang="ts">
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
-import errors from '@app/shared/errors';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import CharacterNameList from '../mainpage/CharacterNameList.vue';

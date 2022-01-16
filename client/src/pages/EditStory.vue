@@ -71,7 +71,6 @@
 <script lang="ts">
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import { StoryType } from '@app/shared/enums/story-type.enum';
-import errors from '@app/shared/errors';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import StoryView from 'components/stories/StoryView.vue';
 import { displayOptions } from 'src/boot/display';

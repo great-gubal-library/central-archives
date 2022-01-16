@@ -61,7 +61,6 @@
 </template>
 
 <script lang="ts">
-import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Vue } from 'vue-class-component';

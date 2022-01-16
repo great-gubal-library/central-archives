@@ -28,18 +28,15 @@
 </template>
 
 <script lang="ts">
-import errors from '@app/shared/errors';
-import FreeCompanyCrest from 'components/free-company/FreeCompanyCrest.vue';
 import { MyCommunitiesInfoDto } from '@app/shared/dto/communities/my-communities-info.dto';
-import { useQuasar } from 'quasar';
-import minXIVAPI from 'src/common/xivapi-min';
+import FreeCompanyCrest from 'components/free-company/FreeCompanyCrest.vue';
 import { useApi } from 'src/boot/axios';
+import { notifyError, notifySuccess } from 'src/common/notify';
+import minXIVAPI from 'src/common/xivapi-min';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
-import { notifyError, notifySuccess } from 'src/common/notify';
 
 const $api = useApi();
-const $q = useQuasar();
 const $store = useStore();
 
 @Options({

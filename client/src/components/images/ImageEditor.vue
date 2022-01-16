@@ -14,7 +14,6 @@
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
-import errors from '@app/shared/errors';
 import { notifyError } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 import { ImageDetailsModel } from '../upload/image-details-model';

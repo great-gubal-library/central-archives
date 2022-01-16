@@ -138,8 +138,8 @@
 </template>
 
 <script lang="ts">
-import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
+import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker';
@@ -147,15 +147,14 @@ import '@toby.mosque/quasar-ui-qdatetimepicker/dist/index.css'; // Temp, move so
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import EventAnnouncementEditor from 'components/event/EventAnnouncementEditor.vue';
 import { DateTime } from 'luxon/src/luxon';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import EventView from 'src/components/event/EventView.vue';
+import { useRouter } from 'src/router';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import { notifyError, notifySuccess } from 'src/common/notify';
-import { useRouter } from 'src/router';
 
 const $api = useApi();
 const $router = useRouter();

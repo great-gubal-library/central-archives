@@ -76,12 +76,11 @@
 
 <script lang="ts">
 import SharedConstants from '@app/shared/SharedConstants';
-import rules from 'src/markdown/rules.md';
-import { Options, Vue } from 'vue-class-component';
-import errors from '@app/shared/errors';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { CharacterSearchModel } from 'src/components/character/character-search-model';
 import CharacterFinderField from 'src/components/character/CharacterFinderField.vue';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import rules from 'src/markdown/rules.md';
+import { Options, Vue } from 'vue-class-component';
 
 @Options({
   components: {

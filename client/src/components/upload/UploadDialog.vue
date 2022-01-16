@@ -62,19 +62,18 @@
 </template>
 
 <script lang="ts">
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
+import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
+import { ImageCategory } from '@app/shared/enums/image-category.enum';
+import SharedConstants from '@app/shared/SharedConstants';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
-import StepSelectImage from './StepSelectImage.vue';
-import StepThumbnail from './StepThumbnail.vue';
-import StepImageDetails from './StepImageDetails.vue';
+import { ImageDetailsModel } from './image-details-model';
 import { ImageSelectModel } from './image-select-model';
 import { ImageThumbModel } from './image-thumb-model';
-import { ImageDetailsModel } from './image-details-model';
-import { ImageCategory } from '@app/shared/enums/image-category.enum';
-import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
-import errors from '@app/shared/errors';
-import SharedConstants from '@app/shared/SharedConstants';
-import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import StepImageDetails from './StepImageDetails.vue';
+import StepSelectImage from './StepSelectImage.vue';
+import StepThumbnail from './StepThumbnail.vue';
 
 enum Step {
   SELECT_IMAGE = 'SELECT_IMAGE',

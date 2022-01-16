@@ -12,18 +12,16 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import { useStore } from 'src/store';
-import { useApi } from 'src/boot/axios';
-import { useQuasar } from 'quasar';
-import MyImage from 'components/images/MyImage.vue';
-import errors from '@app/shared/errors';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
+import MyImage from 'components/images/MyImage.vue';
+import { useQuasar } from 'quasar';
+import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
+import { useStore } from 'src/store';
+import { Options, Vue } from 'vue-class-component';
 
 async function load(): Promise<ImageDto[]> {
 	const $api = useApi();
-	const $q = useQuasar();
   const $store = useStore();
   const characterId = $store.getters.characterId;
 
@@ -46,8 +44,6 @@ async function load(): Promise<ImageDto[]> {
 		MyImage,
 	},
 	async beforeRouteEnter(_, __, next) {
-		const $q = useQuasar();
-
     try {
       const images = await load();
       next(vm => (vm as PageMyImages).setContent(images));

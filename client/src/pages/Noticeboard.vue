@@ -7,15 +7,12 @@
 
 <script lang="ts">
 import { NoticeboardItemSummaryDto } from '@app/shared/dto/noticeboard/noticeboard-item-summary.dto';
-import errors from '@app/shared/errors';
 import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();
-const $q = useQuasar();
 
 @Options({
 	name: 'PageNoticeboard',

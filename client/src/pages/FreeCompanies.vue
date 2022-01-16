@@ -7,16 +7,13 @@
 </template>
 
 <script lang="ts">
-import errors from '@app/shared/errors';
-import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
-import { Options, Vue } from 'vue-class-component';
 import { notifyError } from 'src/common/notify';
+import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
+import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();
-const $q = useQuasar();
 
 @Options({
 	name: 'PageFreeCompanies',

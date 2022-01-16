@@ -8,13 +8,12 @@
 <script lang="ts">
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
-import { useQuasar } from 'quasar';
-import { useApi } from 'src/boot/axios';
-import { RouteParams } from 'vue-router';
-import { Options, Vue } from 'vue-class-component';
 import ImageEditor from 'components/images/ImageEditor.vue';
+import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { useRouter } from 'src/router';
+import { Options, Vue } from 'vue-class-component';
+import { RouteParams } from 'vue-router';
 
 const $api = useApi();
 const $router = useRouter();

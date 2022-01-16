@@ -48,7 +48,6 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component';
-import errors from '@app/shared/errors';
 import { notifyError, notifySuccess } from 'src/common/notify';
 
 export default class PageLogIn extends Vue {

@@ -69,13 +69,12 @@
 <script lang="ts">
 import { NoticeboardItemDto } from '@app/shared/dto/noticeboard/noticeboard-item.dto';
 import { NoticeboardLocation } from '@app/shared/enums/noticeboard-location.enum';
-import NoticeboardItemView from 'components/noticeboard/NoticeboardItemView.vue';
-import errors from '@app/shared/errors';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
+import NoticeboardItemView from 'components/noticeboard/NoticeboardItemView.vue';
 import { displayOptions } from 'src/boot/display';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import { notifyError, notifySuccess } from 'src/common/notify';
 
 @Options({
   name: 'PageEditNoticeboardItem',
