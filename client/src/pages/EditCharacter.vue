@@ -140,7 +140,7 @@ async function load(params: RouteParams): Promise<CharacterProfileDto> {
   const character = $store.state.user!.characters.get(id)!;
 
   try {
-    return await $api.characters.getCharacterProfile(character.name!, character.server!);
+    return await $api.characters.getCharacterProfile(character.name, character.server);
   } catch (e) {
     $q.notify({
       type: 'negative',
