@@ -256,12 +256,13 @@ export default class MainLayout extends Vue {
   }
 
   .layout__logo {
+    filter: brightness(1.05);
     width: 540px;
     max-width: 100%;
   }
 
   .layout__logo:hover {
-    filter: brightness(1.1);
+    filter: brightness(1.125);
     transition: all 0.3s ease;
   }
 
