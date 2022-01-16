@@ -86,7 +86,7 @@ export class StoriesService {
         type: storyDto.type,
       });
 
-      story.tags = storyDto.tags.map(
+      story.tags = storyDto.tags.filter(tag => tag !== '').map(
         (tag) =>
           new StoryTag({
             name: tag,
@@ -142,7 +142,7 @@ export class StoriesService {
         .getMany();
 
       const existingTagNames = story.tags.map((tag) => tag.name);
-      const newTagNames = storyDto.tags.filter((tagName) => !existingTagNames.includes(tagName));
+      const newTagNames = storyDto.tags.filter((tagName) => tagName !== '' && !existingTagNames.includes(tagName));
 
       story.tags = [
         ...story.tags,
