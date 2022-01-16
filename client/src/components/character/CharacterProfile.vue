@@ -1,7 +1,7 @@
 <template>
   <div class="character-profile">
     <p v-if="!preview && character.mine">
-      <router-link to="/edit-character">Edit profile</router-link>
+      <router-link :to="`/edit-character/${character.id}`">Edit profile</router-link>
     </p>
     <banner-view :banner="character.banner" />
     <header class="character-profile__header">

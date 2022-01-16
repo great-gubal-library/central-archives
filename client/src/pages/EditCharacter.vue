@@ -128,17 +128,19 @@ import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import HtmlEditor from '../components/common/HtmlEditor.vue';
+import { RouteParams } from 'vue-router';
 
 const $api = useApi();
 const $q = useQuasar();
 
-async function load(): Promise<CharacterProfileDto> {
+async function load(params: RouteParams): Promise<CharacterProfileDto> {
+  const id = parseInt(params.id as string, 10);
+
   const $store = useStore();
-  const name = $store.getters.character?.name || '';
-  const server = $store.getters.character?.server || '';
+  const character = $store.state.user!.characters.get(id)!;
 
   try {
-    return await $api.characters.getCharacterProfile(name, server);
+    return await $api.characters.getCharacterProfile(character.name!, character.server!);
   } catch (e) {
     $q.notify({
       type: 'negative',
@@ -154,8 +156,8 @@ async function load(): Promise<CharacterProfileDto> {
     CharacterProfile,
     BannerEditSection,
   },
-  async beforeRouteEnter(_, __, next) {
-    const character = await load();
+  async beforeRouteEnter(to, _, next) {
+    const character = await load(to.params);
     next((vm) => (vm as PageEditCharacter).setContent(character));
   },
 })
@@ -231,8 +233,8 @@ export default class PageEditCharacter extends Vue {
   }
 
   viewCharacter() {
-    const name = this.$store.getters.character?.name || '';
-    const server = this.$store.getters.character?.server || '';
+    const name = this.character.name || '';
+    const server = this.character.server || '';
     void this.$router.push(`/${server}/${name.replace(/ /g, '_')}`);
   }
 

@@ -55,7 +55,7 @@
         <q-item
           clickable
           v-ripple
-          to="/edit-character"
+          :to="`/edit-character/${$store.getters.characterId}`"
         >
           <q-item-section>
             <q-item-label>Edit profile</q-item-label>

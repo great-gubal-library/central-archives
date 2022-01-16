@@ -117,7 +117,7 @@ const routes: RouteRecordRaw[] = [
 
   // User actions
   {
-    path: '/edit-character',
+    path: '/edit-character/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditCharacter.vue') }],
     meta: {
