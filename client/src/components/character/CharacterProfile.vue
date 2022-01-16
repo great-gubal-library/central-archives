@@ -93,7 +93,7 @@ class Props {
 export default class CharacterProfile extends Vue.with(Props) {
   get fcLink() {
     const fc = this.character.freeCompany;
-		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(' ', '_')}`;
+		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(/ /g, '_')}`;
   }
 
   get appearance(): string {

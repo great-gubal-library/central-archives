@@ -42,7 +42,7 @@ class Props {
 })
 export default class FreeCompanyNameList extends Vue.with(Props) {
   getLink(fc: FreeCompanySummaryDto) {
-    return `/fc/${fc.server}/${fc.name.replace(' ', '_')}`
+    return `/fc/${fc.server}/${fc.name.replace(/ /g, '_')}`
   }
 
   select(profile: FreeCompanySummaryDto) {

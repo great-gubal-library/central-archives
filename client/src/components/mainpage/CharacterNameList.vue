@@ -40,7 +40,7 @@ class Props {
 })
 export default class CharacterNameList extends Vue.with(Props) {
   getLink(profile: CharacterSummaryDto) {
-    return `/${profile.server}/${profile.name.replace(' ', '_')}`
+    return `/${profile.server}/${profile.name.replace(/ /g, '_')}`
   }
 
   select(profile: CharacterSummaryDto) {

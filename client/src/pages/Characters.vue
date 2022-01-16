@@ -130,7 +130,7 @@ export default class PageCharacters extends Vue {
   }
 
   onRowClick(e: Event, profile: CharacterSummaryDto) {
-    void this.$router.push(`/${profile.server}/${profile.name.replace(' ', '_')}`);
+    void this.$router.push(`/${profile.server}/${profile.name.replace(/ /g, '_')}`);
   }
 
 	refresh() {

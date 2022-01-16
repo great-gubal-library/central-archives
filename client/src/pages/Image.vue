@@ -110,7 +110,7 @@ export default class PageImage extends Vue {
 
   get authorLink(): string {
     const server = this.image.authorServer;
-    const character = this.image.author.replace(' ', '_');
+    const character = this.image.author.replace(/ /g, '_');
     return `/${server}/${character}`;
   }
 }

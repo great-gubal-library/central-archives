@@ -65,12 +65,12 @@ export default class PageMyCommunities extends Vue {
 
 	get fcLink() {
 		const fc = this.communities.freeCompany;
-		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(' ', '_')}`;
+		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(/ /g, '_')}`;
 	}
 
 	get editFCLink() {
 		const fc = this.communities.freeCompany;
-		return fc == null ? null : `/edit-free-company/${fc.server}/${fc.name.replace(' ', '_')}`;
+		return fc == null ? null : `/edit-free-company/${fc.server}/${fc.name.replace(/ /g, '_')}`;
 	}
 
 	setContent(communities: MyCommunitiesInfoDto) {

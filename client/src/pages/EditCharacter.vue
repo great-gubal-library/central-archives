@@ -233,7 +233,7 @@ export default class PageEditCharacter extends Vue {
   viewCharacter() {
     const name = this.$store.getters.character?.name || '';
     const server = this.$store.getters.character?.server || '';
-    void this.$router.push(`/${server}/${name.replace(' ', '_')}`);
+    void this.$router.push(`/${server}/${name.replace(/ /g, '_')}`);
   }
 
   setCarrdProfileLink(newValue: string) {

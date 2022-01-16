@@ -45,7 +45,7 @@ async function load(params: RouteParams): Promise<Content> {
 			throw new Error();
 		}
 
-		name = name.replace('_', ' ');
+		name = name.replace(/_/g, ' ');
 
 		try {
 			const fc = await $api.freeCompanies.getFreeCompany(name, server);

@@ -50,7 +50,7 @@ async function load(params: RouteParams): Promise<Content> {
 			throw new Error();
 		}
 
-		name = name.replace('_', ' ');
+		name = name.replace(/_/g, ' ');
 
 		try {
 			const character = await $api.characters.getCharacterProfile(name, server);

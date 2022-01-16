@@ -87,7 +87,7 @@ async function load(params: RouteParams): Promise<FreeCompanyDto> {
   const server = params.server as string;
   
   try {
-    return await $api.freeCompanies.getFreeCompany(name.replace('_', ' '), server);
+    return await $api.freeCompanies.getFreeCompany(name.replace(/_/g, ' '), server);
   } catch (e) {
     $q.notify({
       type: 'negative',
@@ -169,7 +169,7 @@ export default class PageEditFreeCompany extends Vue {
   viewFreeCompany() {
     const name = this.fc.name || '';
     const server = this.fc.server || '';
-    void this.$router.push(`/fc/${server}/${name.replace(' ', '_')}`);
+    void this.$router.push(`/fc/${server}/${name.replace(/ /g, '_')}`);
   }
 
   setCarrdProfileLink(newValue: string) {

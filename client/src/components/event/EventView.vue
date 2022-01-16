@@ -76,7 +76,7 @@ export default class EventView extends Vue.with(Props) {
 	/*
   get authorLink(): string {
     const server = this.image.authorServer;
-    const character = this.image.author.replace(' ', '_');
+    const character = this.image.author.replace(/ /g, '_');
     return `/${server}/${character}`;
   }
 	*/

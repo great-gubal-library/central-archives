@@ -146,7 +146,7 @@ export default class UserMenu extends Vue {
 
   get myProfileLink() {
 		const server = this.$store.getters.character?.server || '';
-		const character = this.$store.getters.character?.name.replace(' ', '_') || '';
+		const character = this.$store.getters.character?.name.replace(/ /g, '_') || '';
 		return `/${server}/${character}`;
 	}
 

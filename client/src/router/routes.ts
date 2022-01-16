@@ -282,7 +282,7 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/FreeCompany.vue') }],
     meta: {
       title(route: RouteLocationNormalized): string {
-        return (route.params.fc as string).replace('_', ' ');
+        return (route.params.fc as string).replace(/_/g, ' ');
       }
     },
   },
@@ -312,7 +312,7 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Character.vue') }],
     meta: {
       title(route: RouteLocationNormalized): string {
-        return (route.params.character as string).replace('_', ' ');
+        return (route.params.character as string).replace(/_/g, ' ');
       }
     },
   },

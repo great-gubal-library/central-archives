@@ -51,7 +51,7 @@ export default class NoticeboardItemView extends Vue.with(Props) {
 
   get authorLink(): string {
     const server = this.noticeboardItem.authorServer;
-    const character = this.noticeboardItem.author.replace(' ', '_');
+    const character = this.noticeboardItem.author.replace(/ /g, '_');
     return `/${server}/${character}`;
   }
 }

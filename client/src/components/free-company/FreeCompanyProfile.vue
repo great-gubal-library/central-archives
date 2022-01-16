@@ -74,7 +74,7 @@ class Props {
 export default class CharacterProfile extends Vue.with(Props) {
 	get editFCLink() {
 		const fc = this.freeCompany;
-		return `/edit-free-company/${fc.server}/${fc.name.replace(' ', '_')}`;
+		return `/edit-free-company/${fc.server}/${fc.name.replace(/ /g, '_')}`;
 	}
 
   get description(): string {
