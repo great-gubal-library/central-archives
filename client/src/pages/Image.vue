@@ -31,14 +31,14 @@
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
 import html from '@app/shared/html';
-import { useQuasar, createMetaMixin } from 'quasar';
+import { createMetaMixin } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
-import { RouteParams, useRouter } from 'vue-router';
+import { RouteParams } from 'vue-router';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 
 async function load(params: RouteParams): Promise<ImageDto> {

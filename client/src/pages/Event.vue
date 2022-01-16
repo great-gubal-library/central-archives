@@ -20,11 +20,11 @@ import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import EventView from 'src/components/event/EventView.vue';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
+import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
-import { RouteParams, useRouter } from 'vue-router';
+import { RouteParams } from 'vue-router';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 
 async function load(params: RouteParams): Promise<{event: EventDto, eventId: number}> {

@@ -19,14 +19,13 @@ import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import errors from '@app/shared/errors';
 import FreeCompanyProfile from 'components/free-company/FreeCompanyProfile.vue';
 import CharacterNameList from 'components/mainpage/CharacterNameList.vue';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
-import { RouteParams, useRouter } from 'vue-router';
+import { RouteParams } from 'vue-router';
 import { notifyError } from 'src/common/notify';
+import { useRouter } from 'src/router';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 
 interface Content {

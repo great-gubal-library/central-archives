@@ -153,11 +153,11 @@ import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import EventView from 'src/components/event/EventView.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
-import { RouteParams, useRouter } from 'vue-router';
+import { RouteParams } from 'vue-router';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import { useRouter } from 'src/router';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 const $store = useStore();
 

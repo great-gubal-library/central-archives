@@ -10,13 +10,13 @@ import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
-import { RouteParams, useRouter } from 'vue-router';
+import { RouteParams } from 'vue-router';
 import { Options, Vue } from 'vue-class-component';
 import ImageEditor from 'components/images/ImageEditor.vue';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import { useRouter } from 'src/router';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 
 async function load(params: RouteParams): Promise<ImageDto> {

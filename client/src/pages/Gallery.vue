@@ -8,16 +8,14 @@
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
-import errors from '@app/shared/errors';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
+import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
-import { RouteParams, useRouter } from 'vue-router';
+import { RouteParams } from 'vue-router';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 
 async function load(params: RouteParams): Promise<{ category: ImageCategory, images: ImageSummaryDto[] }> {

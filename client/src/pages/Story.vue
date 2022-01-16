@@ -10,15 +10,13 @@
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import errors from '@app/shared/errors';
 import StoryView from 'components/stories/StoryView.vue';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
-import { useRouter } from 'vue-router';
+import { notifyError } from 'src/common/notify';
+import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import { notifyError } from 'src/common/notify';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 
 async function load(params: RouteParams): Promise<StoryDto> {

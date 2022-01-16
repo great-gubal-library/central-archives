@@ -7,18 +7,16 @@
 </template>
 
 <script lang="ts">
-import errors from '@app/shared/errors';
 import { NoticeboardItemDto } from '@app/shared/dto/noticeboard/noticeboard-item.dto';
+import errors from '@app/shared/errors';
 import NoticeboardItemView from 'components/noticeboard/NoticeboardItemView.vue';
-import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
-import { useRouter } from 'vue-router';
+import { notifyError } from 'src/common/notify';
+import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import { notifyError } from 'src/common/notify';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 
 async function load(params: RouteParams): Promise<NoticeboardItemDto> {

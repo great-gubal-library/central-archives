@@ -26,12 +26,12 @@ import StoryList from 'components/stories/StoryList.vue';
 import { useQuasar } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
+import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
-import { RouteParams, useRouter } from 'vue-router';
+import { RouteParams } from 'vue-router';
 import ThumbGallery from '../components/images/ThumbGallery.vue';
 
 const $api = useApi();
-const $q = useQuasar();
 const $router = useRouter();
 
 interface Content {
