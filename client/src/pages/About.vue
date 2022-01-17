@@ -2,10 +2,10 @@
   <q-page class="page-about">
 		<h2>About Chaos Archives</h2>
 		<p>
-			Chaos Archives is a roleplaying portal for the Chaos (EU) roleplaying community in Final Fantasy XIV, heavily inspired by <a href="https://www.argentarchives.org">Argent Archives <q-icon class="external-link-icon" name="launch" /></a>, but built from scratch to cater to the needs of FFXIV roleplayers.
+			Chaos Archives is a roleplay portal for the Chaos (EU) roleplaying community in Final Fantasy XIV, heavily inspired by <a href="https://www.argentarchives.org">Argent Archives <q-icon class="external-link-icon" name="launch" /></a>, but built from scratch to cater to the needs of FFXIV roleplayers.
 		</p>
 		<p>
-			Chaos Archives is part of the <a href="https://discord.gg/ffxiv-chaos-rp" target="_blank">FFXIV Chaos Roleplaying Community <q-icon name="discord" /></a>. Feel free to join us on Discord!
+			Chaos Archives is part of the <a href="https://discord.gg/ffxiv-chaos-rp" target="_blank">FFXIV Chaos RP Community <q-icon name="discord" /></a>. Feel free to join us on Discord!
 		</p>
 		<h3>Credits</h3>
 		<dl>
