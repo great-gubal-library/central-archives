@@ -70,7 +70,7 @@ export class NewsService {
 			const description = item.querySelector('description')!.textContent!; // Guaranteed to exist
 			const contentHtml = parse(description);
 			const contentParagraph = contentHtml.querySelector('p');
-			const content = contentParagraph ? contentParagraph.textContent! : '';
+			const content = contentParagraph ? contentParagraph.textContent! : contentHtml.textContent!;
 
 			try {
 				// Get image URL from linked page
@@ -87,7 +87,7 @@ export class NewsService {
 					author,
 					content,
 					link,
-					image: images.length > 0 ? images[0].getAttribute('data-src')! : '',
+					image: images.length > 0 ? images[0].getAttribute('data-src') || images[0].getAttribute('src')! : '',
 				};
 			} catch (e) {
 				if (e instanceof Error) {
