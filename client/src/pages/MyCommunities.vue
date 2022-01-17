@@ -20,7 +20,10 @@
 				<p>You are not listed a member of a Free Company.</p>
 			</section>
 			<p>
-			<q-btn color="secondary" icon="refresh" label="Set Free Company from Lodestone" @click="onSetFCFromLodestoneClick" />
+				<template v-if="communities.freeCompany">
+					<q-btn color="secondary" icon="remove" label="Unset Free Company" @click="onUnsetFCClick" />&nbsp;
+				</template>
+				<q-btn color="primary" icon="refresh" :label="communities.freeCompany ? 'Update Free Company from Lodestone': 'Set Free Company from Lodestone'" @click="onSetFCFromLodestoneClick" />
 			</p>
 			<q-inner-loading :showing="loading" />
 		</section>
@@ -77,22 +80,39 @@ export default class PageMyCommunities extends Vue {
 		const characterInfo = await minXIVAPI.character.get(lodestoneId);
 		const fcName = characterInfo.Character.FreeCompanyName!;
 
+		let title;
 		let message;
+		let okTitle;
 
 		if (characterInfo.Character.FreeCompanyName) {
-			message = `Lodestone reports you are a member of ${fcName}. Set that as your Free Company?`;
+			if (this.communities.freeCompany
+					&& characterInfo.Character.FreeCompanyName === this.communities.freeCompany.name) {
+				title = 'Confirm Updating Free Company';
+				message = `Update your Free Company "${fcName}" from Lodestone? This operation cannot be undone.`;
+				okTitle = 'Update Free Company';
+			} else {
+				title = 'Confirm Setting Free Company';
+				message = `Lodestone reports you are a member of ${fcName}. Set that as your Free Company?`;
+				okTitle = 'Set Free Company';
+			}
 		} else {
+			title = 'Confirm Unsetting Free Company';
 			message = 'Lodestone reports you are not a member of any Free Company. Remove your Free Company association?';
+			okTitle = 'Unset Free Company';
 		}
 
 		this.$q.dialog({
-			title: 'Confirm Setting Free Company',
+			title,
 			message,
 			ok: {
-				label: fcName ? 'Set Free Company' : 'Unset Free Company',
-				flat: true
+				label: okTitle,
+				flat: true,
 			},
-			cancel: 'Cancel',
+			cancel: {
+				label: 'Cancel',
+				color: 'secondary',
+				flat: true,
+			}
 		}).onOk(() => this.setFCFromLodestone());
 	}
 
@@ -100,10 +120,51 @@ export default class PageMyCommunities extends Vue {
 		this.loading = true;
 
 		try {
+			const oldName = this.communities.freeCompany?.name;
 			const fc = await this.$api.communities.setFCFromLodestone($store.getters.characterId!);
 			this.communities.freeCompany = fc;
 
-			notifySuccess('Free Company set.');
+			if (!fc) {
+				notifySuccess('Free Company unset.');
+			} else if (fc.name === oldName) {
+				notifySuccess('Free Company updated.');
+			} else {
+				notifySuccess('Free Company set.');
+			}
+		} catch (e) {
+			notifyError(e);
+		} finally {
+			this.loading = false;
+		}
+	}
+
+	async onUnsetFCClick() {
+		const fcName = this.communities.freeCompany!.name;
+
+		this.$q.dialog({
+			title: 'Confirm Unsetting Free Company',
+			message: `Do you want to remove your association with ${fcName}?`,
+			ok: {
+				label: 'Unset Free Company',
+				color: 'negative',
+				flat: true,
+			},
+			cancel: {
+				label: 'Cancel',
+				color: 'secondary',
+				flat: true,
+			}
+		}).onOk(() => this.unsetFC());
+	}
+
+	async unsetFC() {
+		this.loading = true;
+
+		try {
+			await this.$api.communities.unsetFC($store.getters.characterId!);
+			this.communities.freeCompany = null;
+
+			notifySuccess('Free Company unset.');
 		} catch (e) {
 			notifyError(e);
 		} finally {

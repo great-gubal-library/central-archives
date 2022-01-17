@@ -16,4 +16,8 @@ export default class CommunitiesAPI {
 	async setFCFromLodestone(characterId: number): Promise<CommunityFCSummaryDto> {
 		return this.transport.authPost('free-company', { characterId });
 	}
+
+	async unsetFC(characterId: number): Promise<void> {
+		return this.transport.authPost('free-company/unset', { characterId });
+	}
 }

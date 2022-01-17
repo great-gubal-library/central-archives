@@ -88,44 +88,36 @@ export class CommunitiesService {
 
 			if (!existingFC) {
 				fc = new FreeCompany();
-				fc.name = fcLodestoneInfo.FreeCompany.Name;
-				fc.lodestoneId = fcLodestoneId;
-				fc.tag = fcLodestoneInfo.FreeCompany.Tag;
-
-				if (!fc.leader && characterInfo.lodestoneId === leaderLodestoneId) {
-					if (!fc.claimedAt) {
-						fc.claimedAt = new Date();
-					}
-
-					fc.leader = character;
-				}
-
-				const server = await em.getRepository(Server).findOne({
-					where: {
-						name: fcLodestoneInfo.FreeCompany.Server
-					}
-				});
-
-				if (!server) {
-					throw new ConflictException(`Unknown server: ${fcLodestoneInfo.FreeCompany.Server}`);
-				}
-				
-				fc.crest = fcLodestoneInfo.FreeCompany.Crest.join(',');
-				fc.server = server;
 				fc.foundedAt = DateTime.fromSeconds(fcLodestoneInfo.FreeCompany.Formed).toJSDate();
-				await fcRepo.save(fc);
 			} else {
 				fc = existingFC;
-
-				if (!fc.leader && characterInfo.lodestoneId === leaderLodestoneId) {
-					if (!fc.claimedAt) {
-						fc.claimedAt = new Date();
-					}
-
-					fc.leader = character;
-					await fcRepo.save(fc);
-				}
 			}
+
+			fc.name = fcLodestoneInfo.FreeCompany.Name;
+			fc.lodestoneId = fcLodestoneId;
+			fc.tag = fcLodestoneInfo.FreeCompany.Tag;
+
+			if (!fc.leader && characterInfo.lodestoneId === leaderLodestoneId) {
+				if (!fc.claimedAt) {
+					fc.claimedAt = new Date();
+				}
+
+				fc.leader = character;
+			}
+
+			const server = await em.getRepository(Server).findOne({
+				where: {
+					name: fcLodestoneInfo.FreeCompany.Server
+				}
+			});
+
+			if (!server) {
+				throw new ConflictException(`Unknown server: ${fcLodestoneInfo.FreeCompany.Server}`);
+			}
+			
+			fc.server = server;
+			fc.crest = fcLodestoneInfo.FreeCompany.Crest.join(',');
+			await fcRepo.save(fc);
 
 			character.freeCompany = Promise.resolve(fc);
 			await characterRepo.save(character);
@@ -143,5 +135,40 @@ export class CommunitiesService {
 			server: fc.server.name,
 			isLeader: !!fc.leader && fc.leader.id === characterId,
 		}
+	}
+
+	async unsetFreeCompany(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<void> {
+		const characterInfo = user.characters.find(ch => ch.id === characterIdWrapper.characterId);
+		
+		if (!characterInfo) {
+			throw new NotFoundException('Character not found');
+		}
+
+		return this.connection.transaction(async em => {
+			const characterRepo = em.getRepository(Character);
+			const character = await characterRepo.findOne({
+				where: {
+					id: characterInfo.id,
+					verifiedAt: Not(IsNull())
+				}
+			});
+
+			if (!character) {
+				throw new NotFoundException('Character not found');
+			}
+
+			character.freeCompany = Promise.resolve(null);
+			await characterRepo.save(character);
+
+			// If we're the leader, forget it
+			await em.getRepository(FreeCompany).update({
+				leader: {
+					id: character.id
+				}
+			}, {
+				leader: null,
+				claimedAt: null as unknown as Date
+			});
+		});
 	}
 }

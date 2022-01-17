@@ -23,4 +23,10 @@ export class CommunitiesController {
 	async setFreeCompany(@Body() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<CommunityFCSummaryDto|null> {
 		return this.communitiesService.setFreeCompany(characterIdWrapper, user);
 	}
+
+	@Post('free-company/unset')
+	@RoleRequired(Role.USER)
+	async unsetFreeCompany(@Body() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<void> {
+		await this.communitiesService.unsetFreeCompany(characterIdWrapper, user);
+	}
 }
