@@ -122,9 +122,9 @@
 
     <q-footer elevated>
       <q-toolbar>
-        <div class="layout__filler text-body justify-center text-center">
-          Final Fantasy XIV is © 2010&ndash;2021 Square Enix Co., Ltd. All rights reserved.<br />
-          All text and images on this site are © 2021 by their respective owners.
+        <div class="layout__footer text-body justify-center text-center">
+          Final Fantasy XIV is © 2010&ndash;2021 Square Enix Co., Ltd. All rights reserved. Chaos Archives is a fansite and is not affiliated with Square Enix.<br />
+          All text and images on this site are © 2021 by their respective owners. <router-link to="/privacy-statement">(Privacy statement)</router-link>
         </div>
       </q-toolbar>
     </q-footer>
@@ -328,6 +328,18 @@ export default class MainLayout extends Vue {
   
   .q-footer {
     background: #1f5993;
+  }
+
+  .layout__footer {
+    flex-grow: 1;
+  }
+
+  .layout__footer a {
+    color: #bbb;
+  }
+
+  .layout__footer a:hover {
+    color: #ccc;
   }
 
   @media screen and (min-width: $max-layout-width) {

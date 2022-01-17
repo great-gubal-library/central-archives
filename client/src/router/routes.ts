@@ -39,6 +39,15 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  {
+    path: '/privacy-statement',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/PrivacyStatement.vue') }],
+    meta: {
+      title: 'Privacy Statement'
+    },
+  },
+
   // User actions
 
   {
