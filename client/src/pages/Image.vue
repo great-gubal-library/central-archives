@@ -130,6 +130,8 @@ export default class PageImage extends Vue {
 </script>
 
 <style lang="scss">
+@import url($extraGoogleFonts);
+
 .page-image__edit-bar {
 	display: flex;
 	align-items: center;
