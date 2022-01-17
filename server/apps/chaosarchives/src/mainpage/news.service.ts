@@ -1,5 +1,5 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { HttpService, Injectable } from '@nestjs/common';
+import { HttpService, Injectable, Logger } from '@nestjs/common';
 import parse from 'node-html-parser';
 import { JSDOM } from 'jsdom';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
@@ -11,6 +11,8 @@ export enum NewsCacheType {
 
 @Injectable()
 export class NewsService {
+	private readonly log = new Logger(NewsService.name);
+
 	private readonly NEWS_SITE = 'https://crescentmoonpublishing.com/feed/';
 
 	private readonly CACHE_DURATION_LONG_SEC = 86400;
@@ -88,6 +90,12 @@ export class NewsService {
 					image: images.length > 0 ? images[0].getAttribute('data-src')! : '',
 				};
 			} catch (e) {
+				if (e instanceof Error) {
+					this.log.error(e.message, e.stack);
+				} else {
+					this.log.error(e);
+				}
+
 				// Fallback in case we can't get the image URL
 				return {
 					title,

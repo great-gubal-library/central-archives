@@ -115,7 +115,12 @@ export class CrescentMoonPublishingService {
 					source: EventSource.CRESCENT_MOON_PUBLISHING,
 				};
 			} catch (e) {
-				this.log.error(e);
+				if (e instanceof Error) {
+					this.log.error(e.message, e.stack);
+				} else {
+					this.log.error(e);
+				}
+
 				return null;
 			}
 		}));
