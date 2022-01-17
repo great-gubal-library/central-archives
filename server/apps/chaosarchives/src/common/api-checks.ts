@@ -6,7 +6,8 @@ const DOMAIN_REGEX = /^([A-Za-z0-9-]+\.)+[A-Za-z0-9-]+$/;
 const SUBDOMAIN_REGEX = /^[A-Za-z0-9-]+$/;
 
 export function checkCarrdProfile(carrdProfile: string, user: UserInfo): string {
-	const valid = SUBDOMAIN_REGEX.exec(carrdProfile)
+	const valid = carrdProfile === ''
+		|| SUBDOMAIN_REGEX.exec(carrdProfile)
 		|| (roleImplies(user.role, Role.TRUSTED) && DOMAIN_REGEX.test(carrdProfile));
 	
 	if (!valid) {
