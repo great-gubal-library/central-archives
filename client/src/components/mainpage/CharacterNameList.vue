@@ -3,6 +3,7 @@
     <q-item
       v-for="profile in profiles"
       :key="`${profile.name}_${profile.server}`"
+      :class="{ 'character-name-list__item_active' : profile.name === activeName && profile.server === activeServer }"
       clickable
       v-ripple
       :to="links ? getLink(profile) : null"
@@ -32,6 +33,14 @@ class Props {
 
   links = prop<boolean>({
     default: true,
+  })
+
+  activeName = prop<string>({
+    required: false,
+  })
+
+  activeServer = prop<string>({
+    required: false,
   })
 }
 

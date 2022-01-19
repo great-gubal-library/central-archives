@@ -138,7 +138,7 @@ export default class PageMyCommunities extends Vue {
 		}
 	}
 
-	async onUnsetFCClick() {
+	onUnsetFCClick() {
 		const fcName = this.communities.freeCompany!.name;
 
 		this.$q.dialog({
