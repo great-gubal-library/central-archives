@@ -1,24 +1,20 @@
 <template>
   <q-timeline>
     <q-timeline-entry heading tag="div">
-      <h2 class="news-timeline__header">
+      <h4 class="news-timeline__header">
+        News by
         <a
           class="news-timeline__link"
           href="https://crescentmoonpublishing.com/the-daily-moogle/"
           target="_blank"
-          >News by The Daily Moogle</a
-        >
-      </h2>
-      <div class="news-timeline__blurb">
-        Kindly provided by
-        <a
+          >The Daily Moogle</a
+        > and <a
           class="news-timeline__link"
-          href="https://crescentmoonpublishing.com/"
+          href="https://news.kryst.company/"
           target="_blank"
-          >Crescent Moon Publishing</a
+          >Limsa Insider</a
         >
-        — a Final Fantasy XIV fansite, by players, for players!
-      </div>
+      </h4>
     </q-timeline-entry>
     <q-timeline-entry
       v-for="(entry, index) in news"
@@ -55,22 +51,24 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { prop, Options, Vue } from 'vue-class-component';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 
+class Props {
+  news = prop<NewsDto[]>({
+    required: true,
+  });
+}
+
 @Options({
-  props: {
-    news: {
-      type: Object as () => NewsDto[],
-      required: true,
-    },
-  },
+  name: 'NewsTimeline',
 })
-export default class NewsTimeline extends Vue {}
+export default class NewsTimeline extends Vue.with(Props) {}
 </script>
 
 <style lang="scss">
 .news-timeline__header {
+  margin-top: 0;
   margin-bottom: 0;
 }
 
