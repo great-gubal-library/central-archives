@@ -7,6 +7,7 @@ import { BaseEventDto } from '@app/shared/dto/events/base-event.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
+import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import {
@@ -20,7 +21,7 @@ import {
   Post,
   Put,
   Query,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
@@ -45,6 +46,14 @@ export class EventsController {
   @RoleRequired(Role.USER)
   async search(@Query('query') query: string): Promise<EventSearchResultDto[]> {
     return this.eventsService.search(query);
+  }
+
+  @Get('/month/:year/:month')
+  async getByMonth(
+    @Param('year', ParseIntPipe) year: number,
+    @Param('month', ParseIntPipe) month: number,
+  ): Promise<EventSummaryDto[]> {
+    return this.eventsService.getByMonth(year, month);
   }
 
   @Get('/:id')

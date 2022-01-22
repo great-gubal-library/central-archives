@@ -18,7 +18,7 @@ import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { BadRequestException, HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime, Duration } from 'luxon';
-import { Connection, EntityManager, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
+import { Connection, EntityManager, In, IsNull, LessThan, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { Contains } from '../common/db';
 import utils from '../common/utils';
 import { ImagesService } from '../images/images.service';
@@ -28,427 +28,470 @@ import { ExternalEvent } from './model/external-event';
 
 @Injectable()
 export class EventsService {
-	private readonly logger = new Logger(EventsService.name);
+  private readonly logger = new Logger(EventsService.name);
 
-	private readonly CACHE_DURATION_SHORT_MS = Duration.fromObject({ minutes: 5 }).toMillis();
+  private readonly CACHE_DURATION_SHORT_MS = Duration.fromObject({ minutes: 5 }).toMillis();
 
-	private readonly MAX_RESULTS = 10;
+  private readonly MAX_RESULTS = 10;
 
-	constructor(
-		private readonly cmpService: CrescentMoonPublishingService,
-		private readonly ccService: ChocoboChronicleService,
-		private readonly imagesService: ImagesService,
-		private readonly connection: Connection,
-		@InjectRepository(Event)
-		private readonly eventRepo: Repository<Event>,
-		@InjectRedis()
-		private readonly redisService: Redis,
-		private readonly httpService: HttpService,
-	) { }
+  constructor(
+    private readonly cmpService: CrescentMoonPublishingService,
+    private readonly ccService: ChocoboChronicleService,
+    private readonly imagesService: ImagesService,
+    private readonly connection: Connection,
+    @InjectRepository(Event)
+    private readonly eventRepo: Repository<Event>,
+    @InjectRedis()
+    private readonly redisService: Redis,
+    private readonly httpService: HttpService,
+  ) {}
 
-	async getEvent(id: number, edit: boolean, user?: UserInfo): Promise<BaseEventDto> {
-		// TODO: optimize query
-		const event = await this.eventRepo.findOne({
-			where: {
-				id,
-			},
-			relations: [ 'owner', 'owner.user', 'locations', 'locations.server', 'banner', 'banner.owner' ]
-		});
+  async getEvent(id: number, edit: boolean, user?: UserInfo): Promise<BaseEventDto> {
+    // TODO: optimize query
+    const event = await this.eventRepo.findOne({
+      where: {
+        id,
+      },
+      relations: ['owner', 'owner.user', 'locations', 'locations.server', 'banner', 'banner.owner'],
+    });
 
-		if (!event) {
-			throw new NotFoundException('Event not found');
-		}
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
 
-		const location = event.locations.length > 0 ? event.locations[0] : null;
-		const banner = await event.banner;
-		let announcements: EventAnnouncement[] = [];
-		let images: ImageSummaryDto[] = [];
+    const location = event.locations.length > 0 ? event.locations[0] : null;
+    const banner = await event.banner;
+    let announcements: EventAnnouncement[] = [];
+    let images: ImageSummaryDto[] = [];
 
-		if (edit) {
-			announcements = await event.notifications;
-		} else {
-			images = await this.imagesService.getImages({ eventId: id });
-		}
+    if (edit) {
+      announcements = await event.notifications;
+    } else {
+      images = await this.imagesService.getImages({ eventId: id });
+    }
 
-		const properties = {
-			title: event.title,
-			mine: !!event.owner && event.owner.user.id === user?.id,
-			details: event.details,
-			oocDetails: event.oocDetails,
-			startDateTime: event.startDateTime.getTime(),
-			endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
-			link: event.externalSourceLink || event.link,
-			contact: event.contact,
-			banner: !banner ? null : new BannerDto({
-				id: banner.id,
-				url: this.imagesService.getUrl(banner),
-				width: banner.width,
-				height: banner.height
-			}),
-			locationName: location ? location.name : '',
-			locationAddress: location ? location.address : '',
-			locationServer: location ? location.server.name : '',
-			locationTags: location ? location.tags : '',
-		};
+    const properties = {
+      title: event.title,
+      mine: !!event.owner && event.owner.user.id === user?.id,
+      details: event.details,
+      oocDetails: event.oocDetails,
+      startDateTime: event.startDateTime.getTime(),
+      endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
+      link: event.externalSourceLink || event.link,
+      contact: event.contact,
+      banner: !banner
+        ? null
+        : new BannerDto({
+            id: banner.id,
+            url: this.imagesService.getUrl(banner),
+            width: banner.width,
+            height: banner.height,
+          }),
+      locationName: location ? location.name : '',
+      locationAddress: location ? location.address : '',
+      locationServer: location ? location.server.name : '',
+      locationTags: location ? location.tags : '',
+    };
 
-		if (!edit) {
-			return new EventDto({ ...properties,
-				images
-			});
-		}
+    if (!edit) {
+      return new EventDto({ ...properties, images });
+    }
 
-		return new EventEditDto({ ...properties,
-			announcements: announcements.map(announcement => new EventAnnouncementDto({
-				id: announcement.id,
-				minutesBefore: announcement.minutesBefore,
-				content: announcement.content,
-			}))
-		});
-	}
+    return new EventEditDto({
+      ...properties,
+      announcements: announcements.map(
+        (announcement) =>
+          new EventAnnouncementDto({
+            id: announcement.id,
+            minutesBefore: announcement.minutesBefore,
+            content: announcement.content,
+          }),
+      ),
+    });
+  }
 
   async createEvent(eventDto: EventEditDto, characterId: number, user: UserInfo): Promise<IdWrapper> {
-    const eventEntity = await this.connection.transaction(async em => {
-			const character = await em.getRepository(Character).findOne({
-				id: characterId,
-				user: {
-					id: user.id
-				},
-				verifiedAt: Not(IsNull())
-			});
+    const eventEntity = await this.connection.transaction(async (em) => {
+      const character = await em.getRepository(Character).findOne({
+        id: characterId,
+        user: {
+          id: user.id,
+        },
+        verifiedAt: Not(IsNull()),
+      });
 
-			if (!character) {
-				throw new BadRequestException('Invalid character ID');
-			}
+      if (!character) {
+        throw new BadRequestException('Invalid character ID');
+      }
 
-			const event = new Event();
-			event.locations = [];
-			event.notifications = Promise.resolve([]);
-			event.owner = character;
-			event.source = EventSource.WEBSITE;
-			await this.updateEventInternal(em, event, eventDto);
-			return event;
-		});
+      const event = new Event();
+      event.locations = [];
+      event.notifications = Promise.resolve([]);
+      event.owner = character;
+      event.source = EventSource.WEBSITE;
+      await this.updateEventInternal(em, event, eventDto);
+      return event;
+    });
 
-		this.notifySteward(eventEntity); // no await
-		return { id: eventEntity.id };
+    this.notifySteward(eventEntity); // no await
+    return { id: eventEntity.id };
   }
 
   async updateEvent(eventId: number, eventDto: EventEditDto, user: UserInfo): Promise<void> {
-    const eventEntity = await this.connection.transaction(async em => {
-			const event = await em.getRepository(Event).findOne({
-				where: {
-					id: eventId,
-					owner: {
-						user: {
-							id: user.id
-						}
-					},
-				},
-				relations: [ 'owner', 'locations', 'locations.server' ]
-			});
+    const eventEntity = await this.connection.transaction(async (em) => {
+      const event = await em.getRepository(Event).findOne({
+        where: {
+          id: eventId,
+          owner: {
+            user: {
+              id: user.id,
+            },
+          },
+        },
+        relations: ['owner', 'locations', 'locations.server'],
+      });
 
-			if (!event) {
-				throw new NotFoundException('Event not found');
-			}
+      if (!event) {
+        throw new NotFoundException('Event not found');
+      }
 
-			await this.updateEventInternal(em, event, eventDto);
-			return event;
-		});
+      await this.updateEventInternal(em, event, eventDto);
+      return event;
+    });
 
-		this.notifySteward(eventEntity); // no await
-	}
+    this.notifySteward(eventEntity); // no await
+  }
 
-	private async updateEventInternal(em: EntityManager, eventEntity: Event, eventDto: EventEditDto): Promise<void> {
-		const event = eventEntity;
-		event.title = eventDto.title;
-		event.startDateTime = new Date(eventDto.startDateTime);
-		event.endDateTime = eventDto.endDateTime ? new Date(eventDto.endDateTime) : null;
-		event.details = html.sanitize(eventDto.details);
-		event.oocDetails = html.sanitize(eventDto.oocDetails);
-		event.link = eventDto.link; // TODO: Validate
-		event.contact = eventDto.contact;
+  private async updateEventInternal(em: EntityManager, eventEntity: Event, eventDto: EventEditDto): Promise<void> {
+    const event = eventEntity;
+    event.title = eventDto.title;
+    event.startDateTime = new Date(eventDto.startDateTime);
+    event.endDateTime = eventDto.endDateTime ? new Date(eventDto.endDateTime) : null;
+    event.details = html.sanitize(eventDto.details);
+    event.oocDetails = html.sanitize(eventDto.oocDetails);
+    event.link = eventDto.link; // TODO: Validate
+    event.contact = eventDto.contact;
 
-		if (eventDto.banner && eventDto.banner.id) {
-			const banner = await em.getRepository(Image).findOne({
-				where: {
-					id: eventDto.banner.id,
-					owner: event.owner
-				}
-			});
+    if (eventDto.banner && eventDto.banner.id) {
+      const banner = await em.getRepository(Image).findOne({
+        where: {
+          id: eventDto.banner.id,
+          owner: event.owner,
+        },
+      });
 
-			if (!banner) {
-				throw new BadRequestException('Banner not found');
-			}
+      if (!banner) {
+        throw new BadRequestException('Banner not found');
+      }
 
-			if (banner.width / banner.height < SharedConstants.MIN_BANNER_ASPECT_RATIO) {
-				throw new BadRequestException('Banner is too tall for its width');
-			}
+      if (banner.width / banner.height < SharedConstants.MIN_BANNER_ASPECT_RATIO) {
+        throw new BadRequestException('Banner is too tall for its width');
+      }
 
-			event.banner = Promise.resolve(banner);
-		} else {
-			event.banner = Promise.resolve(null as unknown as Image);
-		}
+      event.banner = Promise.resolve(banner);
+    } else {
+      event.banner = Promise.resolve(null as unknown as Image);
+    }
 
-		let location: EventLocation;
+    let location: EventLocation;
 
-		if (event.locations.length > 0) {
-			location = event.locations[0];
-		} else {
-			location = new EventLocation();
-			location.event = event;
-			event.locations.push(location);
-		}
+    if (event.locations.length > 0) {
+      location = event.locations[0];
+    } else {
+      location = new EventLocation();
+      location.event = event;
+      event.locations.push(location);
+    }
 
-		location.name = eventDto.locationName;
-		location.address = eventDto.locationAddress;
-		location.tags = eventDto.locationTags;
+    location.name = eventDto.locationName;
+    location.address = eventDto.locationAddress;
+    location.tags = eventDto.locationTags;
 
-		const server = await em.getRepository(Server).findOne({
-			where: {
-				name: eventDto.locationServer
-			}
-		});
+    const server = await em.getRepository(Server).findOne({
+      where: {
+        name: eventDto.locationServer,
+      },
+    });
 
-		if (!server) {
-			throw new BadRequestException(`Server ${eventDto.locationServer} not found`);
-		}
+    if (!server) {
+      throw new BadRequestException(`Server ${eventDto.locationServer} not found`);
+    }
 
-		location.server = server;
+    location.server = server;
 
-		// Update announcements; O(n^2) filters used for code clarity, since number of notifications is small
-		const dtoAnnouncementIds = eventDto.announcements.map(notification => notification.id).filter(id => !!id);
-		const announcements = (await event.notifications)
-				.filter(notification => dtoAnnouncementIds.includes(notification.id));
-		
-		for (const dtoAnnouncement of eventDto.announcements) {
-			let announcement = announcements.find(n => n.id === dtoAnnouncement.id);
+    // Update announcements; O(n^2) filters used for code clarity, since number of notifications is small
+    const dtoAnnouncementIds = eventDto.announcements.map((notification) => notification.id).filter((id) => !!id);
+    const announcements = (await event.notifications).filter((notification) =>
+      dtoAnnouncementIds.includes(notification.id),
+    );
 
-			if (!announcement) {
-				announcement = new EventAnnouncement();
-				announcements.push(announcement);
-			}
+    for (const dtoAnnouncement of eventDto.announcements) {
+      let announcement = announcements.find((n) => n.id === dtoAnnouncement.id);
 
-			announcement.content = dtoAnnouncement.content;
-			announcement.minutesBefore = dtoAnnouncement.minutesBefore;
-			announcement.postAt = DateTime.fromJSDate(event.startDateTime)
-					.minus({ minutes: announcement.minutesBefore })
-					.toJSDate();
-		}
+      if (!announcement) {
+        announcement = new EventAnnouncement();
+        announcements.push(announcement);
+      }
 
-		event.notifications = Promise.resolve(announcements);
-		await em.getRepository(Event).save(event);
-	}
+      announcement.content = dtoAnnouncement.content;
+      announcement.minutesBefore = dtoAnnouncement.minutesBefore;
+      announcement.postAt = DateTime.fromJSDate(event.startDateTime)
+        .minus({ minutes: announcement.minutesBefore })
+        .toJSDate();
+    }
 
-	async deleteEvent(eventId: number, user: UserInfo): Promise<void> {
-		const eventEntity = await this.connection.transaction(async em => {
-			const eventRepo = em.getRepository(Event);
-			const event = await eventRepo.findOne({
-				where: {
-					id: eventId,
-					owner: {
-						user: {
-							id: user.id
-						}
-					},
-				},
-				relations: [ 'owner' ]
-			});
+    event.notifications = Promise.resolve(announcements);
+    await em.getRepository(Event).save(event);
+  }
 
-			if (!event) {
-				throw new NotFoundException('Event not found');
-			}
+  async deleteEvent(eventId: number, user: UserInfo): Promise<void> {
+    const eventEntity = await this.connection.transaction(async (em) => {
+      const eventRepo = em.getRepository(Event);
+      const event = await eventRepo.findOne({
+        where: {
+          id: eventId,
+          owner: {
+            user: {
+              id: user.id,
+            },
+          },
+        },
+        relations: ['owner'],
+      });
 
-			await eventRepo.softRemove(event);
-			return event;
-		});
+      if (!event) {
+        throw new NotFoundException('Event not found');
+      }
 
-		this.notifySteward(eventEntity); // no await
-	}
+      await eventRepo.softRemove(event);
+      return event;
+    });
 
-	private async notifySteward(event: Event): Promise<void> {
-		try {
-			this.logger.debug(`Notifying Steward about event ${event.id} change`);
-			await this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/event`, { eventId: event.id }).toPromise();
-		} catch (e) {
-			if (e instanceof Error) {
-				this.logger.error(e.message, e.stack);
-			} else {
-				this.logger.error(e);
-			}
-		}
-	}
+    this.notifySteward(eventEntity); // no await
+  }
 
-	async getEvents(refreshExternal = false): Promise<EventSummariesDto> {
-		const eventsTimestamp = await this.redisService.get('eventsTimestamp');
-		let eventsUpToDate = false;
+  private async notifySteward(event: Event): Promise<void> {
+    try {
+      this.logger.debug(`Notifying Steward about event ${event.id} change`);
+      await this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/event`, { eventId: event.id }).toPromise();
+    } catch (e) {
+      if (e instanceof Error) {
+        this.logger.error(e.message, e.stack);
+      } else {
+        this.logger.error(e);
+      }
+    }
+  }
 
-		if (eventsTimestamp) {
-			const date = DateTime.fromMillis(parseInt(eventsTimestamp, 10));
+  async getEvents(refreshExternal = false): Promise<EventSummariesDto> {
+    const eventsTimestamp = await this.redisService.get('eventsTimestamp');
+    let eventsUpToDate = false;
 
-			if (DateTime.now().diff(date).toMillis() <= this.CACHE_DURATION_SHORT_MS) {
-				eventsUpToDate = true;
-			}
-		}
+    if (eventsTimestamp) {
+      const date = DateTime.fromMillis(parseInt(eventsTimestamp, 10));
 
-		if (!refreshExternal || eventsUpToDate) {
-			return {
-				events: await this.getEventsFromDatabase(),
-				eventsUpToDate
-			};
-		}
+      if (DateTime.now().diff(date).toMillis() <= this.CACHE_DURATION_SHORT_MS) {
+        eventsUpToDate = true;
+      }
+    }
 
-		// Not cached - fetch and cache
-		const [ cmpEvents, ccEvents] = await Promise.all([
-			this.cmpService.fetchEvents(),
-			this.ccService.fetchEvents(),
-		]);
-		
-		const events = [ ...cmpEvents, ...ccEvents ]
-				.sort((e1, e2) => utils.compareNumbers(e1.startDateTime, e2.startDateTime));
-		await this.saveEvents(events);
-		await this.redisService.set('eventsTimestamp', Date.now().toString());
-		return { 
-			events: await this.getEventsFromDatabase(),
-			eventsUpToDate: true
-		};
-	}
+    if (!refreshExternal || eventsUpToDate) {
+      return {
+        events: await this.getEventsFromDatabase(),
+        eventsUpToDate,
+      };
+    }
 
-	private async getEventsFromDatabase(): Promise<EventSummaryDto[]> {
-		const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day');
-		const events = await this.eventRepo.find({
-			where: {
-				startDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
-				hidden: false,
-			},
-			order: {
-				startDateTime: 'ASC',
-				createdAt: 'ASC'
-			},
-			take: this.MAX_RESULTS,
-			relations: [ 'locations', 'locations.server' ]
-		});
+    // Not cached - fetch and cache
+    const [cmpEvents, ccEvents] = await Promise.all([this.cmpService.fetchEvents(), this.ccService.fetchEvents()]);
 
-		return events.map(event => this.toEventDto(event));
-	}
+    const events = [...cmpEvents, ...ccEvents].sort((e1, e2) =>
+      utils.compareNumbers(e1.startDateTime, e2.startDateTime),
+    );
+    await this.saveEvents(events);
+    await this.redisService.set('eventsTimestamp', Date.now().toString());
+    return {
+      events: await this.getEventsFromDatabase(),
+      eventsUpToDate: true,
+    };
+  }
 
-	private async saveEvents(events: ExternalEvent[]): Promise<void> {
-		if (events.length === 0) {
-			return;
-		}
+  private async getEventsFromDatabase(): Promise<EventSummaryDto[]> {
+    const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day');
+    const events = await this.eventRepo.find({
+      where: {
+        startDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
+        hidden: false,
+      },
+      order: {
+        startDateTime: 'ASC',
+        createdAt: 'ASC',
+      },
+      take: this.MAX_RESULTS,
+      relations: ['locations', 'locations.server'],
+    });
 
-		await this.connection.transaction(async em => {
-			const links = events.map(event => event.link);
-			const eventRepo = em.getRepository(Event);
-			const existingEvents = await eventRepo.find({
-				where: {
-					externalSourceLink: In(links),
-				},
-				relations: [ 'locations' ]
-			});
-			const existingEventsByLink = new Map<string, Event>();
+    return events.map((event) => this.toEventDto(event));
+  }
 
-			for (const existingEvent of existingEvents) {
-				existingEventsByLink.set(existingEvent.externalSourceLink, existingEvent);
-			}
+  private async saveEvents(events: ExternalEvent[]): Promise<void> {
+    if (events.length === 0) {
+      return;
+    }
 
-			const savedEvents: Event[] = [];
-			const serverNames = new Set(events
-				.map(event => event.locations.map(location => location.server))
-				.flat()
-				.filter(serverName => !!serverName));
-			const serversByName = new Map<string, Server>();
+    await this.connection.transaction(async (em) => {
+      const links = events.map((event) => event.link);
+      const eventRepo = em.getRepository(Event);
+      const existingEvents = await eventRepo.find({
+        where: {
+          externalSourceLink: In(links),
+        },
+        relations: ['locations'],
+      });
+      const existingEventsByLink = new Map<string, Event>();
 
-			if (serverNames.size > 0) {
-				const servers = await em.getRepository(Server).find({
-					where: {
-						name: In(Array.from(serverNames))
-					}
-				});
+      for (const existingEvent of existingEvents) {
+        existingEventsByLink.set(existingEvent.externalSourceLink, existingEvent);
+      }
 
-				for (const server of servers) {
-					serversByName.set(server.name, server);
-				}
-			}			
+      const savedEvents: Event[] = [];
+      const serverNames = new Set(
+        events
+          .map((event) => event.locations.map((location) => location.server))
+          .flat()
+          .filter((serverName) => !!serverName),
+      );
+      const serversByName = new Map<string, Server>();
 
-			for (const eventDto of events) {
-				const event = existingEventsByLink.get(eventDto.link) || eventRepo.create({
-					locations: []
-				});
+      if (serverNames.size > 0) {
+        const servers = await em.getRepository(Server).find({
+          where: {
+            name: In(Array.from(serverNames)),
+          },
+        });
 
-				event.title = eventDto.title;
-				event.details = html.sanitize(eventDto.details);
-				event.startDateTime = new Date(eventDto.startDateTime);
-				event.endDateTime = eventDto.endDateTime ? new Date(eventDto.endDateTime) : null;
-				event.source = eventDto.source;
-				event.externalSourceLink = eventDto.link;
+        for (const server of servers) {
+          serversByName.set(server.name, server);
+        }
+      }
 
-				const dtoLocations = eventDto.locations;
+      for (const eventDto of events) {
+        const event =
+          existingEventsByLink.get(eventDto.link) ||
+          eventRepo.create({
+            locations: [],
+          });
 
-				if (event.locations.length > dtoLocations.length) {
-					event.locations.splice(dtoLocations.length, event.locations.length - dtoLocations.length);
-				} else if (event.locations.length < dtoLocations.length) {
-					for (let i = event.locations.length; i < dtoLocations.length; i++) {
-						const location = new EventLocation();
-						location.event = event;
-						event.locations.push(location);
-					}
-				}
+        event.title = eventDto.title;
+        event.details = html.sanitize(eventDto.details);
+        event.startDateTime = new Date(eventDto.startDateTime);
+        event.endDateTime = eventDto.endDateTime ? new Date(eventDto.endDateTime) : null;
+        event.source = eventDto.source;
+        event.externalSourceLink = eventDto.link;
 
-				for (let i = 0; i < dtoLocations.length; i++) {
-					const location = event.locations[i];
-					const locationDto = dtoLocations[i];
+        const dtoLocations = eventDto.locations;
 
-					location.name = locationDto.name;
-					location.address = locationDto.address;
-					location.tags = locationDto.tags;
+        if (event.locations.length > dtoLocations.length) {
+          event.locations.splice(dtoLocations.length, event.locations.length - dtoLocations.length);
+        } else if (event.locations.length < dtoLocations.length) {
+          for (let i = event.locations.length; i < dtoLocations.length; i++) {
+            const location = new EventLocation();
+            location.event = event;
+            event.locations.push(location);
+          }
+        }
 
-					const server = serversByName.get(locationDto.server);
+        for (let i = 0; i < dtoLocations.length; i++) {
+          const location = event.locations[i];
+          const locationDto = dtoLocations[i];
 
-					if (!server) {
-						throw new BadRequestException(`World server not found: ${server}`);
-					}
+          location.name = locationDto.name;
+          location.address = locationDto.address;
+          location.tags = locationDto.tags;
 
-					location.server = server;
-				}
+          const server = serversByName.get(locationDto.server);
 
-				savedEvents.push(event);
-			}
+          if (!server) {
+            throw new BadRequestException(`World server not found: ${server}`);
+          }
 
-			await eventRepo.save(savedEvents);
-		});
-	}
+          location.server = server;
+        }
 
-	private toEventDto(event: Event): EventSummaryDto {
-		return {
-			id: event.id,
-			title: event.title,
-			startDateTime: event.startDateTime.getTime(),
-			endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
-			link: event.externalSourceLink || '',
-			source: event.source,
-			locations: event.locations.map(location => ({
-				id: location.id,
-				name: location.name,
-				address: location.address,
-				server: location.server?.name || '',
-				tags: location.tags
-			}))
-		};
-	}
+        savedEvents.push(event);
+      }
 
-	async search(query: string): Promise<EventSearchResultDto[]> {
+      await eventRepo.save(savedEvents);
+    });
+  }
+
+  private toEventDto(event: Event): EventSummaryDto {
+    return {
+      id: event.id,
+      title: event.title,
+      startDateTime: event.startDateTime.getTime(),
+      endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
+      link: event.externalSourceLink || '',
+      source: event.source,
+      locations: event.locations.map((location) => ({
+        id: location.id,
+        name: location.name,
+        address: location.address,
+        server: location.server?.name || '',
+        tags: location.tags,
+      })),
+    };
+  }
+
+  async search(query: string): Promise<EventSearchResultDto[]> {
     const results = await this.eventRepo.find({
-			where: {
-				title: Contains(query)
-			},
-			take: 10,
-			select: [ 'id', 'title', 'startDateTime' ]
-		});
+      where: {
+        title: Contains(query),
+      },
+      take: 10,
+      select: ['id', 'title', 'startDateTime'],
+    });
 
-		return results.map(event => ({
-			id: event.id,
-			title: event.title,
-			startDateTime: event.startDateTime.getTime(),
-		}));
+    return results.map((event) => ({
+      id: event.id,
+      title: event.title,
+      startDateTime: event.startDateTime.getTime(),
+    }));
+  }
+
+  async getByMonth(year: number, month: number): Promise<EventSummaryDto[]> {
+    const startOfMonth = DateTime.fromObject(
+      {
+        year,
+        month,
+        day: 1,
+      },
+      {
+        zone: SharedConstants.FFXIV_SERVER_TIMEZONE,
+      },
+    );
+
+		const endOfMonth = startOfMonth.plus({ months: 1 });
+
+    const events = await this.eventRepo.find({
+      where: [
+				{
+					startDateTime: MoreThanOrEqual(startOfMonth.toJSDate()),
+				},
+				{
+					startDateTime: LessThan(endOfMonth.toJSDate()),
+				},
+				{
+					hidden: false,
+				}
+			],
+      order: {
+        startDateTime: 'ASC',
+        createdAt: 'ASC',
+      },
+      relations: ['locations', 'locations.server'],
+    });
+
+    return events.map((event) => this.toEventDto(event));
   }
 }
