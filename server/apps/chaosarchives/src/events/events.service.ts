@@ -425,24 +425,6 @@ export class EventsService {
     });
   }
 
-  private toEventDto(event: Event): EventSummaryDto {
-    return {
-      id: event.id,
-      title: event.title,
-      startDateTime: event.startDateTime.getTime(),
-      endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
-      link: event.externalSourceLink || '',
-      source: event.source,
-      locations: event.locations.map((location) => ({
-        id: location.id,
-        name: location.name,
-        address: location.address,
-        server: location.server?.name || '',
-        tags: location.tags,
-      })),
-    };
-  }
-
   async search(query: string): Promise<EventSearchResultDto[]> {
     const results = await this.eventRepo.find({
       where: {
@@ -493,5 +475,23 @@ export class EventsService {
     });
 
     return events.map((event) => this.toEventDto(event));
+  }
+
+  private toEventDto(event: Event): EventSummaryDto {
+    return {
+      id: event.id,
+      title: event.title,
+      startDateTime: event.startDateTime.getTime(),
+      endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
+      link: event.externalSourceLink || '',
+      source: event.source,
+      locations: event.locations.map((location) => ({
+        id: location.id,
+        name: location.name,
+        address: location.address,
+        server: location.server?.name || '',
+        tags: location.tags,
+      })),
+    };
   }
 }
