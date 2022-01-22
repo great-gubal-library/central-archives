@@ -1,8 +1,13 @@
 <template>
   <q-list class="event-list" dark>
     <q-item-label header> Events </q-item-label>
-    <event-item v-for="event in $store.state.events" :key="event.title" :event="event" />
+    <q-item clickable v-ripple to="/event-calendar">
+      <q-item-section>
+        <q-item-label><q-icon class="text-h6" name="event" /> Event calendar</q-item-label>
+      </q-item-section>
+    </q-item>
     <q-separator dark />
+    <event-item v-for="event in $store.state.events" :key="event.title" :event="event" />
   </q-list>
 </template>
 

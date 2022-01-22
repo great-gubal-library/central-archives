@@ -2,6 +2,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
+import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import APITransport from './api-transport';
 
@@ -38,5 +39,9 @@ export default class EventsAPI {
 
   async searchEvents(query: string): Promise<EventSearchResultDto[]> {
     return this.transport.authGet<EventSearchResultDto[]>('search', { query });
+  }
+
+  async getEventsForMonth(year: number, month: number): Promise<EventSummaryDto[]> {
+    return this.transport.tokenGet<EventSummaryDto[]>(`month/${year}/${month}`);
   }
 }

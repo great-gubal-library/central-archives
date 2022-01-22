@@ -1,3 +1,4 @@
 {
-  "vuelidate-rules": {}
+  "vuelidate-rules": {},
+  "@quasar/qcalendar": {}
 }

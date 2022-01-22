@@ -237,6 +237,24 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  {
+    path: '/event-calendar',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EventCalendar.vue') }],
+    meta: {
+      title: 'Event Calendar'
+    },
+  },
+
+  {
+    path: '/event-calendar/:year/:month',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EventCalendar.vue') }],
+    meta: {
+      title: 'Event Calendar'
+    },
+  },
+
   // Images
 
   { 

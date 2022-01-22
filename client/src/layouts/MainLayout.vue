@@ -105,13 +105,6 @@
       :width="DRAWER_WIDTH"
     >
       <event-list />
-      <q-list dense dark>
-        <q-item clickable v-ripple tag="a" target="_blank" href="https://chocobochronicle.co.uk/events/month/">
-          <q-item-section>
-            <q-item-label>Event archive</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
     </q-drawer>
 
     <q-page-container>
