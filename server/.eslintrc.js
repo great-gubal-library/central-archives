@@ -32,5 +32,6 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'prefer-destructuring': 'off',
     'no-plusplus': 'off',
+    '@typescript-eslint/no-floating-promises': 'error',
   },
 };

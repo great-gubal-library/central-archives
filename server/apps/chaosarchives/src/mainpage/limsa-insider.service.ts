@@ -82,7 +82,6 @@ export class LimsaInsiderService {
 			year = DateTime.fromObject({ year: now.year - 1, month: monthNumber, day: dayNumber });
 		}
 
-		console.log(year);
 		return year;
 	}
 }

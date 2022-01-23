@@ -88,7 +88,7 @@ export class EventsService {
       return event;
     });
 
-    this.notifySteward(eventEntity); // no await
+    void this.notifySteward(eventEntity); // no await
 
     const result = await this.toEventDto(eventEntity, true, user) as EventCreaterResultDto;
     result.id = eventEntity.id;
@@ -117,7 +117,7 @@ export class EventsService {
       return event;
     });
 
-    this.notifySteward(eventEntity); // no await
+    void this.notifySteward(eventEntity); // no await
     return this.toEventDto(eventEntity, true, user) as Promise<EventEditDto>;
   }
 
@@ -234,7 +234,7 @@ export class EventsService {
       return event;
     });
 
-    this.notifySteward(eventEntity); // no await
+    void this.notifySteward(eventEntity); // no await
   }
 
   private async notifySteward(event: Event): Promise<void> {
