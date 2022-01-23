@@ -183,7 +183,7 @@ export default class PageEditStory extends Vue {
   }
 
   onTagsChanged(newTags: string) {
-    this.story.tags = newTags.split(/,\s+/).map((tag) => tag.trim()).filter(tag => tag !== '');
+    this.story.tags = newTags.split(/,\s*/).map((tag) => tag.trim()).filter(tag => tag !== '');
   }
 }
 </script>
