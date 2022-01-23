@@ -270,7 +270,7 @@ export class ImagesService {
           format,
         });
         
-        this.assignImageEvent(em, image, request);
+        await this.assignImageEvent(em, image, request);
         await em.getRepository(Image).save(image);
 
         return {
@@ -328,7 +328,7 @@ export class ImagesService {
       image.description = html.sanitize(request.description);
       image.credits = request.credits;
 
-      this.assignImageEvent(em, image, request);
+      await this.assignImageEvent(em, image, request);
       await imageRepo.save(image);
     });
   }
