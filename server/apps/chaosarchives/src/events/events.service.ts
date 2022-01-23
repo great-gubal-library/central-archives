@@ -17,7 +17,6 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { BadRequestException, HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Iot } from 'aws-sdk';
 import { DateTime, Duration } from 'luxon';
 import { Connection, EntityManager, In, IsNull, LessThan, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { Contains } from '../common/db';
@@ -363,7 +362,7 @@ export class EventsService {
           for (let i = dtoLocations.length; i < event.locations.length; i++) {
             em.remove(event.locations[i]);
           }
-          
+
           event.locations.splice(dtoLocations.length, event.locations.length - dtoLocations.length);
         } else if (event.locations.length < dtoLocations.length) {
           for (let i = event.locations.length; i < dtoLocations.length; i++) {
