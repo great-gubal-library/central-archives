@@ -67,13 +67,13 @@
 </template>
 
 <script lang="ts">
-import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-profile-filter.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { Race } from '@app/shared/enums/race.enum';
+import SharedConstants from '@app/shared/SharedConstants';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
-import SharedConstants from '@app/shared/SharedConstants';
 
 const $api = useApi();
 
@@ -84,8 +84,11 @@ const $api = useApi();
   async beforeRouteEnter(to, __, next) {
     const searchQuery = to.query.searchQuery as string || '';
     const race = to.query.race && Object.values(Race).includes(to.query.race as Race) ? to.query.race as Race : null;
+    const page = parseInt(to.query.page as string, 10) || 1;
+    const rowsPerPage = parseInt(to.query.rowsPerPage as string, 10) || SharedConstants.DEFAULT_ROWS_PER_PAGE;
 
     const filter: CharacterProfileFilterDto = {
+      offset: (page - 1) * rowsPerPage,
       limit: SharedConstants.DEFAULT_ROWS_PER_PAGE,
       searchQuery,
     };
@@ -95,14 +98,14 @@ const $api = useApi();
     }
 
     const profiles = await $api.characters.getCharacterProfiles(filter);
-    next((vm) => (vm as PageCharacters).setContent(profiles, searchQuery, race));
+    next((vm) => (vm as PageCharacters).setContent(profiles, searchQuery, race, { page, rowsPerPage }));
   },
 })
 export default class PageCharacters extends Vue {
   profiles: CharacterSummaryDto[] = [];
   pagination = {
     page: 1,
-    rowsPerPage: 20,
+    rowsPerPage: SharedConstants.DEFAULT_ROWS_PER_PAGE,
     rowsNumber: 0,
   };
 
@@ -143,10 +146,13 @@ export default class PageCharacters extends Vue {
     ];
   }
 
-  setContent(profiles: PagingResultDto<CharacterSummaryDto>, searchQuery: string, race: Race | null) {
+  setContent(profiles: PagingResultDto<CharacterSummaryDto>, searchQuery: string, race: Race | null,
+      pagination: { page: number; rowsPerPage: number }) {
     this.profiles = profiles.data;
     this.searchQuery = searchQuery;
     this.race = race;
+    this.pagination.page = pagination.page;
+    this.pagination.rowsPerPage = pagination.rowsPerPage;
     this.pagination.rowsNumber = profiles.total;
   }
 
@@ -156,21 +162,6 @@ export default class PageCharacters extends Vue {
 
 	refresh() {
 		void this.onPageRequest({ pagination: this.pagination });
-
-    const queryParams: { [ k: string] : string } = {};
-
-    if (this.searchQuery) {
-      queryParams.searchQuery = this.searchQuery;
-    }
-
-    if (this.race) {
-      queryParams.race = this.race;
-    }
-
-    void this.$router.replace({
-      path: '/profiles',
-      query: queryParams,
-    })
 	}
 
   async onPageRequest(props: { pagination: { page: number; rowsPerPage: number } }) {
@@ -190,6 +181,24 @@ export default class PageCharacters extends Vue {
     this.pagination.rowsNumber = profiles.total;
     this.pagination.rowsPerPage = rowsPerPage;
     this.pagination.page = page;
+
+    const queryParams: { [ k: string] : string|number } = {
+      page: this.pagination.page,
+      rowsPerPage: this.pagination.rowsPerPage
+    };
+
+    if (this.searchQuery) {
+      queryParams.searchQuery = this.searchQuery;
+    }
+
+    if (this.race) {
+      queryParams.race = this.race;
+    }
+
+    void this.$router.replace({
+      path: '/profiles',
+      query: queryParams,
+    })
   }
 }
 </script>
