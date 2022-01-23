@@ -8,7 +8,6 @@
       :row-key="name"
       v-model:pagination="pagination"
 			wrap-cells
-      @row-click="onRowClick"
       @request="onPageRequest"
     >
       <template v-slot:top>
@@ -39,17 +38,28 @@
       </template>
       <template v-slot:body-cell-avatar="props">
         <q-td :props="props">
-          <q-avatar round>
-            <img :src="props.row.avatar" />
-          </q-avatar>
+          <router-link :to="getLink(props.row)">
+            <q-avatar round>
+              <img :src="props.row.avatar" />
+            </q-avatar>
+          </router-link>
         </q-td>
       </template>
       <template v-slot:body-cell-name="props">
         <q-td :props="props">
-          <span class="page-characters__column-name">{{props.row.name}}</span>
-					<template v-if="props.row.occupation">
-						<br /><span class="page-characters__column-occupation">{{props.row.occupation}}</span>
-					</template>
+          <router-link :to="getLink(props.row)">
+            <span class="page-characters__column-name">{{props.row.name}}</span>
+            <template v-if="props.row.occupation">
+              <br /><span class="page-characters__column-occupation">{{props.row.occupation}}</span>
+            </template>
+          </router-link>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-race="props">
+        <q-td :props="props">
+          <router-link :to="getLink(props.row)">
+            <span class="page-characters__column-race">{{$display.races[props.row.race]}}</span>
+          </router-link>
         </q-td>
       </template>
     </q-table>
@@ -121,7 +131,6 @@ export default class PageCharacters extends Vue {
         format: (val: Race) => this.$display.races[val],
         label: 'Race',
         align: 'left',
-        classes: 'page-characters__column-race',
         sortable: false,
       },
     ];
@@ -141,8 +150,8 @@ export default class PageCharacters extends Vue {
     this.pagination.rowsNumber = profiles.total;
   }
 
-  onRowClick(e: Event, profile: CharacterSummaryDto) {
-    void this.$router.push(`/${profile.server}/${profile.name.replace(/ /g, '_')}`);
+  getLink(profile: CharacterSummaryDto) {
+    return `/${profile.server}/${profile.name.replace(/ /g, '_')}`;
   }
 
 	refresh() {
@@ -218,6 +227,22 @@ export default class PageCharacters extends Vue {
 
 .page-characters__table th {
   font-family: $form-header-font;
+}
+
+.page-characters__table td {
+  padding: 0;
+}
+
+.page-characters__table td > a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  padding: 7px 16px;
+}
+
+.page-characters__table td > a:link, .page-characters__table td > a:visited, .page-characters__table td > a:hover {
+  color: black;
 }
 
 .page-characters__column-name {
