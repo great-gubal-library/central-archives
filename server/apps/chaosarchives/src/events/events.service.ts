@@ -2,9 +2,9 @@ import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, Event, EventAnnouncement, EventLocation, Image, Server } from '@app/entity';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
-import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { BaseEventDto } from '@app/shared/dto/events/base-event.dto';
 import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
+import { EventCreaterResultDto } from '@app/shared/dto/events/event-create-result.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
@@ -59,65 +59,20 @@ export class EventsService {
       throw new NotFoundException('Event not found');
     }
 
-    const location = event.locations.length > 0 ? event.locations[0] : null;
-    const banner = await event.banner;
-    let announcements: EventAnnouncement[] = [];
-    let images: ImageSummaryDto[] = [];
-
-    if (edit) {
-      announcements = await event.notifications;
-    } else {
-      images = await this.imagesService.getImages({ eventId: id });
-    }
-
-    const properties = {
-      title: event.title,
-      mine: !!event.owner && event.owner.user.id === user?.id,
-      details: event.details,
-      oocDetails: event.oocDetails,
-      startDateTime: event.startDateTime.getTime(),
-      endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
-      link: event.externalSourceLink || event.link,
-      contact: event.contact,
-      banner: !banner
-        ? null
-        : new BannerDto({
-            id: banner.id,
-            url: this.imagesService.getUrl(banner),
-            width: banner.width,
-            height: banner.height,
-          }),
-      locationName: location ? location.name : '',
-      locationAddress: location ? location.address : '',
-      locationServer: location ? location.server.name : '',
-      locationTags: location ? location.tags : '',
-    };
-
-    if (!edit) {
-      return new EventDto({ ...properties, images });
-    }
-
-    return new EventEditDto({
-      ...properties,
-      announcements: announcements.map(
-        (announcement) =>
-          new EventAnnouncementDto({
-            id: announcement.id,
-            minutesBefore: announcement.minutesBefore,
-            content: announcement.content,
-          }),
-      ),
-    });
+    return this.toEventDto(event, edit, user);
   }
 
-  async createEvent(eventDto: EventEditDto, characterId: number, user: UserInfo): Promise<IdWrapper> {
+  async createEvent(eventDto: EventEditDto, characterId: number, user: UserInfo): Promise<EventCreaterResultDto> {
     const eventEntity = await this.connection.transaction(async (em) => {
       const character = await em.getRepository(Character).findOne({
-        id: characterId,
-        user: {
-          id: user.id,
+        where: {
+          id: characterId,
+          user: {
+            id: user.id,
+          },
+          verifiedAt: Not(IsNull()),
         },
-        verifiedAt: Not(IsNull()),
+        relations: [ 'user' ],
       });
 
       if (!character) {
@@ -134,10 +89,13 @@ export class EventsService {
     });
 
     this.notifySteward(eventEntity); // no await
-    return { id: eventEntity.id };
+
+    const result = await this.toEventDto(eventEntity, true, user) as EventCreaterResultDto;
+    result.id = eventEntity.id;
+    return result;
   }
 
-  async updateEvent(eventId: number, eventDto: EventEditDto, user: UserInfo): Promise<void> {
+  async updateEvent(eventId: number, eventDto: EventEditDto, user: UserInfo): Promise<EventEditDto> {
     const eventEntity = await this.connection.transaction(async (em) => {
       const event = await em.getRepository(Event).findOne({
         where: {
@@ -148,7 +106,7 @@ export class EventsService {
             },
           },
         },
-        relations: ['owner', 'locations', 'locations.server'],
+        relations: ['owner', 'owner.user', 'locations', 'locations.server', 'banner', 'banner.owner'],
       });
 
       if (!event) {
@@ -160,6 +118,7 @@ export class EventsService {
     });
 
     this.notifySteward(eventEntity); // no await
+    return this.toEventDto(eventEntity, true, user) as Promise<EventEditDto>;
   }
 
   private async updateEventInternal(em: EntityManager, eventEntity: Event, eventDto: EventEditDto): Promise<void> {
@@ -178,6 +137,7 @@ export class EventsService {
           id: eventDto.banner.id,
           owner: event.owner,
         },
+        relations: [ 'owner' ]
       });
 
       if (!banner) {
@@ -221,15 +181,22 @@ export class EventsService {
 
     // Update announcements; O(n^2) filters used for code clarity, since number of notifications is small
     const dtoAnnouncementIds = eventDto.announcements.map((notification) => notification.id).filter((id) => !!id);
-    const announcements = (await event.notifications).filter((notification) =>
-      dtoAnnouncementIds.includes(notification.id),
-    );
+    const announcements: EventAnnouncement[] = [];
+
+    for (const announcement of await event.notifications) {
+      if (dtoAnnouncementIds.includes(announcement.id)) {
+        announcements.push(announcement);
+      } else {
+        em.remove(announcement);
+      }
+    }
 
     for (const dtoAnnouncement of eventDto.announcements) {
       let announcement = announcements.find((n) => n.id === dtoAnnouncement.id);
 
       if (!announcement) {
         announcement = new EventAnnouncement();
+        announcement.event = event;
         announcements.push(announcement);
       }
 
@@ -331,7 +298,7 @@ export class EventsService {
       relations: ['locations', 'locations.server'],
     });
 
-    return events.map((event) => this.toEventDto(event));
+    return events.map((event) => this.toEventSummaryDto(event));
   }
 
   private async saveEvents(events: ExternalEvent[]): Promise<void> {
@@ -474,10 +441,10 @@ export class EventsService {
       relations: ['locations', 'locations.server'],
     });
 
-    return events.map((event) => this.toEventDto(event));
+    return events.map((event) => this.toEventSummaryDto(event));
   }
 
-  private toEventDto(event: Event): EventSummaryDto {
+  private toEventSummaryDto(event: Event): EventSummaryDto {
     return {
       id: event.id,
       title: event.title,
@@ -493,5 +460,57 @@ export class EventsService {
         tags: location.tags,
       })),
     };
+  }
+
+  private async toEventDto(event: Event, edit: boolean, user?: UserInfo): Promise<BaseEventDto> {
+    const location = event.locations.length > 0 ? event.locations[0] : null;
+    const banner = await event.banner;
+    let announcements: EventAnnouncement[] = [];
+    let images: ImageSummaryDto[] = [];
+
+    if (edit) {
+      announcements = await event.notifications;
+    } else {
+      images = await this.imagesService.getImages({ eventId: event.id });
+    }
+
+    const properties = {
+      title: event.title,
+      mine: !!event.owner && event.owner.user.id === user?.id,
+      details: event.details,
+      oocDetails: event.oocDetails,
+      startDateTime: event.startDateTime.getTime(),
+      endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
+      link: event.externalSourceLink || event.link,
+      contact: event.contact,
+      banner: !banner
+        ? null
+        : new BannerDto({
+            id: banner.id,
+            url: this.imagesService.getUrl(banner),
+            width: banner.width,
+            height: banner.height,
+          }),
+      locationName: location ? location.name : '',
+      locationAddress: location ? location.address : '',
+      locationServer: location ? location.server.name : '',
+      locationTags: location ? location.tags : '',
+    };
+
+    if (!edit) {
+      return new EventDto({ ...properties, images });
+    }
+
+    return new EventEditDto({
+      ...properties,
+      announcements: announcements.map(
+        (announcement) =>
+          new EventAnnouncementDto({
+            id: announcement.id,
+            minutesBefore: announcement.minutesBefore,
+            content: announcement.content,
+          }),
+      ),
+    });
   }
 }

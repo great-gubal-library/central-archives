@@ -1,4 +1,4 @@
-import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { EventCreaterResultDto } from '@app/shared/dto/events/event-create-result.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
@@ -25,12 +25,12 @@ export default class EventsAPI {
     return this.transport.authGet<EventEditDto>(`${id}`, { edit: true });
   }
 
-  async createEvent(event: EventEditDto, params: { characterId: number }): Promise<IdWrapper> {
-    return this.transport.authPost<IdWrapper>('', event, params);
+  async createEvent(event: EventEditDto, params: { characterId: number }): Promise<EventCreaterResultDto> {
+    return this.transport.authPost<EventCreaterResultDto>('', event, params);
   }
 
-  async editEvent(id: number, event: EventEditDto): Promise<void> {
-    return this.transport.authPut<void>(`${id}`, event);
+  async updateEvent(id: number, event: EventEditDto): Promise<EventEditDto> {
+    return this.transport.authPut<EventEditDto>(`${id}`, event);
   }
 
   async deleteEvent(id: number): Promise<void> {

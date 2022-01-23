@@ -4,6 +4,7 @@ import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { BaseEventDto } from '@app/shared/dto/events/base-event.dto';
+import { EventCreaterResultDto } from '@app/shared/dto/events/event-create-result.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
@@ -72,7 +73,7 @@ export class EventsController {
     @Body() event: EventEditDto,
     @Query('characterId', ParseIntPipe) characterId: number,
     @CurrentUser() user: UserInfo,
-  ): Promise<IdWrapper> {
+  ): Promise<EventCreaterResultDto> {
     return this.eventsService.createEvent(event, characterId, user);
   }
 
@@ -82,7 +83,7 @@ export class EventsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() event: EventEditDto,
     @CurrentUser() user: UserInfo,
-  ): Promise<void> {
+  ): Promise<EventEditDto> {
     return this.eventsService.updateEvent(id, event, user);
   }
 

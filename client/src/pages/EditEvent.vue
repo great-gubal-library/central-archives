@@ -371,10 +371,12 @@ export default class PageEditEvent extends Vue {
     try {
       if (!this.eventId) {
         const characterId = this.$store.getters.characterId!;
-        const { id } = await this.$api.events.createEvent(this.event, { characterId });
-        this.eventId = id;
+        const result = await this.$api.events.createEvent(this.event, { characterId });
+        this.event = new EventEditDto(result);
+        this.eventId = result.id;
+        void this.$router.replace(`/edit-event/${result.id}`);
       } else {
-        await this.$api.events.editEvent(this.eventId, this.event);
+        this.event = new EventEditDto(await this.$api.events.updateEvent(this.eventId, this.event));
       }
 
       this.eventBackup = new EventEditDto(this.event);
