@@ -1,9 +1,11 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from "@nestjs/common";
 import { QueryFailedError } from "typeorm";
 import { isQueryFailedError } from "./common/db";
 
 @Catch(QueryFailedError)
 export class GlobalExceptionsFilter implements ExceptionFilter {
+	private readonly log = new Logger(GlobalExceptionsFilter.name);
+
   catch(e: QueryFailedError, host: ArgumentsHost): void {
     const response = host.switchToHttp().getResponse();
     
@@ -13,6 +15,8 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
 				message: 'Sorry, emoji and other non-text characters are disabled. Please remove them and try again.',
 			});
 		} else {
+			this.log.error(e.message, e.stack);
+			
 			response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
 				statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
 				message: 'Internal database error. Please contact the Chaos Archives administrator for help.',
