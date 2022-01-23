@@ -5,6 +5,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import escape from 'escape-html';
 import { NodeHtmlMarkdown } from 'node-html-markdown';
+import schedule, { Job } from 'node-schedule';
 import sanitizeHtml from 'sanitize-html';
 import { Repository } from 'typeorm';
 import { BotGateway } from './bot.gateway';
@@ -13,7 +14,7 @@ import { BotGateway } from './bot.gateway';
 export class AnnouncementService {
   private readonly logger = new Logger(AnnouncementService.name);
 
-  private readonly timers = new Map<number, NodeJS.Timeout[]>();
+  private readonly timers = new Map<number, Job[]>();
 
   constructor(
     private readonly botGateway: BotGateway,
@@ -62,7 +63,7 @@ export class AnnouncementService {
 
     if (eventTimers) {
       // Prevent existing timers for this event from firing, as we're about to reload its data
-      eventTimers.forEach((timer) => clearTimeout(timer));
+      eventTimers.forEach((timer) => timer.cancel());
       this.timers.delete(eventId);
     }
 
@@ -90,10 +91,10 @@ export class AnnouncementService {
 			const eventUrl = `${serverConfiguration.frontendRoot}/event/${announcementEventId}`;
 			const content = `${announcement.content}\n\n${eventUrl}`;
 			
-			const timerId = setTimeout(async () => {
+			const timerId = schedule.scheduleJob(announcement.postAt, async () => {
 				this.unregisterTimer(announcementEventId, timerId);
 				await this.postAnnouncement(content);
-			}, remainingMS);
+			});
 
 			this.registerTimer(announcementEventId, timerId);
 			this.logger.log(`Event ${announcementEventId} firing in ${remainingMS} msec`);
@@ -112,7 +113,7 @@ export class AnnouncementService {
 		}
 	}
 
-	private registerTimer(eventId: number, timerId: NodeJS.Timeout) {
+	private registerTimer(eventId: number, timerId: Job) {
 		let timers = this.timers.get(eventId);
 
 		if (!timers) {
@@ -123,7 +124,7 @@ export class AnnouncementService {
 		timers.push(timerId);
 	}
 
-	private unregisterTimer(eventId: number, timerId: NodeJS.Timeout) {
+	private unregisterTimer(eventId: number, timerId: Job) {
 		const timers = this.timers.get(eventId);
 
 		if (!timers) {
