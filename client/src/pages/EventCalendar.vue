@@ -136,8 +136,6 @@ export default class PageEventCalendar extends Vue {
 				endTime: endDate && endDate.toMillis() !== startDate.toMillis() ? endDate.toFormat('HH:mm') : null,
 			})
 		}
-
-		console.log('eventMap', this.eventMap);
 	}
 
 	private getThisMonth(): DateTime {
