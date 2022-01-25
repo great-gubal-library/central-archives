@@ -144,6 +144,31 @@ ol li {
 	background: $striped-list-bg-even;
 }
 
+.paged-link-table thead tr {
+  background: #f0f0f0;
+}
+
+.paged-link-table th {
+  font-family: $form-header-font;
+}
+
+.paged-link-table td {
+  padding: 0;
+}
+
+.paged-link-table td > a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  padding: 7px 16px;
+}
+
+.paged-link-table td > a:link, .paged-link-table td > a:visited, .paged-link-table td > a:hover {
+  color: black;
+}
+
+
 // Mobile usability improvements
 @media screen and (max-width: $breakpoint-xs) {
 	h2 {

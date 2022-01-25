@@ -2,7 +2,7 @@
   <q-page class="page-characters">
     <h2>People of the Realm</h2>
     <q-table
-      class="page-characters__table striped-list"
+      class="page-characters__table striped-list paged-link-table"
       :columns="columns"
       :rows="profiles"
       :row-key="name"
@@ -228,30 +228,6 @@ export default class PageCharacters extends Vue {
 
 .page-characters__race-select {
   width: 110px;
-}
-
-.page-characters__table thead {
-  background: #f0f0f0;
-}
-
-.page-characters__table th {
-  font-family: $form-header-font;
-}
-
-.page-characters__table td {
-  padding: 0;
-}
-
-.page-characters__table td > a {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100%;
-  padding: 7px 16px;
-}
-
-.page-characters__table td > a:link, .page-characters__table td > a:visited, .page-characters__table td > a:hover {
-  color: black;
 }
 
 .page-characters__column-name {

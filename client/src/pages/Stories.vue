@@ -2,13 +2,12 @@
   <q-page class="page-stories">
     <h2>Stories</h2>
     <q-table
-      class="page-stories__table striped-list"
+      class="page-stories__table striped-list paged-link-table"
       :columns="columns"
       :rows="stories"
       :row-key="name"
       v-model:pagination="pagination"
 			wrap-cells
-      @row-click="onRowClick"
       @request="onPageRequest"
     >
       <template v-slot:top>
@@ -50,13 +49,19 @@
 					</label>
 				</section>
       </template>
-      <template v-slot:header-cell-avatar="props">
-        <q-th :props="props" auto-width />
-      </template>
       <template v-slot:body-cell-title="props">
         <q-td :props="props">
-          <span class="page-stories__column-title">{{props.row.title}}</span>
-					<br /><span class="page-stories__column-author">{{props.row.author}}</span>
+          <router-link :to="getLink(props.row)">
+            <span class="page-stories__column-title">{{props.row.title}}</span>
+            <br /><span class="page-stories__column-author">{{props.row.author}}</span>
+          </router-link>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-createdAt="props">
+        <q-td :props="props">
+          <router-link :to="getLink(props.row)">
+            <span class="page-stories__column-createdAt">{{$display.relativeTime(props.row.createdAt)}}</span>
+          </router-link>
         </q-td>
       </template>
     </q-table>
@@ -163,8 +168,8 @@ export default class PageStories extends Vue {
     this.pagination.rowsNumber = stories.total;
   }
 
-  onRowClick(e: Event, story: StorySummaryDto) {
-    void this.$router.push(`/story/${story.id}`);
+  getLink(story: StorySummaryDto) {
+    return `/story/${story.id}`;
   }
 
 	onTagFilter(value: string, update: () => void) {
@@ -246,14 +251,6 @@ export default class PageStories extends Vue {
 
 .page-stories__tag-select {
 	flex-grow: 1;
-}
-
-.page-stories__table thead {
-  background: #f0f0f0;
-}
-
-.page-stories__table th {
-  font-family: $form-header-font;
 }
 
 .page-stories__column-title {
