@@ -54,7 +54,7 @@ export default class EventList extends Vue {
 </script>
 
 <style lang="scss">
-.event-list > .q-item:nth-child(even) {
+.event-list > .q-item:nth-child(even), .event-list > .q-item:hover {
   background: rgba(255, 255, 255, 0.11);
 }
 </style>
