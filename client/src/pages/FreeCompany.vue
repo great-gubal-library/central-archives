@@ -24,6 +24,8 @@ import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 import { notifyError } from 'src/common/notify';
 import { useRouter } from 'src/router';
+import { MetaOptions } from 'quasar/dist/types/meta';
+import { createMetaMixin } from 'quasar';
 
 const $api = useApi();
 const $router = useRouter();
@@ -85,7 +87,29 @@ async function load(params: RouteParams): Promise<Content> {
 	async beforeRouteUpdate(to) {
 		const content = await load(to.params);
 		(this as PageFreeCompany).setContent(content);
-	}
+	},
+	mixins: [
+		createMetaMixin(function(this: PageFreeCompany) {
+			const result: MetaOptions = {
+				meta: {}
+			};
+
+			if (this.fc.banner) {
+				Object.assign(result.meta, {
+					ogImage: {
+						property: 'og:image',
+						content: this.fc.banner.url,
+					},
+					twitterCard: {
+						property: 'twitter:card',
+						content: 'summary_large_image',
+					},
+				});
+			}
+
+			return result;
+		}),
+	],
 })
 export default class PageFreeCompany extends Vue {
 	name = '';

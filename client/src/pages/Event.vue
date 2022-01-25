@@ -15,6 +15,8 @@
 <script lang="ts">
 import { EventDto } from '@app/shared/dto/events/event.dto';
 import errors from '@app/shared/errors';
+import { createMetaMixin } from 'quasar';
+import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import EventView from 'src/components/event/EventView.vue';
@@ -36,7 +38,6 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 
 	try {
 		const event = await $api.events.getEvent(id);
-		document.title = `${event.title} — Chaos Archives`;
 		return { event, eventId: id };
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
@@ -63,7 +64,30 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 	async beforeRouteUpdate(to) {
 		const { event, eventId } = await load(to.params);
 		(this as PageEvent).setContent(event, eventId);
-	}
+	},
+	mixins: [
+		createMetaMixin(function(this: PageEvent) {
+			const result: MetaOptions = {
+				title: `${this.event.title} — Chaos Archives`,
+				meta: {}
+			};
+
+			if (this.event.banner) {
+				Object.assign(result.meta, {
+					ogImage: {
+						property: 'og:image',
+						content: this.event.banner.url,
+					},
+					twitterCard: {
+						property: 'twitter:card',
+						content: 'summary_large_image',
+					},
+				});
+			}
+
+			return result;
+		}),
+	],
 })
 export default class PageEvent extends Vue {
 	eventId = -1;

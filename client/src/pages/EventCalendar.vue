@@ -51,6 +51,7 @@ import { useApi } from 'src/boot/axios';
 import { useRouter } from 'src/router';
 import { RouteParams } from 'vue-router';
 import { notifyError } from 'src/common/notify';
+import { createMetaMixin } from 'quasar';
 
 const $api = useApi();
 const $router = useRouter();
@@ -74,8 +75,6 @@ async function load(params: RouteParams): Promise<{date: DateTime, events: Event
 
 	try {
 		const events = await $api.events.getEventsForMonth(date.year, date.month);
-		const yearMonth = date.toFormat('LLLL yyyy', { locale: 'en' });
-		document.title = `${yearMonth} — Chaos Archives`;
 		return { date, events };
 	} catch (e) {
 		notifyError(e);
@@ -105,7 +104,14 @@ interface EventItem {
 	async beforeRouteUpdate(to) {
 		const { date, events } = await load(to.params);
 		(this as PageEventCalendar).setContent(date, events);
-	}
+	},
+	mixins: [
+		createMetaMixin(function(this: PageEventCalendar) {
+			return {
+				title: `${this.yearMonth} events — Chaos Archives`
+			}
+		}),
+	],
 })
 export default class PageEventCalendar extends Vue {
 	Role = Role;

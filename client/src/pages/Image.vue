@@ -76,14 +76,14 @@ async function load(params: RouteParams): Promise<ImageDto> {
 		(this as PageImage).setContent(image);
 	},
 	mixins: [
-		createMetaMixin(function() {
+		createMetaMixin(function(this: PageImage) {
 			return {
 				meta: {
-					'ogImage': {
+					ogImage: {
 						property: 'og:image',
-						content: (this as PageImage).image.url,
+						content: this.image.url,
 					},
-					'twitterCard': {
+					twitterCard: {
 						property: 'twitter:card',
 						content: 'summary_large_image',
 					},

@@ -23,6 +23,8 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import errors from '@app/shared/errors';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
 import StoryList from 'components/stories/StoryList.vue';
+import { createMetaMixin } from 'quasar';
+import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import { useRouter } from 'src/router';
@@ -91,7 +93,29 @@ async function load(params: RouteParams): Promise<Content> {
 	async beforeRouteUpdate(to) {
 		const content = await load(to.params);
 		(this as PageCharacter).setContent(content);
-	}
+	},
+	mixins: [
+		createMetaMixin(function(this: PageCharacter) {
+			const result: MetaOptions = {
+				meta: {}
+			};
+
+			if (this.character.banner) {
+				Object.assign(result.meta, {
+					ogImage: {
+						property: 'og:image',
+						content: this.character.banner.url,
+					},
+					twitterCard: {
+						property: 'twitter:card',
+						content: 'summary_large_image',
+					},
+				});
+			}
+
+			return result;
+		}),
+	],
 })
 export default class PageCharacter extends Vue {
 	name = '';
