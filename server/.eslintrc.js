@@ -33,5 +33,6 @@ module.exports = {
     'prefer-destructuring': 'off',
     'no-plusplus': 'off',
     '@typescript-eslint/no-floating-promises': 'error',
+    'no-void': 'off',
   },
 };
