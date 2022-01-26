@@ -125,7 +125,7 @@ export class StoriesService {
       });
 
       if (storyDto.tags.length > 0) {
-        em.getRepository(StoryTag).delete({
+        void em.getRepository(StoryTag).delete({
           story: {
             id: storyDto.id,
           },
@@ -185,6 +185,7 @@ export class StoriesService {
       .innerJoinAndSelect('story.owner', 'character')
       .orderBy('story.createdAt', 'DESC')
       .select(['story.id', 'character.name', 'story.title', 'story.createdAt'])
+      .offset(filter.offset)
       .limit(filter.limit);
 
       if (filter.searchQuery) {
