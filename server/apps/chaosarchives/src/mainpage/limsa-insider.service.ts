@@ -46,17 +46,25 @@ export class LimsaInsiderService {
 	}
 
 	private parseIssue(issue: HTMLElement, index: number): NewsDto {
-		let selector = 'hr + h2';
-		let titleElement = issue.querySelector(selector);
-
+		let titleSelector = 'hr + h2';
+		let titleElement = issue.querySelector(titleSelector);
 		if (!titleElement) {
-			selector = 'h2';
-			titleElement = issue.querySelector(selector);
+				titleSelector = 'h2';
+				titleElement = issue.querySelector(titleSelector);
 		}
 
 		const title = titleElement.textContent;
-		const content = issue.querySelector(`${selector} + p`).textContent;
-		const author = issue.querySelector(`${selector} + p + div.container`).querySelector('u').textContent.replace(/^By /, '');
+
+		let subtitleSelector = `${titleSelector} + p`;
+		let subtitleElement = issue.querySelector(subtitleSelector);
+
+		if (!subtitleElement) {
+			subtitleSelector = `${titleSelector} + h3`;
+			subtitleElement = issue.querySelector(subtitleSelector);
+		}
+
+		const content = issue.querySelector(subtitleSelector).textContent;
+		const author = issue.querySelector(`${subtitleSelector} + div.container`).querySelector('u').textContent.replace(/^By /, '');
 		const anchor = issue.id.replace(/-section$/, '');
 		const link = index === 0 ? this.CURRENT_NEWS_SITE : `${this.ARCHIVE_NEWS_SITE}#${anchor}}`;
 		const image = this.getImageUrl(issue.querySelector('img'),
