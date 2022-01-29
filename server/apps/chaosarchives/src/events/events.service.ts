@@ -130,6 +130,7 @@ export class EventsService {
     event.oocDetails = html.sanitize(eventDto.oocDetails);
     event.link = eventDto.link; // TODO: Validate
     event.contact = eventDto.contact;
+    event.recurring = eventDto.recurring;
 
     if (eventDto.banner && eventDto.banner.id) {
       const banner = await em.getRepository(Image).findOne({
