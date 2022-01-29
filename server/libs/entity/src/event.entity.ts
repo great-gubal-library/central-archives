@@ -80,7 +80,7 @@ export class Event extends BasicEntity {
   @ManyToOne(() => Image, {
     lazy: true,
   })
-  banner: Promise<Image>;
+  banner: Promise<Image|null>;
 
   @OneToMany(() => EventLocation, 'event', {
     cascade: true,

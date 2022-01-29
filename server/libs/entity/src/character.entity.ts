@@ -165,7 +165,7 @@ export class Character extends BasicEntity {
   @ManyToOne(() => Image, {
     lazy: true,
   })
-  banner: Promise<Image>;
+  banner: Promise<Image|null>;
 
   @ManyToOne(() => FreeCompany, {
     lazy: true,
