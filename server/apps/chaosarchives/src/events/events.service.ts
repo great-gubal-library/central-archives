@@ -182,13 +182,18 @@ export class EventsService {
     // Update announcements; O(n^2) filters used for code clarity, since number of notifications is small
     const dtoAnnouncementIds = eventDto.announcements.map((notification) => notification.id).filter((id) => !!id);
     const announcements: EventAnnouncement[] = [];
+    const announcementsToRemove: EventAnnouncement[] = [];
 
     for (const announcement of await event.announcements) {
       if (dtoAnnouncementIds.includes(announcement.id)) {
         announcements.push(announcement);
       } else {
-        em.remove(announcement);
+        announcementsToRemove.push(announcement);
       }
+    }
+
+    if (announcementsToRemove.length > 0) {
+      await Promise.all(announcementsToRemove.map(announcement => em.remove(announcement)));
     }
 
     for (const dtoAnnouncement of eventDto.announcements) {
@@ -342,6 +347,8 @@ export class EventsService {
         }
       }
 
+      const locationsToRemove: EventLocation[] = [];
+
       for (const eventDto of events) {
         const event =
           existingEventsByLink.get(eventDto.link) ||
@@ -360,7 +367,7 @@ export class EventsService {
 
         if (event.locations.length > dtoLocations.length) {
           for (let i = dtoLocations.length; i < event.locations.length; i++) {
-            em.remove(event.locations[i]);
+            locationsToRemove.push(event.locations[i]);
           }
 
           event.locations.splice(dtoLocations.length, event.locations.length - dtoLocations.length);
@@ -390,6 +397,10 @@ export class EventsService {
         }
 
         savedEvents.push(event);
+      }
+
+      if (locationsToRemove.length > 0) {
+        await Promise.all(locationsToRemove.map(location => em.remove(location)));
       }
 
       await eventRepo.save(savedEvents);
