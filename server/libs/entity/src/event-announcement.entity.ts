@@ -18,6 +18,7 @@ export class EventAnnouncement extends BasicEntity {
 	minutesBefore: number;
 
 	@Column({
+		type: 'text',
     nullable: false,
   })
 	content: string;
