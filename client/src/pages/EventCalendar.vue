@@ -24,8 +24,8 @@
 					:key="event.id"
 				>
 					<div
-						class="page-event-calendar__event text-caption bg-cyan-8 text-white rounded-border"
-						:class=" { 'page-event-calendar__event_internal' : !event.link }"
+						class="page-event-calendar__event text-caption rounded-border"
+						:class=" { 'page-event-calendar__event_internal' : !event.link, 'page-event-calendar__event_recurring': event.recurring }"
 					>
 						<router-link v-if="!event.link" :to="`/event/${event.id}`">
 							{{ event.startTime }}<template v-if="event.endTime"> – {{ event.endTime }}</template><br/>{{ event.title }}
@@ -90,6 +90,7 @@ interface EventItem {
 	startTime: string;
 	endTime: string|null;
 	link: string;
+	recurring: boolean;
 }
 
 @Options({
@@ -138,6 +139,7 @@ export default class PageEventCalendar extends Vue {
 				id: event.id,
 				title: event.title,
 				link: event.link,
+				recurring: event.recurring,
 				startTime: startDate.toFormat('HH:mm'),
 				endTime: endDate && endDate.toMillis() !== startDate.toMillis() ? endDate.toFormat('HH:mm') : null,
 			})
@@ -200,6 +202,8 @@ export default class PageEventCalendar extends Vue {
 
 .page-event-calendar__event {
 	margin-bottom: 4px;
+	background: $cyan-8;
+	color: white;
 }
 
 .page-event-calendar__event_internal {
@@ -213,5 +217,18 @@ export default class PageEventCalendar extends Vue {
 
 .page-event-calendar__event a:hover {
 	color: $yellow-3;
+}
+
+.page-event-calendar__event_recurring {
+	background: #e0e0e5;
+}
+
+.page-event-calendar__event_recurring a, .page-event-calendar__event_recurring a:visited {
+	display: block;
+	color: #222;
+}
+
+.page-event-calendar__event_recurring a:hover {
+	color: $link-hover-color;
 }
 </style>

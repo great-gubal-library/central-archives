@@ -11,6 +11,10 @@ export abstract class BaseEventDto {
 	@IsOptional()
 	mine: boolean;
 
+	@IsBoolean()
+	@IsOptional()
+	recurring: boolean;
+
 	@IsString()
 	details: string;
 

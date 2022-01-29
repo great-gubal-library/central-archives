@@ -8,5 +8,6 @@ export interface EventSummaryDto {
   endDateTime: number | null;
   link: string;
 	source: EventSource;
+  recurring: boolean;
   locations: EventLocationDto[];
 }

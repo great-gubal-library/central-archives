@@ -32,6 +32,7 @@ export class ChocoboChronicleService {
 			id: -1,
 			title: this.processTitle(event.title),
 			details: event.description,
+			recurring: event.title.includes('Tavern Roulette') || event.title.includes('EGF'),
 			startDateTime: this.parseDate(event.utc_start_date),
 			endDateTime: this.parseDate(event.utc_end_date),
 			image: event.image.url,

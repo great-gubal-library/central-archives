@@ -108,6 +108,7 @@ export class CrescentMoonPublishingService {
 					id: -1,
 					title: name,
 					details: '',
+					recurring: name.includes('EGF'),
 					locations,
 					link: href,
 					startDateTime: date!.toMillis(),

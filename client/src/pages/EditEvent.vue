@@ -34,6 +34,10 @@
               format24h
               clearable
             />
+            <q-checkbox
+              v-model="event.recurring"
+              label="This is a recurring event"
+            />
             <h6>Location</h6>
             <q-input
               v-model="event.locationName"
@@ -274,6 +278,7 @@ export default class PageEditEvent extends Vue {
         oocDetails: '',
         link: '',
         contact: '',
+        recurring: false,
         banner: null,
         locationName: '',
         locationAddress: '',

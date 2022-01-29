@@ -77,6 +77,12 @@ export class Event extends BasicEntity {
   })
   hidden: boolean;
 
+  @Column({
+    nullable: false,
+    default: false,
+  })
+  recurring: boolean;
+
   @ManyToOne(() => Image, {
     lazy: true,
   })

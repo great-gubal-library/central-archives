@@ -358,6 +358,7 @@ export class EventsService {
 
         event.title = eventDto.title;
         event.details = html.sanitize(eventDto.details);
+        event.recurring = eventDto.recurring;
         event.startDateTime = new Date(eventDto.startDateTime);
         event.endDateTime = eventDto.endDateTime ? new Date(eventDto.endDateTime) : null;
         event.source = eventDto.source;
@@ -467,6 +468,7 @@ export class EventsService {
       endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
       link: event.externalSourceLink || '',
       source: event.source,
+      recurring: event.recurring,
       locations: event.locations.map((location) => ({
         id: location.id,
         name: location.name,
@@ -493,6 +495,7 @@ export class EventsService {
       title: event.title,
       mine: !!event.owner && event.owner.user.id === user?.id,
       details: event.details,
+      recurring: event.recurring,
       oocDetails: event.oocDetails,
       startDateTime: event.startDateTime.getTime(),
       endDateTime: event.endDateTime ? event.endDateTime.getTime() : null,
