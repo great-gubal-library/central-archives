@@ -5,10 +5,6 @@ import { JSDOM } from 'jsdom';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 
-export enum NewsCacheType {
-	LONG, SHORT
-}
-
 @Injectable()
 export class DailyMoogleService {
 	private readonly log = new Logger(DailyMoogleService.name);
