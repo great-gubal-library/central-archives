@@ -3,7 +3,7 @@
     <p v-if="!preview && story.mine">
       <router-link :to="`/edit-story/${story.id}`">Edit story</router-link>
     </p>
-    <h2 class="story-view__title">{{ story.title }}</h2>
+    <h2 class="story-view__title regular-header-font">{{ story.title }}</h2>
     <section class="text-caption story-view__subtitle row">
       <div class="story-view__posted-by">
       Posted by <router-link :to="authorLink">{{ story.author }}</router-link> on {{ date }}

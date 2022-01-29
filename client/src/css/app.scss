@@ -58,6 +58,10 @@ h2 {
 	margin-bottom: 24px;
 }
 
+h2.regular-header-font {
+	font-family: $header-font;
+}
+
 h3 {
 	font-size: 2rem;
 	margin-top: 0.8em;

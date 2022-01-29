@@ -4,7 +4,7 @@
 			<router-link :to="`/edit-image/${image.id}`">Edit image</router-link>
 			<q-btn flat color="negative" label="Delete image" @click="onDeleteClick" />
 		</section>
-		<h2>{{image.title}}</h2>
+		<h2 class="regular-header-font">{{image.title}}</h2>
 		<template v-if="image.id">
 			<section class="text-caption page-image__subtitle row">
 				<div class="page-image__posted-by">
