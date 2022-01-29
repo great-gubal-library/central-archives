@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 import { ChocoboChronicleEventsDto } from './dto/chocobo-chronicle-events.dto';
 import { ExternalEvent } from './model/external-event';
+import { isRecurringEvent } from './util/event-utils';
 
 @Injectable()
 export class ChocoboChronicleService {
@@ -32,7 +33,7 @@ export class ChocoboChronicleService {
 			id: -1,
 			title: this.processTitle(event.title),
 			details: event.description,
-			recurring: event.title.includes('Tavern Roulette') || event.title.includes('EGF'),
+			recurring: isRecurringEvent(event.title),
 			startDateTime: this.parseDate(event.utc_start_date),
 			endDateTime: this.parseDate(event.utc_end_date),
 			image: event.image.url,

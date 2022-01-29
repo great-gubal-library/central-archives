@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
 import utils from '../common/utils';
 import { ExternalEvent } from './model/external-event';
+import { isRecurringEvent } from './util/event-utils';
 
 
 @Injectable()
@@ -108,7 +109,7 @@ export class CrescentMoonPublishingService {
 					id: -1,
 					title: name,
 					details: '',
-					recurring: name.includes('EGF'),
+					recurring: isRecurringEvent(name),
 					locations,
 					link: href,
 					startDateTime: date!.toMillis(),
