@@ -1,7 +1,7 @@
 <template>
 	<div class="event-view">
 		<banner-view :banner="event.banner" />
-		<h2>{{event.title}}</h2>
+		<h2 class="regular-header-font">{{event.title}}</h2>
 		<template v-if="event.title && event.startDateTime">
 			<p>
 				<strong>Starts:</strong> {{$display.formatDateTimeServer(event.startDateTime)}}
