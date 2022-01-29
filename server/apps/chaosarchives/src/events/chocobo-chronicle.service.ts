@@ -40,7 +40,12 @@ export class ChocoboChronicleService {
 			link: event.url,
 			locations: this.parseLocations(event.description),
 			source: EventSource.CHOCOBO_CHRONICLE,
-		})).filter(event => event.startDateTime >= today);
+		})).filter(event => event.startDateTime >= today && this.isPublicEvent(event));
+	}
+
+	private isPublicEvent(event: ExternalEvent): boolean {
+		// These are for employees only, so filter them out
+		return !event.title.toLowerCase().includes('private card reading');
 	}
 
 	private processTitle(title: string): string {
