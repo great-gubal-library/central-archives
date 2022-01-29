@@ -65,7 +65,7 @@ export class ChocoboChronicleService {
 
 		try {
 			return tableColumns.map(column => {
-					try {
+				try {
 					// Here's hoping they won't change the layout and break everything...
 					const divs = column.querySelectorAll('div');
 					const name = divs[0].textContent.trim();
