@@ -48,6 +48,7 @@ export class LimsaInsiderService {
 	private parseIssue(issue: HTMLElement, index: number): NewsDto {
 		let titleSelector = 'hr + h2';
 		let titleElement = issue.querySelector(titleSelector);
+		
 		if (!titleElement) {
 				titleSelector = 'h2';
 				titleElement = issue.querySelector(titleSelector);
