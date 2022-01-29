@@ -93,5 +93,5 @@ export class Event extends BasicEntity {
     orphanedRowAction: 'delete',
     lazy: true,
   })
-  notifications: Promise<EventAnnouncement[]>;
+  announcements: Promise<EventAnnouncement[]>;
 }

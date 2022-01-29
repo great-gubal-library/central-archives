@@ -81,7 +81,7 @@ export class EventsService {
 
       const event = new Event();
       event.locations = [];
-      event.notifications = Promise.resolve([]);
+      event.announcements = Promise.resolve([]);
       event.owner = character;
       event.source = EventSource.WEBSITE;
       await this.updateEventInternal(em, event, eventDto);
@@ -183,7 +183,7 @@ export class EventsService {
     const dtoAnnouncementIds = eventDto.announcements.map((notification) => notification.id).filter((id) => !!id);
     const announcements: EventAnnouncement[] = [];
 
-    for (const announcement of await event.notifications) {
+    for (const announcement of await event.announcements) {
       if (dtoAnnouncementIds.includes(announcement.id)) {
         announcements.push(announcement);
       } else {
@@ -207,7 +207,7 @@ export class EventsService {
         .toJSDate();
     }
 
-    event.notifications = Promise.resolve(announcements);
+    event.announcements = Promise.resolve(announcements);
     await em.getRepository(Event).save(event);
   }
 
@@ -473,7 +473,7 @@ export class EventsService {
     let images: ImageSummaryDto[] = [];
 
     if (edit) {
-      announcements = await event.notifications;
+      announcements = await event.announcements;
     } else {
       images = await this.imagesService.getImages({ eventId: event.id });
     }
