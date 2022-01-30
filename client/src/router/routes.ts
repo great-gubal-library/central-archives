@@ -298,6 +298,12 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/venue/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Venue.vue') }],
+  },
+
   // Communities
 
   { 

@@ -1,4 +1,5 @@
 import { VenueSummaryDto } from '@app/shared/dto/venues/venue-summary.dto';
+import { VenueDto } from '@app/shared/dto/venues/venue.dto';
 import APITransport from './api-transport';
 
 export default class VenuesAPI {
@@ -10,5 +11,17 @@ export default class VenuesAPI {
 
 	async getVenues(): Promise<VenueSummaryDto[]> {
 		return this.transport.get<VenueSummaryDto[]>('');
+	}
+
+	async getVenue(id: number): Promise<VenueDto> {
+		return this.transport.tokenGet<VenueDto>(`${id}`);
+	}
+
+	async createVenue(venue: VenueDto): Promise<void> {
+		await this.transport.authPost<void>('', venue);
+	}
+
+	async editVenue(venue: VenueDto): Promise<void> {
+		await this.transport.authPut<void>(`${venue.id}`, venue);
 	}
 }

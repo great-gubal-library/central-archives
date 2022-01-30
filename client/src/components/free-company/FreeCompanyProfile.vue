@@ -64,6 +64,7 @@ class Props {
 }
 
 @Options({
+  name: 'FreeCompanyProfile',
   components: {
     CharacterDetail,
     CharacterDetailsBox,
@@ -71,7 +72,7 @@ class Props {
     BannerView,
   },
 })
-export default class CharacterProfile extends Vue.with(Props) {
+export default class FreeCompanyProfile extends Vue.with(Props) {
 	get editFCLink() {
 		const fc = this.freeCompany;
 		return `/edit-free-company/${fc.server}/${fc.name.replace(/ /g, '_')}`;
