@@ -1,6 +1,12 @@
 <template>
   <q-page class="page-venue">
-		<venue-profile v-if="venue.id" :venue="venue" />
+		<template v-if="venue.id">
+			<section v-if="venue.mine" class="page-venue__edit-bar">
+				<router-link :to="`/edit-venue/${venue.id}`">Edit venue</router-link>
+				<q-btn flat color="negative" label="Delete venue" @click="onDeleteClick" />
+			</section>
+			<venue-profile :venue="venue" />
+		</template>
 	</q-page>	
 </template>
 
@@ -10,7 +16,7 @@ import VenueProfile from 'components/venues/VenueProfile.vue';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import { notifyError } from 'src/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { createMetaMixin } from 'quasar';
@@ -77,9 +83,35 @@ export default class PageVenue extends Vue {
 	setContent(venue: VenueDto) {
 		this.venue = venue;
 	}
+
+	onDeleteClick() {
+		this.$q.dialog({
+        title: 'Confirm Delete',
+        message: `Do you want to delete the venue “${this.venue.name}”?`,
+				ok: {
+					label: 'Delete',
+					color: 'negative',
+					flat: true
+				},
+        cancel: 'Cancel',
+      }).onOk(async () => {
+        try {
+					await this.$api.venues.deleteVenue(this.venue.id);
+
+					notifySuccess('Venue deleted.');
+					void this.$router.replace('/');
+				} catch (e) {
+					notifyError(e);
+				}
+      });
+	}
 }
 </script>
 
 <style lang="scss">
-
+.page-venue__edit-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
 </style>

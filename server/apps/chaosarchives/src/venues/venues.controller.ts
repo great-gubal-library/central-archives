@@ -6,7 +6,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { VenueSummaryDto } from '@app/shared/dto/venues/venue-summary.dto';
 import { VenueDto } from '@app/shared/dto/venues/venue.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { VenuesService } from './venues.service';
 
 @Controller('venues')
@@ -36,5 +36,11 @@ export class VenuesController {
 		// eslint-disable-next-line no-param-reassign
 		venue.id = id;
 		await this.venuesService.editVenue(venue, user);
+	}
+
+	@Delete(':id')
+	@RoleRequired(Role.USER)
+	async deleteVenue(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserInfo): Promise<void> {
+		await this.venuesService.deleteVenue(id, user);
 	}
 }

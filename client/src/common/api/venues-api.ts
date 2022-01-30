@@ -25,4 +25,8 @@ export default class VenuesAPI {
 	async editVenue(venue: VenueDto): Promise<void> {
 		await this.transport.authPut<void>(`${venue.id}`, venue);
 	}
+
+	async deleteVenue(id: number): Promise<void> {
+		return this.transport.authDelete<void>(`${id}`);
+	}
 }

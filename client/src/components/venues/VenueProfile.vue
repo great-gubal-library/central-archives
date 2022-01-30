@@ -1,8 +1,5 @@
 <template>
   <div class="venue-profile">
-    <p v-if="!preview && venue.mine">
-      <router-link :to="editVenueLink">Edit Venue</router-link>
-    </p>
     <banner-view :banner="venue.banner" />
     <header class="venue-profile__header">
       <div class="layout__filler"></div>

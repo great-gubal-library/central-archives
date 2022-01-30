@@ -283,8 +283,9 @@ export class VenuesService {
 						user: {
 							id: user.id
 						}
-					}
-				}
+					},
+				},
+				relations: [ 'owner', 'owner.user' ]
 			});
 
 			if (!venue) {
