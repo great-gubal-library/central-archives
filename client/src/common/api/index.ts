@@ -9,6 +9,7 @@ import ImagesAPI from './images-api';
 import NoticeboardAPI from './noticeboard-api';
 import StoriesAPI from './stories-api';
 import UserAPI from './user-api';
+import VenuesAPI from './venues-api';
 
 export default class API {
   private readonly transport = new APITransport();
@@ -25,6 +26,7 @@ export default class API {
   readonly images = new ImagesAPI(this.transport);
   readonly stories = new StoriesAPI(this.transport);
   readonly noticeboard = new NoticeboardAPI(this.transport);
+  readonly venues = new VenuesAPI(this.transport);
 
   // Access token management
 

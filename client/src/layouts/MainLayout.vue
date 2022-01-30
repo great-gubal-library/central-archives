@@ -158,24 +158,7 @@ export default class MainLayout extends Vue {
     { label: 'Screenshots', to: '/gallery/screenshot' },
     { label: 'Noticeboard', to: '/noticeboard' },
     { label: 'Free Companies', to: '/free-companies' },
-    // { label: 'Venues', to: '' },
-  ];
-
-  readonly createContentLinks = [
-    { label: 'Adventure', to: '' },
-    { label: 'Advertisement', to: '' },
-    { label: 'Event', to: '' },
-    { label: 'Free Company', to: '' },
-    { label: 'Noticeboard item', to: '' },
-  ];
-
-  readonly friendActivity = [
-    { title: 'Dungeon Crawlin\' Fools' },
-    { title: 'No Cure for the Paladin Blues' },
-    { title: 'War and XPs' },
-    { title: 'Don\'t Split the Party' },
-    { title: 'Blood Runs in the Family' },
-    { title: 'Utterly Dwarfed' },
+    { label: 'Venues', to: '/venues' },
   ];
 
   leftDrawerOpen = false;
