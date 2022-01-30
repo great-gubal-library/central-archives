@@ -62,6 +62,11 @@
               v-model="venue.status"
               label="Status"
             />
+            <q-input
+              :model-value="tags"
+              @update:model-value="onTagsChanged"
+              label="Tags (comma-separated)"
+            />
             <h6>Location</h6>
             <q-option-group
               inline
@@ -307,6 +312,14 @@ export default class PageEditVenue extends Vue {
     return this.$display.formatDate(this.venue.foundedAt);
   }
 
+  get tags() {
+    return this.venue.tags.join(', ');
+  }
+
+  onTagsChanged(newTags: string) {
+    this.venue.tags = newTags.split(/,\s*/).map((tag) => tag.trim()).filter(tag => tag !== '');
+  }
+
   get locationOptions() {
     return Object.values(VenueLocation).map(location => ({
       label: this.$display.venueLocations[location],
@@ -325,7 +338,7 @@ export default class PageEditVenue extends Vue {
     if (this.venue.location !== VenueLocation.OPEN_WORLD && !this.venue.subdivision) {
       this.venue.subdivision = false;
     }
-    
+
     this.onPlotUpdated();
   }
 
