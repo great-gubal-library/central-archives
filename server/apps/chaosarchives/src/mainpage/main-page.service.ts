@@ -38,6 +38,7 @@ export class MainPageService {
 			newScreenshots,
 			newStories: [], // Will be loaded by StoriesService instead
 			newNoticeboardItems: [], // Will be loaded by NoticeboardService instead
+			newVenues: [], // Will be loaded by VenueService instead
 			news: [], // Will be loaded by NewsService instead
 			newsUpToDate: false,
 		};

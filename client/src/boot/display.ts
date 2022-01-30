@@ -1,3 +1,4 @@
+import { HousingArea } from '@app/shared/enums/housing-area.enum';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { noticeboardLocations } from '@app/shared/enums/noticeboard-location.enum';
 import { Race } from '@app/shared/enums/race.enum';
@@ -44,6 +45,14 @@ class Display {
 		[ImageCategory.UNLISTED]: 'Unlisted',
 		[ImageCategory.ARTWORK]: 'Artwork',
 		[ImageCategory.SCREENSHOT]: 'Screenshot',
+	};
+
+	readonly housingAreas: { [k: string]: string } = {
+		[HousingArea.MIST]: 'Mist',
+		[HousingArea.LAVENDER_BEDS]: 'Lavender Beds',
+		[HousingArea.GOBLET]: 'Goblet',
+		[HousingArea.SHIROGANE]: 'Shirogane',
+		[HousingArea.EMPYREUM]: 'Empyreum',
 	};
 
 	relativeTime(timestamp: number) {

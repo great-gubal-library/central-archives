@@ -23,6 +23,10 @@
         <free-company-name-list :free-companies="content.newFreeCompanies" />
       </section>
     </section>
+    <section>
+      <h5><router-link to="/venues">Venues</router-link></h5>
+      <venue-list :venues="content.newVenues" />
+    </section>
     <section v-if="content.newScreenshots.length > 0">
       <h5><router-link to="/gallery/screenshot">New screenshots</router-link></h5>
       <thumb-gallery :images="content.newScreenshots" />
@@ -36,6 +40,7 @@ import ThumbGallery from 'components/images/ThumbGallery.vue';
 import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
 import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
 import StoryList from 'components/stories/StoryList.vue';
+import VenueList from 'components/venues/VenueList.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
@@ -62,6 +67,7 @@ async function load(): Promise<MainPageContentDto> {
     FreeCompanyNameList,
     StoryList,
     NoticeboardItemList,
+    VenueList,
     ThumbGallery,
   },
   async beforeRouteEnter(_, __, next) {
@@ -75,6 +81,7 @@ export default class PageIndex extends Vue {
     newsUpToDate: false,
     newProfiles: [],
     newFreeCompanies: [],
+    newVenues: [],
     newStories: [],
     newArtwork: [],
     newScreenshots: [],

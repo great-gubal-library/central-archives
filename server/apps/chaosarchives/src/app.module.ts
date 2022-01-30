@@ -18,6 +18,7 @@ import { MainPageModule } from './mainpage/main-page.module';
 import { NoticeboardModule } from './noticeboard/noticeboard.module';
 import { StoriesModule } from './stories/stories.module';
 import { UserModule } from './user/user.module';
+import { VenuesModule } from './venues/venues.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { UserModule } from './user/user.module';
     NoticeboardModule,
     CommunitiesModule,
     FreeCompaniesModule,
+    VenuesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImagesModule } from '../images/images.module';
 import { NoticeboardModule } from '../noticeboard/noticeboard.module';
 import { StoriesModule } from '../stories/stories.module';
+import { VenuesModule } from '../venues/venues.module';
 import { DailyMoogleService } from './daily-moogle.service';
 import { LimsaInsiderService } from './limsa-insider.service';
 import { MainPageController } from './main-page.controller';
@@ -17,6 +18,7 @@ import { NewsService } from './news.service';
     StoriesModule,
     ImagesModule,
     NoticeboardModule,
+    VenuesModule,
     HttpModule,
   ],
   controllers: [MainPageController],
