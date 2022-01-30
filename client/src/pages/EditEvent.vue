@@ -55,7 +55,7 @@
               </template>
             </q-input>
             <q-select
-              label="Server"
+              label="World"
               icon="public"
               class="page-edit-event__server-select"
               v-model="event.locationServer"

@@ -1,18 +1,26 @@
 import { HousingArea } from '@app/shared/enums/housing-area.enum';
 import { VenueLocation } from '@app/shared/enums/venue-location.enum';
+import SharedConstants from '@app/shared/SharedConstants';
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateIf, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, Max, Min, ValidateIf, ValidateNested } from 'class-validator';
 import { BannerDto } from '../characters/banner.dto';
 
 export class VenueDto {
   @IsNumber()
+  @IsOptional()
   id: number;
 
   @IsBoolean()
   mine: boolean;
 
-  @IsNumber()
-  foundedAt: number;
+	@IsString()
+	owner: string;
+
+	@IsString()
+	ownerServer: string;
+
+  @IsString()
+  foundedAt: string;
 
   @IsString()
   name: string;
@@ -44,10 +52,13 @@ export class VenueDto {
   housingArea: HousingArea|null;
 
   @IsNumber()
+  @Min(SharedConstants.housing.MIN_WARD_NUMBER)
+  @Max(SharedConstants.housing.MAX_WARD_NUMBER)
   @ValidateIf((object: VenueDto) => object.location !== VenueLocation.OPEN_WORLD)
   ward: number|null;
 
   @IsNumber()
+  @Min(SharedConstants.housing.MIN_MAIN_WARD_PLOT)
   @ValidateIf((object: VenueDto) => object.location !== VenueLocation.OPEN_WORLD)
   plot: number|null;
 

@@ -1,3 +1,4 @@
+import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { VenueSummaryDto } from '@app/shared/dto/venues/venue-summary.dto';
 import { VenueDto } from '@app/shared/dto/venues/venue.dto';
 import APITransport from './api-transport';
@@ -17,8 +18,8 @@ export default class VenuesAPI {
 		return this.transport.tokenGet<VenueDto>(`${id}`);
 	}
 
-	async createVenue(venue: VenueDto): Promise<void> {
-		await this.transport.authPost<void>('', venue);
+	async createVenue(venue: VenueDto): Promise<IdWrapper> {
+		return this.transport.authPost<IdWrapper>('', venue);
 	}
 
 	async editVenue(venue: VenueDto): Promise<void> {

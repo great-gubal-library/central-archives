@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-venue">
-		<venue-profile :venue="venue" />
+		<venue-profile v-if="venue.id" :venue="venue" />
 	</q-page>	
 </template>
 

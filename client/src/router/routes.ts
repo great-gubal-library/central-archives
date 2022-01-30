@@ -304,6 +304,24 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Venue.vue') }],
   },
 
+  { 
+    path: '/create-venue',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditVenue.vue') }],
+    meta: {
+      title: 'Create Venue'
+    },
+  },
+
+  { 
+    path: '/edit-venue/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditVenue.vue') }],
+    meta: {
+      title: 'Edit Venue'
+    },
+  },
+
   // Communities
 
   { 

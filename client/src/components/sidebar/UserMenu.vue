@@ -101,6 +101,25 @@
         <q-item
           clickable
           v-ripple
+          to="/create-venue"
+        >
+          <q-item-section>
+            <q-item-label>Create venue</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
+          to="/my-venues"
+        >
+          <q-item-section>
+            <q-item-label>My venues</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator dark />
+        <q-item
+          clickable
+          v-ripple
           @click="uploadImage"
         >
           <q-item-section>

@@ -125,7 +125,7 @@ export class StoriesService {
       });
 
       if (storyDto.tags.length > 0) {
-        void em.getRepository(StoryTag).delete({
+        await em.getRepository(StoryTag).delete({
           story: {
             id: storyDto.id,
           },

@@ -24,15 +24,15 @@ export class Venue extends BasicEntity {
   server: Server;
 
   @ManyToOne(() => Character, {
-    nullable: true,
+    nullable: false,
   })
-  owner: Character|null;
+  owner: Character;
 
   @Column({
     type: 'date',
     nullable: false
   })
-  foundedAt: Date;
+  foundedAt: string;
 
   @Column({
     type: 'mediumtext',

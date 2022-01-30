@@ -3,6 +3,7 @@ import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { noticeboardLocations } from '@app/shared/enums/noticeboard-location.enum';
 import { Race } from '@app/shared/enums/race.enum';
 import { StoryType } from '@app/shared/enums/story-type.enum';
+import { VenueLocation } from '@app/shared/enums/venue-location.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { DateTime } from 'luxon';
 import { boot } from 'quasar/wrappers';
@@ -47,6 +48,12 @@ class Display {
 		[ImageCategory.SCREENSHOT]: 'Screenshot',
 	};
 
+	readonly venueLocations: { [k: string]: string } = {
+		[VenueLocation.OPEN_WORLD]: 'Open World',
+		[VenueLocation.HOUSE]: 'House',
+		[VenueLocation.APARTMENT]: 'Apartment',
+	};
+
 	readonly housingAreas: { [k: string]: string } = {
 		[HousingArea.MIST]: 'Mist',
 		[HousingArea.LAVENDER_BEDS]: 'Lavender Beds',
@@ -64,8 +71,9 @@ class Display {
 		return result === '0 minutes ago' ? 'Just now' : result;
 	}
 
-	formatDate(timestamp: number) {
-		return DateTime.fromMillis(timestamp).toFormat(DATE_FORMAT, { locale: 'en-GB' });
+	formatDate(date: number|string) {
+		const dateTime = typeof date === 'string' ?  DateTime.fromISO(date) : DateTime.fromMillis(date);
+		return dateTime.toFormat(DATE_FORMAT, { locale: 'en-GB' });
 	}
 
 	formatDateTimeServer(timestamp: number) {

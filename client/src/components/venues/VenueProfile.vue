@@ -5,6 +5,7 @@
     </p>
     <banner-view :banner="venue.banner" />
     <header class="venue-profile__header">
+      <div class="layout__filler"></div>
       <div class="venue-profile__header-names">
         <h2 class="venue-profile__header-title">{{ venue.name }}</h2>
         <div class="venue-profile__header-subtitle">{{ address }}</div>
@@ -13,6 +14,7 @@
     </header>
     <character-details-box class="venue-profile__infobox">
       <character-detail label="World" :value="venue.server" v-if="venue.server" />
+      <character-detail label="Owner" :value="venue.owner" :router-link="ownerLink" />
       <character-detail label="Founded" :value="$display.formatDate(venue.foundedAt)" v-if="venue.foundedAt" />
       <character-detail label="Website" :value="venue.website" :link="venue.website" v-if="venue.website" />
       <character-detail label="Purpose" :value="venue.purpose" v-if="venue.purpose" />
@@ -32,7 +34,8 @@
     <template v-if="!venue.description && !venue.carrdProfile">
       No description.
     </template>
-    <template v-if="venue.tags">
+    <template v-if="venue.tags.length > 0">
+      <hr />
       <strong>Tags:</strong> {{ venue.tags.join(', ') }}
     </template>
   </div>
@@ -77,7 +80,7 @@ export default class VenueProfile extends Vue.with(Props) {
 			address = this.venue.address;
 		} else {
 			const plotTerm = this.venue.location === VenueLocation.HOUSE ? 'Plot' : 'Apartment';
-			address = `${this.$display.housingAreas[this.venue.housingArea!]}, Ward ${this.venue.ward!}, ${plotTerm} ${this.venue.plot!}}`;
+			address = `${this.$display.housingAreas[this.venue.housingArea!]}, Ward ${this.venue.ward!}, ${plotTerm} ${this.venue.plot!}`;
 
 			if (this.venue.subdivision) {
 				address += ' (subdivision)';
@@ -93,6 +96,12 @@ export default class VenueProfile extends Vue.with(Props) {
 
   get carrdLink(): string {
     return `${this.$api.prefix}carrd/character/preview/${this.venue.carrdProfile}`;
+  }
+
+  get ownerLink(): string {
+    const server = this.venue.ownerServer;
+    const character = this.venue.owner.replace(/ /g, '_');
+    return `/${server}/${character}`;
   }
 }
 </script>
