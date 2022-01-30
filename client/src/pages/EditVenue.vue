@@ -28,7 +28,7 @@
             </q-select>
             <q-input
               class="page-edit-venue__founded-at"
-              label="Founded *"
+              label="Founded"
               :model-value="foundedAtDisplay"
               readonly
               :rules="[
@@ -36,6 +36,9 @@
               ]"
             >
               <template v-slot:append>
+                <template v-if="venue.foundedAt">
+                  <q-icon name="clear" class="cursor-pointer" @click="venue.foundedAt = null" />&nbsp;
+                </template>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy ref="qDateProxy" cover transition-show="scale" transition-hide="scale">
                     <q-date v-model="venue.foundedAt" mask="YYYY-MM-DD">
@@ -283,7 +286,7 @@ export default class PageEditVenue extends Vue {
       this.venueBackup = new VenueDto({
         id: null as unknown as number,
         mine: true,
-        foundedAt: DateTime.now().toISODate(),
+        foundedAt: null,
         name: '',
         server: this.$store.getters.character!.server,
         owner: this.$store.getters.character!.name,
@@ -309,7 +312,7 @@ export default class PageEditVenue extends Vue {
   }
 
   get foundedAtDisplay() {
-    return this.$display.formatDate(this.venue.foundedAt);
+    return this.venue.foundedAt ? this.$display.formatDate(this.venue.foundedAt) : '(Unknown)';
   }
 
   get tags() {

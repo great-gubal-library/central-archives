@@ -30,9 +30,9 @@ export class Venue extends BasicEntity {
 
   @Column({
     type: 'date',
-    nullable: false
+    nullable: true
   })
-  foundedAt: string;
+  foundedAt: string|null;
 
   @Column({
     type: 'mediumtext',

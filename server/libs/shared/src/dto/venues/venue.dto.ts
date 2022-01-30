@@ -20,7 +20,8 @@ export class VenueDto {
 	ownerServer: string;
 
   @IsString()
-  foundedAt: string;
+  @IsOptional()
+  foundedAt: string|null;
 
   @IsString()
   name: string;

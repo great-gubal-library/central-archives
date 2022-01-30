@@ -11,7 +11,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
-import { Connection, EntityManager, In, Not, Repository } from 'typeorm';
+import { Connection, EntityManager, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../common/api-checks';
 import { ImagesService } from '../images/images.service';
 
@@ -164,15 +164,19 @@ export class VenuesService {
 
 		// Validate founding date
 
-		const foundedAt = DateTime.fromISO(venueDto.foundedAt, {
-			zone: SharedConstants.FFXIV_SERVER_TIMEZONE
-		});
+		if (venueDto.foundedAt) {
+			const foundedAt = DateTime.fromISO(venueDto.foundedAt, {
+				zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+			});
 
-		if (!foundedAt.isValid || foundedAt.toMillis() > Date.now()) {
-			throw new BadRequestException('Invalid founding date');
+			if (!foundedAt.isValid || foundedAt.toMillis() > Date.now()) {
+				throw new BadRequestException('Invalid founding date');
+			}
+
+			venue.foundedAt = foundedAt.toISODate();
+		} else {
+			venue.foundedAt = null;
 		}
-
-		venue.foundedAt = foundedAt.toISODate();
 
 		// Validate server
 
