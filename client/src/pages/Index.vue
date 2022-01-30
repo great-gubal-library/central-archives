@@ -24,7 +24,7 @@
       </section>
     </section>
     <section>
-      <h5><router-link to="/venues">Venues</router-link></h5>
+      <h5><router-link to="/venues">New Venues</router-link></h5>
       <venue-list :venues="content.newVenues" />
     </section>
     <section v-if="content.newScreenshots.length > 0">
