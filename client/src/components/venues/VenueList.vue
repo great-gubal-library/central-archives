@@ -10,10 +10,7 @@
       >
         <q-item-section>
             <q-item-label>{{venue.name}}</q-item-label>
-            <q-item-label caption><template v-if="venue.housingArea">$display.housingAreas[venue.housingArea], </template>{{venue.address}}</q-item-label>
-        </q-item-section>
-        <q-item-section side>
-            <q-item-label>{{$display.relativeTime(venue.createdAt)}}</q-item-label>
+            <q-item-label caption><template v-if="venue.housingArea">{{ $display.housingAreas[venue.housingArea] }}, </template>{{venue.address}}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>

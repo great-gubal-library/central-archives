@@ -6,7 +6,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { VenueSummaryDto } from '@app/shared/dto/venues/venue-summary.dto';
 import { VenueDto } from '@app/shared/dto/venues/venue.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { VenuesService } from './venues.service';
 
 @Controller('venues')
@@ -14,14 +14,8 @@ export class VenuesController {
 	constructor(private venuesService: VenuesService) {}
 
 	@Get()
-	async getVenues(): Promise<VenueSummaryDto[]> {
-		return this.venuesService.getVenues({});
-	}
-
-	@Get('my-venues')
-	@RoleRequired(Role.USER)
-	async getMyVenues(@CurrentUser() user: UserInfo): Promise<VenueSummaryDto[]> {
-		return this.venuesService.getMyVenues(user);
+	async getVenues(@Query() filter: { characterId?: number }): Promise<VenueSummaryDto[]> {
+		return this.venuesService.getVenues(filter);
 	}
 
 	@Get(':id')

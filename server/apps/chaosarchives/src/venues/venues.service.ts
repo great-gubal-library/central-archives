@@ -23,27 +23,12 @@ export class VenuesService {
     private imagesService: ImagesService,
   ) {}
 
-	async getVenues(filter: { limit?: number }): Promise<VenueSummaryDto[]> {
+	async getVenues(filter: { characterId?: number, limit?: number }): Promise<VenueSummaryDto[]> {
 		const myVenues = await this.venueRepo.find({
+			where: filter.characterId ? { owner: { id: filter.characterId } } : undefined,
 			order: { 'createdAt': 'DESC' },
-			relations: [ 'owner' ],
+			relations: [ 'owner', 'server' ],
 			take: filter.limit || undefined,
-		});
-
-		return myVenues.map(venue => this.toVenueSummaryDto(venue));
-	}
-
-	async getMyVenues(user: UserInfo): Promise<VenueSummaryDto[]> {
-		const myVenues = await this.venueRepo.find({
-			where: {
-				owner: {
-					user: {
-						id: user.id
-					}
-				}
-			},
-			order: { 'createdAt': 'DESC' },
-			relations: [ 'owner' ]
 		});
 
 		return myVenues.map(venue => this.toVenueSummaryDto(venue));
@@ -56,7 +41,7 @@ export class VenuesService {
 			address = venue.address;
 		} else {
 			const plotTerm = venue.location === VenueLocation.HOUSE ? 'plot' : 'apartment';
-			address = `Ward ${venue.ward}, ${plotTerm} ${venue.plot}}`;
+			address = `Ward ${venue.ward}, ${plotTerm} ${venue.plot}`;
 
 			if (venue.subdivision) {
 				address += ' (subdivision)';

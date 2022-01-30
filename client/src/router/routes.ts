@@ -299,6 +299,15 @@ const routes: RouteRecordRaw[] = [
   },
 
   { 
+    path: '/my-venues',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/MyVenues.vue') }],
+    meta: {
+      title: 'My Venues'
+    },
+  },
+
+  { 
     path: '/venue/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Venue.vue') }],

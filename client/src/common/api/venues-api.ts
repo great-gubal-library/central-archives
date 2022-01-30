@@ -10,8 +10,8 @@ export default class VenuesAPI {
     this.transport = transport.atPath('venues');
   }
 
-	async getVenues(): Promise<VenueSummaryDto[]> {
-		return this.transport.get<VenueSummaryDto[]>('');
+	async getVenues(filter?: { characterId?: number }): Promise<VenueSummaryDto[]> {
+		return this.transport.get<VenueSummaryDto[]>('', filter);
 	}
 
 	async getVenue(id: number): Promise<VenueDto> {
