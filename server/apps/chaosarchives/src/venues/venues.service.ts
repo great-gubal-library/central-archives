@@ -57,6 +57,24 @@ export class VenuesService {
 		}
 	}
 
+	async getVenueByName(name: string, server: string, user?: UserInfo): Promise<VenueDto> {
+		const venue = await this.venueRepo.findOne({
+			where: {
+				name,
+				server: {
+					name: server,
+				},
+			},
+			relations: [ 'server', 'owner', 'owner.server', 'banner', 'banner.owner', 'tags' ]
+		});
+
+		if (!venue) {
+			throw new NotFoundException('Venue not found');
+		}
+
+		return this.toVenueDto(venue, user);
+	}
+
 	async getVenue(venueId: number, user?: UserInfo): Promise<VenueDto> {
 		const venue = await this.venueRepo.findOne({
 			where: {

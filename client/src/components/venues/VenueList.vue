@@ -35,7 +35,7 @@ class Props {
 })
 export default class VenueList extends Vue.with(Props) {
   getLink(venue: VenueSummaryDto) {
-    return `/venue/${venue.id}`
+    return `/venue/${venue.server}/${venue.name.replace(/ /g, '_')}`;
   }
 }
 </script>

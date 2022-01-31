@@ -18,6 +18,10 @@ export default class VenuesAPI {
 		return this.transport.tokenGet<VenueDto>(`${id}`);
 	}
 
+	async getVenueByName(name: string, server: string): Promise<VenueDto> {
+		return this.transport.tokenGet<VenueDto>(`${server}/${name}`);
+	}
+
 	async createVenue(venue: VenueDto): Promise<IdWrapper> {
 		return this.transport.authPost<IdWrapper>('', venue);
 	}

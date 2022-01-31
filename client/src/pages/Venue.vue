@@ -26,14 +26,20 @@ const $router = useRouter();
 
 async function load(params: RouteParams): Promise<VenueDto> {
 		const id = parseInt(params.id as string, 10);
+		const name = params.name as string;
+		const server = params.server as string;
 
-		if (!id) {
+		if (!id && !name) {
 			void $router.replace('/');
 			throw new Error();
 		}
 
 		try {
-			return await $api.venues.getVenue(id);
+			if (id) {
+				return await $api.venues.getVenue(id);
+			} else {
+				return await $api.venues.getVenueByName(name.replace(/_/g, ' '), server);
+			}
 		} catch (e) {			
 			notifyError(e);
 			throw e;

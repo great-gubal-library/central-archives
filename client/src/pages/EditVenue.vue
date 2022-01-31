@@ -191,10 +191,11 @@
 
 <script lang="ts">
 import { VenueDto } from '@app/shared/dto/venues/venue.dto';
+import { HousingArea } from '@app/shared/enums/housing-area.enum';
+import { VenueLocation } from '@app/shared/enums/venue-location.enum';
 import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
-import { DateTime } from 'luxon/src/luxon';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
@@ -203,8 +204,6 @@ import VenueProfile from 'src/components/venues/VenueProfile.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import { VenueLocation } from '@app/shared/enums/venue-location.enum';
-import { HousingArea } from '@app/shared/enums/housing-area.enum';
 
 const $api = useApi();
 const $router = useRouter();

@@ -18,6 +18,12 @@ export class VenuesController {
 		return this.venuesService.getVenues(filter);
 	}
 
+	@Get(':server/:name')
+	@UseGuards(OptionalJwtAuthGuard)
+	async getVenueByName(@Param('name') name: string, @Param('server') server: string, @CurrentUser() user?: UserInfo): Promise<VenueDto> {
+		return this.venuesService.getVenueByName(name, server, user);
+	}
+
 	@Get(':id')
 	@UseGuards(OptionalJwtAuthGuard)
 	async getVenue(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<VenueDto> {
