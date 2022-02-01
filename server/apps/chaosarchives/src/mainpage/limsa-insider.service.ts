@@ -37,10 +37,19 @@ export class LimsaInsiderService {
 		result.push(this.parseIssue(currentIssue, 0));
 
 		const archiveDoc = parse(archivePage.data);
-		const archiveIssues = archiveDoc.querySelectorAll('.inner section').reverse();
-		// ignore latest hidden entry, as it can be wrong compared to the version on news.kryst.company
-		result.push(...archiveIssues.slice(1, SharedConstants.MAX_NEWS_ENTRIES)
-				.map((issue, index) => this.parseIssue(issue, index + 1)));
+		const archiveIssueSections = archiveDoc.querySelectorAll('.inner section').reverse();
+		const seenTitles = new Set([result[0].title.toLowerCase()]);
+
+		for (let i = 1; i < archiveIssueSections.length; i++) {
+			// ignore latest hidden entry, as it can be wrong compared to the version on news.kryst.company
+			const issue = this.parseIssue(archiveIssueSections[i], i + 1);
+			const titleKey = issue.title.toLowerCase();
+
+			if (!seenTitles.has(titleKey)) {
+				seenTitles.add(titleKey);
+				result.push(issue);
+			}
+		}
 
 		return result;
 	}
