@@ -1,7 +1,7 @@
 import { NewsDto } from "@app/shared/dto/news/news.dto";
-import SharedConstants from "@app/shared/SharedConstants";
-import { HttpService, Injectable, Logger } from "@nestjs/common";
+import { BadGatewayException, HttpService, Injectable, Logger } from "@nestjs/common";
 import { DateTime } from "luxon";
+import { AxiosError } from 'axios';
 import parse, { HTMLElement } from "node-html-parser";
 
 const EORZEAN_MONTH_NAMES: string[] = [];
@@ -27,16 +27,30 @@ export class LimsaInsiderService {
 		const result: NewsDto[] = [];
 
 		// Parse Carrd pages
-		const [ currentPage, archivePage ] = await Promise.all([
-			this.httpService.get<string>(this.CURRENT_NEWS_SITE).toPromise(),
-			this.httpService.get<string>(this.ARCHIVE_NEWS_SITE).toPromise(),
-		]);
+		let currentDoc: HTMLElement;
+		let archiveDoc: HTMLElement;
+		
+		try {
+			const [ currentPage, archivePage ] = await Promise.all([
+				this.httpService.get<string>(this.CURRENT_NEWS_SITE).toPromise(),
+				this.httpService.get<string>(this.ARCHIVE_NEWS_SITE).toPromise(),
+			]);
 
-		const currentDoc = parse(currentPage.data);
+			currentDoc = parse(currentPage.data);
+			archiveDoc = parse(archivePage.data);
+		} catch (e) {
+			if ((e as AxiosError).isAxiosError) {
+				const ae = e as AxiosError;
+				this.log.error(`Error retrieving ${ae.request}`, ae.stack);
+				throw new BadGatewayException(ae.message);
+			} else {
+				throw e;
+			}
+		}
+
 		const currentIssue = currentDoc.querySelector('.inner');
 		result.push(this.parseIssue(currentIssue, 0));
 
-		const archiveDoc = parse(archivePage.data);
 		const archiveIssueSections = archiveDoc.querySelectorAll('.inner section').reverse();
 		const seenTitles = new Set([result[0].title.toLowerCase()]);
 

@@ -1,6 +1,7 @@
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 import SharedConstants from '@app/shared/SharedConstants';
-import { HttpService, Injectable, Logger } from '@nestjs/common';
+import { BadGatewayException, HttpService, Injectable, Logger } from '@nestjs/common';
+import { AxiosError } from 'axios';
 import { JSDOM } from 'jsdom';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
@@ -17,8 +18,21 @@ export class DailyMoogleService {
 
 	async fetchNews(): Promise<NewsDto[]> {
 		// Parse RSS feed
-		const page = await this.httpService.get<string>(this.NEWS_SITE).toPromise();
-		const doc = new JSDOM(page.data, { contentType: 'application/rss+xml' }).window.document;
+		let doc: Document;
+
+		try {
+			const page = await this.httpService.get<string>(this.NEWS_SITE).toPromise();
+			doc = new JSDOM(page.data, { contentType: 'application/rss+xml' }).window.document;
+		} catch (e) {
+			if ((e as AxiosError).isAxiosError) {
+				const ae = e as AxiosError;
+				this.log.error(`Error retrieving ${ae.config.url}`, ae.stack);
+				throw new BadGatewayException(ae.message);
+			} else {
+				throw e;
+			}
+		}
+
 		const newsItems = Array.from(doc.querySelectorAll('item'))
 				.filter(item => !this.isOOC(item.querySelector('title')!.textContent!));
 		
