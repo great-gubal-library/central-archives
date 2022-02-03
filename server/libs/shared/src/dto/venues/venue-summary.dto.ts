@@ -6,4 +6,5 @@ export interface VenueSummaryDto {
 	server: string;
 	address: string;
 	housingArea: HousingArea|null;
+	purpose: string;
 }

@@ -10,7 +10,7 @@
       >
         <q-item-section>
             <q-item-label>{{venue.name}}</q-item-label>
-            <q-item-label caption><template v-if="venue.housingArea">{{ $display.housingAreas[venue.housingArea] }}, </template>{{venue.address}}</q-item-label>
+            <q-item-label caption><template v-if="venue.housingArea">{{ $display.housingAreas[venue.housingArea]}}<template v-if="venue.purpose"> — </template></template>{{venue.purpose}}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>

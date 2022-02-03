@@ -52,6 +52,7 @@ export class VenuesService {
 			id: venue.id,
 			name: venue.name,
 			server: venue.server.name,
+			purpose: venue.purpose,
 			housingArea: venue.housingArea,
 			address
 		}
