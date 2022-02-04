@@ -27,10 +27,10 @@ export class DailyMoogleService {
 			if ((e as AxiosError).isAxiosError) {
 				const ae = e as AxiosError;
 				this.log.error(`Error retrieving ${ae.config.url}`, ae.stack);
-				throw new BadGatewayException(ae.message);
-			} else {
-				throw e;
+				return [];
 			}
+			
+			throw e;
 		}
 
 		const newsItems = Array.from(doc.querySelectorAll('item'))

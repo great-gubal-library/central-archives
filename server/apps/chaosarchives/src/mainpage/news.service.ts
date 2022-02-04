@@ -56,7 +56,7 @@ export class NewsService {
 
 	private async fetchNews(): Promise<NewsDto[]> {
 		const [ dailyMoogleNews, limsaInsiderNews ] = await Promise.all([
-			[], // this.dailyMoogleService.fetchNews(),
+			this.dailyMoogleService.fetchNews(),
 			this.limsaInsiderService.fetchNews(),
 		]);
 
