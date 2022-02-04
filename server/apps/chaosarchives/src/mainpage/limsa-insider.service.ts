@@ -90,7 +90,7 @@ export class LimsaInsiderService {
 		const content = issue.querySelector(subtitleSelector).textContent;
 		const author = issue.querySelector(`${subtitleSelector} + div.container`).querySelector('u').textContent.replace(/^By /, '');
 		const anchor = issue.id.replace(/-section$/, '');
-		const link = index === 0 ? this.CURRENT_NEWS_SITE : `${this.ARCHIVE_NEWS_SITE}#${anchor}}`;
+		const link = index === 0 ? this.CURRENT_NEWS_SITE : `${this.ARCHIVE_NEWS_SITE}#${anchor}`;
 		const image = this.getImageUrl(issue.querySelector('img'),
 				index === 0 ? this.CURRENT_NEWS_SITE : this.ARCHIVE_NEWS_SITE);
 		const [ month, day ] = issue.querySelectorAll('.container p');
