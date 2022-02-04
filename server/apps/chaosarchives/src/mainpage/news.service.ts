@@ -49,14 +49,14 @@ export class NewsService {
 
 		// Not cached, or cache is obsolete - fetch and cache
 		const news = await this.fetchNews();
-		this.redisService.set('news', JSON.stringify(news), 'ex', this.CACHE_DURATION_LONG_SEC); // Intentionally no await
-		this.redisService.set('newsTimestamp', Date.now().toString(), 'ex', this.CACHE_DURATION_LONG_SEC);
+		void this.redisService.set('news', JSON.stringify(news), 'ex', this.CACHE_DURATION_LONG_SEC);
+		void this.redisService.set('newsTimestamp', Date.now().toString(), 'ex', this.CACHE_DURATION_LONG_SEC);
 		return { news, newsUpToDate: true };
 	}
 
 	private async fetchNews(): Promise<NewsDto[]> {
 		const [ dailyMoogleNews, limsaInsiderNews ] = await Promise.all([
-			this.dailyMoogleService.fetchNews(),
+			[], // this.dailyMoogleService.fetchNews(),
 			this.limsaInsiderService.fetchNews(),
 		]);
 
