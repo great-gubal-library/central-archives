@@ -37,7 +37,7 @@ export class CrescentMoonPublishingService {
 
 		// Query linked pages in parallel
 		const result: (EventSummaryDto|null)[] = await Promise.all(calendarItems.map(async calendarItem => {
-			const name = calendarItem.querySelector('.jet-listing-dynamic-field__content').textContent;
+			const name = calendarItem.querySelector('.jet-listing-dynamic-link__label').textContent;
 			const href = calendarItem.getAttribute('data-url');
 
 			if (!name || !href) {
