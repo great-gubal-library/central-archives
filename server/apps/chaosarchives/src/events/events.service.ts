@@ -439,24 +439,17 @@ export class EventsService {
 
 		const endOfMonth = startOfMonth.plus({ months: 1 });
 
-    const events = await this.eventRepo.find({
-      where: [
-				{
-					startDateTime: MoreThanOrEqual(startOfMonth.toJSDate()),
-				},
-				{
-					startDateTime: LessThan(endOfMonth.toJSDate()),
-				},
-				{
-					hidden: false,
-				}
-			],
-      order: {
-        startDateTime: 'ASC',
-        createdAt: 'ASC',
-      },
-      relations: ['locations', 'locations.server'],
-    });
+    const events = await this.eventRepo.createQueryBuilder('event')
+      .leftJoinAndSelect('event.locations', 'location')
+      .leftJoinAndSelect('location.server', 'server')
+      .where('event.startDateTime >= :startOfMonth', { startOfMonth: startOfMonth.toJSDate() })
+      .andWhere('event.startDateTime < :endOfMonth', { endOfMonth: endOfMonth.toJSDate() })
+      .andWhere('event.hidden = :hidden', { hidden: false } )
+      .orderBy({
+        'event.startDateTime': 'ASC',
+        'event.createdAt': 'ASC',
+      })
+      .getMany();
 
     return events.map((event) => this.toEventSummaryDto(event));
   }
