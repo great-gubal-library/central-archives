@@ -130,7 +130,10 @@ export class CrescentMoonPublishingService {
 		const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day').toMillis();
 
 		return (result.filter(event => event !== null) as ExternalEvent[])
-			.filter(event => event.startDateTime >= startOfDay && !event.title.includes('OOC'))
+			.filter(event => event.startDateTime >= startOfDay
+				&& !event.title.includes('OOC')
+				&& !event.title.includes('Final Fantasy')
+				&& !event.title.includes('XIV'))
 			.sort((e1, e2) => utils.compareNumbers(e1.startDateTime, e2.startDateTime));
 	}
 }
