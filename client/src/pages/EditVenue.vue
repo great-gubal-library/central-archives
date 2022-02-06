@@ -125,12 +125,12 @@
               </template>
               <template v-else-if="venue.location === VenueLocation.APARTMENT">
                 <q-input
-                  v-model.number="venue.plot"
+                  v-model="venue.room"
                   label="Room *"
                   :rules="[
                     $rules.required('This field is required.'),
-                    $rules.minValue(SharedConstants.housing.MIN_APARTMENT_NUMBER, `Room number cannot be less than ${SharedConstants.housing.MIN_APARTMENT_NUMBER}.`),
-                    $rules.maxValue(SharedConstants.housing.MAX_APARTMENT_NUMBER, `Room number cannot be greater than ${SharedConstants.housing.MAX_APARTMENT_NUMBER}.`),
+                    (val) => parseInt(val, 10) >= SharedConstants.housing.MIN_APARTMENT_NUMBER || `Room number cannot be less than ${SharedConstants.housing.MIN_APARTMENT_NUMBER}.`,
+                    (val) => parseInt(val, 10) <= SharedConstants.housing.MAX_APARTMENT_NUMBER || `Room number cannot be greater than ${SharedConstants.housing.MAX_APARTMENT_NUMBER}.`,
                   ]"
                 />
                 <q-checkbox v-model="venue.subdivision" label="Subdivision" />
@@ -299,6 +299,7 @@ export default class PageEditVenue extends Vue {
         housingArea: null,
         ward: null,
         plot: null,
+        room: null,
         subdivision: false,
         carrdProfile: '',
         banner: null,

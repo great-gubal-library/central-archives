@@ -76,8 +76,8 @@ export default class VenueProfile extends Vue.with(Props) {
 		if (this.venue.location === VenueLocation.OPEN_WORLD) {
 			address = this.venue.address;
 		} else {
-			const plotTerm = this.venue.location === VenueLocation.HOUSE ? 'Plot' : 'Apartment';
-			address = `${this.$display.housingAreas[this.venue.housingArea!]}, Ward ${this.venue.ward!}, ${plotTerm} ${this.venue.plot!}`;
+			const plot = this.venue.location === VenueLocation.HOUSE ? `Plot ${this.venue.plot!}` : `Apartment ${this.venue.room!}`;
+			address = `${this.$display.housingAreas[this.venue.housingArea!]}, Ward ${this.venue.ward!}, ${plot}`;
 
 			if (this.venue.subdivision) {
 				address += ' (subdivision)';

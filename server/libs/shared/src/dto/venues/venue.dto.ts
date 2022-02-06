@@ -60,8 +60,12 @@ export class VenueDto {
 
   @IsNumber()
   @Min(SharedConstants.housing.MIN_MAIN_WARD_PLOT)
-  @ValidateIf((object: VenueDto) => object.location !== VenueLocation.OPEN_WORLD)
+  @ValidateIf((object: VenueDto) => object.location === VenueLocation.HOUSE)
   plot: number|null;
+
+  @IsString()
+  @ValidateIf((object: VenueDto) => object.location === VenueLocation.APARTMENT)
+  room: string|null;
 
   @ValidateIf((object: VenueDto) => object.location !== VenueLocation.OPEN_WORLD)
   subdivision: boolean|null;

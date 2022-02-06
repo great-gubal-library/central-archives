@@ -40,8 +40,8 @@ export class VenuesService {
 		if (venue.location === VenueLocation.OPEN_WORLD) {
 			address = venue.address;
 		} else {
-			const plotTerm = venue.location === VenueLocation.HOUSE ? 'plot' : 'apartment';
-			address = `Ward ${venue.ward}, ${plotTerm} ${venue.plot}`;
+			const plot = venue.location === VenueLocation.HOUSE ? `plot ${venue.plot}` : `apartment ${venue.room}`;
+			address = `Ward ${venue.ward}, ${plot}`;
 
 			if (venue.subdivision) {
 				address += ' (subdivision)';
@@ -111,6 +111,7 @@ export class VenuesService {
 			housingArea: venue.housingArea,
 			ward: venue.ward,
 			plot: venue.plot,
+			room: venue.room,
 			subdivision: venue.subdivision,
 			carrdProfile: venue.carrdProfile,
 			tags: venue.tags.map(tag => tag.name),
@@ -220,12 +221,12 @@ export class VenuesService {
 			venue.housingArea = null;
 			venue.ward = null;
 			venue.plot = null;
+			venue.room = null;
 			venue.subdivision = null;
 		} else {
 			venue.address = '';
 			venue.housingArea = venueDto.housingArea;
 			venue.ward = venueDto.ward;
-			venue.plot = venueDto.plot;
 
 			if (venueDto.location === VenueLocation.HOUSE) {
 				const plot = venueDto.plot!;
@@ -235,15 +236,17 @@ export class VenuesService {
 				}
 
 				venue.plot = plot;
+				venue.room = null;
 				venue.subdivision = plot >= SharedConstants.housing.MIN_SUBDIVISION_PLOT;
 			} else {
-				const room = venueDto.plot!;
+				const room = venueDto.room!;
 
-				if (room > SharedConstants.housing.MAX_APARTMENT_NUMBER) {
+				if (parseInt(room, 10) > SharedConstants.housing.MAX_APARTMENT_NUMBER) {
 					throw new BadRequestException('Invalid room number');
 				}
 
-				venue.plot = room;
+				venue.room = room;
+				venue.plot = null;
 				venue.subdivision = venueDto.subdivision;
 			}
 		}

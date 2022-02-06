@@ -99,6 +99,13 @@ export class Venue extends BasicEntity {
 	plot: number|null;
 
   @Column({
+    type: 'varchar',
+    length: 60,
+    nullable: true,
+  })
+	room: string|null;
+
+  @Column({
     type: 'boolean',
     nullable: true,
   })
