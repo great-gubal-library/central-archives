@@ -6,7 +6,7 @@ const html = {
 			allowedTags: [ ...sanitizeHtml.defaults.allowedTags, 'img' ],
 			allowedAttributes: { ...sanitizeHtml.defaults.allowedAttributes,
 				'*': [ 'style' ],
-				'table': [ 'border' ],
+				'table': [ 'border', 'cellpadding', 'cellspacing' ],
 				'img': [ 'src', 'alt', 'title', 'width', 'height' ],
 			},
 		});
