@@ -1,6 +1,6 @@
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 import SharedConstants from '@app/shared/SharedConstants';
-import { BadGatewayException, HttpService, Injectable, Logger } from '@nestjs/common';
+import { HttpService, Injectable, Logger } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import { JSDOM } from 'jsdom';
 import { DateTime } from 'luxon';
