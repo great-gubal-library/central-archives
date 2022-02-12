@@ -1,9 +1,9 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { Character, FreeCompany, Image, Server } from '@app/entity';
 import { CharacterIdWrapper } from '@app/shared/dto/common/character-id-wrapper.dto';
-import { CommunityFCSummaryDto } from '@app/shared/dto/communities/community-fc-summary.dto';
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
+import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-summary.dto';
 import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ConflictException, ForbiddenException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,7 +22,7 @@ export class FreeCompaniesService {
 		@InjectRepository(FreeCompany) private freeCompanyRepo: Repository<FreeCompany>,
 	) {}
 
-	async getMyFreeCompany(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<CommunityFCSummaryDto|null> {
+	async getMyFreeCompany(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<MyFreeCompanySummaryDto|null> {
 		const character = await this.characterRepo.findOne({
 			where: {
 				id: characterIdWrapper.characterId,
@@ -42,7 +42,7 @@ export class FreeCompaniesService {
 		return !fc ? null : this.toFCSummaryDto(fc, characterIdWrapper.characterId);
 	}
 	
-	async setFreeCompany(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<CommunityFCSummaryDto|null> {
+	async setFreeCompany(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<MyFreeCompanySummaryDto|null> {
 		const characterInfo = user.characters.find(ch => ch.id === characterIdWrapper.characterId);
 		
 		if (!characterInfo) {
@@ -128,7 +128,7 @@ export class FreeCompaniesService {
 		})
 	}
 
-	private toFCSummaryDto(fc: FreeCompany, characterId: number): CommunityFCSummaryDto {
+	private toFCSummaryDto(fc: FreeCompany, characterId: number): MyFreeCompanySummaryDto {
 		return {
 			id: fc.id,
 			name: fc.name,
