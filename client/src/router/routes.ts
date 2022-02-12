@@ -351,6 +351,15 @@ const routes: RouteRecordRaw[] = [
   // Free Companies
 
   { 
+    path: '/my-free-company',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/MyFreeCompany.vue') }],
+    meta: {
+      title: 'My Free Company'
+    },
+  },
+
+  { 
     path: '/free-companies',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/FreeCompanies.vue') }],

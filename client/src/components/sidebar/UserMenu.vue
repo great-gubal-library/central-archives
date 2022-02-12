@@ -64,10 +64,19 @@
         <q-item
           clickable
           v-ripple
+          to="/my-free-company"
+        >
+          <q-item-section>
+            <q-item-label>My Free Company</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
           to="/my-communities"
         >
           <q-item-section>
-            <q-item-label>My communities/FC</q-item-label>
+            <q-item-label>My communities</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
