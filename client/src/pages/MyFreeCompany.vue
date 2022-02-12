@@ -3,29 +3,29 @@
     <h2>My Free Company</h2>
     <section>
       <div class="page-my-free-company__subtitle">for {{ $store.getters.character?.name }}</div>
-      <section class="page-my-free-company__fc" v-if="communities.freeCompany">
-        <free-company-crest :images="communities.freeCompany.crest" />
+      <section class="page-my-free-company__fc" v-if="freeCompany">
+        <free-company-crest :images="freeCompany.crest" />
         <div class="page-my-free-company__fc-info">
           <p class="page-my-free-company__fc-name">
-            <router-link :to="fcLink">{{ communities.freeCompany.name }}</router-link>
-            <template v-if="communities.freeCompany.isLeader">
+            <router-link :to="fcLink">{{ freeCompany.name }}</router-link>
+            <template v-if="freeCompany.isLeader">
               — Leader <router-link :to="editFCLink">(Edit Free Company)</router-link>
             </template>
           </p>
-          <p v-if="communities.freeCompany.goal"><strong>Goal:</strong> {{ communities.freeCompany.goal }}</p>
+          <p v-if="freeCompany.goal"><strong>Goal:</strong> {{ freeCompany.goal }}</p>
         </div>
       </section>
       <section v-else>
         <p>You are not listed a member of a Free Company.</p>
       </section>
       <p>
-        <template v-if="communities.freeCompany">
+        <template v-if="freeCompany">
           <q-btn color="secondary" icon="remove" label="Unset Free Company" @click="onUnsetFCClick" />&nbsp;
         </template>
         <q-btn
           color="primary"
           icon="refresh"
-          :label="communities.freeCompany ? 'Update Free Company from Lodestone' : 'Set Free Company from Lodestone'"
+          :label="freeCompany ? 'Update Free Company from Lodestone' : 'Set Free Company from Lodestone'"
           @click="onSetFCFromLodestoneClick"
         />
       </p>
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { MyCommunitiesInfoDto } from '@app/shared/dto/communities/my-communities-info.dto';
+import { CommunityFCSummaryDto } from '@app/shared/dto/communities/community-fc-summary.dto';
 import FreeCompanyCrest from 'components/free-company/FreeCompanyCrest.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
@@ -47,36 +47,36 @@ const $api = useApi();
 const $store = useStore();
 
 @Options({
-  name: 'PageMyCommunities',
+  name: 'PageMyFreeCompany',
   components: {
     FreeCompanyCrest,
   },
   async beforeRouteEnter(_, __, next) {
     try {
-      const communities = await $api.communities.getMyCommunities($store.getters.characterId!);
-      next((vm) => (vm as PageMyCommunities).setContent(communities));
+      const myFC = await $api.freeCompanies.getMyFreeCompany($store.getters.characterId!);
+      next((vm) => (vm as PageMyFreeCompany).setContent(myFC));
     } catch (e) {
       console.log(e);
       notifyError(e);
     }
   },
 })
-export default class PageMyCommunities extends Vue {
-  communities: MyCommunitiesInfoDto = { freeCompany: null };
+export default class PageMyFreeCompany extends Vue {
+  freeCompany: CommunityFCSummaryDto|null = null;
   loading = false;
 
   get fcLink() {
-    const fc = this.communities.freeCompany;
+    const fc = this.freeCompany;
     return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(/ /g, '_')}`;
   }
 
   get editFCLink() {
-    const fc = this.communities.freeCompany;
+    const fc = this.freeCompany;
     return fc == null ? null : `/edit-free-company/${fc.server}/${fc.name.replace(/ /g, '_')}`;
   }
 
-  setContent(communities: MyCommunitiesInfoDto) {
-    this.communities = communities;
+  setContent(freeCompany: CommunityFCSummaryDto|null) {
+    this.freeCompany = freeCompany;
   }
 
   async onSetFCFromLodestoneClick() {
@@ -90,8 +90,8 @@ export default class PageMyCommunities extends Vue {
 
     if (characterInfo.Character.FreeCompanyName) {
       if (
-        this.communities.freeCompany &&
-        characterInfo.Character.FreeCompanyName === this.communities.freeCompany.name
+        this.freeCompany &&
+        characterInfo.Character.FreeCompanyName === this.freeCompany.name
       ) {
         title = 'Confirm Updating Free Company';
         message = `Update your Free Company "${fcName}" from Lodestone? This operation cannot be undone.`;
@@ -128,9 +128,9 @@ export default class PageMyCommunities extends Vue {
     this.loading = true;
 
     try {
-      const oldName = this.communities.freeCompany?.name;
-      const fc = await this.$api.communities.setFCFromLodestone($store.getters.characterId!);
-      this.communities.freeCompany = fc;
+      const oldName = this.freeCompany?.name;
+      const fc = await this.$api.freeCompanies.setFCFromLodestone($store.getters.characterId!);
+      this.freeCompany = fc;
 
       if (!fc) {
         notifySuccess('Free Company unset.');
@@ -147,7 +147,7 @@ export default class PageMyCommunities extends Vue {
   }
 
   onUnsetFCClick() {
-    const fcName = this.communities.freeCompany!.name;
+    const fcName = this.freeCompany!.name;
 
     this.$q
       .dialog({
@@ -171,8 +171,8 @@ export default class PageMyCommunities extends Vue {
     this.loading = true;
 
     try {
-      await this.$api.communities.unsetFC($store.getters.characterId!);
-      this.communities.freeCompany = null;
+      await this.$api.freeCompanies.unsetFC($store.getters.characterId!);
+      this.freeCompany = null;
 
       notifySuccess('Free Company unset.');
     } catch (e) {

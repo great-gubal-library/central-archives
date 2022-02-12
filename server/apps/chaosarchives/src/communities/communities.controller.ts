@@ -11,22 +11,4 @@ import { CommunitiesService } from './communities.service';
 @Controller('communities')
 export class CommunitiesController {
 	constructor(private communitiesService: CommunitiesService) {}
-
-	@Get('my-communities')
-	@RoleRequired(Role.USER)
-	async getCommunitiesInfo(@Query() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<MyCommunitiesInfoDto> {
-		return this.communitiesService.getCommunitiesInfo(characterIdWrapper, user);
-	}
-
-	@Post('free-company')
-	@RoleRequired(Role.USER)
-	async setFreeCompany(@Body() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<CommunityFCSummaryDto|null> {
-		return this.communitiesService.setFreeCompany(characterIdWrapper, user);
-	}
-
-	@Post('free-company/unset')
-	@RoleRequired(Role.USER)
-	async unsetFreeCompany(@Body() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<void> {
-		await this.communitiesService.unsetFreeCompany(characterIdWrapper, user);
-	}
 }

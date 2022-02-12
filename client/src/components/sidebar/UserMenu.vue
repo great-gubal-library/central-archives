@@ -70,6 +70,7 @@
             <q-item-label>My Free Company</q-item-label>
           </q-item-section>
         </q-item>
+        <!--
         <q-item
           clickable
           v-ripple
@@ -79,6 +80,7 @@
             <q-item-label>My communities</q-item-label>
           </q-item-section>
         </q-item>
+        -->
         <q-item
           clickable
           v-ripple

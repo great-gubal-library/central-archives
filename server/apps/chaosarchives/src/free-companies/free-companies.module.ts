@@ -1,4 +1,4 @@
-import { FreeCompany } from '@app/entity';
+import { Character, FreeCompany } from '@app/entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImagesModule } from '../images/images.module';
@@ -7,7 +7,7 @@ import { FreeCompaniesService } from './free-companies.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([FreeCompany]),
+    TypeOrmModule.forFeature([FreeCompany, Character]),
     ImagesModule,
   ],
   controllers: [FreeCompaniesController],

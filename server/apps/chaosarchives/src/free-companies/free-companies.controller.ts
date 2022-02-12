@@ -2,10 +2,12 @@ import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
 import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
+import { CharacterIdWrapper } from '@app/shared/dto/common/character-id-wrapper.dto';
+import { CommunityFCSummaryDto } from '@app/shared/dto/communities/community-fc-summary.dto';
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { Body, Controller, Get, Param, ParseIntPipe, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { FreeCompaniesService } from './free-companies.service';
 
 @Controller('free-companies')
@@ -13,6 +15,24 @@ export class FreeCompaniesController {
 	constructor(
 		private freeCompaniesService: FreeCompaniesService,
 	) {}
+
+	@Get('my-free-company')
+	@RoleRequired(Role.USER)
+	async getMyFreeCompany(@Query() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<CommunityFCSummaryDto|null> {
+		return this.freeCompaniesService.getMyFreeCompany(characterIdWrapper, user);
+	}
+
+	@Post('my-free-company')
+	@RoleRequired(Role.USER)
+	async setFreeCompany(@Body() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<CommunityFCSummaryDto|null> {
+		return this.freeCompaniesService.setFreeCompany(characterIdWrapper, user);
+	}
+
+	@Post('my-free-company/unset')
+	@RoleRequired(Role.USER)
+	async unsetFreeCompany(@Body() characterIdWrapper: CharacterIdWrapper, @CurrentUser() user: UserInfo): Promise<void> {
+		await this.freeCompaniesService.unsetFreeCompany(characterIdWrapper, user);
+	}
 
 	@Get()
 	async getFreeCompanies(): Promise<FreeCompanySummaryDto[]> {
