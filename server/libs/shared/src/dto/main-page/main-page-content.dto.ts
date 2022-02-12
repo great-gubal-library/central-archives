@@ -1,4 +1,5 @@
 import { CharacterSummaryDto } from "../characters/character-summary.dto";
+import { CommunitySummaryDto } from "../communities/community-summary.dto";
 import { FreeCompanySummaryDto } from "../fcs/free-company-summary.dto";
 import { ImageSummaryDto } from "../image/image-summary.dto";
 import { NewsDto } from "../news/news.dto";
@@ -11,6 +12,7 @@ export interface MainPageContentDto {
 	newsUpToDate: boolean;
 	newProfiles: CharacterSummaryDto[];
 	newFreeCompanies: FreeCompanySummaryDto[];
+	newCommunities: CommunitySummaryDto[];
 	newVenues: VenueSummaryDto[];
 	newStories: StorySummaryDto[];
 	newArtwork: ImageSummaryDto[];

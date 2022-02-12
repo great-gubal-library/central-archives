@@ -2,6 +2,7 @@ import { Character } from '@app/entity';
 import { FreeCompany } from '@app/entity/free-company.entity';
 import { HttpModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommunitiesModule } from '../communities/communities.module';
 import { ImagesModule } from '../images/images.module';
 import { NoticeboardModule } from '../noticeboard/noticeboard.module';
 import { StoriesModule } from '../stories/stories.module';
@@ -18,6 +19,7 @@ import { NewsService } from './news.service';
     StoriesModule,
     ImagesModule,
     NoticeboardModule,
+    CommunitiesModule,
     VenuesModule,
     HttpModule,
   ],

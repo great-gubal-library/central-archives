@@ -12,6 +12,10 @@
             <q-item-label>{{community.name}}</q-item-label>
             <q-item-label caption>{{community.goal}}</q-item-label>
         </q-item-section>
+        <q-item-section side v-if="community.mine">
+          <q-btn flat icon="edit" :to="`edit-community/${community.id}`" />
+          <q-btn flat icon="trash" />
+        </q-item-section>
       </q-item>
     </q-list>
     <p v-else>
@@ -21,20 +25,20 @@
 </template>
 
 <script lang="ts">
-import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
+import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { prop, Options, Vue } from 'vue-class-component';
 
 class Props {
-  communities = prop<CommunitySummaryDto[]>({
+  communities = prop<MyCommunitySummaryDto[]>({
     required: true
   });
 }
 
 @Options({
-  name: 'CommunityList',
+  name: 'MyCommunityList',
 })
-export default class CommunityList extends Vue.with(Props) {
-  getLink(community: CommunitySummaryDto) {
+export default class MyCommunityList extends Vue.with(Props) {
+  getLink(community: MyCommunitySummaryDto) {
     return `/community/${community.name.replace(/ /g, '_')}`;
   }
 }

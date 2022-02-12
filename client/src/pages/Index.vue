@@ -23,9 +23,15 @@
         <free-company-name-list :free-companies="content.newFreeCompanies" />
       </section>
     </section>
-    <section>
-      <h5><router-link to="/venues">New Venues</router-link></h5>
-      <venue-list :venues="content.newVenues" />
+    <section class="page-index__profiles-and-fcs">
+      <section>
+        <h5><router-link to="/venues">New Venues</router-link></h5>
+        <venue-list :venues="content.newVenues" />
+      </section>
+      <section>
+        <h5><router-link to="/communities">New Communities</router-link></h5>
+        <community-list :communities="content.newCommunities" />
+      </section>
     </section>
     <section v-if="content.newScreenshots.length > 0">
       <h5><router-link to="/gallery/screenshot">New screenshots</router-link></h5>
@@ -43,6 +49,7 @@ import StoryList from 'components/stories/StoryList.vue';
 import VenueList from 'components/venues/VenueList.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
+import CommunityList from 'src/components/communities/CommunityList.vue';
 import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
 import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
 import { Options, Vue } from 'vue-class-component';
@@ -68,6 +75,7 @@ async function load(): Promise<MainPageContentDto> {
     StoryList,
     NoticeboardItemList,
     VenueList,
+    CommunityList,
     ThumbGallery,
   },
   async beforeRouteEnter(_, __, next) {
@@ -81,6 +89,7 @@ export default class PageIndex extends Vue {
     newsUpToDate: false,
     newProfiles: [],
     newFreeCompanies: [],
+    newCommunities: [],
     newVenues: [],
     newStories: [],
     newArtwork: [],

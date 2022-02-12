@@ -11,6 +11,7 @@ import { CommunitiesService } from './communities.service';
     TypeOrmModule.forFeature([Character, Community, CommunityMembership]),
   ],
   controllers: [CommunitiesController],
-  providers: [CommunitiesService]
+  providers: [CommunitiesService],
+  exports: [CommunitiesService]
 })
 export class CommunitiesModule {}

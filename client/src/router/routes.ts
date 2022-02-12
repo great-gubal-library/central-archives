@@ -340,6 +340,15 @@ const routes: RouteRecordRaw[] = [
   // Communities
 
   { 
+    path: '/communities',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Communities.vue') }],
+    meta: {
+      title: 'Communities'
+    },
+  },
+
+  { 
     path: '/my-communities',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/MyCommunities.vue') }],
