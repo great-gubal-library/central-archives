@@ -4,8 +4,8 @@
     <section>
       <div class="page-my-communities__subtitle">for {{ $store.getters.character?.name }}</div>
     </section>
-    <my-community-list :communities="communities" />
-    <div>
+    <my-community-list :communities="communities" @deleted="onCommunityDeleted" />
+    <div class="page-my-communities__button-bar">
       <q-btn color="primary" icon="add" label="New community" to="create-community" />
     </div>
   </q-page>
@@ -45,6 +45,14 @@ export default class PageMyCommunities extends Vue {
   setContent(communities: MyCommunitySummaryDto[]) {
     this.communities = communities;
   }
+
+  onCommunityDeleted(community: MyCommunitySummaryDto) {
+    const index = this.communities.indexOf(community);
+
+    if (index > 0) {
+      this.communities.splice(index, 1);
+    }
+  }
 }
 </script>
 
@@ -58,5 +66,10 @@ export default class PageMyCommunities extends Vue {
   font-family: $header-font;
   font-size: 1.6em;
   margin-bottom: 24px;
+}
+
+.page-my-communities__button-bar {
+	margin-top: 8px;
+	text-align: right;
 }
 </style>

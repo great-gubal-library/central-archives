@@ -363,6 +363,24 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Community.vue') }],
   },
 
+  { 
+    path: '/create-community',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditCommunity.vue') }],
+    meta: {
+      title: 'Create Community'
+    },
+  },
+
+  { 
+    path: '/edit-community/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditCommunity.vue') }],
+    meta: {
+      title: 'Edit Community'
+    },
+  },
+
   // Free Companies
 
   { 

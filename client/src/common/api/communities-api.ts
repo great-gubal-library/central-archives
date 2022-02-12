@@ -1,3 +1,4 @@
+import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
@@ -18,8 +19,20 @@ export default class CommunitiesAPI {
     return this.transport.get('');
   }
 
+  async getCommunity(id: number): Promise<CommunityDto> {
+    return this.transport.tokenGet(`${id}`);
+  }
+
   async getCommunityByName(name: string): Promise<CommunityDto> {
-    return this.transport.tokenGet(name);
+    return this.transport.tokenGet(`by-name/${name}`);
+  }
+
+  async createCommunity(community: CommunityDto): Promise<IdWrapper> {
+    return this.transport.authPost('', community);
+  }
+
+  async editCommunity(community: CommunityDto): Promise<void> {
+    return this.transport.authPut(`${community.id}`, community);
   }
 
   async deleteCommunity(id: number): Promise<void> {

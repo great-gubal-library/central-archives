@@ -70,12 +70,27 @@ export class CommunitiesService {
 		}
 	}
 
+	async getCommunity(id: number, user?: UserInfo): Promise<CommunityDto> {
+		const community = await this.communityRepo.findOne({
+			where: {
+				id,
+			},
+			relations: [ 'owner', 'owner.server', 'tags', 'banner', 'banner.owner' ]
+		});
+
+		if (!community) {
+			throw new NotFoundException('Community not found');
+		}
+
+		return this.toCommunityDto(community, user);
+	}
+
 	async getCommunityByName(name: string, user?: UserInfo): Promise<CommunityDto> {
 		const community = await this.communityRepo.findOne({
 			where: {
 				name,
 			},
-			relations: [ 'owner', 'tags', 'banner', 'banner.owner' ]
+			relations: [ 'owner', 'owner.server', 'tags', 'banner', 'banner.owner' ]
 		});
 
 		if (!community) {
@@ -135,6 +150,15 @@ export class CommunitiesService {
 			community.owner = character;
 			community.tags = [];
 			await this.saveInternal(em, community, communityDto, user);
+
+			// Add the character as a community member
+			const membership = new CommunityMembership();
+			membership.character = character;
+			membership.community = community;
+			membership.canEdit = true;
+			membership.canManageMembers = true;
+			await em.getRepository(CommunityMembership).save(membership);
+
 			return { id: community.id };
 		});		
 	}
