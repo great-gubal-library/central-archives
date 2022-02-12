@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div class="page-error404 fullscreen text-white text-center q-pa-md flex flex-center">
     <div>
       <div style="font-size: 30vh">
         404
@@ -27,3 +27,9 @@ import { Vue } from 'vue-class-component'
 
 export default class Error404 extends Vue {}
 </script>
+
+<style lang="scss">
+.page-error404 {
+  background: #10579e;
+}
+</style>
