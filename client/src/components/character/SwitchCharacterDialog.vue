@@ -87,9 +87,14 @@ export default class ConfirmImageDeleteDialog extends Vue {
 	}
 
   onCharacterSelect(character: SessionCharacterDto) {
+    const oldCharacterId = this.$store.getters.characterId;
     this.$store.commit('setCurrentCharacterId', character.id);
     this.$emit('ok', character);
     this.hide();
+
+    if (character.id !== oldCharacterId) {
+      notifySuccess(`${character.name} is now your active character.`);
+    }
   }
 
   onAddCharacterClick() {
