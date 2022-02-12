@@ -49,7 +49,7 @@ class Display {
 	};
 
 	readonly venueLocations: { [k: string]: string } = {
-		[VenueLocation.OPEN_WORLD]: 'Open World',
+		[VenueLocation.OPEN_WORLD]: 'Open world',
 		[VenueLocation.HOUSE]: 'House',
 		[VenueLocation.APARTMENT]: 'Apartment',
 	};
@@ -57,7 +57,7 @@ class Display {
 	readonly housingAreas: { [k: string]: string } = {
 		[HousingArea.MIST]: 'Mist',
 		[HousingArea.LAVENDER_BEDS]: 'Lavender Beds',
-		[HousingArea.GOBLET]: 'Goblet',
+		[HousingArea.GOBLET]: 'The Goblet',
 		[HousingArea.SHIROGANE]: 'Shirogane',
 		[HousingArea.EMPYREUM]: 'Empyreum',
 	};
