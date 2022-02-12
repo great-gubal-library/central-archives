@@ -112,6 +112,25 @@
         <q-item
           clickable
           v-ripple
+          to="/create-community"
+        >
+          <q-item-section>
+            <q-item-label>Create community</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
+          to="/my-communities"
+        >
+          <q-item-section>
+            <q-item-label>My communities</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator dark />
+        <q-item
+          clickable
+          v-ripple
           to="/create-venue"
         >
           <q-item-section>
