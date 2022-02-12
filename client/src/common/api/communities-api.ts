@@ -1,4 +1,5 @@
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
+import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import APITransport from './api-transport';
 
@@ -15,5 +16,13 @@ export default class CommunitiesAPI {
 
   async getCommunities(): Promise<CommunitySummaryDto[]> {
     return this.transport.get('');
+  }
+
+  async getCommunityByName(name: string): Promise<CommunityDto> {
+    return this.transport.tokenGet(name);
+  }
+
+  async deleteCommunity(id: number): Promise<void> {
+    return this.transport.authDelete(`${id}`);
   }
 }

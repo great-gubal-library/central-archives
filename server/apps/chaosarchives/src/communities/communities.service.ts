@@ -7,6 +7,7 @@ import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import crypto from 'crypto';
 import { Connection, Repository } from 'typeorm';
 import { ImagesService } from '../images/images.service';
 
@@ -66,10 +67,10 @@ export class CommunitiesService {
 		}
 	}
 
-	async getCommunity(id: number, user?: UserInfo): Promise<CommunityDto> {
+	async getCommunityByName(name: string, user?: UserInfo): Promise<CommunityDto> {
 		const community = await this.communityRepo.findOne({
 			where: {
-				id,
+				name,
 			},
 			relations: [ 'owner', 'tags', 'banner', 'banner.owner' ]
 		});
@@ -106,5 +107,31 @@ export class CommunitiesService {
 				height: banner.height,
 			}
 		}
+	}
+
+	async deleteCommunity(communityId: number, user: UserInfo): Promise<void> {
+		await this.connection.transaction(async em => {
+			const communityRepo = em.getRepository(Community);
+			const community = await communityRepo.findOne({
+				where: {
+					id: communityId,
+					owner: {
+						user: {
+							id: user.id
+						}
+					},
+				},
+				relations: [ 'owner', 'owner.user' ]
+			});
+
+			if (!community) {
+				throw new NotFoundException('Community not found');
+			}
+
+			// Free the name for new venues, but keep the record with a deleted flag
+			community.name = `${crypto.randomUUID()} ${community.name}`;
+			await communityRepo.save(community);
+			await communityRepo.softRemove(community);
+		});
 	}
 }

@@ -307,7 +307,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/venue/:server/:name',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Venue.vue') }],
@@ -355,6 +355,12 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: 'My Communities'
     },
+  },
+
+  {
+    path: '/community/:name',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Community.vue') }],
   },
 
   // Free Companies
