@@ -8,13 +8,34 @@
             flat
             dense
             no-caps
-            icon="menu"
+            icon="person"
+            tooltip="User"
+            aria-label="User"
+            @click="toggleLeftDrawer"
+          />
+          <q-btn-dropdown
+            class="layout__toolbar-buton-more lt-md"
+            flat
+            dense
+            no-caps
+            dropdown-icon="menu"
             tooltip="Menu"
             aria-label="Menu"
-            @click="toggleLeftDrawer"
           >
-            <q-tooltip>Menu</q-tooltip>
-          </q-btn>
+            <q-list>
+              <q-item
+                v-for="link in siteLinks"
+                clickable
+                v-close-popup
+                :key="link.label"
+                :to="link.to"
+              >
+                <q-item-section>
+                  <q-item-label>{{link.label}}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
           <div v-if="$store.getters.character" class="gt-sm layout__char-name">
             <q-avatar round>
               <img :src="$store.getters.character.avatar" />
@@ -22,6 +43,7 @@
             <span>{{ $store.getters.characterShortName }}</span>
           </div>
         </div>
+        
 
         <q-toolbar-title class="layout__toolbar-title text-center">
           <router-link to="/" class="gt-xs">
@@ -64,6 +86,9 @@
           </q-btn>
         </div>
       </q-toolbar>
+      <nav class="layout__nav-links gt-sm">
+        <q-btn v-for="link in siteLinks" flat dense no-caps v-ripple :key="link.label" :label="link.label" :to="link.to" />
+      </nav>
     </q-header>
 
     <q-drawer
@@ -75,24 +100,16 @@
       :width="DRAWER_WIDTH"
     >
       
+      <!--
       <q-list dense dark>
-        <!--
         <q-item>
           <q-item-section>
             <q-input dark color="white" label="Search" />
           </q-item-section>
         </q-item>
-        -->
-        <q-item-label header>
-          Chaos Archives
-        </q-item-label>
-        <q-item v-for="link in siteLinks" clickable v-ripple :key="link.label" :to="link.to">
-          <q-item-section>
-            <q-item-label>{{link.label}}</q-item-label>
-          </q-item-section>
-        </q-item>
       </q-list>
       <q-separator dark />
+      -->
       <user-menu />
     </q-drawer>
 
@@ -247,8 +264,19 @@ export default class MainLayout extends Vue {
     padding-right: 4px;
   }
 
-  .q-header {
-    background: #1e6ab6;
+  .q-header .q-toolbar {
+    background: #185694;
+  }
+
+  .layout__nav-links {
+    background: linear-gradient(to bottom, #125599, #12559960);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    text-align: center;
+  }
+
+  .layout__nav-links .q-btn {
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .q-drawer {
