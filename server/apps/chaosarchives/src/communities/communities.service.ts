@@ -1,14 +1,17 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character } from '@app/entity';
-import { CommunityMembership } from '@app/entity/community-membership.entity';
-import { Community } from '@app/entity/community.entity';
+import { Character, Community, CommunityMembership, CommunityTag, Image } from '@app/entity';
+import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import html from '@app/shared/html';
+import SharedConstants from '@app/shared/SharedConstants';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
-import { Connection, Repository } from 'typeorm';
+import { DateTime } from 'luxon';
+import { Connection, EntityManager, Repository } from 'typeorm';
+import { checkCarrdProfile } from '../common/api-checks';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
@@ -109,6 +112,130 @@ export class CommunitiesService {
 		}
 	}
 
+	async createCommunity(communityDto: CommunityDto, user: UserInfo): Promise<IdWrapper> {
+		return this.connection.transaction(async em => {
+			const character = await em.getRepository(Character).findOne({
+				where: {
+					name: communityDto.owner,
+					server: {
+						name: communityDto.ownerServer,
+					},
+					user: {
+						id: user.id
+					},
+				},
+				relations: [ 'server', 'user' ]
+			});
+
+			if (!character) {
+				throw new BadRequestException('Invalid owner character');
+			}
+
+			const community = new Community();
+			community.owner = character;
+			community.tags = [];
+			await this.saveInternal(em, community, communityDto, user);
+			return { id: community.id };
+		});		
+	}
+
+	async editCommunity(communityDto: CommunityDto, user: UserInfo): Promise<void> {
+		await this.connection.transaction(async em => {
+			const community = await em.getRepository(Community).findOne({
+				where: {
+					id: communityDto.id,
+					owner: {
+						user: {
+							id: user.id
+						}
+					},
+				},
+				relations: [ 'banner', 'banner.owner', 'owner', 'tags' ]
+			});
+
+			if (!community) {
+				throw new NotFoundException('Community not found');
+			}
+
+			await this.saveInternal(em, community, communityDto, user);
+		});		
+	}
+
+	/* eslint-disable no-param-reassign */
+	private async saveInternal(em: EntityManager, community: Community, communityDto: CommunityDto, user: UserInfo): Promise<void> {
+		community.name = communityDto.name;
+		community.description = html.sanitize(communityDto.description);
+		community.website = communityDto.website; // TODO: Validate
+		community.discord = communityDto.discord; // TODO: Validate
+		community.goal = communityDto.goal;
+		community.status = communityDto.status;
+		community.recruitingOfficers = communityDto.recruitingOfficers;
+		community.carrdProfile = checkCarrdProfile(communityDto.carrdProfile, user);
+
+		// Validate founding date
+
+		if (communityDto.foundedAt) {
+			const foundedAt = DateTime.fromISO(communityDto.foundedAt, {
+				zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+			});
+
+			if (!foundedAt.isValid || foundedAt.toMillis() > Date.now()) {
+				throw new BadRequestException('Invalid founding date');
+			}
+
+			community.foundedAt = foundedAt.toISODate();
+		} else {
+			community.foundedAt = null;
+		}
+
+		// Set banner
+
+		if (communityDto.banner && communityDto.banner.id) {
+			const banner = await em.getRepository(Image).findOne({
+				where: {
+					id: communityDto.banner.id,
+					owner: community.owner
+				}
+			});
+
+			if (!banner) {
+				throw new BadRequestException('Banner not found');
+			}
+
+			if (banner.width / banner.height < SharedConstants.MIN_BANNER_ASPECT_RATIO) {
+				throw new BadRequestException('Banner is too tall for its width');
+			}
+
+			community.banner = Promise.resolve(banner);
+		} else {
+			community.banner = Promise.resolve(null);
+		}
+		
+		// Set tags
+
+		const existingTagNames = community.tags.map((tag) => tag.name);
+		const newTagNames = communityDto.tags.filter((tagName) => tagName !== '' && !existingTagNames.includes(tagName));
+		const tagsToDelete = community.tags.filter(tag => !communityDto.tags.includes(tag.name));
+		const tagsToRetain = community.tags.filter(tag => communityDto.tags.includes(tag.name));
+
+		community.tags = [
+			...tagsToRetain,
+			...newTagNames.map(
+				(tag) =>
+					new CommunityTag({
+						name: tag,
+						community,
+					}),
+			),
+		];
+
+		if (tagsToDelete.length > 0) {
+			await Promise.all(tagsToDelete.map(tag => em.remove(tag)));
+		}
+
+		await em.save(community);
+	}
+
 	async deleteCommunity(communityId: number, user: UserInfo): Promise<void> {
 		await this.connection.transaction(async em => {
 			const communityRepo = em.getRepository(Community);
@@ -128,7 +255,7 @@ export class CommunitiesService {
 				throw new NotFoundException('Community not found');
 			}
 
-			// Free the name for new venues, but keep the record with a deleted flag
+			// Free the name for new communitys, but keep the record with a deleted flag
 			community.name = `${crypto.randomUUID()} ${community.name}`;
 			await communityRepo.save(community);
 			await communityRepo.softRemove(community);
