@@ -3,6 +3,7 @@ import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
 import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
@@ -18,6 +19,12 @@ export class CommunitiesController {
 	@RoleRequired(Role.USER)
 	async getMyCommunities(@Query('characterId', ParseIntPipe) characterId: number, @CurrentUser() user: UserInfo): Promise<MyCommunitySummaryDto[]> {
 		return this.communitiesService.getMyCommunities(characterId, user);
+	}
+
+	@Get(':id/members')
+	@RoleRequired(Role.USER)
+	async getCommunityMembers(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserInfo): Promise<CommunityMemberDto[]> {
+		return this.communitiesService.getCommunityMembers(id, user);
 	}
 
 	@Get()

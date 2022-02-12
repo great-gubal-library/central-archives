@@ -1,6 +1,7 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { Character, Community, CommunityMembership, CommunityTag, Image } from '@app/entity';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
@@ -47,6 +48,38 @@ export class CommunitiesService {
 			goal: community.goal,
 			mine: user.characters.map(ch => ch.id).includes(community.owner.id),
 		}
+	}
+
+	async getCommunityMembers(communityId: number, user: UserInfo): Promise<CommunityMemberDto[]> {
+		await this.checkEditRights(communityId, user);
+
+		const memberships = await this.communityMembershipRepo.createQueryBuilder('membership')
+			.innerJoinAndSelect('membership.community', 'community')
+			.innerJoinAndSelect('community.owner', 'owner')
+			.innerJoinAndSelect('membership.character', 'character')
+			.innerJoinAndSelect('character.server', 'server')
+			.innerJoinAndSelect('character.user', 'user')
+			.where('community.id = :communityId', { communityId })
+			.select([
+				'membership.id',
+				'character.id',
+				'character.name',
+				'server.id',
+				'server.name',
+				'membership.confirmed',
+				'membership.canEdit',
+				'membership.canManageMembers',
+			])
+			.getMany();
+
+		return memberships.map(membership => ({
+			characterId: membership.character.id,
+			name: membership.character.name,
+			server: membership.character.server.name,
+			confirmed: membership.confirmed,
+			canEdit: membership.canEdit,
+			canManageMembers: membership.canManageMembers
+		}));
 	}
 
 	async getCommunities(filter: { limit?: number }, orderByDate: boolean): Promise<CommunitySummaryDto[]> {
@@ -155,6 +188,7 @@ export class CommunitiesService {
 			const membership = new CommunityMembership();
 			membership.character = character;
 			membership.community = community;
+			membership.confirmed = true;
 			membership.canEdit = true;
 			membership.canManageMembers = true;
 			await em.getRepository(CommunityMembership).save(membership);
@@ -164,15 +198,12 @@ export class CommunitiesService {
 	}
 
 	async editCommunity(communityDto: CommunityDto, user: UserInfo): Promise<void> {
+		await this.checkEditRights(communityDto.id, user);
+
 		await this.connection.transaction(async em => {
 			const community = await em.getRepository(Community).findOne({
 				where: {
 					id: communityDto.id,
-					owner: {
-						user: {
-							id: user.id
-						}
-					},
 				},
 				relations: [ 'banner', 'banner.owner', 'owner', 'tags' ]
 			});
@@ -284,5 +315,25 @@ export class CommunitiesService {
 			await communityRepo.save(community);
 			await communityRepo.softRemove(community);
 		});
+	}
+
+	private async checkEditRights(communityId: number, user: UserInfo): Promise<void> {
+		return this.checkFlag(communityId, user, false);
+	}
+
+	private async checkFlag(communityId: number, user: UserInfo, manageMembersFlag: boolean): Promise<void> {
+		const flagName = manageMembersFlag ? 'canManageMembers' : 'canEdit';
+
+		const membershipCount = await this.communityMembershipRepo.createQueryBuilder('membership')
+			.innerJoinAndSelect('membership.community', 'community')
+			.innerJoinAndSelect('membership.character', 'character')
+			.where('community.id = :communityId', { communityId })
+			.andWhere('character.id IN (:...characterIds)', { characterIds: user.characters.map(ch => ch.id) })
+			.andWhere(`membership.${flagName} = :flag`, { flag: true })
+			.getCount();
+
+		if (membershipCount === 0) {
+			throw new ForbiddenException('Operation not permitted');
+		}
 	}
 }
