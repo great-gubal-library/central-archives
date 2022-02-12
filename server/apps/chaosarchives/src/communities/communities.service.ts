@@ -3,10 +3,12 @@ import { Character } from '@app/entity';
 import { CommunityMembership } from '@app/entity/community-membership.entity';
 import { Community } from '@app/entity/community.entity';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
+import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
+import { ImagesService } from '../images/images.service';
 
 @Injectable()
 export class CommunitiesService {
@@ -15,6 +17,7 @@ export class CommunitiesService {
 		@InjectRepository(Character) private characterRepo: Repository<Character>,
 		@InjectRepository(Community) private communityRepo: Repository<Community>,
 		@InjectRepository(CommunityMembership) private communityMembershipRepo: Repository<CommunityMembership>,
+    private imagesService: ImagesService,
 		) {}
 
 	async getMyCommunities(characterId: number, user: UserInfo): Promise<MyCommunitySummaryDto[]> {
@@ -60,6 +63,48 @@ export class CommunitiesService {
 			id: community.id,
 			name: community.name,
 			goal: community.goal,
+		}
+	}
+
+	async getCommunity(id: number, user?: UserInfo): Promise<CommunityDto> {
+		const community = await this.communityRepo.findOne({
+			where: {
+				id,
+			},
+			relations: [ 'owner', 'tags', 'banner', 'banner.owner' ]
+		});
+
+		if (!community) {
+			throw new NotFoundException('Community not found');
+		}
+
+		return this.toCommunityDto(community, user);
+	}
+
+	private async toCommunityDto(community: Community, user?: UserInfo): Promise<CommunityDto> {
+		const banner = await community.banner;
+		
+		return {
+			id: community.id,
+			mine: !!user && user.characters.map(ch => ch.id).includes(community.owner.id),
+			foundedAt: community.foundedAt,
+			name: community.name,
+			owner: community.owner.name,
+			ownerServer: community.owner.server.name,
+			description: community.description,
+			goal: community.goal,
+			website: community.website,
+			discord: community.discord,
+			status: community.status,
+			recruitingOfficers: community.recruitingOfficers,
+			carrdProfile: community.carrdProfile,
+			tags: community.tags.map(tag => tag.name),
+			banner: !banner ? null : {
+				id: banner.id,
+				url: this.imagesService.getUrl(banner),
+				width: banner.width,
+				height: banner.height,
+			}
 		}
 	}
 }

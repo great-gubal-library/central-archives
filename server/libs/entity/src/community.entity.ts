@@ -61,12 +61,6 @@ export class Community extends BasicEntity {
     nullable: false,
     default: ''
   })
-	areaOfOperations: string;
-
-  @Column({
-    nullable: false,
-    default: ''
-  })
 	recruitingOfficers: string;
 
   @Column({
