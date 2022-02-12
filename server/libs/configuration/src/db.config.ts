@@ -1,4 +1,7 @@
 import { Character, Event, EventLocation, EventAnnouncement, Image, Server, Story, StoryTag, User, NoticeboardItem, FreeCompany, Venue } from '@app/entity';
+import { CommunityMembership } from '@app/entity/community-membership.entity';
+import { CommunityTag } from '@app/entity/community-tag.entity';
+import { Community } from '@app/entity/community.entity';
 import { VenueTag } from '@app/entity/venue-tag.entity';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import config from 'config';
@@ -15,6 +18,9 @@ export const dbConfiguration: TypeOrmModuleOptions = {
   timezone: 'Z',
   entities: [
     Character,
+    Community,
+    CommunityMembership,
+    CommunityTag,
     Event,
     EventAnnouncement,
     EventLocation,
