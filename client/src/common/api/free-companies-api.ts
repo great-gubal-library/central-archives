@@ -1,6 +1,6 @@
-import { CommunityFCSummaryDto } from '@app/shared/dto/communities/community-fc-summary.dto';
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
+import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-summary.dto';
 import APITransport from './api-transport';
 
 export default class FreeCompaniesAPI {
@@ -10,11 +10,11 @@ export default class FreeCompaniesAPI {
     this.transport = transport.atPath('free-companies');
   }
 
-	async getMyFreeCompany(characterId: number): Promise<CommunityFCSummaryDto|null> {
+	async getMyFreeCompany(characterId: number): Promise<MyFreeCompanySummaryDto|null> {
 		return this.transport.authGet('my-free-company', { characterId });
 	}
 
-	async setFCFromLodestone(characterId: number): Promise<CommunityFCSummaryDto|null> {
+	async setFCFromLodestone(characterId: number): Promise<MyFreeCompanySummaryDto|null> {
 		return this.transport.authPost('my-free-company', { characterId });
 	}
 

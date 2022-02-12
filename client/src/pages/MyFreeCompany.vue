@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { CommunityFCSummaryDto } from '@app/shared/dto/communities/community-fc-summary.dto';
+import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-summary.dto';
 import FreeCompanyCrest from 'components/free-company/FreeCompanyCrest.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
@@ -62,7 +62,7 @@ const $store = useStore();
   },
 })
 export default class PageMyFreeCompany extends Vue {
-  freeCompany: CommunityFCSummaryDto|null = null;
+  freeCompany: MyFreeCompanySummaryDto|null = null;
   loading = false;
 
   get fcLink() {
@@ -75,7 +75,7 @@ export default class PageMyFreeCompany extends Vue {
     return fc == null ? null : `/edit-free-company/${fc.server}/${fc.name.replace(/ /g, '_')}`;
   }
 
-  setContent(freeCompany: CommunityFCSummaryDto|null) {
+  setContent(freeCompany: MyFreeCompanySummaryDto|null) {
     this.freeCompany = freeCompany;
   }
 

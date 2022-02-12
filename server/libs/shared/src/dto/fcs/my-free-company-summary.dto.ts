@@ -1,4 +1,4 @@
-export interface CommunityFCSummaryDto {
+export interface MyFreeCompanySummaryDto {
 	id: number;
 	name: string;
 	tag: string;

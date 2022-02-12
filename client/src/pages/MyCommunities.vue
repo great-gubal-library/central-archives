@@ -3,15 +3,12 @@
 		<h2>My Communities</h2>
 			<section>
 			<div class="page-my-communities__subtitle">for {{ $store.getters.character?.name }}</div>
-			
-			<q-inner-loading :showing="loading" />
 		</section>
 	</q-page>	
 </template>
 
 <script lang="ts">
-import { MyCommunitiesInfoDto } from '@app/shared/dto/communities/my-communities-info.dto';
-import FreeCompanyCrest from 'components/free-company/FreeCompanyCrest.vue';
+import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import minXIVAPI from 'src/common/xivapi-min';
@@ -24,7 +21,7 @@ const $store = useStore();
 @Options({
 	name: 'PageMyCommunities',
 	components: {
-		FreeCompanyCrest
+		
 	},
   async beforeRouteEnter(_, __, next) {
     try {
@@ -36,7 +33,7 @@ const $store = useStore();
   }
 })
 export default class PageMyCommunities extends Vue {
-	communities: MyCommunitiesInfoDto = { freeCompany: null };
+	communities: MyCommunitySummaryDto[] = [];
 	loading = false;
 
 	

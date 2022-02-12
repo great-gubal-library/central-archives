@@ -3,23 +3,17 @@ import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { CommunityTag } from './community-tag.entity';
 import { Image } from './image.entity';
-import { Server } from './server.entity';
 
 @Entity()
-@Unique(['name', 'server'])
 export class Community extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
     nullable: false,
+    unique: true,
   })
   name: string;
-
-  @ManyToOne(() => Server, {
-    nullable: false,
-  })
-  server: Server;
 
   @ManyToOne(() => Character, {
     nullable: false,
