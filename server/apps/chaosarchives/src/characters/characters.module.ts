@@ -1,4 +1,4 @@
-import { Character } from '@app/entity';
+import { Character, CommunityMembership } from '@app/entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '@app/auth/auth.module';
@@ -9,7 +9,7 @@ import { CharactersService } from './characters.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Character]),
+    TypeOrmModule.forFeature([Character, CommunityMembership]),
     StoriesModule,
     ImagesModule,
     AuthModule,

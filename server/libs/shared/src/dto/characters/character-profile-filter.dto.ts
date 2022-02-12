@@ -16,4 +16,9 @@ export class CharacterProfileFilterDto extends PagingDto {
 	@IsNumber()
 	@IsOptional()
 	freeCompanyId?: number;
+
+	@Type(() => Number)
+	@IsNumber()
+	@IsOptional()
+	communityId?: number;
 }

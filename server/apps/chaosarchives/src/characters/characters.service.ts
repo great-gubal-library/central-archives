@@ -1,7 +1,7 @@
 import { AuthService } from '@app/auth/auth.service';
 import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character, Image, Server, User } from '@app/entity';
+import { Character, CommunityMembership, Image, Server, User } from '@app/entity';
 import { generateVerificationCode } from '@app/security';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
@@ -21,7 +21,7 @@ import { BadRequestException, ConflictException, GoneException, Injectable, NotF
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../common/api-checks';
-import { escapeForLike, isQueryFailedError } from '../common/db';
+import { andWhereExists, escapeForLike, isQueryFailedError } from '../common/db';
 import { getLodestoneCharacter } from '../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
@@ -32,6 +32,7 @@ export class CharactersService {
     private imagesService: ImagesService,
     private connection: Connection,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
+    @InjectRepository(CommunityMembership) private communityMembershipRepo: Repository<CommunityMembership>,
   ) {}
 
   async getCharacterProfile(
@@ -180,6 +181,15 @@ export class CharactersService {
 
     if (filter.freeCompanyId) {
       query.andWhere('character.freeCompany.id = :freeCompanyId', { freeCompanyId: filter.freeCompanyId });
+    }
+
+    if (filter.communityId) {
+      andWhereExists(query, this.communityMembershipRepo.createQueryBuilder('membership')
+        .innerJoinAndSelect('membership.character', 'mch')
+        .innerJoinAndSelect('membership.community', 'mcm')
+        .where('mch.id = character.id')
+        .andWhere('mcm.id = :communityId', { communityId: filter.communityId })
+        .select('1'));
     }
 
     const total = await query.getCount();

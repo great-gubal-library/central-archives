@@ -6,6 +6,8 @@
 				<q-btn flat color="negative" label="Delete community" @click="onDeleteClick" />
 			</section>
 			<community-profile :community="community" />
+			<h3>Members</h3>
+			<character-name-list :profiles="members" />
 		</template>
 	</q-page>	
 </template>
@@ -13,6 +15,7 @@
 <script lang="ts">
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import CommunityProfile from 'components/communities/CommunityProfile.vue';
+import CharacterNameList from 'components/mainpage/CharacterNameList.vue';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
@@ -20,11 +23,13 @@ import { notifyError, notifySuccess } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { createMetaMixin } from 'quasar';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
+import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 
 const $api = useApi();
 const $router = useRouter();
 
-async function load(params: RouteParams): Promise<CommunityDto> {
+async function load(params: RouteParams): Promise<{community: CommunityDto, members: PagingResultDto<CharacterSummaryDto>}> {
 		const name = params.name as string;
 
 		if (!name) {
@@ -33,7 +38,9 @@ async function load(params: RouteParams): Promise<CommunityDto> {
 		}
 
 		try {
-			return await $api.communities.getCommunityByName(name.replace(/_/g, ' '));
+			const community = await $api.communities.getCommunityByName(name.replace(/_/g, ' '));
+			const members = await $api.characters.getCharacterProfiles({ communityId: community.id, limit: 99999 });
+			return { community, members };
 		} catch (e) {			
 			notifyError(e);
 			void $router.replace('/');
@@ -44,14 +51,15 @@ async function load(params: RouteParams): Promise<CommunityDto> {
 @Options({
 	components: {
 		CommunityProfile,
+		CharacterNameList,
 	},
 	async beforeRouteEnter(to, _, next) {
-		const content = await load(to.params);
-		next(vm => (vm as PageCommunity).setContent(content));
+		const { community, members } = await load(to.params);
+		next(vm => (vm as PageCommunity).setContent(community, members));
 	},
 	async beforeRouteUpdate(to) {
-		const content = await load(to.params);
-		(this as PageCommunity).setContent(content);
+		const { community, members } = await load(to.params);
+		(this as PageCommunity).setContent(community, members);
 	},
 	mixins: [
 		createMetaMixin(function(this: PageCommunity) {
@@ -79,9 +87,11 @@ async function load(params: RouteParams): Promise<CommunityDto> {
 })
 export default class PageCommunity extends Vue {
 	community: CommunityDto = new CommunityDto();
+	members: CharacterSummaryDto[] = [];
 
-	setContent(community: CommunityDto) {
+	setContent(community: CommunityDto, members: PagingResultDto<CharacterSummaryDto>) {
 		this.community = community;
+		this.members = members.data;
 	}
 
 	onDeleteClick() {
