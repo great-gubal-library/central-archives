@@ -12,9 +12,12 @@
             <q-item-label>{{community.name}}</q-item-label>
             <q-item-label caption>{{community.goal}}</q-item-label>
         </q-item-section>
-        <q-item-section side v-if="community.mine">
+        <q-item-section side v-if="community.canEdit">
           <q-btn flat dense icon="edit" :to="`/edit-community/${community.id}`" @click.stop="" />
-          <q-btn flat dense icon="delete" @click.stop.prevent="onDeleteClick(community)" />
+          <q-btn v-if="community.canDelete" flat dense icon="delete" @click.stop.prevent="onDeleteClick(community)" />
+        </q-item-section>
+        <q-item-section side v-else-if="community.membershipStatus === MembershipStatus.APPLIED">
+          Applied
         </q-item-section>
       </q-item>
     </q-list>
@@ -26,6 +29,7 @@
 
 <script lang="ts">
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
+import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { prop, Options, Vue } from 'vue-class-component';
 
@@ -40,6 +44,8 @@ class Props {
   emits: [ 'deleted' ]
 })
 export default class MyCommunityList extends Vue.with(Props) {
+  readonly MembershipStatus = MembershipStatus;
+  
   getLink(community: MyCommunitySummaryDto) {
     return `/community/${community.name.replace(/ /g, '_')}`;
   }
@@ -71,5 +77,6 @@ export default class MyCommunityList extends Vue.with(Props) {
 .my-community-list .q-item__section--side {
   flex-direction: row;
   flex-wrap: nowrap;
+  align-items: center;
 }
 </style>

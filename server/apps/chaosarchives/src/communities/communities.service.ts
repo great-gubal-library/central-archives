@@ -34,18 +34,22 @@ export class CommunitiesService {
 			.innerJoinAndSelect('community.owner', 'owner')
 			.innerJoinAndSelect('membership.character', 'character')
 			.where('character.id = :characterId', { characterId })
-			.select(['membership.id', 'community.id', 'community.name', 'community.goal', 'owner.id'])
+			.select(['membership.id', 'membership.status', 'membership.canEdit', 'community.id', 'community.name', 'community.goal', 'owner.id'])
 			.getMany();
 
-		return memberships.map(membership => this.toMyCommunitySummary(membership.community, user));
+		return memberships.map(membership => this.toMyCommunitySummary(membership, characterId, user));
 	}
 
-	private toMyCommunitySummary(community: Community, user: UserInfo): MyCommunitySummaryDto {
+	private toMyCommunitySummary(membership: CommunityMembership, characterId: number, user: UserInfo): MyCommunitySummaryDto {
+		const community = membership.community;
+
 		return {
 			id: community.id,
 			name: community.name,
 			goal: community.goal,
-			mine: user.characters.map(ch => ch.id).includes(community.owner.id),
+			canDelete: user.characters.map(ch => ch.id).includes(community.owner.id),
+			canEdit: membership.canEdit,
+			membershipStatus: membership.status,
 		}
 	}
 
