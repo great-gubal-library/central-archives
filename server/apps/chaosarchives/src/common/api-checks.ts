@@ -1,6 +1,6 @@
 import { UserInfo } from "@app/auth/model/user-info";
 import { Role, roleImplies } from "@app/shared/enums/role.enum";
-import { BadRequestException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException } from "@nestjs/common";
 
 const DOMAIN_REGEX = /^([A-Za-z0-9-]+\.)+[A-Za-z0-9-]+$/;
 const SUBDOMAIN_REGEX = /^[A-Za-z0-9-]+$/;
@@ -15,4 +15,10 @@ export function checkCarrdProfile(carrdProfile: string, user: UserInfo): string 
 	}
 
 	return carrdProfile;
+}
+
+export function assertUserCharacterId(characterId: number, user: UserInfo) {
+	if (!user.characters.map(ch => ch.id).includes(characterId)) {
+		throw new ForbiddenException('Invalid character id');
+	}
 }

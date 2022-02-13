@@ -38,4 +38,8 @@ export default class CommunitiesAPI {
   async deleteCommunity(id: number): Promise<void> {
     return this.transport.authDelete(`${id}`);
   }
+
+  async applyForMembership(id: number, characterId: number): Promise<void> {
+    return this.transport.authPost(`${id}/apply`, {}, { characterId });
+  }
 }

@@ -27,6 +27,12 @@ export class CommunitiesController {
 		return this.communitiesService.getCommunityMembers(id, user);
 	}
 
+	@Post(':id/apply')
+	@RoleRequired(Role.USER)
+	async applyForMembership(@Param('id', ParseIntPipe) id: number, @Query('characterId', ParseIntPipe) characterId: number, @CurrentUser() user: UserInfo): Promise<void> {
+		return this.communitiesService.applyForMembership(id, characterId, user);
+	}
+
 	@Get()
 	async getCommunities(): Promise<CommunitySummaryDto[]> {
 		return this.communitiesService.getCommunities({}, false);

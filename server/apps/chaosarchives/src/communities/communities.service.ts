@@ -13,7 +13,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
 import { Connection, EntityManager, Repository } from 'typeorm';
-import { checkCarrdProfile } from '../common/api-checks';
+import { assertUserCharacterId, checkCarrdProfile } from '../common/api-checks';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
@@ -27,9 +27,7 @@ export class CommunitiesService {
 		) {}
 
 	async getMyCommunities(characterId: number, user: UserInfo): Promise<MyCommunitySummaryDto[]> {
-		if (!user.characters.map(ch => ch.id).includes(characterId)) {
-			throw new ForbiddenException('Invalid character id');
-		}
+		assertUserCharacterId(characterId, user);
 
 		const memberships = await this.communityMembershipRepo.createQueryBuilder('membership')
 			.innerJoinAndSelect('membership.community', 'community')
@@ -141,7 +139,7 @@ export class CommunitiesService {
 
 		const [ banner, membership ] = await Promise.all([
 			community.banner,
-			characterId ? this.getMembership(community.id, characterId) : null,
+			characterId ? this.getMembership(this.communityMembershipRepo, community.id, characterId) : null,
 		]);
 		
 		return {
@@ -171,8 +169,17 @@ export class CommunitiesService {
 		}
 	}
 
-	private async getMembership(communityId: number, characterId: number): Promise<CommunityMembership> {
-		return new CommunityMembership();
+	private async getMembership(repo: Repository<CommunityMembership>, communityId: number, characterId: number): Promise<CommunityMembership|null> {
+		return (await repo.findOne({
+			where: {
+				community: {
+					id: communityId
+				},
+				character: {
+					id: characterId
+				}
+			}
+		})) || null;
 	}
 
 	async createCommunity(communityDto: CommunityDto, user: UserInfo): Promise<IdWrapper> {
@@ -365,5 +372,41 @@ export class CommunitiesService {
 			.getCount();
 
 		return membershipCount > 0;
+	}
+
+	async applyForMembership(communityId: number, characterId: number, user: UserInfo): Promise<void> {
+		assertUserCharacterId(characterId, user);
+
+		await this.connection.transaction(async em => {
+			const membershipRepo = em.getRepository(CommunityMembership);
+			const existingMembership = await this.getMembership(membershipRepo, communityId, characterId);
+
+			if (existingMembership) {
+				return;
+			}
+
+			const [ community, character ] = await Promise.all([
+				em.getRepository(Community).findOne(communityId),
+				em.getRepository(Character).findOne(characterId),
+			]);
+
+			if (!character) {
+				throw new NotFoundException('Invalid character');
+			}
+
+			if (!community) {
+				throw new NotFoundException('Invalid community');
+			}
+
+			const newMembership = membershipRepo.create({
+				community,
+				character,
+				status: MembershipStatus.APPLIED,
+				canEdit: false,
+				canManageMembers: false,
+			});
+
+			await membershipRepo.save(newMembership);
+		});
 	}
 }

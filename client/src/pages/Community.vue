@@ -1,15 +1,30 @@
 <template>
-  <q-page class="page-community">
+	<q-page class="page-community">
 		<template v-if="community.id">
-			<section v-if="community.canEdit" class="page-community__edit-bar">
+			<section v-if="!community.membershipStatus" class="page-community__edit-bar">
+				<q-btn flat color="primary" label="Join community" @click="onJoinClick" />
+			</section>
+			<section
+				v-else-if="community.membershipStatus === MembershipStatus.APPLIED"
+				class="page-community__edit-bar page-community__membership-status"
+			>You have applied to join this community. An officer will have to review your application before you can join.</section>
+			<section
+				v-else-if="community.membershipStatus === MembershipStatus.REJECTED"
+				class="page-community__edit-bar page-community__membership-status"
+			>Your membership application has been rejected.</section>
+			<section v-else-if="community.canEdit" class="page-community__edit-bar">
 				<router-link :to="`/edit-community/${community.id}`">Edit community</router-link>
 				<q-btn flat color="negative" label="Delete community" @click="onDeleteClick" />
 			</section>
+			<section
+				v-else-if="community.membershipStatus === MembershipStatus.CONFIRMED"
+				class="page-community__edit-bar page-community__membership-status"
+			>You are a member of this community.</section>
 			<community-profile :community="community" />
 			<h3>Members</h3>
 			<character-name-list :profiles="members" />
 		</template>
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -26,29 +41,30 @@ import { createMetaMixin } from 'quasar';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { useStore } from 'src/store';
+import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 
 const $api = useApi();
 const $store = useStore();
 const $router = useRouter();
 
-async function load(params: RouteParams): Promise<{community: CommunityDto, members: PagingResultDto<CharacterSummaryDto>}> {
-		const name = params.name as string;
+async function load(params: RouteParams): Promise<{ community: CommunityDto, members: PagingResultDto<CharacterSummaryDto> }> {
+	const name = params.name as string;
 
-		if (!name) {
-			void $router.replace('/');
-			throw new Error();
-		}
+	if (!name) {
+		void $router.replace('/');
+		throw new Error();
+	}
 
-		try {
-			const characterId = $store.getters.characterId!;
-			const community = await $api.communities.getCommunityByName(name.replace(/_/g, ' '), characterId);
-			const members = await $api.characters.getCharacterProfiles({ communityId: community.id, limit: 99999 });
-			return { community, members };
-		} catch (e) {			
-			notifyError(e);
-			void $router.replace('/');
-			throw e;
-		}
+	try {
+		const characterId = $store.getters.characterId!;
+		const community = await $api.communities.getCommunityByName(name.replace(/_/g, ' '), characterId);
+		const members = await $api.characters.getCharacterProfiles({ communityId: community.id, limit: 99999 });
+		return { community, members };
+	} catch (e) {
+		notifyError(e);
+		void $router.replace('/');
+		throw e;
+	}
 }
 
 @Options({
@@ -65,7 +81,7 @@ async function load(params: RouteParams): Promise<{community: CommunityDto, memb
 		(this as PageCommunity).setContent(community, members);
 	},
 	mixins: [
-		createMetaMixin(function(this: PageCommunity) {
+		createMetaMixin(function (this: PageCommunity) {
 			const result: MetaOptions = {
 				title: `${this.community.name} — Chaos Archives`,
 				meta: {}
@@ -89,6 +105,8 @@ async function load(params: RouteParams): Promise<{community: CommunityDto, memb
 	],
 })
 export default class PageCommunity extends Vue {
+	readonly MembershipStatus = MembershipStatus;
+
 	community: CommunityDto = new CommunityDto();
 	members: CharacterSummaryDto[] = [];
 
@@ -99,24 +117,51 @@ export default class PageCommunity extends Vue {
 
 	onDeleteClick() {
 		this.$q.dialog({
-        title: 'Confirm Delete',
-        message: `Do you want to delete the community “${this.community.name}”?`,
-				ok: {
-					label: 'Delete',
-					color: 'negative',
-					flat: true
-				},
-        cancel: 'Cancel',
-      }).onOk(async () => {
-        try {
-					await this.$api.communities.deleteCommunity(this.community.id);
+			title: 'Confirm Delete',
+			message: `Do you want to delete the community “${this.community.name}”?`,
+			ok: {
+				label: 'Delete',
+				color: 'negative',
+				flat: true
+			},
+			cancel: 'Cancel',
+		}).onOk(async () => {
+			try {
+				await this.$api.communities.deleteCommunity(this.community.id);
 
-					notifySuccess('Community deleted.');
-					void this.$router.replace('/');
-				} catch (e) {
-					notifyError(e);
-				}
-      });
+				notifySuccess('Community deleted.');
+				void this.$router.replace('/');
+			} catch (e) {
+				notifyError(e);
+			}
+		});
+	}
+
+	onJoinClick() {
+		const character = this.$store.getters.character!;
+
+		this.$q.dialog({
+			title: 'Confirm Join',
+			message: `Do you want to apply for membership in “${this.community.name}” as ${character.name}? An officer will have to confirm your application.`,
+			ok: {
+				label: 'Apply',
+				color: 'primary',
+				flat: true
+			},
+			cancel: {
+				label: 'Cancel',
+				color: 'secondary',
+				flat: true
+			},
+		}).onOk(async () => {
+			try {
+				await this.$api.communities.applyForMembership(this.community.id, character.id);
+				this.community.membershipStatus = MembershipStatus.APPLIED;
+				notifySuccess('You have applied for membership.');
+			} catch (e) {
+				notifyError(e);
+			}
+		});
 	}
 }
 </script>
