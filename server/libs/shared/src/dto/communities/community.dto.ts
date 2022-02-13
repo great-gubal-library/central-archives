@@ -8,7 +8,16 @@ export class CommunityDto {
   id: number;
 
   @IsBoolean()
+  @IsOptional()
   mine: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  canEdit: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  canManageMembers: boolean;
 
 	@IsString()
 	owner: string;

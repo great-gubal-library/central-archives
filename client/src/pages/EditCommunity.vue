@@ -201,6 +201,8 @@ export default class PageEditCommunity extends Vue {
       this.communityBackup = new CommunityDto({
         id: null as unknown as number,
         mine: true,
+        canEdit: true,
+        canManageMembers: true,
         foundedAt: null,
         name: '',
         owner: this.$store.getters.character!.name,

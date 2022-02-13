@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-community">
 		<template v-if="community.id">
-			<section v-if="community.mine" class="page-community__edit-bar">
+			<section v-if="community.canEdit" class="page-community__edit-bar">
 				<router-link :to="`/edit-community/${community.id}`">Edit community</router-link>
 				<q-btn flat color="negative" label="Delete community" @click="onDeleteClick" />
 			</section>

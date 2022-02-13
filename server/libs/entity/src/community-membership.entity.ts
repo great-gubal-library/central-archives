@@ -1,3 +1,4 @@
+import { MembershipStatus } from "@app/shared/enums/membership-status.enum";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { BasicEntity } from "./basic.entity";
 import { Character } from "./character.entity";
@@ -20,10 +21,12 @@ export class CommunityMembership extends BasicEntity {
   community: Community;
 
 	@Column({
+    type: 'enum',
+    enum: MembershipStatus,
     nullable: false,
-    default: false
+    default: MembershipStatus.APPLIED,
   })
-	confirmed: boolean;
+	status: MembershipStatus;
 
 	@Column({
     nullable: false,

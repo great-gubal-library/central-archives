@@ -5,6 +5,7 @@ import { CommunityMemberDto } from '@app/shared/dto/communities/community-member
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
+import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
@@ -51,7 +52,7 @@ export class CommunitiesService {
 	}
 
 	async getCommunityMembers(communityId: number, user: UserInfo): Promise<CommunityMemberDto[]> {
-		await this.checkEditRights(communityId, user);
+		await this.assertEditRights(communityId, user);
 
 		const memberships = await this.communityMembershipRepo.createQueryBuilder('membership')
 			.innerJoinAndSelect('membership.community', 'community')
@@ -76,7 +77,7 @@ export class CommunitiesService {
 			characterId: membership.character.id,
 			name: membership.character.name,
 			server: membership.character.server.name,
-			confirmed: membership.confirmed,
+			status: membership.status,
 			canEdit: membership.canEdit,
 			canManageMembers: membership.canManageMembers
 		}));
@@ -134,11 +135,17 @@ export class CommunitiesService {
 	}
 
 	private async toCommunityDto(community: Community, user?: UserInfo): Promise<CommunityDto> {
-		const banner = await community.banner;
+		const [ banner, canEdit, canManageMembers ] = await Promise.all([
+			community.banner,
+			user ? this.checkEditRights(community.id, user) : false,
+			user ? this.checkManageMembersRights(community.id, user) : false,
+		]);
 		
 		return {
 			id: community.id,
 			mine: !!user && user.characters.map(ch => ch.id).includes(community.owner.id),
+			canEdit,
+			canManageMembers,
 			foundedAt: community.foundedAt,
 			name: community.name,
 			owner: community.owner.name,
@@ -188,7 +195,7 @@ export class CommunitiesService {
 			const membership = new CommunityMembership();
 			membership.character = character;
 			membership.community = community;
-			membership.confirmed = true;
+			membership.status = MembershipStatus.CONFIRMED;
 			membership.canEdit = true;
 			membership.canManageMembers = true;
 			await em.getRepository(CommunityMembership).save(membership);
@@ -198,7 +205,7 @@ export class CommunitiesService {
 	}
 
 	async editCommunity(communityDto: CommunityDto, user: UserInfo): Promise<void> {
-		await this.checkEditRights(communityDto.id, user);
+		await this.assertEditRights(communityDto.id, user);
 
 		await this.connection.transaction(async em => {
 			const community = await em.getRepository(Community).findOne({
@@ -317,11 +324,27 @@ export class CommunitiesService {
 		});
 	}
 
-	private async checkEditRights(communityId: number, user: UserInfo): Promise<void> {
+	private async checkEditRights(communityId: number, user: UserInfo): Promise<boolean> {
 		return this.checkFlag(communityId, user, false);
 	}
 
-	private async checkFlag(communityId: number, user: UserInfo, manageMembersFlag: boolean): Promise<void> {
+	private async assertEditRights(communityId: number, user: UserInfo): Promise<void> {
+		if (!this.checkFlag(communityId, user, false)) {
+			throw new ForbiddenException('Operation not permitted');
+		}
+	}
+
+	private async checkManageMembersRights(communityId: number, user: UserInfo): Promise<boolean> {
+		return this.checkFlag(communityId, user, true);
+	}
+
+	private async assertManageMembersRights(communityId: number, user: UserInfo): Promise<void> {
+		if (!this.checkFlag(communityId, user, true)) {
+			throw new ForbiddenException('Operation not permitted');
+		}
+	}
+
+	private async checkFlag(communityId: number, user: UserInfo, manageMembersFlag: boolean): Promise<boolean> {
 		const flagName = manageMembersFlag ? 'canManageMembers' : 'canEdit';
 
 		const membershipCount = await this.communityMembershipRepo.createQueryBuilder('membership')
@@ -329,11 +352,10 @@ export class CommunitiesService {
 			.innerJoinAndSelect('membership.character', 'character')
 			.where('community.id = :communityId', { communityId })
 			.andWhere('character.id IN (:...characterIds)', { characterIds: user.characters.map(ch => ch.id) })
+			.andWhere(`membership.status = :status`, { status: MembershipStatus.CONFIRMED })
 			.andWhere(`membership.${flagName} = :flag`, { flag: true })
 			.getCount();
 
-		if (membershipCount === 0) {
-			throw new ForbiddenException('Operation not permitted');
-		}
+		return membershipCount > 0;
 	}
 }
