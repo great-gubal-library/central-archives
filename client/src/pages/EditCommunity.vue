@@ -122,6 +122,7 @@
 
 <script lang="ts">
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
+import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
@@ -131,10 +132,12 @@ import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import CarrdEditSection from 'src/components/common/CarrdEditSection.vue';
 import CommunityProfile from 'src/components/communities/CommunityProfile.vue';
 import { useRouter } from 'src/router';
+import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 
 const $api = useApi();
+const $store = useStore();
 const $router = useRouter();
 
 async function load(params: RouteParams): Promise<CommunityDto|null> {
@@ -145,7 +148,7 @@ async function load(params: RouteParams): Promise<CommunityDto|null> {
 	}
 
 	try {
-		return await $api.communities.getCommunity(id);
+		return await $api.communities.getCommunity(id, $store.getters.characterId!);
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
 			notifyError('Community not found.');
@@ -201,6 +204,7 @@ export default class PageEditCommunity extends Vue {
       this.communityBackup = new CommunityDto({
         id: null as unknown as number,
         mine: true,
+        membershipStatus: MembershipStatus.CONFIRMED,
         canEdit: true,
         canManageMembers: true,
         foundedAt: null,

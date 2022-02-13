@@ -1,5 +1,6 @@
+import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { BannerDto } from '../characters/banner.dto';
 
 export class CommunityDto {
@@ -10,6 +11,10 @@ export class CommunityDto {
   @IsBoolean()
   @IsOptional()
   mine: boolean;
+
+  @IsEnum(MembershipStatus)
+  @IsOptional()
+  membershipStatus: MembershipStatus|null;
 
   @IsBoolean()
   @IsOptional()

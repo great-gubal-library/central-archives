@@ -104,7 +104,7 @@ export class CommunitiesService {
 		}
 	}
 
-	async getCommunity(id: number, user?: UserInfo): Promise<CommunityDto> {
+	async getCommunity(id: number, characterId?: number, user?: UserInfo): Promise<CommunityDto> {
 		const community = await this.communityRepo.findOne({
 			where: {
 				id,
@@ -116,10 +116,10 @@ export class CommunitiesService {
 			throw new NotFoundException('Community not found');
 		}
 
-		return this.toCommunityDto(community, user);
+		return this.toCommunityDto(community, characterId, user);
 	}
 
-	async getCommunityByName(name: string, user?: UserInfo): Promise<CommunityDto> {
+	async getCommunityByName(name: string, characterId?: number, user?: UserInfo): Promise<CommunityDto> {
 		const community = await this.communityRepo.findOne({
 			where: {
 				name,
@@ -131,21 +131,25 @@ export class CommunitiesService {
 			throw new NotFoundException('Community not found');
 		}
 
-		return this.toCommunityDto(community, user);
+		return this.toCommunityDto(community, characterId, user);
 	}
 
-	private async toCommunityDto(community: Community, user?: UserInfo): Promise<CommunityDto> {
-		const [ banner, canEdit, canManageMembers ] = await Promise.all([
+	private async toCommunityDto(community: Community, characterId?: number, user?: UserInfo): Promise<CommunityDto> {
+		if (user && characterId && !user.characters.map(ch => ch.id).includes(characterId)) {
+			throw new ForbiddenException('Invalid character ID');
+		}
+
+		const [ banner, membership ] = await Promise.all([
 			community.banner,
-			user ? this.checkEditRights(community.id, user) : false,
-			user ? this.checkManageMembersRights(community.id, user) : false,
+			characterId ? this.getMembership(community.id, characterId) : null,
 		]);
 		
 		return {
 			id: community.id,
 			mine: !!user && user.characters.map(ch => ch.id).includes(community.owner.id),
-			canEdit,
-			canManageMembers,
+			membershipStatus: membership ? membership.status : null,
+			canEdit: !!membership && membership.canEdit,
+			canManageMembers: !!membership && membership.canEdit,
 			foundedAt: community.foundedAt,
 			name: community.name,
 			owner: community.owner.name,
@@ -165,6 +169,10 @@ export class CommunitiesService {
 				height: banner.height,
 			}
 		}
+	}
+
+	private async getMembership(communityId: number, characterId: number): Promise<CommunityMembership> {
+		return new CommunityMembership();
 	}
 
 	async createCommunity(communityDto: CommunityDto, user: UserInfo): Promise<IdWrapper> {

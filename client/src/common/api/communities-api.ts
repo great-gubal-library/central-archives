@@ -19,12 +19,12 @@ export default class CommunitiesAPI {
     return this.transport.get('');
   }
 
-  async getCommunity(id: number): Promise<CommunityDto> {
-    return this.transport.tokenGet(`${id}`);
+  async getCommunity(id: number, characterId: number): Promise<CommunityDto> {
+    return this.transport.tokenGet(`${id}`, { characterId });
   }
 
-  async getCommunityByName(name: string): Promise<CommunityDto> {
-    return this.transport.tokenGet(`by-name/${name}`);
+  async getCommunityByName(name: string, characterId: number): Promise<CommunityDto> {
+    return this.transport.tokenGet(`by-name/${name}`, { characterId });
   }
 
   async createCommunity(community: CommunityDto): Promise<IdWrapper> {

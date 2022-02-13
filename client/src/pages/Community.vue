@@ -25,8 +25,10 @@ import { MetaOptions } from 'quasar/dist/types/meta';
 import { createMetaMixin } from 'quasar';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
+import { useStore } from 'src/store';
 
 const $api = useApi();
+const $store = useStore();
 const $router = useRouter();
 
 async function load(params: RouteParams): Promise<{community: CommunityDto, members: PagingResultDto<CharacterSummaryDto>}> {
@@ -38,7 +40,8 @@ async function load(params: RouteParams): Promise<{community: CommunityDto, memb
 		}
 
 		try {
-			const community = await $api.communities.getCommunityByName(name.replace(/_/g, ' '));
+			const characterId = $store.getters.characterId!;
+			const community = await $api.communities.getCommunityByName(name.replace(/_/g, ' '), characterId);
 			const members = await $api.characters.getCharacterProfiles({ communityId: community.id, limit: 99999 });
 			return { community, members };
 		} catch (e) {			

@@ -13,7 +13,7 @@ import { CommunitiesService } from './communities.service';
 
 @Controller('communities')
 export class CommunitiesController {
-	constructor(private communitiesService: CommunitiesService) {}
+	constructor(private communitiesService: CommunitiesService) { }
 
 	@Get('my-communities')
 	@RoleRequired(Role.USER)
@@ -34,14 +34,14 @@ export class CommunitiesController {
 
 	@Get('by-name/:name')
 	@UseGuards(OptionalJwtAuthGuard)
-	async getCommunityByName(@Param('name') name: string, @CurrentUser() user?: UserInfo): Promise<CommunityDto> {
-		return this.communitiesService.getCommunityByName(name, user);
+	async getCommunityByName(@Param('name') name: string, @Query('characterId', ParseIntPipe) characterId?: number, @CurrentUser() user?: UserInfo): Promise<CommunityDto> {
+		return this.communitiesService.getCommunityByName(name, characterId, user);
 	}
 
 	@Get(':id')
 	@UseGuards(OptionalJwtAuthGuard)
-	async getCommunity(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<CommunityDto> {
-		return this.communitiesService.getCommunity(id, user);
+	async getCommunity(@Param('id', ParseIntPipe) id: number, @Query('characterId', ParseIntPipe) characterId?: number, @CurrentUser() user?: UserInfo): Promise<CommunityDto> {
+		return this.communitiesService.getCommunity(id, characterId, user);
 	}
 
 	@Post()
