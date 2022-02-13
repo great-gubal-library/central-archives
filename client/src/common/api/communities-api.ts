@@ -1,4 +1,5 @@
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
+import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
@@ -41,5 +42,9 @@ export default class CommunitiesAPI {
 
   async applyForMembership(id: number, characterId: number): Promise<void> {
     return this.transport.authPost(`${id}/apply`, {}, { characterId });
+  }
+
+  async getMembers(id: number): Promise<CommunityMemberDto[]> {
+    return this.transport.authGet(`${id}/members`);
   }
 }

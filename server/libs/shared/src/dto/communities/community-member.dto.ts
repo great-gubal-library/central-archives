@@ -4,6 +4,7 @@ export interface CommunityMemberDto {
 	characterId: number;
 	name: string;
 	server: string;
+	avatar: string;
 	status: MembershipStatus;
 	canEdit: boolean;
 	canManageMembers: boolean;

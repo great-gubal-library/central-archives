@@ -14,6 +14,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { CharacterRegistrationStatus } from '@app/shared/enums/character-registration-status.enum';
+import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
@@ -189,6 +190,7 @@ export class CharactersService {
         .innerJoinAndSelect('membership.community', 'mcm')
         .where('mch.id = character.id')
         .andWhere('mcm.id = :communityId', { communityId: filter.communityId })
+        .andWhere('membership.status = :membershipStatus', { membershipStatus: MembershipStatus.CONFIRMED })
         .select('1'));
     }
 

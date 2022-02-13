@@ -5,7 +5,7 @@
       class="page-characters__table striped-list paged-link-table"
       :columns="columns"
       :rows="profiles"
-      :row-key="name"
+      row-key="name"
       v-model:pagination="pagination"
 			wrap-cells
       @request="onPageRequest"

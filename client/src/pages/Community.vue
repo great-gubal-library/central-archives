@@ -21,8 +21,14 @@
 				class="page-community__edit-bar page-community__membership-status"
 			>You are a member of this community.</section>
 			<community-profile :community="community" />
-			<h3>Members</h3>
-			<character-name-list :profiles="members" />
+			<template v-if="!community.canManageMembers">
+				<h3>Members</h3>
+				<character-name-list :profiles="members" />
+			</template>
+			<template v-else>
+				<h3>Applicants</h3>
+				<community-applicant-editor :members="applicants" />
+			</template>
 		</template>
 	</q-page>
 </template>
@@ -42,6 +48,8 @@ import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { useStore } from 'src/store';
 import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
+import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
+import CommunityApplicantEditor from 'src/components/communities/CommunityApplicantEditor.vue';
 
 const $api = useApi();
 const $store = useStore();
@@ -71,6 +79,7 @@ async function load(params: RouteParams): Promise<{ community: CommunityDto, mem
 	components: {
 		CommunityProfile,
 		CharacterNameList,
+		CommunityApplicantEditor,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const { community, members } = await load(to.params);
@@ -109,10 +118,22 @@ export default class PageCommunity extends Vue {
 
 	community: CommunityDto = new CommunityDto();
 	members: CharacterSummaryDto[] = [];
+	applicants: CommunityMemberDto[] = [];
+	confirmedMembers: CommunityMemberDto[] = [];
 
 	setContent(community: CommunityDto, members: PagingResultDto<CharacterSummaryDto>) {
 		this.community = community;
 		this.members = members.data;
+
+		if (community.canManageMembers) {
+			void this.refreshEditedMembers();
+		}
+	}
+
+	async refreshEditedMembers() {
+		const allMembers = await this.$api.communities.getMembers(this.community.id);
+		this.applicants = allMembers.filter(member => member.status === MembershipStatus.APPLIED);
+		this.confirmedMembers = allMembers.filter(member => member.status === MembershipStatus.CONFIRMED);
 	}
 
 	onDeleteClick() {

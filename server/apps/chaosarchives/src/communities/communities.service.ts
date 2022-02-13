@@ -67,9 +67,10 @@ export class CommunitiesService {
 				'membership.id',
 				'character.id',
 				'character.name',
+				'character.avatar',
 				'server.id',
 				'server.name',
-				'membership.confirmed',
+				'membership.status',
 				'membership.canEdit',
 				'membership.canManageMembers',
 			])
@@ -79,6 +80,7 @@ export class CommunitiesService {
 			characterId: membership.character.id,
 			name: membership.character.name,
 			server: membership.character.server.name,
+			avatar: membership.character.avatar,
 			status: membership.status,
 			canEdit: membership.canEdit,
 			canManageMembers: membership.canManageMembers
