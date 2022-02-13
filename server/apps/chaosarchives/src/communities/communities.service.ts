@@ -5,15 +5,16 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
+import { MemberFlagsDto } from '@app/shared/dto/communities/member-flags.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
-import { Connection, EntityManager, Repository } from 'typeorm';
+import { Connection, EntityManager, FindOneOptions, Repository } from 'typeorm';
 import { assertUserCharacterId, checkCarrdProfile } from '../common/api-checks';
 import { ImagesService } from '../images/images.service';
 
@@ -193,25 +194,6 @@ export class CommunitiesService {
             height: banner.height,
           },
     };
-  }
-
-  private async getMembership(
-    repo: Repository<CommunityMembership>,
-    communityId: number,
-    characterId: number,
-  ): Promise<CommunityMembership | null> {
-    return (
-      (await repo.findOne({
-        where: {
-          community: {
-            id: communityId,
-          },
-          character: {
-            id: characterId,
-          },
-        },
-      })) || null
-    );
   }
 
   async createCommunity(communityDto: CommunityDto, user: UserInfo): Promise<IdWrapper> {
@@ -469,7 +451,7 @@ export class CommunitiesService {
 
     await this.connection.transaction(async (em) => {
       const membershipRepo = em.getRepository(CommunityMembership);
-      const membership = await this.getMembership(membershipRepo, communityId, characterId);
+      const membership = await this.getMembership(membershipRepo, communityId, characterId, true);
 
       if (!membership) {
         throw new NotFoundException('Community member not found');
@@ -479,8 +461,69 @@ export class CommunitiesService {
         return;
       }
 
+			if (status === MembershipStatus.REJECTED && characterId === membership.community.owner.id) {
+				throw new ConflictException('Community owner cannot be rejected');
+			}
+
       membership.status = status;
       await membershipRepo.save(membership);
     });
+  }
+
+	async setMemberFlags(communityId: number, characterId: number, flags: MemberFlagsDto, user: UserInfo): Promise<void> {
+		await this.assertManageMembersRights(communityId, user);
+
+		const canEdit = await this.checkEditRights(communityId, user);
+
+    await this.connection.transaction(async (em) => {
+      const membershipRepo = em.getRepository(CommunityMembership);
+      const membership = await this.getMembership(membershipRepo, communityId, characterId, true);
+
+      if (!membership) {
+        throw new NotFoundException('Community member not found');
+      }
+
+			if (!canEdit && !membership.canEdit && flags.canEdit) {
+				throw new ForbiddenException('You do not have edit permission and cannot set it for others');
+			}
+
+      if (membership.status !== MembershipStatus.CONFIRMED) {
+        throw new ConflictException("Non-confirmed member's flags cannot be edited");
+      }
+
+			if (characterId === membership.community.owner.id) {
+				throw new ConflictException('Community owner flags cannot be edited');
+			}
+
+      membership.canEdit = flags.canEdit;
+			membership.canManageMembers = flags.canManageMembers;
+      await membershipRepo.save(membership);
+    });
+  }
+
+  private async getMembership(
+    repo: Repository<CommunityMembership>,
+    communityId: number,
+    characterId: number,
+		extended?: boolean
+  ): Promise<CommunityMembership | null> {
+		const options: FindOneOptions<CommunityMembership> = {
+			where: {
+				community: {
+					id: communityId,
+				},
+				character: {
+					id: characterId,
+				},
+			},
+		};
+
+		if (extended) {
+			options.relations = [ 'community', 'community.owner' ];
+		}
+
+    return (
+      (await repo.findOne(options)) || null
+    );
   }
 }

@@ -7,6 +7,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
+import { MemberFlagsDto } from '@app/shared/dto/communities/member-flags.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
@@ -62,6 +63,17 @@ export class CommunitiesController {
     @CurrentUser() user: UserInfo,
   ): Promise<void> {
     return this.communitiesService.rejectMember(id, characterId, user);
+  }
+
+  @Put(':id/members/:characterId/flags')
+  @RoleRequired(Role.USER)
+  async setMemberFlags(
+    @Param('id', ParseIntPipe) id: number,
+		@Param('characterId', ParseIntPipe) characterId: number,
+    @Body() flags: MemberFlagsDto,
+    @CurrentUser() user: UserInfo,
+  ): Promise<void> {
+    return this.communitiesService.setMemberFlags(id, characterId, flags, user);
   }
 
   @Get()

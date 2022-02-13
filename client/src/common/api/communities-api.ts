@@ -2,6 +2,7 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
+import { MemberFlagsDto } from '@app/shared/dto/communities/member-flags.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import APITransport from './api-transport';
 
@@ -54,5 +55,9 @@ export default class CommunitiesAPI {
 
   async rejectMember(id: number, characterId: number): Promise<void> {
     return this.transport.authPost(`${id}/members/reject`, { characterId });
+  }
+
+  async setMemberFlags(id: number, characterId: number, flags: MemberFlagsDto): Promise<void> {
+    return this.transport.authPut(`${id}/members/${characterId}/flags`, flags);
   }
 }

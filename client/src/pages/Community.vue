@@ -32,10 +32,18 @@
         <character-name-list :profiles="members" />
       </template>
       <template v-else>
-        <h3>Applicants</h3>
-        <community-applicant-editor
-          :community-id="community.id"
-          :members="applicants"
+				<template v-if="applicants.length > 0">
+					<h3>Applicants</h3>
+					<community-applicant-editor
+						:community-id="community.id"
+						:members="applicants"
+						@updated="refreshEditableMembers"
+					/>
+				</template>
+				<h3>Members</h3>
+        <community-member-editor
+          :community="community"
+          :members="confirmedMembers"
           @updated="refreshEditableMembers"
         />
       </template>
@@ -60,6 +68,7 @@ import { useStore } from 'src/store';
 import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import CommunityApplicantEditor from 'src/components/communities/CommunityApplicantEditor.vue';
+import CommunityMemberEditor from 'src/components/communities/CommunityMemberEditor.vue';
 
 const $api = useApi();
 const $store = useStore();
@@ -92,6 +101,7 @@ async function load(
     CommunityProfile,
     CharacterNameList,
     CommunityApplicantEditor,
+		CommunityMemberEditor,
   },
   async beforeRouteEnter(to, _, next) {
     const { community, members } = await load(to.params);
