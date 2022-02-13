@@ -41,10 +41,18 @@ export default class CommunitiesAPI {
   }
 
   async applyForMembership(id: number, characterId: number): Promise<void> {
-    return this.transport.authPost(`${id}/apply`, {}, { characterId });
+    return this.transport.authPost(`${id}/members/apply`, { characterId });
   }
 
   async getMembers(id: number): Promise<CommunityMemberDto[]> {
     return this.transport.authGet(`${id}/members`);
+  }
+
+  async approveMember(id: number, characterId: number): Promise<void> {
+    return this.transport.authPost(`${id}/members/approve`, { characterId });
+  }
+
+  async rejectMember(id: number, characterId: number): Promise<void> {
+    return this.transport.authPost(`${id}/members/reject`, { characterId });
   }
 }

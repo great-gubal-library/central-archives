@@ -3,7 +3,6 @@
     <banner-view :banner="community.banner" />
     <h2 class="community-profile__header-title">{{ community.name }}</h2>
     <character-details-box class="community-profile__infobox">
-      <character-detail label="Owner" :value="community.owner" :router-link="ownerLink" />
       <character-detail label="Founded" :value="$display.formatDate(community.foundedAt)" v-if="community.foundedAt" />
       <character-detail label="Website" :value="community.website" :link="community.website" v-if="community.website" />
       <character-detail label="Discord" :value="community.discord" :link="community.discord" v-if="community.discord" />
@@ -70,12 +69,6 @@ export default class CommunityProfile extends Vue.with(Props) {
 
   get carrdLink(): string {
     return `${this.$api.prefix}carrd/character/preview/${this.community.carrdProfile}`;
-  }
-
-  get ownerLink(): string {
-    const server = this.community.ownerServer;
-    const character = this.community.owner.replace(/ /g, '_');
-    return `/${server}/${character}`;
   }
 }
 </script>
