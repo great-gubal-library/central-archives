@@ -1,8 +1,8 @@
 <template>
   <q-page class="page-community">
     <template v-if="community.id">
-      <section v-if="!community.membershipStatus" class="page-community__edit-bar">
-        <q-btn flat color="primary" label="Join community" @click="onJoinClick" />
+      <section v-if="!community.membershipStatus" class="page-community__join-button-bar">
+        <q-btn outline color="primary" label="Join community" @click="onJoinClick" />
       </section>
       <section
         v-else-if="community.membershipStatus === MembershipStatus.APPLIED"
@@ -218,5 +218,10 @@ export default class PageCommunity extends Vue {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.page-community__join-button-bar {
+  text-align: center;
+  margin-bottom: 8px;
 }
 </style>
