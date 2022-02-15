@@ -8,11 +8,15 @@
             flat
             dense
             no-caps
-            icon="person"
             tooltip="User"
             aria-label="User"
             @click="toggleLeftDrawer"
-          />
+          >
+            <q-avatar v-if="$store.getters.character" round size="28px">
+              <img :src="$store.getters.character.avatar" />
+            </q-avatar>
+            <q-icon v-else name="person" />
+          </q-btn>
           <q-btn-dropdown
             class="layout__toolbar-buton-more lt-md"
             flat
