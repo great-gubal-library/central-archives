@@ -11,7 +11,14 @@ import { MemberFlagsDto } from '@app/shared/dto/communities/member-flags.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { IsNumber, IsOptional } from 'class-validator';
 import { CommunitiesService } from './communities.service';
+
+class OptionalCharacterId {
+  @IsNumber()
+  @IsOptional()
+  characterId?: number;
+}
 
 @Controller('communities')
 export class CommunitiesController {
@@ -85,20 +92,20 @@ export class CommunitiesController {
   @UseGuards(OptionalJwtAuthGuard)
   async getCommunityByName(
     @Param('name') name: string,
-    @Query('characterId', ParseIntPipe) characterId?: number,
+    @Query() characterId: OptionalCharacterId,
     @CurrentUser() user?: UserInfo,
   ): Promise<CommunityDto> {
-    return this.communitiesService.getCommunityByName(name, characterId, user);
+    return this.communitiesService.getCommunityByName(name, characterId.characterId, user);
   }
 
   @Get(':id')
   @UseGuards(OptionalJwtAuthGuard)
   async getCommunity(
     @Param('id', ParseIntPipe) id: number,
-    @Query('characterId', ParseIntPipe) characterId?: number,
+    @Query() characterId: OptionalCharacterId,
     @CurrentUser() user?: UserInfo,
   ): Promise<CommunityDto> {
-    return this.communitiesService.getCommunity(id, characterId, user);
+    return this.communitiesService.getCommunity(id, characterId.characterId, user);
   }
 
   @Post()

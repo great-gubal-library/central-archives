@@ -1,7 +1,8 @@
 <template>
   <q-page class="page-community">
     <template v-if="community.id">
-      <section v-if="!community.membershipStatus" class="page-community__join-button-bar">
+      <section v-if="!$store.getters.characterId"><!-- Not logged in --></section>
+      <section v-else-if="!community.membershipStatus" class="page-community__join-button-bar">
         <q-btn outline color="primary" label="Join community" @click="onJoinClick" />
       </section>
       <section
