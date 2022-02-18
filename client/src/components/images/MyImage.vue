@@ -95,6 +95,7 @@ export default class MyImage extends Vue.with(Props) {
 }
 
 .my-image__description-column {
+	flex-basis: 0;
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
