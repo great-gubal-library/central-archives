@@ -20,10 +20,10 @@
       </div>
     </section>
     <hr />
-    <section
+    <html-viewer
       class="story-view__content"
-      v-html="content"
-    ></section>
+      :content="story.content"
+    />
   </div>
 </template>
 
@@ -31,6 +31,7 @@
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
+import HtmlViewer from '../common/HtmlViewer.vue';
 
 class Props {
   story = prop<StoryDto>({
@@ -45,13 +46,10 @@ class Props {
 @Options({
   name: 'StoryView',
   components: {
+    HtmlViewer,
   }
 })
 export default class StoryView extends Vue.with(Props) {
-  get content(): string {
-    return html.sanitize(this.story.content);
-  }
-
   get date(): string {
     return this.$display.formatDate(this.story.createdAt);
   }

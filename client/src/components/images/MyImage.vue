@@ -8,7 +8,7 @@
 							<div>
 								<h5 v-if="image.category === ImageCategory.UNLISTED">Unlisted image</h5>
 								<h5 v-else><a :href="`/image/${image.id}`" target="_blank">{{image.title}}</a></h5>
-								<section v-html="description"></section>
+								<html-viewer :content="image.description" />
 							</div>
 							<div class="text-right">
 								<q-btn flat color="primary" label="Edit" @click="onEditClick" />
@@ -30,6 +30,7 @@ import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import html from '@app/shared/html';
 import { notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
+import HtmlViewer from '../common/HtmlViewer.vue';
 import { ImageDetailsModel } from '../upload/image-details-model';
 import ImageEditor from './ImageEditor.vue';
 
@@ -42,6 +43,7 @@ class Props {
 @Options({
 	name: 'MyImage',
 	components: {
+		HtmlViewer,
 		ImageEditor,
 	},
 	emits: [ 'saved', 'deleted' ]
@@ -50,10 +52,6 @@ export default class MyImage extends Vue.with(Props) {
 	readonly ImageCategory = ImageCategory;
 	imageDetails = {} as ImageDetailsModel;
 	editing = false;
-
-	get description() {
-		return html.sanitize(this.image.description);
-	}
 
 	onEditClick() {
 		this.editing = true;

@@ -23,10 +23,10 @@
 					<strong>Tags:</strong> {{event.locationTags}}
 				</template>
 			</p>
-			<section v-if="event.details" v-html="details"></section>
+			<html-viewer v-if="event.details" :content="event.details" />
 			<template v-if="event.oocDetails">
 				<h3>OOC Details</h3>
-				<section v-html="oocDetails"></section>
+				<html-viewer :content="event.oocDetails" />
 			</template>
 			<hr />
 			<p v-if="event.link"><strong>Link: </strong> <a :href="event.link">{{ event.link }}</a></p>
@@ -40,6 +40,7 @@ import { EventDto } from '@app/shared/dto/events/event.dto';
 import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import BannerView from '../common/BannerView.vue';
+import HtmlViewer from '../common/HtmlViewer.vue';
 
 class Props {
 	event = prop<EventDto>({
@@ -54,17 +55,10 @@ class Props {
 @Options({
 	components: {
 		BannerView,
+		HtmlViewer,
 	},
 })
 export default class EventView extends Vue.with(Props) {
-	get details() {
-		return html.sanitize(this.event.details);
-	}
-
-	get oocDetails() {
-		return html.sanitize(this.event.oocDetails);
-	}
-
 	get startDateTime(): string {
     return this.$display.formatDateTimeServer(this.event.startDateTime);
   }

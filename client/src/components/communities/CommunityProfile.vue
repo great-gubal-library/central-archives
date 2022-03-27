@@ -11,7 +11,7 @@
       <character-detail label="Recruiting officers" :value="community.recruitingOfficers" v-if="community.recruitingOfficers" />
     </character-details-box>
     <template v-if="community.description">
-      <section class="community-profile__description" v-html="description"></section>
+      <html-viewer class="community-profile__description" :content="community.description" />
     </template>
     <iframe
       v-if="community.carrdProfile"
@@ -39,6 +39,7 @@ import { Options, prop, Vue } from 'vue-class-component';
 import BannerView from '../common/BannerView.vue';
 import CharacterDetail from 'components/character/CharacterDetail.vue';
 import CharacterDetailsBox from 'components/character/CharacterDetailsBox.vue';
+import HtmlViewer from '../common/HtmlViewer.vue';
 
 class Props {
   community = prop<CommunityDto>({
@@ -56,16 +57,13 @@ class Props {
     CharacterDetail,
     CharacterDetailsBox,
     BannerView,
+    HtmlViewer,
   },
 })
 export default class CommunityProfile extends Vue.with(Props) {
 	get editCommunityLink(): string {
 		return `/edit-community/${this.community.id}`;
 	}
-
-  get description(): string {
-    return html.sanitize(this.community.description);
-  }
 
   get carrdLink(): string {
     return `${this.$api.prefix}carrd/character/preview/${this.community.carrdProfile}`;

@@ -7,6 +7,7 @@
     api-key="dnguuf3cwxakkez6t1njyi2m6gavgoa97jqo3yt8qoirudgb"
     :init="options"
     :model-value="modelValue"
+     @click.capture="onClickCapture"
     @update:model-value="onInput"
   />
   </div>
@@ -15,6 +16,7 @@
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import Editor from '@tinymce/tinymce-vue';
+import { onHtmlViewClickCapture } from 'src/common/html-view-utils';
 import { TinyMceEditor } from 'tinymce';
 import { Options, prop, Vue } from 'vue-class-component';
 
@@ -39,7 +41,7 @@ const FONTS = [
 const FONT_OPTION = FONTS.map(font => `${font}=${font},sans-serif`).join(';');
 
 const TINYMCE_PLUGINS = [
-  'code advlist autolink lists link image charmap hr',
+  'code advlist autolink lists link image charmap hr nonbreaking',
   'searchreplace visualblocks',
   'table paste help wordcount'
 ];
@@ -55,7 +57,7 @@ const TINYMCE_OPTIONS = {
   menu: {
     edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
     view: { title: 'View', items: 'code | visualaid visualchars visualblocks' },
-    insert: { title: 'Insert', items: 'image gallery upload link | charmap hr | nonbreaking' },
+    insert: { title: 'Insert', items: 'image gallery upload link | charmap nonbreaking hr | hidedetails' },
     format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat' },
     list: { title: 'List', items: 'outdent indent' },
     table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' },
@@ -151,6 +153,12 @@ export default class HtmlEditor extends Vue.with(Props) {
           onAction: () => editor.execCommand('Indent')
         });
 
+        editor.ui.registry.addMenuItem('hidedetails', {
+          text: 'Hide details',
+          icon: 'chevron-right',
+          onAction: () => this.onHideDetailsClick(editor)
+        });
+
         if (this.allowImages) {
           editor.ui.registry.addMenuItem('gallery', {
             text: 'Image from my gallery...',
@@ -180,6 +188,10 @@ export default class HtmlEditor extends Vue.with(Props) {
     };
   }
 
+  onClickCapture(event: Event) {
+    onHtmlViewClickCapture(event);
+  }
+
   onInput(newValue: string) {
     this.$emit('update:modelValue', newValue);
   }
@@ -205,13 +217,23 @@ export default class HtmlEditor extends Vue.with(Props) {
   }
 
   private insertImage(editor: TinyMceEditor, src: string, width: number, height: number, title: string) {
-    const img = document.createElement('img');
-    img.src = src;
-    img.width = width;
-    img.height = height;
-    img.alt = title;
-    editor.focus();
-    editor.selection.setContent(img.outerHTML);
+    editor.undoManager.transact(() => {
+      const img = document.createElement('img');
+      img.src = src;
+      img.width = width;
+      img.height = height;
+      img.alt = title;
+      editor.focus();
+      editor.selection.setContent(img.outerHTML);
+    });
+  }
+
+  private onHideDetailsClick(editor: TinyMceEditor) {
+    editor.undoManager.transact(() => {
+      editor.focus();
+      const content = editor.selection.getContent({ format: 'html' });
+      editor.selection.setContent(`<section class="hide-details hide-details_visible"><div class="hide-details__title">[insert title here]</div><div class="hide-details__content">${content || '[insert text here]'}</div></section>`);
+    });
   }
 }
 </script>

@@ -181,6 +181,25 @@ ol li {
   color: black;
 }
 
+// Custom HTML editor elements
+
+.hide-details {
+	margin: 0 0 16px;
+}
+
+.hide-details__title {
+	margin-bottom: 5px;
+	border-bottom: 1px solid #aaa;
+	cursor: pointer;
+}
+
+.hide-details__content {
+	display: none;
+}
+
+.hide-details.hide-details_visible > .hide-details__content {
+	display: block;
+}
 
 // Mobile usability improvements
 @media screen and (max-width: $breakpoint-xs) {

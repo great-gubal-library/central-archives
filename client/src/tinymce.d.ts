@@ -17,6 +17,7 @@ declare module 'tinymce' {
 		execCommand(command: string): void;
 
 		selection: {
+			getContent(options: { format: string }): string;
 			setContent(content: string): void;
 		}
 
@@ -26,6 +27,11 @@ declare module 'tinymce' {
 
 				addMenuItem(id: string, options: MenuItemOptions): void;
 			}
+		}
+
+		undoManager: {
+			add(): void;
+			transact(action: () => void): void;
 		}
 	}
 }

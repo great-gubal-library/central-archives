@@ -17,7 +17,7 @@
       <character-detail label="Purpose" :value="venue.purpose" v-if="venue.purpose" />
     </character-details-box>
     <template v-if="venue.description">
-      <section class="venue-profile__description" v-html="description"></section>
+      <html-viewer class="venue-profile__description" :content="venue.description" />
     </template>
     <iframe
       v-if="venue.carrdProfile"
@@ -46,6 +46,7 @@ import BannerView from '../common/BannerView.vue';
 import CharacterDetail from 'components/character/CharacterDetail.vue';
 import CharacterDetailsBox from 'components/character/CharacterDetailsBox.vue';
 import { VenueLocation } from '@app/shared/enums/venue-location.enum';
+import HtmlViewer from '../common/HtmlViewer.vue';
 
 class Props {
   venue = prop<VenueDto>({
@@ -63,6 +64,7 @@ class Props {
     CharacterDetail,
     CharacterDetailsBox,
     BannerView,
+    HtmlViewer,
   },
 })
 export default class VenueProfile extends Vue.with(Props) {

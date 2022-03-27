@@ -27,7 +27,7 @@
       This Free Company's leader has not yet claimed it on Chaos Archives.
     </template>
     <template v-if="freeCompany.description">
-      <section class="free-company-profile__appearance-background" v-html="description"></section>
+      <html-viewer class="free-company-profile__appearance-background" :content="freeCompany.description" />
     </template>
     <iframe
       v-if="freeCompany.carrdProfile"
@@ -47,11 +47,11 @@
 <script lang="ts">
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
 import FreeCompanyCrest from './FreeCompanyCrest.vue';
-import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import BannerView from '../common/BannerView.vue';
 import CharacterDetail from 'components/character/CharacterDetail.vue';
 import CharacterDetailsBox from 'components/character/CharacterDetailsBox.vue';
+import HtmlViewer from '../common/HtmlViewer.vue';
 
 class Props {
   freeCompany = prop<FreeCompanyDto>({
@@ -70,6 +70,7 @@ class Props {
     CharacterDetailsBox,
     FreeCompanyCrest,
     BannerView,
+    HtmlViewer,
   },
 })
 export default class FreeCompanyProfile extends Vue.with(Props) {
@@ -77,10 +78,6 @@ export default class FreeCompanyProfile extends Vue.with(Props) {
 		const fc = this.freeCompany;
 		return `/edit-free-company/${fc.server}/${fc.name.replace(/ /g, '_')}`;
 	}
-
-  get description(): string {
-    return html.sanitize(this.freeCompany.description);
-  }
 
   get carrdLink(): string {
     return `${this.$api.prefix}carrd/character/preview/${this.freeCompany.carrdProfile}`;

@@ -28,17 +28,17 @@
     </character-details-box>
     <template v-if="character.appearance">
       <h3 v-if="!character.combinedDescription">Outward appearance</h3>
-      <section
+      <html-viewer
         class="character-profile__appearance-background"
         :class="{ 'character-profile__appearance-background_no-header': character.combinedDescription }"
-        v-html="appearance"
-      ></section>
+        :content="character.appearance"
+      />
     </template>
     <template v-if="!character.combinedDescription">
       <template v-if="character.background"><hr /></template>
       <template v-if="character.background">
         <h3>Background</h3>
-        <section class="character-profile__appearance-background" v-html="background"></section>
+        <html-viewer class="character-profile__appearance-background" :content="character.background" />
       </template>
     </template>
     <template v-if="!character.appearance && (character.combinedDescription || !character.background)">
@@ -70,6 +70,7 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import BannerView from '../common/BannerView.vue';
+import HtmlViewer from '../common/HtmlViewer.vue';
 import CharacterDetail from './CharacterDetail.vue';
 import CharacterDetailsBox from './CharacterDetailsBox.vue';
 
@@ -88,20 +89,13 @@ class Props {
     CharacterDetail,
     CharacterDetailsBox,
     BannerView,
+    HtmlViewer,
   },
 })
 export default class CharacterProfile extends Vue.with(Props) {
   get fcLink() {
     const fc = this.character.freeCompany;
 		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(/ /g, '_')}`;
-  }
-
-  get appearance(): string {
-    return html.sanitize(this.character.appearance);
-  }
-
-  get background(): string {
-    return html.sanitize(this.character.background);
   }
 
   get hasPersonalityBox(): boolean {

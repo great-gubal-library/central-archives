@@ -13,10 +13,10 @@
       </div>
     </section>
     <hr />
-    <section
+    <html-viewer
       class="noticeboard-item-view__content"
-      v-html="content"
-    ></section>
+      :content="noticeboardItem.content"
+    />
   </div>
 </template>
 
@@ -24,6 +24,7 @@
 import { NoticeboardItemDto } from '@app/shared/dto/noticeboard/noticeboard-item.dto';
 import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
+import HtmlViewer from '../common/HtmlViewer.vue';
 
 class Props {
   noticeboardItem = prop<NoticeboardItemDto>({
@@ -38,13 +39,10 @@ class Props {
 @Options({
   name: 'NoticeboardItemView',
   components: {
+    HtmlViewer,
   }
 })
 export default class NoticeboardItemView extends Vue.with(Props) {
-  get content(): string {
-    return html.sanitize(this.noticeboardItem.content);
-  }
-
   get date(): string {
     return this.$display.formatDate(this.noticeboardItem.createdAt);
   }

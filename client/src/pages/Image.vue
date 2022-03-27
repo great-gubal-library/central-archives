@@ -16,7 +16,7 @@
 			</section>
 			<a :href="image.url" :title="image.title" target="_blank"><q-img :src="image.url" :ratio="image.width / image.height" /></a>
 			<template v-if="image.description">
-				<section class="page-image__description" v-html="description"></section>
+				<html-viewer class="page-image__description" :content="image.description" />
 				<hr />
 			</template>
 			<section class="page-image__credits">
@@ -34,6 +34,7 @@ import html from '@app/shared/html';
 import { createMetaMixin } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import HtmlViewer from 'src/components/common/HtmlViewer.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
@@ -67,6 +68,9 @@ async function load(params: RouteParams): Promise<ImageDto> {
 
 @Options({
 	name: 'PageImage',
+	components: {
+		HtmlViewer,
+	},
 	async beforeRouteEnter(to, _, next) {
 		const image = await load(to.params);
 		next(vm => (vm as PageImage).setContent(image));
@@ -97,10 +101,6 @@ export default class PageImage extends Vue {
 
 	setContent(image: ImageDto) {
 		this.image = image;
-	}
-
-	get description() {
-		return this.image ? html.sanitize(this.image.description) : '';
 	}
 
 	get date(): string {
