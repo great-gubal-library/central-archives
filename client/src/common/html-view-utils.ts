@@ -22,7 +22,6 @@ export function onHtmlViewClickCapture(event: Event) {
     }
   } else if (target.classList.contains('hide-details__title')) {
     const detailsBox = target.parentElement;
-		console.log('detailsBox', detailsBox);
 
     if (detailsBox && detailsBox.classList.contains('hide-details')) {
       const visibleClassName = 'hide-details_visible';
