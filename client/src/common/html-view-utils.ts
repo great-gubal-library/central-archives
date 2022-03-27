@@ -1,6 +1,27 @@
+import { useRouter } from 'src/router';
+
+const $router = useRouter();
+
 export function onHtmlViewClickCapture(event: Event) {
-  if (event.target instanceof HTMLElement && event.target.classList.contains('hide-details__title')) {
-    const detailsBox = event.target.parentElement;
+  const target = event.target;
+
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+  
+  if (target.tagName.toLowerCase() === 'a') {
+    // Follow internal links without reloading the page
+    const link = target as HTMLAnchorElement;
+
+    if (link.host === window.location.host && link.pathname) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      // link.pathname is guaranteed to start with /, so it's okay to pass to the router
+      void $router.push(link.pathname);
+    }
+  } else if (target.classList.contains('hide-details__title')) {
+    const detailsBox = target.parentElement;
 		console.log('detailsBox', detailsBox);
 
     if (detailsBox && detailsBox.classList.contains('hide-details')) {
