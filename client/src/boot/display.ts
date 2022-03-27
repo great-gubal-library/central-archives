@@ -28,7 +28,7 @@ class Display {
 		[Race.MIQOTE]: "Miqo'te",
 		[Race.ROEGADYN]: 'Roegadyn',
 		[Race.AURA]: 'Au Ra',
-		[Race.HROTHGAR]: 'Hhothgar',
+		[Race.HROTHGAR]: 'Hrothgar',
 		[Race.VIERA]: 'Viera',
 	};
 
