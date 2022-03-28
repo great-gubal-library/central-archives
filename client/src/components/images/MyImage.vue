@@ -27,7 +27,6 @@
 <script lang="ts">
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
-import html from '@app/shared/html';
 import { notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 import HtmlViewer from '../common/HtmlViewer.vue';

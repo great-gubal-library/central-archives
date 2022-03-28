@@ -67,7 +67,6 @@
 
 <script lang="ts">
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
-import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import BannerView from '../common/BannerView.vue';
 import HtmlViewer from '../common/HtmlViewer.vue';

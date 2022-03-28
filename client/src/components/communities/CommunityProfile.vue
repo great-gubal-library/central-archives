@@ -34,7 +34,6 @@
 
 <script lang="ts">
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
-import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import BannerView from '../common/BannerView.vue';
 import CharacterDetail from 'components/character/CharacterDetail.vue';

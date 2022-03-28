@@ -37,7 +37,6 @@
 
 <script lang="ts">
 import { EventDto } from '@app/shared/dto/events/event.dto';
-import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import BannerView from '../common/BannerView.vue';
 import HtmlViewer from '../common/HtmlViewer.vue';

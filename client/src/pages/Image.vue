@@ -30,7 +30,6 @@
 <script lang="ts">
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
-import html from '@app/shared/html';
 import { createMetaMixin } from 'quasar';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';

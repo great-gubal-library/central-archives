@@ -22,7 +22,6 @@
 
 <script lang="ts">
 import { NoticeboardItemDto } from '@app/shared/dto/noticeboard/noticeboard-item.dto';
-import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import HtmlViewer from '../common/HtmlViewer.vue';
 

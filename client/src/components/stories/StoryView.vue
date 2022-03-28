@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import { StoryDto } from '@app/shared/dto/stories/story.dto';
-import html from '@app/shared/html';
 import { Options, prop, Vue } from 'vue-class-component';
 import HtmlViewer from '../common/HtmlViewer.vue';
 
