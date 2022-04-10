@@ -15,6 +15,7 @@
       <character-detail label="Founded" :value="$display.formatDate(venue.foundedAt)" v-if="venue.foundedAt" />
       <character-detail label="Website" :value="venue.website" :link="venue.website" v-if="venue.website" />
       <character-detail label="Purpose" :value="venue.purpose" v-if="venue.purpose" />
+      <character-detail label="Status" :value="venue.status" v-if="venue.status" />
     </character-details-box>
     <template v-if="venue.description">
       <html-viewer class="venue-profile__description" :content="venue.description" />
