@@ -62,6 +62,7 @@
               v-model="community.recruitingOfficers"
               label="Recruiting officers"
             />
+            <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in goal, status, and recruiting officers.</div>
             <q-input
               :model-value="tags"
               @update:model-value="onTagsChanged"

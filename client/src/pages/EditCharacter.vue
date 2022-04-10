@@ -58,11 +58,13 @@
             <q-input v-model="character.age" class="page-edit-character__age" label="Age" />
             <q-input v-model="character.birthplace" label="Birthplace" />
             <q-input v-model="character.residence" label="Residence" />
+            <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in all biography fields.</div>
             <h6>Personality</h6>
             <q-input v-model="character.loves" label="Loves" />
             <q-input v-model="character.hates" label="Hates" />
             <q-input v-model="character.motto" label="Motto" />
             <q-input v-model="character.motivation" label="Motivation" />
+            <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name|my friend]], in all personality fields.</div>
           </section>
           <h6>{{ character.combinedDescription ? 'Description' : 'Outward appearance' }}</h6>
           <html-editor v-model="character.appearance" />

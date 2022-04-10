@@ -65,6 +65,7 @@
               v-model="venue.status"
               label="Status"
             />
+            <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in purpose and status.</div>
             <q-input
               :model-value="tags"
               @update:model-value="onTagsChanged"

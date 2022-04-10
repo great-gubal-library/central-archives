@@ -10,6 +10,7 @@
      @click.capture="onClickCapture"
     @update:model-value="onInput"
   />
+    <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]] or [[Character Name|my teacher]].</div>
   </div>
 </template>
 
