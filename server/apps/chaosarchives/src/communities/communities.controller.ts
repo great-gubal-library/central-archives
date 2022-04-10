@@ -11,12 +11,14 @@ import { MemberFlagsDto } from '@app/shared/dto/communities/member-flags.dto';
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { IsNumber, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional } from 'class-validator';
 import { CommunitiesService } from './communities.service';
 
 class OptionalCharacterId {
-  @IsNumber()
+  @IsInt()
   @IsOptional()
+  @Type(() => Number)
   characterId?: number;
 }
 
@@ -95,6 +97,7 @@ export class CommunitiesController {
     @Query() characterId: OptionalCharacterId,
     @CurrentUser() user?: UserInfo,
   ): Promise<CommunityDto> {
+    console.log('characterId', characterId);
     return this.communitiesService.getCommunityByName(name, characterId.characterId, user);
   }
 
