@@ -76,6 +76,14 @@ async function load(params: RouteParams): Promise<{ name: string, results: LinkR
 			return { name, results: [] };
 		}
 
+		const profiles = results.filter(result => result.type === PageType.PROFILE);
+
+		if (profiles.length === 1) {
+			// One character profile found; navigate to it
+			void $router.replace(getLink(profiles[0]));
+			return { name, results: [] };
+		}
+
 		// Several results found; display them
 		return { name, results };
 	} catch (e) {
