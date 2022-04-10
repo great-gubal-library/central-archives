@@ -33,7 +33,7 @@ export class MainPageController {
     const [mainPageContent, newsResult, storyList, noticeboardItemList, newVenuesList, newCommunitiesList] =
       await Promise.all([
         this.mainPageService.getMainPageContent(),
-        this.newsService.getNews(),
+        { news: [], newsUpToDate: true }, // this.newsService.getNews(),
         this.storiesService.getStoryList({ limit: this.MAX_STORIES }),
         this.noticeboardService.getNoticeboardItemList({ limit: this.MAX_NOTICEBOARD_ITEMS }),
         this.venuesService.getVenues({ limit: this.MAX_NEW_VENUES }),
