@@ -14,6 +14,14 @@ const html = {
 				'img': [ 'src', 'alt', 'title', 'width', 'height' ],
 			},
 		});
+	},
+
+	escape(input: string): string {
+		return input.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/'/g, '&apos;')
+			.replace(/"/g, '&quot;');
 	}
 };
 

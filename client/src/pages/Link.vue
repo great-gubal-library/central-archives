@@ -17,6 +17,7 @@ import { LinkResultDto } from '@app/shared/dto/links/link-result.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
+import { wikify } from 'src/common/wikilinks';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
@@ -24,10 +25,6 @@ import { RouteParams } from 'vue-router';
 
 const $api = useApi();
 const $router = useRouter();
-
-function wikify(name: string): string {
-	return name.replace(/ /g, '_'); // TODO: Refactor
-}
 
 function getLink(result: LinkResultDto): string {
 	switch (result.type) {
@@ -72,7 +69,7 @@ async function load(params: RouteParams): Promise<{ name: string, results: LinkR
 		
 		if (results.length === 1) {
 			// One page found; navigate to it
-			void $router.replace(getLink(results[0]));
+			void $router.push(getLink(results[0]));
 			return { name, results: [] };
 		}
 
@@ -80,7 +77,7 @@ async function load(params: RouteParams): Promise<{ name: string, results: LinkR
 
 		if (profiles.length === 1) {
 			// One character profile found; navigate to it
-			void $router.replace(getLink(profiles[0]));
+			void $router.push(getLink(profiles[0]));
 			return { name, results: [] };
 		}
 

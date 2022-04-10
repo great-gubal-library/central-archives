@@ -1,5 +1,5 @@
 <template>
-	<section v-html="sanitizedContent" @click.capture="onClickCapture"></section>
+	<span v-html="html" @click.capture="onClickCapture" />
 </template>
 
 <script lang="ts">
@@ -12,18 +12,21 @@ class Props {
 	content = prop<string>({
 		required: true
 	});
-}
+};
 
 @Options({
-	name: 'HtmlViewer',
+	name: 'LinkField'
 })
-export default class HtmlViewer extends Vue.with(Props) {
-	get sanitizedContent() {
-		return parseWikilinksInHtml(html.sanitize(this.content));
+export default class LinkField extends Vue.with(Props) {
+	get html() {
+		return parseWikilinksInHtml(html.escape(this.content));
 	}
 
 	onClickCapture(event: Event) {
-    onHtmlViewClickCapture(event);
-  }
+		onHtmlViewClickCapture(event);
+	}
 }
 </script>
+
+<style lang="scss">
+</style>

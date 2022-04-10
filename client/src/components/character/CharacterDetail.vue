@@ -4,13 +4,14 @@
     <div class="character-detail__value">
       <template v-if="link"><a :href="link">{{value}}</a></template>
       <template v-else-if="routerLink"><router-link :to="routerLink">{{value}}</router-link></template>
-      <template v-else>{{value}}</template>
+      <template v-else><link-field :content="value"></link-field></template>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { prop, Vue } from 'vue-class-component';
+import { Options, prop, Vue } from 'vue-class-component';
+import LinkField from '../common/LinkField.vue';
 
 class Props {
   label = prop<string>({
@@ -32,6 +33,12 @@ class Props {
   });
 }
 
+@Options({
+  name: 'CharacterDetail',
+  components: {
+    LinkField,
+  },
+})
 export default class CharacterDetail extends Vue.with(Props) {
   
 }
