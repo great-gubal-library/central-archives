@@ -6,6 +6,7 @@ import CommunitiesAPI from './communities-api';
 import EventsAPI from './events-api';
 import FreeCompaniesAPI from './free-companies-api';
 import ImagesAPI from './images-api';
+import LinksAPI from './links-api';
 import NoticeboardAPI from './noticeboard-api';
 import StoriesAPI from './stories-api';
 import UserAPI from './user-api';
@@ -27,6 +28,7 @@ export default class API {
   readonly stories = new StoriesAPI(this.transport);
   readonly noticeboard = new NoticeboardAPI(this.transport);
   readonly venues = new VenuesAPI(this.transport);
+  readonly links = new LinksAPI(this.transport);
 
   // Access token management
 

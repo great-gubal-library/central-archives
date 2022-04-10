@@ -421,6 +421,18 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Links
+
+  // Characters
+  {
+    path: '/link/:name',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Link.vue') }],
+    meta: {
+      title: 'Link'
+    },
+  },
+
   // Characters
   {
     path: '/profiles',

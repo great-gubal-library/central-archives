@@ -6,6 +6,7 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
+    "jsx": "preserve", // needed for Volar
     // Needed to address https://github.com/quasarframework/app-extension-typescript/issues/36
     "noEmit": true,
     "resolveJsonModule": true,

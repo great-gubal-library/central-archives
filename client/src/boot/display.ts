@@ -1,6 +1,7 @@
 import { HousingArea } from '@app/shared/enums/housing-area.enum';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { noticeboardLocations } from '@app/shared/enums/noticeboard-location.enum';
+import { PageType } from '@app/shared/enums/page-type.enum';
 import { Race } from '@app/shared/enums/race.enum';
 import { StoryType } from '@app/shared/enums/story-type.enum';
 import { VenueLocation } from '@app/shared/enums/venue-location.enum';
@@ -60,6 +61,17 @@ class Display {
 		[HousingArea.GOBLET]: 'The Goblet',
 		[HousingArea.SHIROGANE]: 'Shirogane',
 		[HousingArea.EMPYREUM]: 'Empyreum',
+	};
+
+	readonly pageTypes: { [k: string]: string } = {
+		[PageType.PROFILE]: 'Profile',
+		[PageType.FREE_COMPANY]: 'Free Company',
+		[PageType.COMMUNITY]: 'Community',
+		[PageType.VENUE]: 'Venue',
+		[PageType.EVENT]: 'Event',
+		[PageType.STORY]: 'Story',
+		[PageType.NOTICEBOARD_ITEM]: 'Noticeboard item',
+		[PageType.IMAGE]: 'Image',
 	};
 
 	relativeTime(timestamp: number) {
