@@ -103,7 +103,11 @@ export class ImagesService {
       .select(['image', 'character.id'])
       .getMany();
 
-    return images.map(image => ({
+    return images.map(image => this.toImageSummaryDto(image));
+  }
+
+  toImageSummaryDto(image: Image): ImageSummaryDto {
+    return {
       id: image.id,
       url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
       thumbUrl: this.storageService.getUrl(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
@@ -112,7 +116,7 @@ export class ImagesService {
       height: image.height,
       title: image.title,
       createdAt: image.createdAt!.getTime(),
-    }));
+    };
   }
 
   async getMyImages(characterId: number, user: UserInfo): Promise<ImageDto[]> {

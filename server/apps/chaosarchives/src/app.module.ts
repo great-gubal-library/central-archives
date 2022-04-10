@@ -19,6 +19,7 @@ import { NoticeboardModule } from './noticeboard/noticeboard.module';
 import { StoriesModule } from './stories/stories.module';
 import { UserModule } from './user/user.module';
 import { VenuesModule } from './venues/venues.module';
+import { LinksModule } from './links/links.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { VenuesModule } from './venues/venues.module';
     CommunitiesModule,
     FreeCompaniesModule,
     VenuesModule,
+    LinksModule,
   ],
   controllers: [AppController],
   providers: [
