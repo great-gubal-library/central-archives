@@ -25,3 +25,8 @@ export async function getLodestoneCharacter(
     );
   }
 }
+
+export function normalizeServerName(characterInfo: CharacterInfo): string {
+  // Convert strings like "Omega [Chaos]" to just "Omega"
+  return characterInfo.Character.Server.replace(/^([^ ]+) \[.+\]$/, '$1');
+}

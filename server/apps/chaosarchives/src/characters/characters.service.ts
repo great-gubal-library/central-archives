@@ -23,7 +23,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../common/api-checks';
 import { andWhereExists, escapeForLike, isQueryFailedError } from '../common/db';
-import { getLodestoneCharacter } from '../common/lodestone';
+import { getLodestoneCharacter, normalizeServerName } from '../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
@@ -247,7 +247,7 @@ export class CharactersService {
 
       const server = await em.getRepository(Server).findOne({
         where: {
-          name: lodestoneInfo.Character.Server,
+          name: normalizeServerName(lodestoneInfo),
         },
         select: [ 'id', 'name' ]
       });
@@ -356,7 +356,7 @@ export class CharactersService {
     // We allow this: the user can make a new character profile for the new name.
 
     const server = await em.getRepository(Server).findOne({
-      name: characterInfo.Character.Server,
+      name: normalizeServerName(characterInfo),
     });
 
     if (!server) {
