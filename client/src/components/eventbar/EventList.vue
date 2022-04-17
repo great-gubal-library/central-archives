@@ -14,10 +14,8 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
-import { DateTime } from 'luxon';
-import SharedConstants from '@app/shared/SharedConstants';
+import { Options, Vue } from 'vue-class-component';
 import EventItem from './EventItem.vue';
 
 @Options({
@@ -35,15 +33,7 @@ export default class EventList extends Vue {
 
   private async loadEvents(refresh: boolean) {
     const result = await this.$api.events.getEvents({ refresh });
-    const today = DateTime.now()
-      .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)
-      .startOf('day')
-      .toMillis();
-
-    const events = result.events.filter(
-      (event) => event.startDateTime >= today
-    );
-    this.$store.commit('setEvents', events);
+    this.$store.commit('setEvents', result.events);
 
     if (!result.eventsUpToDate) {
       // Update events later without blocking page load
