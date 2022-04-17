@@ -72,7 +72,7 @@ export class EventsService {
           },
           verifiedAt: Not(IsNull()),
         },
-        relations: [ 'user' ],
+        relations: ['user'],
       });
 
       if (!character) {
@@ -90,7 +90,7 @@ export class EventsService {
 
     void this.notifySteward(eventEntity); // no await
 
-    const result = await this.toEventDto(eventEntity, true, user) as EventCreaterResultDto;
+    const result = (await this.toEventDto(eventEntity, true, user)) as EventCreaterResultDto;
     result.id = eventEntity.id;
     return result;
   }
@@ -138,7 +138,7 @@ export class EventsService {
           id: eventDto.banner.id,
           owner: event.owner,
         },
-        relations: [ 'owner' ]
+        relations: ['owner'],
       });
 
       if (!banner) {
@@ -194,7 +194,7 @@ export class EventsService {
     }
 
     if (announcementsToRemove.length > 0) {
-      await Promise.all(announcementsToRemove.map(announcement => em.remove(announcement)));
+      await Promise.all(announcementsToRemove.map((announcement) => em.remove(announcement)));
     }
 
     for (const dtoAnnouncement of eventDto.announcements) {
@@ -292,10 +292,16 @@ export class EventsService {
   private async getEventsFromDatabase(): Promise<EventSummaryDto[]> {
     const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day');
     const events = await this.eventRepo.find({
-      where: {
-        startDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
-        hidden: false,
-      },
+      where: [
+        {
+          startDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
+          hidden: false,
+        },
+        {
+          endDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
+          hidden: false,
+        },
+      ],
       order: {
         startDateTime: 'ASC',
         createdAt: 'ASC',
@@ -402,7 +408,7 @@ export class EventsService {
       }
 
       if (locationsToRemove.length > 0) {
-        await Promise.all(locationsToRemove.map(location => em.remove(location)));
+        await Promise.all(locationsToRemove.map((location) => em.remove(location)));
       }
 
       await eventRepo.save(savedEvents);
@@ -437,14 +443,15 @@ export class EventsService {
       },
     );
 
-		const endOfMonth = startOfMonth.plus({ months: 1 });
+    const endOfMonth = startOfMonth.plus({ months: 1 });
 
-    const events = await this.eventRepo.createQueryBuilder('event')
+    const events = await this.eventRepo
+      .createQueryBuilder('event')
       .leftJoinAndSelect('event.locations', 'location')
       .leftJoinAndSelect('location.server', 'server')
       .where('event.startDateTime >= :startOfMonth', { startOfMonth: startOfMonth.toJSDate() })
       .andWhere('event.startDateTime < :endOfMonth', { endOfMonth: endOfMonth.toJSDate() })
-      .andWhere('event.hidden = :hidden', { hidden: false } )
+      .andWhere('event.hidden = :hidden', { hidden: false })
       .orderBy({
         'event.startDateTime': 'ASC',
         'event.createdAt': 'ASC',
