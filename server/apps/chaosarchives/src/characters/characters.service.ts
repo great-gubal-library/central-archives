@@ -3,6 +3,7 @@ import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { UserInfo } from '@app/auth/model/user-info';
 import { Character, CommunityMembership, Image, Server, User } from '@app/entity';
 import { generateVerificationCode } from '@app/security';
+import { normalizeXivapiServerName } from '@app/shared/xivapi-utils';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-profile-filter.dto';
@@ -23,7 +24,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../common/api-checks';
 import { andWhereExists, escapeForLike, isQueryFailedError } from '../common/db';
-import { getLodestoneCharacter, normalizeServerName } from '../common/lodestone';
+import { getLodestoneCharacter, } from '../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
@@ -247,7 +248,7 @@ export class CharactersService {
 
       const server = await em.getRepository(Server).findOne({
         where: {
-          name: normalizeServerName(lodestoneInfo),
+          name: normalizeXivapiServerName(lodestoneInfo.Character.Server),
         },
         select: [ 'id', 'name' ]
       });
@@ -356,7 +357,7 @@ export class CharactersService {
     // We allow this: the user can make a new character profile for the new name.
 
     const server = await em.getRepository(Server).findOne({
-      name: normalizeServerName(characterInfo),
+      name: normalizeXivapiServerName(characterInfo.Character.Server),
     });
 
     if (!server) {

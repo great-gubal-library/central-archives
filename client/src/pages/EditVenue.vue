@@ -254,14 +254,7 @@ export default class PageEditVenue extends Vue {
   ];
 
   // TODO: Temp, refactor
-  readonly serverOptions = [
-    'Cerberus',
-    'Louisoix',
-    'Moogle',
-    'Omega',
-    'Ragnarok',
-    'Spriggan',
-  ];
+  readonly serverOptions = SharedConstants.allowedServers;
 
   readonly VenueLocation = VenueLocation;
 

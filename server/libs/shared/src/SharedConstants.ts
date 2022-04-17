@@ -17,4 +17,13 @@ export default Object.freeze({
 		MIN_APARTMENT_NUMBER: 1,
 		MAX_APARTMENT_NUMBER: 90,
 	}),
+
+	allowedServers: [
+		'Cerberus',
+		'Louisoix',
+		'Moogle',
+		'Omega',
+		'Ragnarok',
+		'Spriggan',
+	],
 })

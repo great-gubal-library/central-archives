@@ -56,18 +56,20 @@
 
 <script lang="ts">
 import { CharacterRegistrationStatus } from '@app/shared/enums/character-registration-status.enum';
+import { normalizeXivapiServerName} from '@app/shared/xivapi-utils';
 import SharedConstants from '@app/shared/SharedConstants';
 import minXIVAPI from 'src/common/xivapi-min';
 import { Options, prop, Vue } from 'vue-class-component';
 import { CharacterSearchModel } from './character-search-model';
 
-// Datacenter name in parentheses: (Chaos)
-const SERVER_SUFFIX = `(${SharedConstants.DATACENTER})`;
-
 class Props {
 	modelValue = prop<CharacterSearchModel>({
 		required: true
 	});
+}
+
+function isAllowedServer(characterInfo: string): boolean {
+	return SharedConstants.allowedServers.indexOf(normalizeXivapiServerName(characterInfo)) !== -1;
 }
 
 @Options({
@@ -99,7 +101,7 @@ export default class CharacterFinderField extends Vue.with(Props) {
         return;
       }
 
-      this.characterOptions = results.filter(result => result.Server.endsWith(SERVER_SUFFIX)).map(result => ({
+      this.characterOptions = results.filter(result => isAllowedServer(result.Server)).map(result => ({
         name: result.Name,
         server: result.Server.split(/\s/)[0], // remove datacenter suffix
         avatar: result.Avatar,

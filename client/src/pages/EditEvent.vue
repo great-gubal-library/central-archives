@@ -239,14 +239,7 @@ export default class PageEditEvent extends Vue {
   ];
 
   // TODO: Temp, refactor
-  readonly serverOptions = [
-    'Cerberus',
-    'Louisoix',
-    'Moogle',
-    'Omega',
-    'Ragnarok',
-    'Spriggan',
-  ];
+  readonly serverOptions = SharedConstants.allowedServers;
 
 	eventId: number|null = null;
   event = new EventEditDto();
