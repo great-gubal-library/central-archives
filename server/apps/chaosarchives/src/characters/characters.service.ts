@@ -342,7 +342,9 @@ export class CharactersService {
       throw new BadRequestException('Invalid character');
     }
 
-    if (characterInfo.Character.DC !== SharedConstants.DATACENTER) {
+    // Try two possible ways XIVAPI can return the data
+    if (characterInfo.Character.DC !== SharedConstants.DATACENTER
+        && characterInfo.Character.Server.replace(/^[^ ]+ \[(.+)\]$/, '$1') !== SharedConstants.DATACENTER ) {
       throw new BadRequestException('This character is from the wrong datacenter');
     }
 
