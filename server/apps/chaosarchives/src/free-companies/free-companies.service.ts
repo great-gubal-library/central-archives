@@ -5,12 +5,14 @@ import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
 import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-summary.dto';
 import SharedConstants from '@app/shared/SharedConstants';
+import { normalizeXivapiServerName } from '@app/shared/xivapi-utils';
 import { BadRequestException, ConflictException, ForbiddenException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI from '@xivapi/js';
 import { DateTime } from 'luxon';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../common/api-checks';
+import { getLodestoneCharacter } from '../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
@@ -50,7 +52,7 @@ export class FreeCompaniesService {
 		}
 
 		const xivapi = new XIVAPI();
-		const lodestoneCharacterInfo = await xivapi.character.get(characterInfo.lodestoneId);
+		const lodestoneCharacterInfo = await getLodestoneCharacter(characterInfo.lodestoneId);
 
 		if (!lodestoneCharacterInfo) {
 			throw new GoneException('Character not found on Lodestone');
@@ -110,7 +112,7 @@ export class FreeCompaniesService {
 
 			const server = await em.getRepository(Server).findOne({
 				where: {
-					name: fcLodestoneInfo.FreeCompany.Server
+					name: normalizeXivapiServerName(fcLodestoneInfo.FreeCompany.Server)
 				}
 			});
 
