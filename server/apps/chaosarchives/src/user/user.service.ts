@@ -52,7 +52,7 @@ export class UserService {
         },
       );
 
-      this.sendVerificationMail(userEntity, characterEntity.name); // no await
+      void this.sendVerificationMail(userEntity, characterEntity.name); // no await
       return {
         userId: userEntity.id,
         characterVerificationCode: characterEntity.verificationCode!, // set by saveCharacterForUser
