@@ -1,4 +1,4 @@
-import { Character, Event, EventLocation, EventAnnouncement, Image, Server, Story, StoryTag, User, NoticeboardItem, FreeCompany, Venue } from '@app/entity';
+import { Character, Event, EventLocation, EventAnnouncement, Image, Server, Story, StoryTag, User, NoticeboardItem, FreeCompany, Venue, Violation } from '@app/entity';
 import { CommunityMembership } from '@app/entity/community-membership.entity';
 import { CommunityTag } from '@app/entity/community-tag.entity';
 import { Community } from '@app/entity/community.entity';
@@ -33,6 +33,7 @@ export const dbConfiguration: TypeOrmModuleOptions = {
     User,
     Venue,
     VenueTag,
+    Violation,
   ],
   synchronize: dbConfig.synchronize,
   logging: dbConfig.logging,
