@@ -48,6 +48,9 @@
       v-if="character.showInfoboxes && hasPersonalityBox"
       class="character-profile__personality-box"
     >
+      <character-detail label="Friends" :value="character.friends" v-if="character.friends" />
+      <character-detail label="Relatives" :value="character.relatives" v-if="character.relatives" />
+      <character-detail label="Rivals/Enemies" :value="character.enemies" v-if="character.enemies" />
       <character-detail label="Loves" :value="character.loves" v-if="character.loves" />
       <character-detail label="Hates" :value="character.hates" v-if="character.hates" />
       <character-detail label="Motto" :value="character.motto" v-if="character.motto" />

@@ -60,6 +60,9 @@
             <q-input v-model="character.residence" label="Residence" />
             <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in all biography fields.</div>
             <h6>Personality</h6>
+            <q-input v-model="character.friends" label="Friends" />
+            <q-input v-model="character.relatives" label="Relatives" />
+            <q-input v-model="character.enemies" label="Rivals/Enemies" />
             <q-input v-model="character.loves" label="Loves" />
             <q-input v-model="character.hates" label="Hates" />
             <q-input v-model="character.motto" label="Motto" />

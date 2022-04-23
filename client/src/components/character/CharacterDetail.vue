@@ -1,6 +1,6 @@
 <template>
   <div class="character-detail" v-show="value">
-    <div class="character-detail__label">{{label}}</div>
+    <div class="character-detail__label" :class="{ 'character-detail__label-narrow': label && label.length > 12 } ">{{label}}</div>
     <div class="character-detail__value">
       <template v-if="link"><a :href="link">{{value}}</a></template>
       <template v-else-if="routerLink"><router-link :to="routerLink">{{value}}</router-link></template>
@@ -67,6 +67,10 @@ export default class CharacterDetail extends Vue.with(Props) {
   flex-grow: 1;
   min-width: 110px;
   font-weight: bold;
+}
+
+.character-detail__label-narrow {
+  letter-spacing: -0.3px;
 }
 
 .character-detail__value {

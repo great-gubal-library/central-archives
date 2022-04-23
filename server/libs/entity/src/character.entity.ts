@@ -135,6 +135,24 @@ export class Character extends BasicEntity {
     nullable: false,
     default: ''
   })
+	friends: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	relatives: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
+	enemies: string;
+
+  @Column({
+    nullable: false,
+    default: ''
+  })
 	motivation: string;
 
   @Column({

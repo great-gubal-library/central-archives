@@ -66,6 +66,15 @@ export class CharacterProfileDto {
   hates: string;
 
   @IsString()
+  friends: string;
+
+  @IsString()
+  relatives: string;
+
+  @IsString()
+  enemies: string;
+
+  @IsString()
   motivation: string;
 
   @IsString()
