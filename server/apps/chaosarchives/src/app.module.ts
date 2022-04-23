@@ -20,6 +20,7 @@ import { StoriesModule } from './stories/stories.module';
 import { UserModule } from './user/user.module';
 import { VenuesModule } from './venues/venues.module';
 import { LinksModule } from './links/links.module';
+import { ViolationsModule } from './violations/violations.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { LinksModule } from './links/links.module';
     FreeCompaniesModule,
     VenuesModule,
     LinksModule,
+    ViolationsModule,
   ],
   controllers: [AppController],
   providers: [
