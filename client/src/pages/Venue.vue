@@ -6,6 +6,7 @@
 				<q-btn flat color="negative" label="Delete venue" @click="onDeleteClick" />
 			</section>
 			<venue-profile :venue="venue" />
+    	<report-violation-section :pageType="PageType.VENUE" :pageId="venue.id" />
 		</template>
 	</q-page>	
 </template>
@@ -20,6 +21,8 @@ import { notifyError, notifySuccess } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { createMetaMixin } from 'quasar';
+import { PageType } from '@app/shared/enums/page-type.enum';
+import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 
 const $api = useApi();
 const $router = useRouter();
@@ -50,6 +53,7 @@ async function load(params: RouteParams): Promise<VenueDto> {
 @Options({
 	components: {
 		VenueProfile,
+		ReportViolationSection,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const content = await load(to.params);
@@ -84,6 +88,8 @@ async function load(params: RouteParams): Promise<VenueDto> {
 	],
 })
 export default class PageVenue extends Vue {
+	readonly PageType = PageType;
+	
 	venue: VenueDto = new VenueDto();
 
 	setContent(venue: VenueDto) {

@@ -1,6 +1,9 @@
 <template>
   <q-page class="page-character">
-		<character-profile v-if="character && character.id" :character="character" />
+		<template v-if="character && character.id">
+			<character-profile :character="character" />		
+    	<report-violation-section :pageType="PageType.PROFILE" :pageId="character.id" />
+		</template>
 		<template v-else-if="notFound">
 			<h2>Character not found</h2>
 			<p>The character {{name}} ({{server}}) is not registered on Chaos Archives.</p>
@@ -20,6 +23,7 @@
 <script lang="ts">
 import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
+import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
 import StoryList from 'components/stories/StoryList.vue';
@@ -27,6 +31,7 @@ import { createMetaMixin } from 'quasar';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
+import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
@@ -85,6 +90,7 @@ async function load(params: RouteParams): Promise<Content> {
 		CharacterProfile,
 		StoryList,
 		ThumbGallery,
+		ReportViolationSection,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const content = await load(to.params);
@@ -118,6 +124,8 @@ async function load(params: RouteParams): Promise<Content> {
 	],
 })
 export default class PageCharacter extends Vue {
+	readonly PageType = PageType;
+
 	name = '';
 	server = '';
 	character: CharacterProfileDto = new CharacterProfileDto();

@@ -48,6 +48,7 @@
           @updated="refreshEditableMembers"
         />
       </template>
+    	<report-violation-section :pageType="PageType.COMMUNITY" :pageId="community.id" />
     </template>
   </q-page>
 </template>
@@ -70,6 +71,8 @@ import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import CommunityApplicantEditor from 'src/components/communities/CommunityApplicantEditor.vue';
 import CommunityMemberEditor from 'src/components/communities/CommunityMemberEditor.vue';
+import { PageType } from '@app/shared/enums/page-type.enum';
+import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 
 const $api = useApi();
 const $store = useStore();
@@ -103,6 +106,7 @@ async function load(
     CharacterNameList,
     CommunityApplicantEditor,
 		CommunityMemberEditor,
+		ReportViolationSection,
   },
   async beforeRouteEnter(to, _, next) {
     const { community, members } = await load(to.params);
@@ -137,6 +141,7 @@ async function load(
   ],
 })
 export default class PageCommunity extends Vue {
+	readonly PageType = PageType;
   readonly MembershipStatus = MembershipStatus;
 
   community: CommunityDto = new CommunityDto();

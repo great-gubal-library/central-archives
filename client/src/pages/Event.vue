@@ -9,11 +9,13 @@
 			<h3>Images related to this event</h3>
 			<thumb-gallery :images="event.images" />
 		</template>
+		<report-violation-section :pageType="PageType.EVENT" :pageId="eventId" />
 	</q-page>	
 </template>
 
 <script lang="ts">
 import { EventDto } from '@app/shared/dto/events/event.dto';
+import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import { createMetaMixin } from 'quasar';
 import { MetaOptions } from 'quasar/dist/types/meta';
@@ -24,6 +26,7 @@ import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
+import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 
 const $api = useApi();
 const $router = useRouter();
@@ -56,6 +59,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 	components: {
 		EventView,
 		ThumbGallery,
+		ReportViolationSection,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const { event, eventId } = await load(to.params);
@@ -90,6 +94,8 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 	],
 })
 export default class PageEvent extends Vue {
+	readonly PageType = PageType;
+	
 	eventId = -1;
 	event = {} as EventDto;
 

@@ -70,9 +70,11 @@
 
 <script lang="ts">
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
+import { PageType } from '@app/shared/enums/page-type.enum';
 import { Options, prop, Vue } from 'vue-class-component';
 import BannerView from '../common/BannerView.vue';
 import HtmlViewer from '../common/HtmlViewer.vue';
+import ReportViolationSection from '../common/ReportViolationSection.vue';
 import CharacterDetail from './CharacterDetail.vue';
 import CharacterDetailsBox from './CharacterDetailsBox.vue';
 
@@ -92,9 +94,12 @@ class Props {
     CharacterDetailsBox,
     BannerView,
     HtmlViewer,
+    ReportViolationSection,
   },
 })
 export default class CharacterProfile extends Vue.with(Props) {
+  PageType = PageType;
+
   get fcLink() {
     const fc = this.character.freeCompany;
 		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(/ /g, '_')}`;

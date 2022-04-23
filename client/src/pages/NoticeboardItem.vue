@@ -2,12 +2,14 @@
   <q-page class="page-noticeboardItem">
 		<template v-if="noticeboardItem.id">
 			<noticeboard-item-view :noticeboard-item="noticeboardItem" />
+    	<report-violation-section :pageType="PageType.NOTICEBOARD_ITEM" :pageId="noticeboardItem.id" />
 		</template>
 	</q-page>	
 </template>
 
 <script lang="ts">
 import { NoticeboardItemDto } from '@app/shared/dto/noticeboard/noticeboard-item.dto';
+import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import NoticeboardItemView from 'components/noticeboard/NoticeboardItemView.vue';
 import { useApi } from 'src/boot/axios';
@@ -15,6 +17,7 @@ import { notifyError } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
+import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 
 const $api = useApi();
 const $router = useRouter();
@@ -46,7 +49,8 @@ async function load(params: RouteParams): Promise<NoticeboardItemDto> {
 @Options({
 	name: 'PageNoticeboardItem',
 	components: {
-		NoticeboardItemView
+		NoticeboardItemView,
+		ReportViolationSection,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const noticeboardItem = await load(to.params);
@@ -58,6 +62,8 @@ async function load(params: RouteParams): Promise<NoticeboardItemDto> {
 	}
 })
 export default class PageNoticeboardItem extends Vue {
+	readonly PageType = PageType;
+	
 	noticeboardItem: NoticeboardItemDto = new NoticeboardItemDto();
 	
 	setContent(story: NoticeboardItemDto) {

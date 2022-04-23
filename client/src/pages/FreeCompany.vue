@@ -4,6 +4,7 @@
 			<free-company-profile :free-company="fc" />
 			<h3>Members</h3>
 			<character-name-list :profiles="members.data" />
+    	<report-violation-section :pageType="PageType.FREE_COMPANY" :pageId="fc.id" />
 		</template>
 		<template v-else-if="notFound">
 			<h2>Free Company not found</h2>
@@ -26,6 +27,8 @@ import { notifyError } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { createMetaMixin } from 'quasar';
+import { PageType } from '@app/shared/enums/page-type.enum';
+import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 
 const $api = useApi();
 const $router = useRouter();
@@ -79,6 +82,7 @@ async function load(params: RouteParams): Promise<Content> {
 	components: {
 		FreeCompanyProfile,
 		CharacterNameList,
+		ReportViolationSection,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const content = await load(to.params);
@@ -112,6 +116,8 @@ async function load(params: RouteParams): Promise<Content> {
 	],
 })
 export default class PageFreeCompany extends Vue {
+	readonly PageType = PageType;
+	
 	name = '';
 	server = '';
 	fc: FreeCompanyDto = new FreeCompanyDto();

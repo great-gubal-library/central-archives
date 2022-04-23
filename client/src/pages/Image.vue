@@ -23,12 +23,14 @@
 				<p><strong>Credits:</strong> {{image.credits}}</p>
 				<p v-if="image.eventId"><strong>Event:</strong> <router-link :to="`/event/${image.eventId}`">{{image.eventTitle}}</router-link></p>
 			</section>
+    	<report-violation-section :pageType="PageType.IMAGE" :pageId="image.id" />
 		</template>
 	</q-page>	
 </template>
 
 <script lang="ts">
 import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import { createMetaMixin } from 'quasar';
 import { useApi } from 'src/boot/axios';
@@ -37,6 +39,7 @@ import HtmlViewer from 'src/components/common/HtmlViewer.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
+import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 
 const $api = useApi();
 const $router = useRouter();
@@ -69,6 +72,7 @@ async function load(params: RouteParams): Promise<ImageDto> {
 	name: 'PageImage',
 	components: {
 		HtmlViewer,
+		ReportViolationSection,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const image = await load(to.params);
@@ -96,6 +100,8 @@ async function load(params: RouteParams): Promise<ImageDto> {
 	],
 })
 export default class PageImage extends Vue {
+	readonly PageType = PageType;
+	
 	image = {} as ImageDto;
 
 	setContent(image: ImageDto) {

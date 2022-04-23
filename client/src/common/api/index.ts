@@ -11,6 +11,7 @@ import NoticeboardAPI from './noticeboard-api';
 import StoriesAPI from './stories-api';
 import UserAPI from './user-api';
 import VenuesAPI from './venues-api';
+import ViolationsAPI from './violations-api';
 
 export default class API {
   private readonly transport = new APITransport();
@@ -25,10 +26,11 @@ export default class API {
   readonly events = new EventsAPI(this.transport);
   readonly freeCompanies = new FreeCompaniesAPI(this.transport);
   readonly images = new ImagesAPI(this.transport);
-  readonly stories = new StoriesAPI(this.transport);
-  readonly noticeboard = new NoticeboardAPI(this.transport);
-  readonly venues = new VenuesAPI(this.transport);
   readonly links = new LinksAPI(this.transport);
+  readonly noticeboard = new NoticeboardAPI(this.transport);
+  readonly stories = new StoriesAPI(this.transport);
+  readonly venues = new VenuesAPI(this.transport);
+  readonly violations = new ViolationsAPI(this.transport);
 
   // Access token management
 
