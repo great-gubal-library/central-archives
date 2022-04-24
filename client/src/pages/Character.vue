@@ -5,11 +5,10 @@
 			<h2>Character not found</h2>
 			<p>The character {{name}} ({{server}}) is not registered on Chaos Archives.</p>
 		</template>
-		<h3>{{name}}'s stories</h3>
-		<story-list v-if="content.stories.length > 0" :stories="content.stories" />
-		<p v-else>
-			{{name}} has no stories... for now!
-		</p>
+		<template v-if="content.stories.length > 0">
+			<h3>{{name}}'s Stories</h3>
+			<story-list :stories="content.stories" />
+		</template>
 		<template v-if="content.images && content.images.length > 0">
 			<h3>{{name}}'s Gallery</h3>
 			<thumb-gallery :images="content.images" />
