@@ -1,9 +1,6 @@
 <template>
   <q-page class="page-character">
-		<template v-if="character && character.id">
-			<character-profile :character="character" />		
-    	<report-violation-section :pageType="PageType.PROFILE" :pageId="character.id" />
-		</template>
+		<character-profile v-if="character && character.id" :character="character" />		
 		<template v-else-if="notFound">
 			<h2>Character not found</h2>
 			<p>The character {{name}} ({{server}}) is not registered on Chaos Archives.</p>
@@ -17,6 +14,7 @@
 			<h3>{{name}}'s Gallery</h3>
 			<thumb-gallery :images="content.images" />
 		</template>
+    <report-violation-section v-if="character && character.id" :pageType="PageType.PROFILE" :pageId="character.id" />
 	</q-page>	
 </template>
 
