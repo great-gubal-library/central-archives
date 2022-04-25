@@ -34,11 +34,17 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <div v-if="$store.getters.character" class="gt-sm layout__char-name">
-            <q-avatar round>
-              <img :src="$store.getters.character.avatar" />
-            </q-avatar>
-            <span>{{ $store.getters.characterShortName }}</span>
+          <div class="gt-sm layout__char-name">
+            <template v-if="$store.getters.character">
+              <q-avatar round>
+                <img :src="$store.getters.character.avatar" />
+              </q-avatar>
+              <span>{{ $store.getters.characterShortName }}</span>
+            </template>
+            <template v-else>
+              <q-icon size="28px" name="account_circle" />
+              <span>A Stranger</span>
+            </template>
           </div>
         </div>
 
