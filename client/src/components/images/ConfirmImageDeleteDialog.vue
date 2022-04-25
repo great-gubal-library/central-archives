@@ -11,7 +11,7 @@
 				<q-btn flat color="primary" label="Cancel" @click="onCancelClick" />
 				<q-btn flat color="negative" :label="!forceConfirming ? 'Delete' : 'Delete Anyway'" @click="onDeleteClick" />
 			</q-card-actions>
-			<q-inner-loading v-if="deleting" />
+			<q-inner-loading :showing="deleting" />
     </q-card>
   </q-dialog>
 </template>
