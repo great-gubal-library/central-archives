@@ -6,7 +6,7 @@
 			<q-btn v-if="!fullPage" flat color="secondary" label="Cancel" @click="onCancelClick" />
 			<q-btn :flat="!fullPage" :disable="!isValid" color="primary" label="Save Changes" @click="onSaveClick" />
 		</div>
-		<q-inner-loading v-if="saving" />
+		<q-inner-loading :showing="saving" />
 	</div>
 </template>
 
