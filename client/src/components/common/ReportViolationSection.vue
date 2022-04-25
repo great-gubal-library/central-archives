@@ -1,8 +1,10 @@
 <template>
 	<section class="report-violation-section">
 		<q-btn flat color="secondary" label="Copy link" @click="copyLink" />
-		<q-btn v-if="!reported" flat color="secondary" label="Report this page" @click="reportPage" />
-		<q-btn v-else disable flat color="secondary" label="Page reported" />
+		<template v-if="verified">
+			<q-btn v-if="!reported" flat color="secondary" label="Report this page" @click="reportPage" />
+			<q-btn v-else disable flat color="secondary" label="Page reported" />
+		</template>
 	</section>
 </template>
 
@@ -11,6 +13,7 @@ import { PageType } from '@app/shared/enums/page-type.enum';
 import { Options, prop, Vue } from 'vue-class-component';
 import { copyToClipboard } from 'quasar';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import { Role, roleImplies } from '@app/shared/enums/role.enum';
 
 class Props {
 	pageType = prop<PageType>({
@@ -27,6 +30,10 @@ class Props {
 })
 export default class ReportViolationSection extends Vue.with(Props) {
 	reported = false;
+
+	get verified() {
+		return this.$store.getters.role && roleImplies(this.$store.getters.role, Role.USER);
+	}
 
 	async copyLink() {
 		try {
