@@ -94,7 +94,9 @@ export default class CharacterFinderField extends Vue.with(Props) {
 
     try {
       this.characterOptionsSearchString = value;
-      const results = (await minXIVAPI.character.search(value)).Results;
+
+			const dc = `_dc_${SharedConstants.DATACENTER}`;
+      const results = (await minXIVAPI.character.search(value, { server: dc })).Results;
 
       if (this.characterOptionsSearchString !== value) {
         // Too late
