@@ -1,12 +1,14 @@
 import { EventSource } from '@app/shared/enums/event-source.enum';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { EventLocation } from './event-location.entity';
 import { EventAnnouncement } from './event-announcement.entity';
 import { Image } from './image.entity';
+import { SearchFields } from './search-fields';
 
 @Entity()
+@Index(SearchFields.event, { fulltext: true })
 export class Event extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;

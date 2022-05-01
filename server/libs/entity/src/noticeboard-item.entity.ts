@@ -1,9 +1,11 @@
 import { NoticeboardLocation } from '@app/shared/enums/noticeboard-location.enum';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
+import { SearchFields } from './search-fields';
 
 @Entity()
+@Index(SearchFields.noticeboardItem, { fulltext: true })
 export class NoticeboardItem extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;

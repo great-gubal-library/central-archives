@@ -35,5 +35,28 @@ export const SearchFields = {
 		'name',
 		'description',
 		'purpose',
-	]
+	],
+
+  event: [
+    'title',
+    'details',
+    'oocDetails',
+    'contact',
+  ],
+
+  story: [
+    'title',
+    'content',
+  ],
+
+  noticeboardItem: [
+    'title',
+    'content',
+  ],
+
+  image: [
+    'title',
+    'description',
+    'credits',
+  ],
 };

@@ -2,6 +2,7 @@ import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story
 import { SearchFields } from '@app/entity/search-fields';
 import { SearchResultDto } from '@app/shared/dto/search/search-result.dto';
 import { SearchResultsDto } from '@app/shared/dto/search/search-results.dto';
+import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { PageType } from '@app/shared/enums/page-type.enum';
 import { escapeStringRegexp, toSearchKeywords } from '@app/shared/search-utils';
 import { Injectable } from '@nestjs/common';
@@ -34,18 +35,28 @@ export class SearchService {
       return [];
     }
 
-    const [ profiles, freeCompanies, communities, venues ] = await Promise.all([
-      this.searchCharacters(keywords),
-      this.searchFreeCompanies(keywords),
-      this.searchCommunities(keywords),
-      this.searchVenues(keywords),
-    ]);
+    const [profiles, freeCompanies, communities, venues, events, stories, noticeboardItems, images] = await Promise.all(
+      [
+        this.searchCharacters(keywords),
+        this.searchFreeCompanies(keywords),
+        this.searchCommunities(keywords),
+        this.searchVenues(keywords),
+        this.searchEvents(keywords),
+        this.searchStories(keywords),
+        this.searchNoticeboardItems(keywords),
+        this.searchImages(keywords),
+      ],
+    );
 
     return [
       { type: PageType.PROFILE, results: this.filter(profiles) },
       { type: PageType.FREE_COMPANY, results: this.filter(freeCompanies) },
       { type: PageType.COMMUNITY, results: this.filter(communities) },
       { type: PageType.VENUE, results: this.filter(venues) },
+      { type: PageType.EVENT, results: this.filter(events) },
+      { type: PageType.STORY, results: this.filter(stories) },
+      { type: PageType.NOTICEBOARD_ITEM, results: this.filter(noticeboardItems) },
+      { type: PageType.IMAGE, results: this.filter(images) },
     ];
   }
 
@@ -115,22 +126,90 @@ export class SearchService {
     }));
   }
 
+  private async searchEvents(keywords: string[]): Promise<SearchResultDto[]> {
+    const properties = SearchFields.event;
+    const qb = this.eventRepo.createQueryBuilder('e');
+
+    return (
+      await andWhereMatches(qb, 'e', properties, keywords)
+        .limit(this.MAX_RESULTS)
+        .select([...this.expandProperties('e', properties)])
+        .getMany()
+    ).map((event) => ({
+      id: event.id,
+      name: event.title,
+      content: this.getContent(event, properties, keywords),
+    }));
+  }
+
+  private async searchStories(keywords: string[]): Promise<SearchResultDto[]> {
+    const properties = SearchFields.story;
+    const qb = this.storyRepo.createQueryBuilder('s');
+
+    return (
+      await andWhereMatches(qb, 's', properties, keywords)
+        .limit(this.MAX_RESULTS)
+        .select([...this.expandProperties('s', properties)])
+        .getMany()
+    ).map((story) => ({
+      id: story.id,
+      name: story.title,
+      content: this.getContent(story, properties, keywords),
+    }));
+  }
+
+  private async searchNoticeboardItems(keywords: string[]): Promise<SearchResultDto[]> {
+    const properties = SearchFields.noticeboardItem;
+    const qb = this.noticeboardItemRepo.createQueryBuilder('nb');
+
+    return (
+      await andWhereMatches(qb, 'nb', properties, keywords)
+        .limit(this.MAX_RESULTS)
+        .select([...this.expandProperties('nb', properties)])
+        .getMany()
+    ).map((noticeboardItem) => ({
+      id: noticeboardItem.id,
+      name: noticeboardItem.title,
+      content: this.getContent(noticeboardItem, properties, keywords),
+    }));
+  }
+
+  private async searchImages(keywords: string[]): Promise<SearchResultDto[]> {
+    const properties = SearchFields.image;
+    const qb = this.imageRepo.createQueryBuilder('i');
+
+    return (
+      await andWhereMatches(qb, 'i', properties, keywords)
+        .andWhere('i.category IN (:...categories)', { categories: [ImageCategory.ARTWORK, ImageCategory.SCREENSHOT] })
+        .innerJoinAndSelect('i.owner', 'owner')
+        .limit(this.MAX_RESULTS)
+        .select(['i', 'owner.id'])
+        .getMany()
+    ).map((image) => ({
+      id: image.id,
+      name: image.title,
+      content: this.getContent(image, properties, keywords),
+      image: this.imageService.toImageSummaryDto(image),
+    }));
+  }
+
   private expandProperties(alias: string, properties: string[]) {
     return properties.map((property) => `${alias}.${property}`);
   }
 
   private getContent(obj: unknown, properties: string[], keywords: string[]): string {
     const objByProperties = obj as { [k: string]: string };
-    const keywordsRegexps = keywords
-      .map((keyword) => {
-        const escapedKeyword = escapeStringRegexp(keyword);
-        return new RegExp(`^(${escapedKeyword})$|^(${escapedKeyword})[^\\w]|[^\\w](${escapedKeyword})$|[^\\w](${escapedKeyword})[^\\w]`);
-      });
+    const keywordsRegexps = keywords.map((keyword) => {
+      const escapedKeyword = escapeStringRegexp(keyword);
+      return new RegExp(
+        `^(${escapedKeyword})$|^(${escapedKeyword})[^\\w]|[^\\w](${escapedKeyword})$|[^\\w](${escapedKeyword})[^\\w]`,
+      );
+    });
 
     for (const property of properties) {
       // Strip all HTML
       const value = sanitizeHtml(objByProperties[property], { allowedTags: [] });
-			const valueLower = value.toLowerCase();
+      const valueLower = value.toLowerCase();
 
       // Require the content to contain every keyword
       if (keywordsRegexps.every((keyword) => keyword.test(valueLower))) {
@@ -142,6 +221,6 @@ export class SearchService {
   }
 
   private filter(results: SearchResultDto[]): SearchResultDto[] {
-    return results.filter(result => result.content !== '');
+    return results.filter((result) => result.content !== '');
   }
 }

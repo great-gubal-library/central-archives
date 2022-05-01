@@ -1,12 +1,14 @@
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { Event } from './event.entity';
+import { SearchFields } from './search-fields';
 
 @Entity()
 @Unique(['hash', 'owner'])
+@Index(SearchFields.image, { fulltext: true })
 export class Image extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;

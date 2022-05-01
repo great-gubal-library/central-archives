@@ -1,10 +1,12 @@
 import { StoryType } from '@app/shared/enums/story-type.enum';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
+import { SearchFields } from './search-fields';
 import { StoryTag } from './story-tag.entity';
 
 @Entity()
+@Index(SearchFields.story, { fulltext: true })
 export class Story extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
