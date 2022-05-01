@@ -111,16 +111,14 @@
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above dark side="left" :class="DRAWER_BG" :width="DRAWER_WIDTH">
-      <!--
       <q-list dense dark>
         <q-item>
           <q-item-section>
-            <q-input dark color="white" label="Search" />
+            <site-search-field />
           </q-item-section>
         </q-item>
       </q-list>
       <q-separator dark />
-      -->
       <user-menu />
     </q-drawer>
 
@@ -155,12 +153,14 @@ import { Vue, Options } from 'vue-class-component';
 import EventList from '../components/eventbar/EventList.vue';
 import UserMenu from '../components/sidebar/UserMenu.vue';
 import InlineSvg from 'vue-inline-svg';
+import SiteSearchField from 'src/components/search/SiteSearchField.vue';
 
 @Options({
   components: {
     EventList,
     UserMenu,
     InlineSvg,
+    SiteSearchField,
   },
 })
 export default class MainLayout extends Vue {

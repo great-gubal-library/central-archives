@@ -3,6 +3,7 @@ import { SearchFields } from '@app/entity/search-fields';
 import { SearchResultDto } from '@app/shared/dto/search/search-result.dto';
 import { SearchResultsDto } from '@app/shared/dto/search/search-results.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
+import { escapeStringRegexp, toSearchKeywords } from '@app/shared/search-utils';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import sanitizeHtml from 'sanitize-html';
@@ -10,18 +11,8 @@ import { Repository } from 'typeorm';
 import { andWhereMatches } from '../common/db';
 import { ImagesService } from '../images/images.service';
 
-function escapeStringRegexp(str: string) {
-	// Escape characters with special meaning either inside or outside character sets.
-	// Use a simple backslash escape when it’s always valid, and a `\xnn` escape when the simpler form would be disallowed by Unicode patterns’ stricter grammar.
-	return str
-		.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-		.replace(/-/g, '\\x2d');
-}
-
 @Injectable()
 export class SearchService {
-  private readonly MIN_WORD_LENGTH = 3;
-
   constructor(
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     @InjectRepository(FreeCompany) private freeCompanyRepo: Repository<FreeCompany>,
@@ -35,16 +26,13 @@ export class SearchService {
   ) {}
 
   async search(query: string): Promise<SearchResultsDto[]> {
-    const keywords = query
-      .split(/\s+/)
-      .map((word) => word.replace(/[()<>~*"+-]/g, '').toLowerCase())
-      .filter((word) => word.length >= this.MIN_WORD_LENGTH);
+    const keywords = toSearchKeywords(query);
 
     if (keywords.length === 0) {
       return [];
     }
 
-    return [{ type: PageType.PROFILE, results: await this.searchCharacters(keywords) }];
+    return [{ type: PageType.PROFILE, results: this.filter(await this.searchCharacters(keywords)) }];
   }
 
   private async searchCharacters(keywords: string[]): Promise<SearchResultDto[]> {
@@ -69,6 +57,11 @@ export class SearchService {
 
   private getContent(obj: unknown, properties: string[], keywords: string[]): string {
     const objByProperties = obj as { [k: string]: string };
+    const keywordsRegexps = keywords
+      .map((keyword) => {
+        const escapedKeyword = escapeStringRegexp(keyword);
+        return new RegExp(`^(${escapedKeyword})$|^(${escapedKeyword})[^\\w]|[^\\w](${escapedKeyword})$|[^\\w](${escapedKeyword})[^\\w]`);
+      });
 
     for (const property of properties) {
       // Strip all HTML
@@ -76,13 +69,15 @@ export class SearchService {
 			const valueLower = value.toLowerCase();
 
       // Require the content to contain every keyword
-      if (keywords.every((keyword) => valueLower.includes(keyword))) {
-        // Make every keyword bold
-        const keywordRegExp = new RegExp(keywords.map(keyword => escapeStringRegexp(keyword)).join('|'), 'ig');
-        return value.replace(keywordRegExp, match => `<strong>${match}</strong>`);
+      if (keywordsRegexps.every((keyword) => keyword.test(valueLower))) {
+        return value;
       }
     }
 
     return '';
+  }
+
+  private filter(results: SearchResultDto[]): SearchResultDto[] {
+    return results.filter(result => result.content !== '');
   }
 }

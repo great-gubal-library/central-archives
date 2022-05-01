@@ -1,10 +1,6 @@
 import { PageType } from "@app/shared/enums/page-type.enum";
-import { ImageSummaryDto } from "../image/image-summary.dto";
+import { BaseLinkResultDto } from "../common/base-link-result.dto";
 
-export interface LinkResultDto {
+export interface LinkResultDto extends BaseLinkResultDto {
 	type: PageType;
-	id?: number;
-	name?: string;
-	server?: string;
-	image?: ImageSummaryDto;
 }

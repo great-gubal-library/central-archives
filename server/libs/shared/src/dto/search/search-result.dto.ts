@@ -1,5 +1,5 @@
-import { LinkResultDto } from "../links/link-result.dto";
+import { BaseLinkResultDto } from "../common/base-link-result.dto";
 
-export interface SearchResultDto extends Omit<LinkResultDto, 'type'> {
+export interface SearchResultDto extends BaseLinkResultDto {
 	content: string;
 }
