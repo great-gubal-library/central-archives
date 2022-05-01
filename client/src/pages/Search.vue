@@ -2,10 +2,41 @@
   <q-page class="page-search">
     <h2 class="regular-header-font">Search Results</h2>
     <template v-if="!isEmpty">
-      Search results for <strong>{{ query }}</strong
-      >:
+      <p>Search results for <strong>{{ query }}</strong>:</p>
+      <q-card>
+        <q-tabs
+          v-model="tab"
+          dense
+          align="justify"
+          narrow-indicator
+        >
+          <template v-for="resultSet in results" :key="resultSet.type">
+            <q-tab :name="resultSet.type" :label="$display.pageTypesPlural[resultSet.type]" />
+          </template>
+        </q-tabs>
+
+        <q-separator />
+
+        <q-tab-panels v-model="tab">
+          <template v-for="resultSet in results" :key="resultSet.type">
+            <q-tab-panel :name="resultSet.type">
+              <dl>
+                <template v-for="(result, index) in resultSet.results" :key="index">
+                  <dt>
+                    <router-link v-if="result.image" :to="result.image.url">
+                      <img class="page-search__image gt-sm" :src="result.image.thumbUrl" :title="result.image.title" />
+                    </router-link>
+                    <router-link :to="getPageLink(resultSet.type, result)">{{ result.name }}</router-link>
+                  </dt>
+                  <dd v-html="formatResult(result.content)"></dd>
+                </template>
+              </dl>
+            </q-tab-panel>
+          </template>
+         </q-tab-panels>
+      </q-card>
       <section v-for="resultSet in results" :key="resultSet.type">
-        <template v-if="resultSet.results.length > 0">
+        <template>
           <h3>{{ $display.pageTypesPlural[resultSet.type] }}</h3>
           <dl>
             <template v-for="(result, index) in resultSet.results" :key="index">
@@ -30,6 +61,7 @@
 
 <script lang="ts">
 import { SearchResultsDto } from '@app/shared/dto/search/search-results.dto';
+import { PageType } from '@app/shared/enums/page-type.enum';
 import { escapeStringRegexp, toSearchKeywords } from '@app/shared/search-utils';
 import { useApi } from 'src/boot/axios';
 import { getPageLink } from 'src/common/pagelinks';
@@ -50,7 +82,7 @@ async function load(to: RouteLocationNormalized): Promise<{ query: string; resul
     throw new Error();
   }
 
-  const results = await $api.search.search(searchQuery);
+  const results = (await $api.search.search(searchQuery)).filter(resultSet => resultSet.results.length > 0);
   return { query: searchQuery, results };
 }
 
@@ -72,6 +104,7 @@ export default class PageSearch extends Vue {
   query = '';
   keywords: string[] = [];
   results: SearchResultsDto[] = [];
+  tab: PageType = PageType.PROFILE;
 
   private keywordsRegexps: RegExp[];
 
@@ -79,6 +112,10 @@ export default class PageSearch extends Vue {
     this.query = query;
     this.keywords = toSearchKeywords(query);
     this.results = results;
+
+    if (!this.isEmpty) {
+      this.tab = this.results[0].type;
+    }
 
     this.keywordsRegexps = this.keywords.map((keyword) => {
       const escapedKeyword = escapeStringRegexp(keyword);
@@ -90,13 +127,7 @@ export default class PageSearch extends Vue {
   }
 
   get isEmpty() {
-    for (const resultSet of this.results) {
-      if (resultSet.results.length > 0) {
-        return false;
-      }
-    }
-
-    return true;
+    return this.results.length === 0;
   }
 
   formatResult(content: string): string {
@@ -141,6 +172,7 @@ export default class PageSearch extends Vue {
 .page-search__image {
   float: left;
   width: 120px;
+  height: 120px;
   margin-right: 8px;
   margin-bottom: 8px;
 }
