@@ -11,6 +11,6 @@ export function escapeStringRegexp(str: string): string {
 export function toSearchKeywords(query: string): string[] {
 	return query
 	.split(/\s+/)
-	.map((word) => word.replace(/[()<>~*"+-]/g, '').toLowerCase())
+	.map((word) => word.replace(/^[()<>~*"+-]/g, '').toLowerCase())
 	.filter((word) => word.length >= MIN_WORD_LENGTH);
 }

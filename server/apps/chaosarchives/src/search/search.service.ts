@@ -133,7 +133,7 @@ export class SearchService {
     return (
       await andWhereMatches(qb, 'e', properties, keywords)
         .limit(this.MAX_RESULTS)
-        .select([...this.expandProperties('e', properties)])
+        .select(['e.id', ...this.expandProperties('e', properties)])
         .getMany()
     ).map((event) => ({
       id: event.id,
@@ -149,7 +149,7 @@ export class SearchService {
     return (
       await andWhereMatches(qb, 's', properties, keywords)
         .limit(this.MAX_RESULTS)
-        .select([...this.expandProperties('s', properties)])
+        .select(['s.id', ...this.expandProperties('s', properties)])
         .getMany()
     ).map((story) => ({
       id: story.id,
@@ -165,7 +165,7 @@ export class SearchService {
     return (
       await andWhereMatches(qb, 'nb', properties, keywords)
         .limit(this.MAX_RESULTS)
-        .select([...this.expandProperties('nb', properties)])
+        .select(['nb.id', ...this.expandProperties('nb', properties)])
         .getMany()
     ).map((noticeboardItem) => ({
       id: noticeboardItem.id,
