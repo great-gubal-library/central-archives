@@ -20,7 +20,7 @@ export default class SiteSearchField extends Vue {
 				}
 
 				void this.$router.push({
-					path: 'search',
+					path: '/search',
 					query: { q: this.value }
 				});
 			});
