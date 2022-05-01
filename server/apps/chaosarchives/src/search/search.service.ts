@@ -13,6 +13,8 @@ import { ImagesService } from '../images/images.service';
 
 @Injectable()
 export class SearchService {
+  private readonly MAX_RESULTS = 20;
+
   constructor(
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     @InjectRepository(FreeCompany) private freeCompanyRepo: Repository<FreeCompany>,
@@ -32,7 +34,19 @@ export class SearchService {
       return [];
     }
 
-    return [{ type: PageType.PROFILE, results: this.filter(await this.searchCharacters(keywords)) }];
+    const [ profiles, freeCompanies, communities, venues ] = await Promise.all([
+      this.searchCharacters(keywords),
+      this.searchFreeCompanies(keywords),
+      this.searchCommunities(keywords),
+      this.searchVenues(keywords),
+    ]);
+
+    return [
+      { type: PageType.PROFILE, results: this.filter(profiles) },
+      { type: PageType.FREE_COMPANY, results: this.filter(freeCompanies) },
+      { type: PageType.COMMUNITY, results: this.filter(communities) },
+      { type: PageType.VENUE, results: this.filter(venues) },
+    ];
   }
 
   private async searchCharacters(keywords: string[]): Promise<SearchResultDto[]> {
@@ -43,11 +57,61 @@ export class SearchService {
       await andWhereMatches(qb, 'c', properties, keywords)
         .innerJoinAndSelect('c.server', 'server')
         .select([...this.expandProperties('c', properties), 'server.name'])
+        .limit(this.MAX_RESULTS)
         .getMany()
     ).map((character) => ({
       name: character.name,
       server: character.server.name,
       content: this.getContent(character, properties, keywords),
+    }));
+  }
+
+  private async searchFreeCompanies(keywords: string[]): Promise<SearchResultDto[]> {
+    const properties = SearchFields.freeCompany;
+    const qb = this.freeCompanyRepo.createQueryBuilder('fc');
+
+    return (
+      await andWhereMatches(qb, 'fc', properties, keywords)
+        .innerJoinAndSelect('fc.server', 'server')
+        .select([...this.expandProperties('fc', properties), 'server.name'])
+        .limit(this.MAX_RESULTS)
+        .getMany()
+    ).map((fc) => ({
+      name: fc.name,
+      server: fc.server.name,
+      content: this.getContent(fc, properties, keywords),
+    }));
+  }
+
+  private async searchCommunities(keywords: string[]): Promise<SearchResultDto[]> {
+    const properties = SearchFields.community;
+    const qb = this.communityRepo.createQueryBuilder('c');
+
+    return (
+      await andWhereMatches(qb, 'c', properties, keywords)
+        .select([...this.expandProperties('c', properties)])
+        .limit(this.MAX_RESULTS)
+        .getMany()
+    ).map((community) => ({
+      name: community.name,
+      content: this.getContent(community, properties, keywords),
+    }));
+  }
+
+  private async searchVenues(keywords: string[]): Promise<SearchResultDto[]> {
+    const properties = SearchFields.venue;
+    const qb = this.venueRepo.createQueryBuilder('v');
+
+    return (
+      await andWhereMatches(qb, 'v', properties, keywords)
+        .innerJoinAndSelect('v.server', 'server')
+        .select([...this.expandProperties('v', properties), 'server.name'])
+        .limit(this.MAX_RESULTS)
+        .getMany()
+    ).map((venue) => ({
+      name: venue.name,
+      server: venue.server.name,
+      content: this.getContent(venue, properties, keywords),
     }));
   }
 

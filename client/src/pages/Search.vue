@@ -118,4 +118,12 @@ export default class PageSearch extends Vue {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.page-search dt {
+	font-size: 1.2em;
+}
+
+.page-search dd {
+	margin-bottom: 8px;
+}
+</style>
