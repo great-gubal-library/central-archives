@@ -1,10 +1,12 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { CommunityTag } from './community-tag.entity';
 import { Image } from './image.entity';
+import { SearchFields } from './search-fields';
 
 @Entity()
+@Index(SearchFields.community, { fulltext: true })
 export class Community extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,61 +24,61 @@ export class Community extends BasicEntity {
 
   @Column({
     type: 'date',
-    nullable: true
+    nullable: true,
   })
-  foundedAt: string|null;
+  foundedAt: string | null;
 
   @Column({
     type: 'mediumtext',
     nullable: false,
-    default: ''
+    default: '',
   })
   description: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	website: string;
+  website: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	discord: string;
+  discord: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	goal: string;
+  goal: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	status: string;
+  status: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	recruitingOfficers: string;
+  recruitingOfficers: string;
 
   @Column({
     nullable: false,
     width: 100,
-    default: ''
+    default: '',
   })
-	carrdProfile: string;
+  carrdProfile: string;
 
   @ManyToOne(() => Image, {
     lazy: true,
   })
-  banner: Promise<Image|null>;
+  banner: Promise<Image | null>;
 
-  @OneToMany(() => CommunityTag, tag => tag.community, {
+  @OneToMany(() => CommunityTag, (tag) => tag.community, {
     cascade: true,
   })
-	tags: CommunityTag[]
+  tags: CommunityTag[];
 }

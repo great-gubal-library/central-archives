@@ -21,6 +21,7 @@ import { UserModule } from './user/user.module';
 import { VenuesModule } from './venues/venues.module';
 import { LinksModule } from './links/links.module';
 import { ViolationsModule } from './violations/violations.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { ViolationsModule } from './violations/violations.module';
     VenuesModule,
     LinksModule,
     ViolationsModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [

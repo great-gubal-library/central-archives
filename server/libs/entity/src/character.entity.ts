@@ -1,14 +1,16 @@
 import { Race } from '@app/shared/enums/race.enum';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { FreeCompany } from './free-company.entity';
 import { Image } from './image.entity';
+import { SearchFields } from './search-fields';
 import { Server } from './server.entity';
 import { User } from './user.entity';
 
 @Entity()
 @Unique(['name', 'server'])
 @Unique(['lodestoneId', 'active'])
+@Index(SearchFields.character, { fulltext: true })
 export class Character extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,7 +25,7 @@ export class Character extends BasicEntity {
     nullable: true,
     default: true,
   })
-  active: boolean|null;
+  active: boolean | null;
 
   @Column({
     nullable: false,
@@ -43,13 +45,13 @@ export class Character extends BasicEntity {
   avatar: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   verifiedAt: Date;
 
   @Column({
     type: 'varchar',
-    nullable: true
+    nullable: true,
   })
   verificationCode: string | null;
 
@@ -66,127 +68,127 @@ export class Character extends BasicEntity {
   @Column({
     type: 'mediumtext',
     nullable: false,
-    default: ''
+    default: '',
   })
   appearance: string;
 
   @Column({
     type: 'mediumtext',
     nullable: false,
-    default: ''
+    default: '',
   })
-	background: string;
+  background: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	occupation: string;
+  occupation: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	age: string;
+  age: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	birthplace: string;
+  birthplace: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	residence: string;
+  residence: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	title: string;
+  title: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	nickname: string;
+  nickname: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	motto: string;
+  motto: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	loves: string;
+  loves: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	hates: string;
+  hates: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	friends: string;
+  friends: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	relatives: string;
+  relatives: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	enemies: string;
+  enemies: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	motivation: string;
+  motivation: string;
 
   @Column({
     nullable: false,
     width: 100,
-    default: ''
+    default: '',
   })
-	carrdProfile: string;
+  carrdProfile: string;
 
   @Column({
     nullable: false,
-    default: true
+    default: true,
   })
-	showAvatar: boolean;
+  showAvatar: boolean;
 
   @Column({
     nullable: false,
-    default: true
+    default: true,
   })
-	showInfoboxes: boolean;
+  showInfoboxes: boolean;
 
   @Column({
     nullable: false,
-    default: false
+    default: false,
   })
-	combinedDescription: boolean;
+  combinedDescription: boolean;
 
   @ManyToOne(() => Image, {
     lazy: true,
   })
-  banner: Promise<Image|null>;
+  banner: Promise<Image | null>;
 
   @ManyToOne(() => FreeCompany, {
     lazy: true,
   })
-  freeCompany: Promise<FreeCompany|null>;
+  freeCompany: Promise<FreeCompany | null>;
 }

@@ -1,18 +1,20 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { Image } from './image.entity';
+import { SearchFields } from './search-fields';
 import { Server } from './server.entity';
 
 @Entity()
 @Unique(['name', 'server'])
+@Index(SearchFields.freeCompany, { fulltext: true })
 export class FreeCompany extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
     nullable: false,
-    unique: true
+    unique: true,
   })
   lodestoneId: string;
 
@@ -30,7 +32,7 @@ export class FreeCompany extends BasicEntity {
   @Column({
     type: 'text',
     nullable: false,
-    default: ''
+    default: '',
   })
   crest: string;
 
@@ -40,68 +42,68 @@ export class FreeCompany extends BasicEntity {
   server: Server;
 
   @Column({
-    nullable: false
+    nullable: false,
   })
   foundedAt: Date;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   claimedAt: Date;
 
   @ManyToOne(() => Character, {
     nullable: true,
   })
-  leader: Character|null;
+  leader: Character | null;
 
   @Column({
     type: 'mediumtext',
     nullable: false,
-    default: ''
+    default: '',
   })
   description: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	website: string;
+  website: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	goal: string;
+  goal: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	status: string;
+  status: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	areaOfOperations: string;
+  areaOfOperations: string;
 
   @Column({
     nullable: false,
-    default: ''
+    default: '',
   })
-	recruitingOfficers: string;
+  recruitingOfficers: string;
 
   @Column({
     nullable: false,
     width: 100,
-    default: ''
+    default: '',
   })
-	carrdProfile: string;
+  carrdProfile: string;
 
   @ManyToOne(() => Image, {
     lazy: true,
   })
-  banner: Promise<Image|null>;
+  banner: Promise<Image | null>;
 
   getCrest(): string[] {
     return this.crest.split(',');

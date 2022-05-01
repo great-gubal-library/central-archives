@@ -1,14 +1,16 @@
 import { HousingArea } from '@app/shared/enums/housing-area.enum';
 import { VenueLocation } from '@app/shared/enums/venue-location.enum';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { Image } from './image.entity';
+import { SearchFields } from './search-fields';
 import { Server } from './server.entity';
 import { VenueTag } from './venue-tag.entity';
 
 @Entity()
 @Unique(['name', 'server'])
+@Index(SearchFields.venue, { fulltext: true })
 export class Venue extends BasicEntity {
   @PrimaryGeneratedColumn()
   id: number;
