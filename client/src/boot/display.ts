@@ -74,6 +74,17 @@ class Display {
 		[PageType.IMAGE]: 'Image',
 	};
 
+	readonly pageTypesPlural: { [k: string]: string } = {
+		[PageType.PROFILE]: 'Profiles',
+		[PageType.FREE_COMPANY]: 'Free Companies',
+		[PageType.COMMUNITY]: 'Communities',
+		[PageType.VENUE]: 'Venues',
+		[PageType.EVENT]: 'Events',
+		[PageType.STORY]: 'Stories',
+		[PageType.NOTICEBOARD_ITEM]: 'Noticeboard items',
+		[PageType.IMAGE]: 'Images',
+	};
+
 	relativeTime(timestamp: number) {
 		const result = DateTime.fromMillis(timestamp).toRelative({
 			locale: 'en',

@@ -6,10 +6,13 @@
       >:
       <section v-for="resultSet in results" :key="resultSet.type">
         <template v-if="resultSet.results.length > 0">
-          <h3>{{ $display.pageTypes[resultSet.type] }}</h3>
+          <h3>{{ $display.pageTypesPlural[resultSet.type] }}</h3>
           <dl>
             <template v-for="(result, index) in resultSet.results" :key="index">
               <dt>
+                <router-link v-if="result.image" :to="result.image.url">
+                  <img class="page-search__image gt-sm" :src="result.image.thumbUrl" :title="result.image.title" />
+                </router-link>
                 <router-link :to="getPageLink(resultSet.type, result)">{{ result.name }}</router-link>
               </dt>
               <dd v-html="formatResult(result.content)"></dd>
@@ -77,11 +80,13 @@ export default class PageSearch extends Vue {
     this.keywords = toSearchKeywords(query);
     this.results = results;
 
-    this.keywordsRegexps = this.keywords
-      .map((keyword) => {
-        const escapedKeyword = escapeStringRegexp(keyword);
-        return new RegExp(`^(${escapedKeyword})$|^(${escapedKeyword})[^\\w]|[^\\w](${escapedKeyword})$|[^\\w](${escapedKeyword})[^\\w]`, 'ig');
-      });
+    this.keywordsRegexps = this.keywords.map((keyword) => {
+      const escapedKeyword = escapeStringRegexp(keyword);
+      return new RegExp(
+        `^(${escapedKeyword})$|^(${escapedKeyword})[^\\w]|[^\\w](${escapedKeyword})$|[^\\w](${escapedKeyword})[^\\w]`,
+        'ig'
+      );
+    });
   }
 
   get isEmpty() {
@@ -97,19 +102,19 @@ export default class PageSearch extends Vue {
   formatResult(content: string): string {
     let result = parseWikilinksInHtml(content);
 
-		for (const regexp of this.keywordsRegexps) {
-			result = result.replace(regexp, (match: string, ...keywords: string[]) => {
-				let replaced = match;
+    for (const regexp of this.keywordsRegexps) {
+      result = result.replace(regexp, (match: string, ...keywords: string[]) => {
+        let replaced = match;
 
-				for (const keyword of keywords.filter(keyword => !!keyword)) {
-					replaced = replaced.replace(keyword, `<strong>${keyword}</strong>`);
-				}
+        for (const keyword of keywords.filter((keyword) => !!keyword)) {
+          replaced = replaced.replace(keyword, `<strong>${keyword}</strong>`);
+        }
 
-				return replaced;
-			});
-		}
+        return replaced;
+      });
+    }
 
-		return result;
+    return result;
   }
 
   getPageLink = getPageLink;
@@ -120,10 +125,23 @@ export default class PageSearch extends Vue {
 
 <style lang="scss">
 .page-search dt {
-	font-size: 1.2em;
+  font-size: 1.2em;
 }
 
 .page-search dd {
-	margin-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.page-search dd::after {
+  content: ' ';
+  display: block;
+  clear: both;
+}
+
+.page-search__image {
+  float: left;
+  width: 120px;
+  margin-right: 8px;
+  margin-bottom: 8px;
 }
 </style>
