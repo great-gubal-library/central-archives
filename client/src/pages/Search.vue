@@ -70,20 +70,18 @@ export default class PageSearch extends Vue {
   keywords: string[] = [];
   results: SearchResultsDto[] = [];
 
-  private keywordsRegexp: RegExp;
+  private keywordsRegexps: RegExp[];
 
   setContent(query: string, results: SearchResultsDto[]) {
     this.query = query;
     this.keywords = toSearchKeywords(query);
     this.results = results;
 
-    const keywordsRegexpStr = this.keywords
+    this.keywordsRegexps = this.keywords
       .map((keyword) => {
         const escapedKeyword = escapeStringRegexp(keyword);
-        return `^(${escapedKeyword})$|^(${escapedKeyword})[^\\w]|[^\\w](${escapedKeyword})$|[^\\w](${escapedKeyword})[^\\w]`;
-      })
-      .join('|');
-    this.keywordsRegexp = new RegExp(keywordsRegexpStr, 'g');
+        return new RegExp(`^(${escapedKeyword})$|^(${escapedKeyword})[^\\w]|[^\\w](${escapedKeyword})$|[^\\w](${escapedKeyword})[^\\w]`, 'ig');
+      });
   }
 
   get isEmpty() {
@@ -97,16 +95,21 @@ export default class PageSearch extends Vue {
   }
 
   formatResult(content: string): string {
-    const wikifiedContent = parseWikilinksInHtml(content);
-    return wikifiedContent.replace(this.keywordsRegexp, (match: string, ...keywords: string[]) => {
-			const keyword = keywords.find(keyword => !!keyword);
+    let result = parseWikilinksInHtml(content);
 
-			if (!keyword) {
-				return match;
-			}
+		for (const regexp of this.keywordsRegexps) {
+			result = result.replace(regexp, (match: string, ...keywords: string[]) => {
+				let replaced = match;
 
-			return match.replace(keyword, `<strong>${keyword}</strong>`);
-		});
+				for (const keyword of keywords.filter(keyword => !!keyword)) {
+					replaced = replaced.replace(keyword, `<strong>${keyword}</strong>`);
+				}
+
+				return replaced;
+			});
+		}
+
+		return result;
   }
 
   getPageLink = getPageLink;
