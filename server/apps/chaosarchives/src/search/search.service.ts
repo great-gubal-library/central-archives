@@ -68,6 +68,7 @@ export class SearchService {
       await andWhereMatches(qb, 'c', properties, keywords)
         .innerJoinAndSelect('c.server', 'server')
         .select([...this.expandProperties('c', properties), 'server.name'])
+        .orderBy('c.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
     ).map((character) => ({
@@ -85,6 +86,7 @@ export class SearchService {
       await andWhereMatches(qb, 'fc', properties, keywords)
         .innerJoinAndSelect('fc.server', 'server')
         .select([...this.expandProperties('fc', properties), 'server.name'])
+        .orderBy('fc.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
     ).map((fc) => ({
@@ -101,6 +103,7 @@ export class SearchService {
     return (
       await andWhereMatches(qb, 'c', properties, keywords)
         .select([...this.expandProperties('c', properties)])
+        .orderBy('c.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
     ).map((community) => ({
@@ -117,6 +120,7 @@ export class SearchService {
       await andWhereMatches(qb, 'v', properties, keywords)
         .innerJoinAndSelect('v.server', 'server')
         .select([...this.expandProperties('v', properties), 'server.name'])
+        .orderBy('v.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
     ).map((venue) => ({
@@ -132,8 +136,9 @@ export class SearchService {
 
     return (
       await andWhereMatches(qb, 'e', properties, keywords)
-        .limit(this.MAX_RESULTS)
         .select(['e.id', ...this.expandProperties('e', properties)])
+        .orderBy('e.updatedAt', 'DESC')
+        .limit(this.MAX_RESULTS)
         .getMany()
     ).map((event) => ({
       id: event.id,
@@ -148,8 +153,9 @@ export class SearchService {
 
     return (
       await andWhereMatches(qb, 's', properties, keywords)
-        .limit(this.MAX_RESULTS)
         .select(['s.id', ...this.expandProperties('s', properties)])
+        .orderBy('s.updatedAt', 'DESC')
+        .limit(this.MAX_RESULTS)
         .getMany()
     ).map((story) => ({
       id: story.id,
@@ -164,8 +170,9 @@ export class SearchService {
 
     return (
       await andWhereMatches(qb, 'nb', properties, keywords)
-        .limit(this.MAX_RESULTS)
         .select(['nb.id', ...this.expandProperties('nb', properties)])
+        .orderBy('nb.updatedAt', 'DESC')
+        .limit(this.MAX_RESULTS)
         .getMany()
     ).map((noticeboardItem) => ({
       id: noticeboardItem.id,
@@ -182,8 +189,9 @@ export class SearchService {
       await andWhereMatches(qb, 'i', properties, keywords)
         .andWhere('i.category IN (:...categories)', { categories: [ImageCategory.ARTWORK, ImageCategory.SCREENSHOT] })
         .innerJoinAndSelect('i.owner', 'owner')
-        .limit(this.MAX_RESULTS)
         .select(['i', 'owner.id'])
+        .orderBy('i.updatedAt', 'DESC')
+        .limit(this.MAX_RESULTS)
         .getMany()
     ).map((image) => ({
       id: image.id,
