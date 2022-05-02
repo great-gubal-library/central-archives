@@ -67,7 +67,7 @@ export class SearchService {
     return (
       await andWhereMatches(qb, 'c', properties, keywords)
         .innerJoinAndSelect('c.server', 'server')
-        .select([...this.expandProperties('c', properties), 'server.name'])
+        .select([...this.expandProperties('c', properties), 'server.name', 'c.updatedAt'])
         .orderBy('c.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
@@ -75,6 +75,7 @@ export class SearchService {
       name: character.name,
       server: character.server.name,
       content: this.getContent(character, properties, keywords),
+      updatedAt: character.updatedAt.getTime(),
     }));
   }
 
@@ -85,7 +86,7 @@ export class SearchService {
     return (
       await andWhereMatches(qb, 'fc', properties, keywords)
         .innerJoinAndSelect('fc.server', 'server')
-        .select([...this.expandProperties('fc', properties), 'server.name'])
+        .select([...this.expandProperties('fc', properties), 'server.name', 'fc.updatedAt'])
         .orderBy('fc.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
@@ -93,6 +94,7 @@ export class SearchService {
       name: fc.name,
       server: fc.server.name,
       content: this.getContent(fc, properties, keywords),
+      updatedAt: fc.updatedAt.getTime(),
     }));
   }
 
@@ -102,13 +104,14 @@ export class SearchService {
 
     return (
       await andWhereMatches(qb, 'c', properties, keywords)
-        .select([...this.expandProperties('c', properties)])
+        .select([...this.expandProperties('c', properties), 'c.updatedAt'])
         .orderBy('c.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
     ).map((community) => ({
       name: community.name,
       content: this.getContent(community, properties, keywords),
+      updatedAt: community.updatedAt.getTime(),
     }));
   }
 
@@ -119,7 +122,7 @@ export class SearchService {
     return (
       await andWhereMatches(qb, 'v', properties, keywords)
         .innerJoinAndSelect('v.server', 'server')
-        .select([...this.expandProperties('v', properties), 'server.name'])
+        .select([...this.expandProperties('v', properties), 'server.name', 'v.updatedAt'])
         .orderBy('v.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
@@ -127,6 +130,7 @@ export class SearchService {
       name: venue.name,
       server: venue.server.name,
       content: this.getContent(venue, properties, keywords),
+      updatedAt: venue.updatedAt.getTime(),
     }));
   }
 
@@ -136,7 +140,7 @@ export class SearchService {
 
     return (
       await andWhereMatches(qb, 'e', properties, keywords)
-        .select(['e.id', ...this.expandProperties('e', properties)])
+        .select(['e.id', ...this.expandProperties('e', properties), 'e.updatedAt'])
         .orderBy('e.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
@@ -144,6 +148,7 @@ export class SearchService {
       id: event.id,
       name: event.title,
       content: this.getContent(event, properties, keywords),
+      updatedAt: event.updatedAt.getTime(),
     }));
   }
 
@@ -153,7 +158,7 @@ export class SearchService {
 
     return (
       await andWhereMatches(qb, 's', properties, keywords)
-        .select(['s.id', ...this.expandProperties('s', properties)])
+        .select(['s.id', ...this.expandProperties('s', properties), 's.updatedAt'])
         .orderBy('s.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
@@ -161,6 +166,7 @@ export class SearchService {
       id: story.id,
       name: story.title,
       content: this.getContent(story, properties, keywords),
+      updatedAt: story.updatedAt.getTime(),
     }));
   }
 
@@ -170,7 +176,7 @@ export class SearchService {
 
     return (
       await andWhereMatches(qb, 'nb', properties, keywords)
-        .select(['nb.id', ...this.expandProperties('nb', properties)])
+        .select(['nb.id', ...this.expandProperties('nb', properties), 'nb.updatedAt'])
         .orderBy('nb.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
@@ -178,6 +184,7 @@ export class SearchService {
       id: noticeboardItem.id,
       name: noticeboardItem.title,
       content: this.getContent(noticeboardItem, properties, keywords),
+      updatedAt: noticeboardItem.updatedAt.getTime(),
     }));
   }
 
@@ -198,6 +205,7 @@ export class SearchService {
       name: image.title,
       content: this.getContent(image, properties, keywords),
       image: this.imageService.toImageSummaryDto(image),
+      updatedAt: image.updatedAt.getTime(),
     }));
   }
 

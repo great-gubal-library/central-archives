@@ -7,10 +7,10 @@ export abstract class BasicEntity {
   id: number;
 
   @CreateDateColumn()
-  createdAt?: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt?: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn({ default: null })
   deletedAt?: Date;

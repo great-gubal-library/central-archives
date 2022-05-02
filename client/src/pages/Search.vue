@@ -26,7 +26,7 @@
                     <router-link v-if="result.image" :to="getPageLink(resultSet.type, result)">
                       <img class="page-search__image gt-sm" :src="result.image.thumbUrl" :title="result.image.title" />
                     </router-link>
-                    <router-link :to="getPageLink(resultSet.type, result)">{{ result.name }}</router-link>
+                    <router-link :to="getPageLink(resultSet.type, result)">{{ result.name }}</router-link> — {{ $display.formatDate(result.updatedAt) }}
                   </dt>
                   <dd v-html="formatResult(result.content)"></dd>
                 </template>
