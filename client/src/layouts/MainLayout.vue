@@ -305,6 +305,12 @@ $max-layout-width: 1280px;
   }
 }
 
+@media screen and (min-width: 1024px) {
+  body {
+    overflow-y: scroll;
+  }
+}
+
 .q-drawer .q-item__label--header {
   font-family: Michroma, sans-serif;
   font-weight: bold;
