@@ -23,7 +23,7 @@
               <dl>
                 <template v-for="(result, index) in resultSet.results" :key="index">
                   <dt>
-                    <router-link v-if="result.image" :to="result.image.url">
+                    <router-link v-if="result.image" :to="getPageLink(resultSet.type, result)">
                       <img class="page-search__image gt-sm" :src="result.image.thumbUrl" :title="result.image.title" />
                     </router-link>
                     <router-link :to="getPageLink(resultSet.type, result)">{{ result.name }}</router-link>
@@ -35,22 +35,6 @@
           </template>
          </q-tab-panels>
       </q-card>
-      <section v-for="resultSet in results" :key="resultSet.type">
-        <template>
-          <h3>{{ $display.pageTypesPlural[resultSet.type] }}</h3>
-          <dl>
-            <template v-for="(result, index) in resultSet.results" :key="index">
-              <dt>
-                <router-link v-if="result.image" :to="result.image.url">
-                  <img class="page-search__image gt-sm" :src="result.image.thumbUrl" :title="result.image.title" />
-                </router-link>
-                <router-link :to="getPageLink(resultSet.type, result)">{{ result.name }}</router-link>
-              </dt>
-              <dd v-html="formatResult(result.content)"></dd>
-            </template>
-          </dl>
-        </template>
-      </section>
     </template>
     <section v-else>
       Nothing found for <strong>{{ query }}</strong
