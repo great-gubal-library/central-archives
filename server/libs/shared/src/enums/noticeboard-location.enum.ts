@@ -5,6 +5,10 @@ export enum NoticeboardLocation {
 	GRIDANIA = 'gridania',
 	ULDAH = 'uldah',
 	ISHGARD = 'ishgard',
+	REVENANTS_TOLL = 'revenants_toll',
+	OLD_SHARLAYAN = 'old_sharlayan',
+	RADZ_AT_HAN = 'radz_at_han',
+	KUGANE = 'kugane',
 }
 
 export const noticeboardLocations: { [k: string]: string } = {
@@ -14,4 +18,8 @@ export const noticeboardLocations: { [k: string]: string } = {
 	[NoticeboardLocation.GRIDANIA]: 'Gridania',
 	[NoticeboardLocation.ULDAH]: "Ul'dah",
 	[NoticeboardLocation.ISHGARD]: 'Ishgard',
+	[NoticeboardLocation.REVENANTS_TOLL]: "Revenant's Toll",
+	[NoticeboardLocation.OLD_SHARLAYAN]: 'Old Sharlayan',
+	[NoticeboardLocation.RADZ_AT_HAN]: 'Radz-at-Han',
+	[NoticeboardLocation.KUGANE]: 'Kugane',
 };
