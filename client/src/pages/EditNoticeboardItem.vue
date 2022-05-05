@@ -153,6 +153,7 @@ export default class PageEditNoticeboardItem extends Vue {
       if (!this.noticeboardItem.id) {
         const { id } = await this.$api.noticeboard.createNoticeboardItem(this.noticeboardItem, this.postOnDiscord);
         this.noticeboardItem.id = id;
+        void this.$router.replace(`/edit-noticeboard-item/${id}`);
       } else {
         await this.$api.noticeboard.editNoticeboardItem(this.noticeboardItem);
       }

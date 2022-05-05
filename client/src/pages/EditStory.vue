@@ -154,6 +154,7 @@ export default class PageEditStory extends Vue {
       if (!this.story.id) {
         const { id } = await this.$api.stories.createStory(this.story);
         this.story.id = id;
+        void this.$router.replace(`/edit-story/${id}`);
       } else {
         await this.$api.stories.editStory(this.story);
       }
