@@ -1,7 +1,8 @@
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { HttpService, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { decode } from 'html-entities';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';

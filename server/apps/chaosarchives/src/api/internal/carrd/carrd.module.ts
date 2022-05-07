@@ -1,5 +1,6 @@
 import { Character } from '@app/entity';
-import { HttpModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CarrdController } from './carrd.controller';
 import { CarrdService } from './carrd.service';

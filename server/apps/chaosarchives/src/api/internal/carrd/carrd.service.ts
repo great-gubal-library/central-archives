@@ -1,5 +1,6 @@
 import { Character } from '@app/entity';
-import { HttpService, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import parse from 'node-html-parser';
 import { IsNull, Not, Repository } from 'typeorm';

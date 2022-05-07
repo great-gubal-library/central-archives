@@ -5,7 +5,8 @@ import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { NoticeboardItemSummaryDto } from '@app/shared/dto/noticeboard/noticeboard-item-summary.dto';
 import { NoticeboardItemDto } from '@app/shared/dto/noticeboard/noticeboard-item.dto';
 import html from '@app/shared/html';
-import { BadRequestException, HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 
@@ -81,7 +82,7 @@ export class NoticeboardService {
     });
 
     if (postOnDiscord) {
-      this.notifySteward(noticeboardItemEntity); // no await
+      void this.notifySteward(noticeboardItemEntity); // no await
     }
 
     return {

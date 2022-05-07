@@ -1,5 +1,6 @@
 import { NewsDto } from "@app/shared/dto/news/news.dto";
-import { BadGatewayException, HttpService, Injectable, Logger } from "@nestjs/common";
+import { BadGatewayException, Injectable, Logger } from "@nestjs/common";
+import { HttpService } from '@nestjs/axios';
 import { DateTime } from "luxon";
 import { AxiosError } from 'axios';
 import parse, { HTMLElement } from "node-html-parser";

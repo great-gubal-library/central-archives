@@ -14,7 +14,8 @@ import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import errors from '@app/shared/errors';
-import { BadRequestException, ConflictException, GoneException, HttpService, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, ConflictException, GoneException, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import parse from 'node-html-parser';
 import { Connection, EntityManager, Repository } from 'typeorm';

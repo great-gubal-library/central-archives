@@ -1,6 +1,7 @@
 import { Character } from '@app/entity';
 import { FreeCompany } from '@app/entity/free-company.entity';
-import { HttpModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommunitiesModule } from '../communities/communities.module';
 import { ImagesModule } from '../images/images.module';
