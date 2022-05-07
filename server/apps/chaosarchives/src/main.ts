@@ -9,4 +9,4 @@ async function bootstrap() {
   app.useGlobalPipes(transformAndValidate);
   await app.listen(serverConfiguration.port);
 }
-bootstrap();
+void bootstrap();

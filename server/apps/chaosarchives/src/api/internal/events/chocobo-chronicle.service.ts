@@ -22,7 +22,7 @@ export class ChocoboChronicleService {
 	) { }
 
 	async fetchEvents(): Promise<ExternalEvent[]> {
-		const response = await this.httpService.get<ChocoboChronicleEventsDto>(this.EVENTS_API_URL).toPromise();
+		const response = (await this.httpService.get<ChocoboChronicleEventsDto>(this.EVENTS_API_URL).toPromise())!;
 		const events = response.data.events;
     const today = DateTime.now()
       .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)

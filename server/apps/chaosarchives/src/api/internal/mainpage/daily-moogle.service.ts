@@ -21,7 +21,7 @@ export class DailyMoogleService {
 		let doc: Document;
 
 		try {
-			const page = await this.httpService.get<string>(this.NEWS_SITE).toPromise();
+			const page = (await this.httpService.get<string>(this.NEWS_SITE).toPromise())!;
 			doc = new JSDOM(page.data, { contentType: 'application/rss+xml' }).window.document;
 		} catch (e) {
 			if ((e as AxiosError).isAxiosError) {
@@ -49,7 +49,7 @@ export class DailyMoogleService {
 
 			try {
 				// Get image URL from linked page
-				const linkedPage = await this.httpService.get<string>(link).toPromise();
+				const linkedPage = (await this.httpService.get<string>(link).toPromise())!;
 				const linkedDoc = parse(linkedPage.data);
 				let images = linkedDoc.querySelectorAll('.elementor-section:nth-child(3) .elementor-col-50:first-child img');
 

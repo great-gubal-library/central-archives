@@ -29,7 +29,7 @@ export class CrescentMoonPublishingService {
 	) { }
 
 	async fetchEvents(): Promise<ExternalEvent[]> {
-		const response = await this.httpService.get<string>(this.EVENTS_SITE).toPromise();
+		const response = (await this.httpService.get<string>(this.EVENTS_SITE).toPromise())!;
 		const doc = parse(response.data);
 
 		// Sidebar events are unreliable, so we query the calendar instead
@@ -50,7 +50,7 @@ export class CrescentMoonPublishingService {
 			}
 
 			try {
-				const linkedPage = await this.httpService.get<string>(href).toPromise();
+				const linkedPage = (await this.httpService.get<string>(href).toPromise())!;
 				const linkedDoc = parse(linkedPage.data);
 				const dateField = linkedDoc.querySelector('i.fa-calendar + div');
 				const timeField = linkedDoc.querySelector('i.fa-clock + div');

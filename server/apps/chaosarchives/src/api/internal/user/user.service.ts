@@ -198,7 +198,7 @@ export class UserService {
     try {
       // We're parsing Lodestone directly in this case because XIVAPI caches the result.
       const url = `https://eu.finalfantasyxiv.com/lodestone/character/${lodestoneId}/`;
-      const page = (await this.httpService.get<string>(url).toPromise()).data;
+      const page = (await this.httpService.get<string>(url).toPromise())!.data;
       const doc = parse(page);
       const profileField = doc.querySelector('.character__selfintroduction');
 

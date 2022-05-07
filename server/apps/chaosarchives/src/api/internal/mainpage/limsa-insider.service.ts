@@ -36,8 +36,8 @@ export class LimsaInsiderService {
 				this.httpService.get<string>(this.ARCHIVE_NEWS_SITE).toPromise(),
 			]);
 
-			currentDoc = parse(currentPage.data);
-			archiveDoc = parse(archivePage.data);
+			currentDoc = parse(currentPage!.data);
+			archiveDoc = parse(archivePage!.data);
 		} catch (e) {
 			if ((e as AxiosError).isAxiosError) {
 				const ae = e as AxiosError;
