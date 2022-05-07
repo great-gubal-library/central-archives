@@ -55,12 +55,7 @@ export class NewsService {
 	}
 
 	private async fetchNews(): Promise<NewsDto[]> {
-		const [ dailyMoogleNews, limsaInsiderNews ] = await Promise.all([
-			this.dailyMoogleService.fetchNews(),
-			this.limsaInsiderService.fetchNews(),
-		]);
-
-		return [ ...dailyMoogleNews, ...limsaInsiderNews ]
+		return (await this.limsaInsiderService.fetchNews())
 			.sort((n1, n2) => -utils.compareNumbers(n1.date, n2.date)) // sort by date descending
 			.slice(0, SharedConstants.MAX_NEWS_ENTRIES);
 	}

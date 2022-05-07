@@ -5,11 +5,6 @@
         News by
         <a
           class="news-timeline__link"
-          href="https://crescentmoonpublishing.com/the-daily-moogle/"
-          target="_blank"
-          >The Daily Moogle</a
-        > and <a
-          class="news-timeline__link"
           href="https://news.kryst.company/"
           target="_blank"
           >Limsa Insider</a
