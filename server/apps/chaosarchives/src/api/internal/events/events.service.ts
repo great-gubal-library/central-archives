@@ -15,10 +15,11 @@ import { EventSource } from '@app/shared/enums/event-source.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime, Duration } from 'luxon';
+import { firstValueFrom } from 'rxjs';
 import { Connection, EntityManager, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { Contains } from '../../../common/db';
 import utils from '../../../common/utils';
@@ -247,7 +248,7 @@ export class EventsService {
   private async notifySteward(event: Event): Promise<void> {
     try {
       this.logger.debug(`Notifying Steward about event ${event.id} change`);
-      await this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/event`, { eventId: event.id }).toPromise();
+      await firstValueFrom(this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/event`, { eventId: event.id }));
     } catch (e) {
       if (e instanceof Error) {
         this.logger.error(e.message, e.stack);

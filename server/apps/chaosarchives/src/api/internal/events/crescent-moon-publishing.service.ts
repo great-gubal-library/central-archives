@@ -2,10 +2,11 @@ import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
+import { firstValueFrom } from 'rxjs';
 import utils from '../../../common/utils';
 import { ExternalEvent } from './model/external-event';
 import { isRecurringEvent } from './util/event-utils';
@@ -30,7 +31,7 @@ export class CrescentMoonPublishingService {
 	) { }
 
 	async fetchEvents(): Promise<ExternalEvent[]> {
-		const response = (await this.httpService.get<string>(this.EVENTS_SITE).toPromise())!;
+		const response = await firstValueFrom(this.httpService.get<string>(this.EVENTS_SITE));
 		const doc = parse(response.data);
 
 		// Sidebar events are unreliable, so we query the calendar instead
@@ -51,7 +52,7 @@ export class CrescentMoonPublishingService {
 			}
 
 			try {
-				const linkedPage = (await this.httpService.get<string>(href).toPromise())!;
+				const linkedPage = await firstValueFrom(this.httpService.get<string>(href));
 				const linkedDoc = parse(linkedPage.data);
 				const dateField = linkedDoc.querySelector('i.fa-calendar + div');
 				const timeField = linkedDoc.querySelector('i.fa-clock + div');

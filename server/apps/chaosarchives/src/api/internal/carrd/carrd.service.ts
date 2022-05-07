@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import parse from 'node-html-parser';
 import { IsNull, Not, Repository } from 'typeorm';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class CarrdService {
@@ -36,7 +37,7 @@ export class CarrdService {
 
 	async getCharacterPreviewCarrdPage(carrdProfile: string): Promise<string> {
 		const baseUrl = carrdProfile.includes('.') ? `https://${carrdProfile}/` : `https://${carrdProfile}.carrd.co/`;
-		const html = (await this.httpService.get(baseUrl).toPromise())!.data;
+		const html = (await firstValueFrom(this.httpService.get(baseUrl))).data;
 		const doc = parse(html);
 
 		// Rewrite image URLs

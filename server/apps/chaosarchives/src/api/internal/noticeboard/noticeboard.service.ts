@@ -9,6 +9,7 @@ import { BadRequestException, Injectable, Logger, NotFoundException } from '@nes
 import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class NoticeboardService {
@@ -164,7 +165,7 @@ export class NoticeboardService {
 	private async notifySteward(noticeboardItem: NoticeboardItem): Promise<void> {
 		try {
 			this.logger.debug(`Notifying Steward about noticeboard ${noticeboardItem.id} creation`);
-			await this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/noticeboard`, { noticeboardItemId: noticeboardItem.id }).toPromise();
+			await firstValueFrom(this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/noticeboard`, { noticeboardItemId: noticeboardItem.id }));
 		} catch (e) {
 			if (e instanceof Error) {
 				this.logger.error(e.message, e.stack);

@@ -22,6 +22,7 @@ import { Connection, EntityManager, Repository } from 'typeorm';
 import { CharactersService } from '../characters/characters.service';
 import { isQueryFailedError } from '../../../common/db';
 import { MailService } from '../../../mail/mail.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -199,7 +200,7 @@ export class UserService {
     try {
       // We're parsing Lodestone directly in this case because XIVAPI caches the result.
       const url = `https://eu.finalfantasyxiv.com/lodestone/character/${lodestoneId}/`;
-      const page = (await this.httpService.get<string>(url).toPromise())!.data;
+      const page = (await firstValueFrom(this.httpService.get<string>(url))).data;
       const doc = parse(page);
       const profileField = doc.querySelector('.character__selfintroduction');
 

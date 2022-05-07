@@ -1,11 +1,12 @@
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { Injectable, Logger } from '@nestjs/common';
 import { decode } from 'html-entities';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
+import { firstValueFrom } from 'rxjs';
 import { ChocoboChronicleEventsDto } from './dto/chocobo-chronicle-events.dto';
 import { ExternalEvent } from './model/external-event';
 import { isRecurringEvent } from './util/event-utils';
@@ -23,7 +24,7 @@ export class ChocoboChronicleService {
 	) { }
 
 	async fetchEvents(): Promise<ExternalEvent[]> {
-		const response = (await this.httpService.get<ChocoboChronicleEventsDto>(this.EVENTS_API_URL).toPromise())!;
+		const response = await firstValueFrom(this.httpService.get<ChocoboChronicleEventsDto>(this.EVENTS_API_URL));
 		const events = response.data.events;
     const today = DateTime.now()
       .setZone(SharedConstants.FFXIV_SERVER_TIMEZONE)

@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { DateTime } from "luxon";
 import { AxiosError } from 'axios';
 import parse, { HTMLElement } from "node-html-parser";
+import { firstValueFrom } from "rxjs";
 
 const EORZEAN_MONTH_NAMES: string[] = [];
 
@@ -33,12 +34,12 @@ export class LimsaInsiderService {
 		
 		try {
 			const [ currentPage, archivePage ] = await Promise.all([
-				this.httpService.get<string>(this.CURRENT_NEWS_SITE).toPromise(),
-				this.httpService.get<string>(this.ARCHIVE_NEWS_SITE).toPromise(),
+				firstValueFrom(this.httpService.get<string>(this.CURRENT_NEWS_SITE)),
+				firstValueFrom(this.httpService.get<string>(this.ARCHIVE_NEWS_SITE)),
 			]);
 
-			currentDoc = parse(currentPage!.data);
-			archiveDoc = parse(archivePage!.data);
+			currentDoc = parse(currentPage.data);
+			archiveDoc = parse(archivePage.data);
 		} catch (e) {
 			if ((e as AxiosError).isAxiosError) {
 				const ae = e as AxiosError;
