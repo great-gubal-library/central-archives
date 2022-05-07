@@ -5,7 +5,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { HttpService, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import parse from 'node-html-parser';
-import utils from '../common/utils';
+import utils from '../../../common/utils';
 import { ExternalEvent } from './model/external-event';
 import { isRecurringEvent } from './util/event-utils';
 

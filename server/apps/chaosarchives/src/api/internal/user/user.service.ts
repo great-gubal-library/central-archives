@@ -19,8 +19,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import parse from 'node-html-parser';
 import { Connection, EntityManager, Repository } from 'typeorm';
 import { CharactersService } from '../characters/characters.service';
-import { isQueryFailedError } from '../common/db';
-import { MailService } from '../mail/mail.service';
+import { isQueryFailedError } from '../../../common/db';
+import { MailService } from '../../../mail/mail.service';
 
 @Injectable()
 export class UserService {

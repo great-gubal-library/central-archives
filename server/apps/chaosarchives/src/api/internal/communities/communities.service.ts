@@ -15,7 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
 import { Connection, EntityManager, FindOneOptions, Repository } from 'typeorm';
-import { assertUserCharacterId, checkCarrdProfile } from '../common/api-checks';
+import { assertUserCharacterId, checkCarrdProfile } from '../../../common/api-checks';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()

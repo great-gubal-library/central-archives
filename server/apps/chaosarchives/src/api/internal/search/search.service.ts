@@ -9,7 +9,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import sanitizeHtml from 'sanitize-html';
 import { Repository } from 'typeorm';
-import { andWhereMatches } from '../common/db';
+import { andWhereMatches } from '../../../common/db';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()

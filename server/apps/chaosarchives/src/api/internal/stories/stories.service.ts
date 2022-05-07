@@ -9,7 +9,7 @@ import html from '@app/shared/html';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, In, IsNull, Not, Repository } from 'typeorm';
-import { escapeForLike } from '../common/db';
+import { escapeForLike } from '../../../common/db';
 
 @Injectable()
 export class StoriesService {

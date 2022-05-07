@@ -4,7 +4,7 @@ import { ViolationReportDto } from '@app/shared/dto/violations/violation-report.
 import { PageType } from '@app/shared/enums/page-type.enum';
 import { BadRequestException, ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
 import { Connection, EntityManager } from 'typeorm';
-import { isQueryFailedError } from '../common/db';
+import { isQueryFailedError } from '../../../common/db';
 
 @Injectable()
 export class ViolationsService {

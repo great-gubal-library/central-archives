@@ -24,7 +24,7 @@ import {
   ImageSanitizeError,
   ImageSanitizeResult,
   sanitizeImage
-} from '../common/image-lib';
+} from '../../../common/image-lib';
 import { StorageService } from './storage.service';
 
 @Injectable()

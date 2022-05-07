@@ -3,7 +3,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { DateTime, Duration } from 'luxon';
-import utils from '../common/utils';
+import utils from '../../../common/utils';
 import { DailyMoogleService } from './daily-moogle.service';
 import { LimsaInsiderService } from './limsa-insider.service';
 

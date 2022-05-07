@@ -11,8 +11,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import XIVAPI from '@xivapi/js';
 import { DateTime } from 'luxon';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
-import { checkCarrdProfile } from '../common/api-checks';
-import { getLodestoneCharacter } from '../common/lodestone';
+import { checkCarrdProfile } from '../../../common/api-checks';
+import { getLodestoneCharacter } from '../../../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
