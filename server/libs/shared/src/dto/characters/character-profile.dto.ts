@@ -2,9 +2,10 @@ import { Race } from '@app/shared/enums/race.enum';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { BannerDto } from './banner.dto';
+import { BaseCharacterProfileDto } from './base-character-profile.dto';
 import { CharacterFreeCompanyDto } from './character-free-company.dto';
 
-export class CharacterProfileDto {
+export class CharacterProfileDto extends BaseCharacterProfileDto {
   @IsNumber()
   id: number;
 
@@ -30,53 +31,6 @@ export class CharacterProfileDto {
   @IsOptional()
   active: boolean;
 
-  // RP fields
-	
-  @IsString()
-  appearance: string;
-
-  @IsString()
-  background: string;
-
-  @IsString()
-  occupation: string;
-
-  @IsString()
-  age: string;
-
-  @IsString()
-  birthplace: string;
-
-  @IsString()
-  residence: string;
-
-  @IsString()
-  title: string;
-
-  @IsString()
-  nickname: string;
-
-  @IsString()
-  motto: string;
-
-  @IsString()
-  loves: string;
-
-  @IsString()
-  hates: string;
-
-  @IsString()
-  friends: string;
-
-  @IsString()
-  relatives: string;
-
-  @IsString()
-  enemies: string;
-
-  @IsString()
-  motivation: string;
-
   @IsString()
   carrdProfile: string;
 
@@ -97,6 +51,8 @@ export class CharacterProfileDto {
   freeCompany: CharacterFreeCompanyDto|null;
 	
 	constructor(properties?: Readonly<CharacterProfileDto>) {
+    super();
+
     if (properties) {
       Object.assign(this, properties);
     }
