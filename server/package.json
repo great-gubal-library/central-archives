@@ -31,6 +31,7 @@
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.4.4",
+    "@nestjs/swagger": "^5.2.1",
     "@nestjs/typeorm": "^8.0.3",
     "@types/aws-sdk": "^2.7.0",
     "@xivapi/js": "^0.3.3",
@@ -65,6 +66,7 @@
     "rxjs": "^7.5.5",
     "sanitize-html": "^2.5.1",
     "sharp": "^0.29.1",
+    "swagger-ui-express": "^4.3.0",
     "typeorm": "^0.2.32"
   },
   "devDependencies": {
