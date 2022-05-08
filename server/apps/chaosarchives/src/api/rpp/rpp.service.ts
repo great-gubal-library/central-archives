@@ -54,6 +54,7 @@ export class RppService {
       loves: character.loves,
       hates: character.hates,
       motivation: character.motivation,
+			currently: '',
 		};
 	}
 

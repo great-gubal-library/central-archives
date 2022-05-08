@@ -93,6 +93,12 @@ export class RppCharacterProfileDto extends BaseCharacterProfileDto {
   @IsString()
   motivation: string;
 
+	@ApiProperty({
+    example: 'Tired, restless.',
+  })
+  @IsString()
+  currently: string;
+
 	constructor(properties?: Readonly<RppCharacterProfileDto>) {
     super();
 
