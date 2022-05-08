@@ -3,6 +3,7 @@ import { RppCharacterProfileDto } from "@app/shared/dto/rpp/rpp-character-profil
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { convert } from 'html-to-text';
 
 @Injectable()
 export class RppService {
@@ -25,10 +26,21 @@ export class RppService {
 			throw new NotFoundException('Character not found');
 		}
 
+		// Strip wikilinks from all properties
+		const properties = Object.keys(character) as (keyof Character)[];
+
+		properties.forEach(property => {
+			const value = character[property];
+
+			if (typeof value === 'string') {
+				(character[property] as string) = this.stripWikilinks(value);
+			}
+		});
+
 		// temp; will use a new table for RPP profiles specifically
 		return {
-			appearance: character.appearance,
-      background: character.combinedDescription ? '' : character.background,
+			appearance: this.htmlToText(character.appearance),
+      background: character.combinedDescription ? '' : this.htmlToText(character.background),
       occupation: character.occupation,
       age: character.age,
       birthplace: character.birthplace,
@@ -43,5 +55,17 @@ export class RppService {
       hates: character.hates,
       motivation: character.motivation,
 		};
+	}
+
+	private stripWikilinks(html: string): string {
+		return html.replace(/\[\[(.+?\|)?(.+?)\]\]/g, '$2');
+	}
+
+	private htmlToText(html: string): string {
+		return convert(html, {
+			wordwrap: false,
+			ignoreHref: true,
+			ignoreImage: true,
+		});
 	}
 }
