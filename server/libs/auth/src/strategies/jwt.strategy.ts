@@ -1,10 +1,11 @@
 
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
 import { authConfiguration } from '@app/configuration';
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthImplService } from '../impl/auth-impl.service';
-import { UserInfo } from '../model/user-info';
+import { AuthInfo } from '../model/auth-info';
+import { AuthScope } from '../model/auth-scope.enum';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,7 +17,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: { sub: number }): Promise<UserInfo> {
-    return this.authService.getUserInfo(payload.sub);
+  async validate(payload: { sub: number, scope?: AuthScope }): Promise<AuthInfo> {
+    return {
+      user: await this.authService.getUserInfo(payload.sub),
+      scope: payload.scope || null,
+    }
   }
 }

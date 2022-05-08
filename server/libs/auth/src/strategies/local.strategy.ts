@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { validate } from 'class-validator';
 import { Strategy } from 'passport-local';
 import { AuthImplService } from '../impl/auth-impl.service';
-import { UserInfo } from '../model/user-info';
+import { AuthInfo } from '../model/auth-info';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -12,7 +12,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: 'email' })
   }
 
-  async validate(email: string, password: string): Promise<UserInfo> {
+  async validate(email: string, password: string): Promise<AuthInfo> {
     const dto = new UserLogInDto({ email, password });
     // We can't use the validation pipe, so we reimplement the class validation logic here manually.
     const errors = await validate(dto);
@@ -24,6 +24,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException(errorMessages);
     }
 
-    return this.authService.validateUser(dto.email, dto.password);
+    return {
+      user: await this.authService.validateUser(dto.email, dto.password),
+      scope: null,
+    }
   }
 }

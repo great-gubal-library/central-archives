@@ -1,7 +1,9 @@
 import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
+import { Scope } from '@app/auth/decorators/scope.decorator';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
+import { AuthScope } from '@app/auth/model/auth-scope.enum';
 import { UserInfo } from '@app/auth/model/user-info';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
@@ -29,6 +31,7 @@ export class CharactersController {
   ) {}
 
   @Get('profile/:server/:name')
+  @Scope(AuthScope.RPP)
   @UseGuards(OptionalJwtAuthGuard)
   async getCharacterProfile(
     @Param('name') name: string,

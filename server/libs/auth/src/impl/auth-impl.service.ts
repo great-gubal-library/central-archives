@@ -71,7 +71,7 @@ export class AuthImplService {
       })),
     });
 
-    this.redisService.set(
+    void this.redisService.set(
       `user_${user.id}`,
       JSON.stringify(result),
       'ex',
