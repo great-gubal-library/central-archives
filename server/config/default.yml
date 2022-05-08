@@ -30,6 +30,7 @@ mail:
 auth:
   jwtSecret: 'secret'
   jwtExpiry: '30d'
+  scopedJwtExpiry: '365d'
 
 s3:
   endpoint: 'https://servername.tld'

@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InternalApiModule } from './api/internal/internal-api.module';
+import { RppModule } from './api/rpp/rpp.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GlobalExceptionsFilter } from './global-exceptions.filter';
@@ -17,6 +18,7 @@ import { MailModule } from './mail/mail.module';
     MailModule,
     AuthModule,
     InternalApiModule,
+    RppModule,
   ],
   controllers: [AppController],
   providers: [
