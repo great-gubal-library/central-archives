@@ -1,3 +1,4 @@
+import { NewsStatus } from '@app/shared/enums/news-status.enum';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
@@ -40,4 +41,11 @@ export class News extends BasicEntity {
     nullable: false,
   })
 	category: NewsCategory[];
+
+  @Column({
+    type: 'enum',
+    enum: NewsStatus,
+    nullable: false,
+  })
+  status: NewsStatus;
 }

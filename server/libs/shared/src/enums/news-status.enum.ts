@@ -1,4 +1,4 @@
 export enum NewsStatus {
-	DRAFT,
-	PUBLISHED,
+	DRAFT = 'draft',
+	PUBLISHED = 'published',
 }
