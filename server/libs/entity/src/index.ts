@@ -8,6 +8,8 @@ export { EventAnnouncement } from './event-announcement.entity';
 export { EventLocation } from './event-location.entity';
 export { FreeCompany } from './free-company.entity';
 export { Image } from './image.entity';
+export { News } from './news.entity';
+export { NewsCategory } from './news-category.entity';
 export { NoticeboardItem } from './noticeboard-item.entity';
 export { Server } from './server.entity';
 export { Story } from './story.entity';
