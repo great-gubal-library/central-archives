@@ -1,3 +1,4 @@
+import { NewsRole } from "@app/shared/enums/news-role.enum";
 import { Race } from "@app/shared/enums/race.enum";
 
 export interface SessionCharacterDto {
@@ -7,5 +8,6 @@ export interface SessionCharacterDto {
   server: string;
   avatar: string;
   race: Race;
+  newsRole: NewsRole;
   verified: boolean;
 }

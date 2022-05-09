@@ -1,3 +1,4 @@
+import { NewsRole } from "@app/shared/enums/news-role.enum";
 import { Race } from "@app/shared/enums/race.enum";
 
 export class UserCharacterInfo {
@@ -12,6 +13,8 @@ export class UserCharacterInfo {
   readonly avatar: string;
   
   readonly race: Race;
+
+  readonly newsRole: NewsRole;
 
   readonly verified: boolean;
 

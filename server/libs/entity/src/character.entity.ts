@@ -1,3 +1,4 @@
+import { NewsRole } from '@app/shared/enums/news-role.enum';
 import { Race } from '@app/shared/enums/race.enum';
 import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
@@ -191,4 +192,18 @@ export class Character extends BasicEntity {
     lazy: true,
   })
   freeCompany: Promise<FreeCompany | null>;
+
+  @Column({
+    type: 'enum',
+    enum: NewsRole,
+    nullable: false,
+    default: NewsRole.NONE,
+  })
+  newsRole: NewsRole;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  newsPseudonym: string|null;
 }

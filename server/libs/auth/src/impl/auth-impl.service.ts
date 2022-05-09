@@ -67,6 +67,7 @@ export class AuthImplService {
         server: character.server.name,
         avatar: character.avatar,
         race: character.race,
+        newsRole: character.newsRole,
         verified: character.verifiedAt !== null
       })),
     });
