@@ -19,7 +19,7 @@
     // Quasar-defined webpack aliases
     "paths": {
       "src/*": ["src/*"],
-      "@common/*": ["../client-common/src/*"],
+      "@common/*": ["src/*"],
       "@app/shared/*": ["../server/libs/shared/src/*"],
       "components/*": ["src/components/*"],
       "layouts/*": ["src/layouts/*"],
