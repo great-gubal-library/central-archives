@@ -13,7 +13,7 @@ html, body {
 
 body {
 	background: #EDEDED;
-	font-family: 'Playfair Display', serif;
+	font-family: 'Crimson Pro', serif;
 }
 
 @media screen and (min-width: 1024px) {
@@ -31,4 +31,14 @@ body {
 	background: #CCCCCC;
 	border: 1px solid #888;
 	border-radius: 5px;
+}
+
+a {
+	color: #556;
+	text-decoration: none;
+	border-bottom: 1px dashed;
+}
+
+a:hover {
+	color: #551a8b;
 }

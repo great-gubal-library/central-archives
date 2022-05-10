@@ -25,10 +25,11 @@ export default class SiteHeader extends Vue {
 }
 
 .header h1 {
-	margin-top: 5rem;
+	margin-top: 0;
 	margin-bottom: 2rem;
 	text-align: center;
 	font-family: Playfair Display SC, serif;
+	text-shadow: #ddd 4px 4px;
 }
 
 .header hr {
@@ -41,7 +42,8 @@ export default class SiteHeader extends Vue {
 .header__info {
 	display: flex;
 	padding-bottom: 2px;
-	font-family: Playfair Display SC, serif;
+	font-size: 20px;
+	text-transform: uppercase;
 }
 
 .header__location {

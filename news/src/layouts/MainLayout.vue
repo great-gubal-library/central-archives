@@ -4,16 +4,19 @@
 		<section class="layout__page-container">
 			<router-view />
 		</section>
+		<site-footer />
   </section>
 </template>
 
 <script lang="ts">
+import SiteFooter from 'src/components/footer/SiteFooter.vue';
 import SiteHeader from 'src/components/header/SiteHeader.vue';
 import { Vue, Options } from 'vue-class-component';
 
 @Options({
   components: {
     SiteHeader,
+		SiteFooter,
   },
 })
 export default class MainLayout extends Vue {
@@ -23,7 +26,7 @@ export default class MainLayout extends Vue {
 
 <style lang="scss">
 .layout {
-	margin: auto;
+	margin: 5rem auto;
 	max-width: 1280px;
 	font-size: 18px;
 }
