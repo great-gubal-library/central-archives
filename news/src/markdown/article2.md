@@ -1,0 +1,2 @@
+What a hectic two days those have been! I'm putting the finishing touches to this article at a table in the Drowning Wench, with patrons — many of them fellow adventurers — a-buzzing about excitedly, and in just under an hour I will be turning in the manuscript at the Harborwatch office, before departing, among many others, for the Limsa docks to embark on a voyage to the Far East — suddenly, and unplanned.
+
