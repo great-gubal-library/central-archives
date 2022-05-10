@@ -11,9 +11,6 @@ import { Options, Vue } from 'vue-class-component';
   name: 'PageIndex',
   components: {
   },
-  async beforeRouteEnter(_, __, next) {
-    next(vm => {});
-  }
 })
 export default class PageIndex extends Vue {
   

@@ -1,8 +1,8 @@
 <template>
-  <section>
-		<div class="layout__page-container">
+  <section class="layout">
+		<section class="layout__page-container">
 			<router-view />
-		</div>
+		</section>
   </section>
 </template>
 
@@ -20,4 +20,8 @@ export default class MainLayout extends Vue {
 </script>
 
 <style lang="scss">
+.layout {
+	margin: auto;
+	max-width: 1280px;
+}
 </style>
