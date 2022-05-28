@@ -4,7 +4,7 @@
 		<hr />
 		<section class="header__info">
 			<div class="header__location">Limsa Lominsa</div>
-			<div class="header__date">10<sup><small>th</small></sup> Sun of the Third Astral Moon</div>
+			<div class="header__date">9<sup><small>th</small></sup> Sun of the Third Astral Moon</div>
 			<div class="header__price">15 gil</div>
 		</section>
 		<hr />
@@ -41,6 +41,7 @@ export default class SiteHeader extends Vue {
 
 .header__info {
 	display: flex;
+	align-items: end;
 	padding-bottom: 2px;
 	font-size: 20px;
 	text-transform: uppercase;
