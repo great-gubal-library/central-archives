@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { NewsCategory } from './news-category.entity';
+import { NewsIssue } from './news-issue.entity';
 
 @Entity()
 export class News extends BasicEntity {
@@ -40,7 +41,7 @@ export class News extends BasicEntity {
   @ManyToOne(() => NewsCategory, {
     nullable: false,
   })
-	category: NewsCategory[];
+	category: NewsCategory;
 
   @Column({
     type: 'enum',
@@ -48,4 +49,9 @@ export class News extends BasicEntity {
     nullable: false,
   })
   status: NewsStatus;
+
+  @ManyToOne(() => NewsIssue, {
+    nullable: true,
+  })
+	issue: NewsIssue|null;
 }

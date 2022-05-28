@@ -10,6 +10,7 @@ export { FreeCompany } from './free-company.entity';
 export { Image } from './image.entity';
 export { News } from './news.entity';
 export { NewsCategory } from './news-category.entity';
+export { NewsIssue } from './news-issue.entity';
 export { NoticeboardItem } from './noticeboard-item.entity';
 export { Server } from './server.entity';
 export { Story } from './story.entity';
