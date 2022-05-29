@@ -1,15 +1,15 @@
 <template>
   <q-timeline>
     <q-timeline-entry heading tag="div">
-      <h4 class="news-timeline__header">
+      <h3 class="news-timeline__header">
         News by
         <a
           class="news-timeline__link"
-          href="https://news.kryst.company/"
+          href="https://theharborwatch.org/"
           target="_blank"
-          >Limsa Insider</a
+          >The Harborwatch</a
         >
-      </h4>
+      </h3>
     </q-timeline-entry>
     <q-timeline-entry
       v-for="(entry, index) in news"
