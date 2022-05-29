@@ -28,6 +28,12 @@ export class News extends BasicEntity {
   slug: string;
 
   @Column({
+    nullable: false,
+    default: ''
+  })
+  subtitle: string;
+
+  @Column({
     type: 'text',
     nullable: false,
     default: ''

@@ -73,6 +73,31 @@ export class NewsService {
 		return this.toIssue(latestIssue);
 	}
 
+	async getIssues(): Promise<number[]> {
+		const issues = await this.newsIssueRepo.createQueryBuilder('issue')
+			.andWhere('issue.publishedAt IS NOT NULL')
+			.orderBy('issue.publishedAt', 'DESC')
+			.select([ 'issue.id' ])
+			.getMany();
+
+		return issues.map(issue => issue.id);
+	}
+
+	async getIssueById(id: number): Promise<NewsIssueDto> {
+		const issue = await this.newsIssueRepo.createQueryBuilder('issue')
+			.where('issue.id = :id', { id })
+			.andWhere('issue.publishedAt IS NOT NULL')
+			.orderBy('issue.publishedAt', 'DESC')
+			.select([ 'issue.id', 'issue.publishedAt' ])
+			.getOne();
+
+		if (!issue) {
+			throw new NotFoundException('Issue not found');
+		}
+
+		return this.toIssue(issue);
+	}
+
 	async getArticleBySlug(slug: string): Promise<NewsArticleDto> {
 		const article = await this.newsRepo.createQueryBuilder('news')
 			.innerJoinAndSelect('news.owner', 'owner')

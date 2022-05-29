@@ -13,6 +13,14 @@ export default class NewsAPI {
 		return this.transport.get('latest');
 	}
 
+	async getIssues(): Promise<number[]> {
+		return this.transport.get('issues');
+	}
+
+	async getIssueById(id: number): Promise<NewsIssueDto> {
+		return this.transport.get(`issues/${id}`);
+	}
+
 	async getArticleBySlug(slug: string): Promise<NewsArticleDto> {
 		return this.transport.get(`by-slug/${slug}`);
 	}

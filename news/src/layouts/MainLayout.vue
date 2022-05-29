@@ -1,5 +1,6 @@
 <template>
   <section class="layout">
+		<issue-navigation />
 		<site-header />
 		<section class="layout__page-container">
 			<router-view />
@@ -11,10 +12,12 @@
 <script lang="ts">
 import SiteFooter from 'src/components/footer/SiteFooter.vue';
 import SiteHeader from 'src/components/header/SiteHeader.vue';
+import IssueNavigation from 'src/components/sidebars/IssueNavigation.vue';
 import { Vue, Options } from 'vue-class-component';
 
 @Options({
   components: {
+		IssueNavigation,
     SiteHeader,
 		SiteFooter,
   },
