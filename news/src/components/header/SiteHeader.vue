@@ -1,6 +1,6 @@
 <template>
 	<header class="header">
-		<h1>The Harborwatch</h1>
+		<h1><router-link to="/">The Harborwatch</router-link></h1>
 		<hr />
 		<section class="header__info">
 			<div class="header__location">Limsa Lominsa</div>
@@ -30,6 +30,15 @@ export default class SiteHeader extends Vue {
 	text-align: center;
 	font-family: Playfair Display SC, serif;
 	text-shadow: #ddd 4px 4px;
+}
+
+.header h1 a {
+	color: inherit;
+	border: inherit;
+}
+
+.header h1 a:hover {
+	color: #551a8b;
 }
 
 .header hr {
