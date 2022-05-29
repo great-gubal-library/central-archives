@@ -53,8 +53,9 @@ export class NewsService {
 		});
 		const year = dateTime.year;
 		const month = padStart(dateTime.month.toString(), 2, '0');
+		const day = padStart(dateTime.day.toString(), 2, '0');
 
-		return `${serverConfiguration.newsRoot}/${year}/${month}/${news.slug}`;
+		return `${serverConfiguration.newsRoot}/${year}/${month}/${day}/${news.slug}`;
 	}
 
 	async getLatestIssue(): Promise<NewsIssueDto|null> {

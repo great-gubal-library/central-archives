@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/:year([0-9]{4})/:month([0-9]{2})/:slug',
+    path: '/:year([0-9]{4})/:month([0-9]{2})/:day([0-9]{2})/:slug',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Article.vue') }],
     meta: {

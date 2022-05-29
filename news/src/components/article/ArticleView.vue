@@ -1,7 +1,7 @@
 <template>
 	<section class="article">
 		<header>
-			<h2>{{article.title}}</h2>
+			<h2><router-link :to="link">{{article.title}}</router-link></h2>
 			<div class="article__subtitle">{{article.subtitle}}</div>
 			<div class="article__author">by <a :href="authorLink" target="_blank">{{article.author.pseudonym}}</a></div>
 		</header>
@@ -11,6 +11,8 @@
 
 <script lang="ts">
 import { NewsArticleDto } from '@app/shared/dto/news/news-article.dto';
+import SharedConstants from '@app/shared/SharedConstants';
+import { DateTime } from 'luxon';
 import { prop, Vue } from 'vue-class-component';
 
 class Props {
@@ -20,6 +22,20 @@ class Props {
 }
 
 export default class ArticleView extends Vue.with(Props) {
+	get link() {
+		const dateTime = DateTime.fromMillis(this.article.publishedAt, {
+			zone: SharedConstants.FFXIV_SERVER_TIMEZONE
+		});
+		const year = dateTime.year;
+		const month = this.pad2(dateTime.month);
+		const day = this.pad2(dateTime.day);
+		return `/${year}/${month}/${day}/${this.article.slug}`;
+	}
+
+	private pad2(n: number): string {
+		return n >= 10 ? n.toString() : `0${n}`;
+	}
+
 	get authorLink() {
 		const name = this.article.author.name.replace(/ /g, '_');
 		const server = this.article.author.server;
@@ -33,6 +49,15 @@ export default class ArticleView extends Vue.with(Props) {
   flex-basis: 0;
   flex-grow: 1;
   margin-right: 20px;
+}
+
+.article h2 a {
+	color: inherit;
+	border: inherit;
+}
+
+.article h2 a:hover {
+	color: #551a8b;
 }
 
 .article__content {
