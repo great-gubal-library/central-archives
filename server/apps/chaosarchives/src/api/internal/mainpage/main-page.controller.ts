@@ -2,11 +2,11 @@ import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 import { Controller, Get } from '@nestjs/common';
 import { CommunitiesService } from '../communities/communities.service';
+import { NewsService } from '../news/news.service';
 import { NoticeboardService } from '../noticeboard/noticeboard.service';
 import { StoriesService } from '../stories/stories.service';
 import { VenuesService } from '../venues/venues.service';
 import { MainPageService } from './main-page.service';
-import { NewsCacheType, NewsService } from './news.service';
 
 @Controller('main-page')
 export class MainPageController {
@@ -33,15 +33,15 @@ export class MainPageController {
     const [mainPageContent, newsResult, storyList, noticeboardItemList, newVenuesList, newCommunitiesList] =
       await Promise.all([
         this.mainPageService.getMainPageContent(),
-        this.newsService.getNews(),
+        this.newsService.getLatestSummaries(),
         this.storiesService.getStoryList({ limit: this.MAX_STORIES }),
         this.noticeboardService.getNoticeboardItemList({ limit: this.MAX_NOTICEBOARD_ITEMS }),
         this.venuesService.getVenues({ limit: this.MAX_NEW_VENUES }),
         this.communitiesService.getCommunities({ limit: this.MAX_NEW_VENUES }, true),
       ]);
 
-    mainPageContent.news = newsResult.news;
-    mainPageContent.newsUpToDate = newsResult.newsUpToDate;
+    mainPageContent.news = newsResult;
+    mainPageContent.newsUpToDate = true;
     mainPageContent.newStories = storyList.data;
     mainPageContent.newNoticeboardItems = noticeboardItemList;
     mainPageContent.newVenues = newVenuesList;
@@ -52,6 +52,6 @@ export class MainPageController {
   // Gets relatively up to date news.
   @Get('/news')
   async getUpdatedNews(): Promise<NewsDto[]> {
-    return (await this.newsService.getNews(NewsCacheType.SHORT)).news;
+    return this.newsService.getLatestSummaries();
   }
 }

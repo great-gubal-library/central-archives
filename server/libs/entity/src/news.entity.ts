@@ -2,6 +2,7 @@ import { NewsStatus } from '@app/shared/enums/news-status.enum';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
+import { Image } from './image.entity';
 import { NewsCategory } from './news-category.entity';
 import { NewsIssue } from './news-issue.entity';
 
@@ -27,6 +28,13 @@ export class News extends BasicEntity {
   slug: string;
 
   @Column({
+    type: 'text',
+    nullable: false,
+    default: ''
+  })
+  summary: string;
+
+  @Column({
     type: 'mediumtext',
     nullable: false,
     default: ''
@@ -49,6 +57,11 @@ export class News extends BasicEntity {
     nullable: false,
   })
   status: NewsStatus;
+
+  @ManyToOne(() => Image, {
+    nullable: true,
+  })
+  image: Image|null;
 
   @ManyToOne(() => NewsIssue, {
     nullable: true,

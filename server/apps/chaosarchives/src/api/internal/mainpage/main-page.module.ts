@@ -13,12 +13,14 @@ import { LimsaInsiderService } from './limsa-insider.service';
 import { MainPageController } from './main-page.controller';
 import { MainPageService } from './main-page.service';
 import { NewsService } from './news.service';
+import { NewsModule } from '../news/news.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Character, FreeCompany]),
     StoriesModule,
     ImagesModule,
+    NewsModule,
     NoticeboardModule,
     CommunitiesModule,
     VenuesModule,
