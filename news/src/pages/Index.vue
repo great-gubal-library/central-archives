@@ -1,6 +1,7 @@
 <template>
   <section class="page-index">
     <template v-if="issue">
+      <mounted-teleport to="#header-date">{{ $display.formatDateEorzean(issue.publishedAt) }}</mounted-teleport>
       <article-view v-for="article in issue.articles" :article="article" :key="article.id" />
     </template>
     <template v-else>
@@ -14,6 +15,7 @@ import { NewsIssueDto } from '@app/shared/dto/news/news-issue.dto';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import ArticleView from 'src/components/article/ArticleView.vue';
+import MountedTeleport from 'src/components/common/MountedTeleport.vue';
 import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();
@@ -32,6 +34,7 @@ async function load(): Promise<NewsIssueDto|null> {
   name: 'PageIndex',
   components: {
     ArticleView,
+    MountedTeleport,
   },
   async beforeRouteEnter(_, __, next) {
     const content = await load();

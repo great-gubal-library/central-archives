@@ -1,10 +1,11 @@
 import { serverConfiguration } from "@app/configuration";
 import { News, NewsIssue } from "@app/entity";
+import { NewsArticleDto } from "@app/shared/dto/news/news-article.dto";
 import { NewsIssueDto } from "@app/shared/dto/news/news-issue.dto";
 import { NewsDto } from "@app/shared/dto/news/news.dto";
 import { NewsStatus } from "@app/shared/enums/news-status.enum";
 import SharedConstants from "@app/shared/SharedConstants";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { padStart } from "lodash";
 import { DateTime } from "luxon";
@@ -71,6 +72,24 @@ export class NewsService {
 		return this.toIssue(latestIssue);
 	}
 
+	async getArticleBySlug(slug: string): Promise<NewsArticleDto> {
+		const article = await this.newsRepo.createQueryBuilder('news')
+			.innerJoinAndSelect('news.owner', 'owner')
+			.innerJoinAndSelect('owner.server', 'server')
+			.innerJoinAndSelect('news.category', 'category')
+			.where('news.status = :status', { status: NewsStatus.PUBLISHED })
+			.andWhere('news.publishedAt IS NOT NULL')
+			.andWhere('news.slug = :slug', { slug })
+			.select([ 'news', 'category.name', 'owner.name', 'server.name', 'owner.newsPseudonym' ])
+			.getOne();
+
+		if (!article) {
+			throw new NotFoundException('Article not found');
+		}
+
+		return this.toArticle(article);
+	}
+
 	private async toIssue(issue: NewsIssue): Promise<NewsIssueDto> {
 		const articles = await this.newsRepo.createQueryBuilder('news')
 			.innerJoinAndSelect('news.owner', 'owner')
@@ -86,19 +105,23 @@ export class NewsService {
 		return {
 			id: issue.id,
 			publishedAt: issue.publishedAt.getTime(),
-			articles: articles.map(article => ({
-				id: article.id,
-				title: article.title,
-				slug: article.slug,
-				content: article.content,
-				category: article.category.name,
-				publishedAt: article.publishedAt.getTime(),
-				author: {
-					name: article.owner.name,
-					server: article.owner.server.name,
-					pseudonym: article.owner.newsPseudonym || article.owner.name,
-				},
-			})),
+			articles: articles.map(article => this.toArticle(article)),
+		};
+	}
+
+	private toArticle(article: News): NewsArticleDto {
+		return {
+			id: article.id,
+			title: article.title,
+			slug: article.slug,
+			content: article.content,
+			category: article.category.name,
+			publishedAt: article.publishedAt.getTime(),
+			author: {
+				name: article.owner.name,
+				server: article.owner.server.name,
+				pseudonym: article.owner.newsPseudonym || article.owner.name,
+			},
 		};
 	}
 }

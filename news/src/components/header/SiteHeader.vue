@@ -4,7 +4,7 @@
 		<hr />
 		<section class="header__info">
 			<div class="header__location">Limsa Lominsa</div>
-			<div class="header__date">9<sup><small>th</small></sup> Sun of the Third Astral Moon</div>
+			<div id="header-date" class="header__date"></div>
 			<div class="header__price">15 gil</div>
 		</section>
 		<hr />
