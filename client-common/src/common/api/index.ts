@@ -7,6 +7,7 @@ import EventsAPI from './events-api';
 import FreeCompaniesAPI from './free-companies-api';
 import ImagesAPI from './images-api';
 import LinksAPI from './links-api';
+import NewsAPI from './news-api';
 import NoticeboardAPI from './noticeboard-api';
 import SearchAPI from './search-api';
 import StoriesAPI from './stories-api';
@@ -28,6 +29,7 @@ export default class API {
   readonly freeCompanies = new FreeCompaniesAPI(this.transport);
   readonly images = new ImagesAPI(this.transport);
   readonly links = new LinksAPI(this.transport);
+  readonly news = new NewsAPI(this.transport);
   readonly noticeboard = new NoticeboardAPI(this.transport);
   readonly search = new SearchAPI(this.transport);
   readonly stories = new StoriesAPI(this.transport);
