@@ -305,6 +305,7 @@ export class CharactersService {
           avatar: character.avatar,
           lodestoneId: character.lodestoneId,
           race: character.race,
+          newsRole: character.newsRole,
           verified: false
         };
       });

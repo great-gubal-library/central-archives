@@ -8,6 +8,7 @@ import { FreeCompaniesModule } from './free-companies/free-companies.module';
 import { ImagesModule } from './images/images.module';
 import { LinksModule } from './links/links.module';
 import { MainPageModule } from './mainpage/main-page.module';
+import { NewsModule } from "./news/news.module";
 import { NoticeboardModule } from './noticeboard/noticeboard.module';
 import { SearchModule } from './search/search.module';
 import { StoriesModule } from './stories/stories.module';
@@ -23,6 +24,7 @@ const controllerModules = [
 	CarrdModule,
 	StoriesModule,
 	ImagesModule,
+	NewsModule,
 	NoticeboardModule,
 	CommunitiesModule,
 	FreeCompaniesModule,
