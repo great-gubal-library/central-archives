@@ -141,6 +141,7 @@ export class NewsService {
 		return {
 			id: article.id,
 			title: article.title,
+			subtitle: article.subtitle,
 			slug: article.slug,
 			content: article.content,
 			category: article.category.name,

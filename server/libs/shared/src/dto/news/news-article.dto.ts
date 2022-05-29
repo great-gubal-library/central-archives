@@ -1,6 +1,7 @@
 export interface NewsArticleDto {
 	id: number;
 	title: string;
+	subtitle: string;
 	slug: string;
 	content: string;
 	publishedAt: number;

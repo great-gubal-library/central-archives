@@ -1,6 +1,5 @@
 import { NewsArticleDto } from "@app/shared/dto/news/news-article.dto";
 import { NewsIssueDto } from "@app/shared/dto/news/news-issue.dto";
-import { NewsDto } from "@app/shared/dto/news/news.dto";
 import { Controller, Get, Param, ParseIntPipe } from "@nestjs/common";
 import { NewsService } from "./news.service";
 
