@@ -3,7 +3,7 @@ export interface NewsArticleDto {
 	title: string;
 	slug: string;
 	content: string;
-	publishedAt: string;
+	publishedAt: number;
 	category: string;
 	author: {
 		name: string;
