@@ -21,19 +21,23 @@ export default class NewsAPI {
 		return this.transport.get(`issues/${id}`);
 	}
 
+	async getArticleBySlug(slug: string): Promise<NewsArticleDto> {
+		return this.transport.get(`by-slug/${slug}`);
+	}
+
 	async getArticleById(id: number): Promise<NewsArticleDto> {
-		return this.transport.get(`articles/${id}`);
+		return this.transport.tokenGet(`articles/${id}`);
+	}
+
+	async getMyArticles(characterId: number): Promise<NewsArticleDto[]> {
+		return this.transport.authGet('my-articles', { characterId });
 	}
 
 	async createArticle(article: NewsArticleDto): Promise<NewsArticleDto> {
-		return this.transport.post('articles', article);
+		return this.transport.authPost('articles', article);
 	}
 
 	async editArticle(article: NewsArticleDto): Promise<NewsArticleDto> {
-		return this.transport.put(`articles/${article.id}`, article);
-	}
-
-	async getArticleBySlug(slug: string): Promise<NewsArticleDto> {
-		return this.transport.get(`by-slug/${slug}`);
+		return this.transport.authPut(`articles/${article.id}`, article);
 	}
 }

@@ -1,4 +1,5 @@
 import { NewsRole } from '@app/shared/enums/news-role.enum';
+import { NewsStatus } from '@app/shared/enums/news-status.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { DateTime } from 'luxon';
 import { boot } from 'quasar/wrappers';
@@ -25,6 +26,12 @@ class Display {
 		[NewsRole.AUTHOR]: 'Author',
 		[NewsRole.EDITOR]: 'Editor',
 	};
+
+	articleStatuses = {
+		[NewsStatus.DRAFT]: 'Draft',
+		[NewsStatus.SUBMITTED]: 'Submitted for publication',
+		[NewsStatus.PUBLISHED]: 'Published',
+	}
 
 	formatDateEorzean(date: number|string) {
 		const dateTime = typeof date === 'string' ?  DateTime.fromISO(date, {

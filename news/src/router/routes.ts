@@ -37,6 +37,15 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/my-articles',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/MyArticles.vue') }],
+    meta: {
+      title: 'My Articles'
+    },
+  },
+
   {
     path: '/issue/:id([0-9]+)',
     component: () => import('layouts/MainLayout.vue'),

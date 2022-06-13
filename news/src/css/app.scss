@@ -42,6 +42,10 @@ a {
 	border-bottom: 1px dashed;
 }
 
+.layout__page-container a.q-btn {
+	border-bottom: none;
+}
+
 a:hover {
 	color: #551a8b;
 }
@@ -49,6 +53,17 @@ a:hover {
 h2 {
 	/*font-size: 4rem; */
 	text-align: center;
+}
+
+h2.with-subtitle {
+	margin-bottom: 0;
+}
+
+.subtitle {
+	text-align: center;
+	font-family: $header-font;
+	font-size: 1.6em;
+	margin-bottom: 24px;
 }
 
 h3 {
@@ -71,4 +86,12 @@ h5 {
 h6 {
 	margin-top: 0.6em;
 	margin-bottom: 0.4em;
+}
+
+.striped-list .q-item, .striped-list tbody tr {
+	background: $striped-list-bg-odd;
+}
+
+.striped-list .q-item:nth-child(even), .striped-list thead tr, .striped-list tr:nth-child(even) {
+	background: $striped-list-bg-even;
 }

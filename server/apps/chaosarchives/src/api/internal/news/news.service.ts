@@ -1,11 +1,13 @@
+import { UserInfo } from "@app/auth/model/user-info";
 import { serverConfiguration } from "@app/configuration";
 import { News, NewsIssue } from "@app/entity";
 import { NewsArticleDto } from "@app/shared/dto/news/news-article.dto";
 import { NewsIssueDto } from "@app/shared/dto/news/news-issue.dto";
 import { NewsDto } from "@app/shared/dto/news/news.dto";
+import { NewsRole } from "@app/shared/enums/news-role.enum";
 import { NewsStatus } from "@app/shared/enums/news-status.enum";
 import SharedConstants from "@app/shared/SharedConstants";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { padStart } from "lodash";
 import { DateTime } from "luxon";
@@ -137,11 +139,29 @@ export class NewsService {
 		};
 	}
 
-	private toArticle(article: News): NewsArticleDto {
+	async getMyArticles(user: UserInfo, characterId: number): Promise<NewsArticleDto[]> {
+		if (!user.characters.find(ch => ch.id === characterId && ch.verified)) {
+			throw new ForbiddenException('Invalid character');
+		}
+
+		const articles = await this.newsRepo.createQueryBuilder('news')
+			.innerJoinAndSelect('news.owner', 'owner')
+			.innerJoinAndSelect('owner.server', 'server')
+			.innerJoinAndSelect('news.category', 'category')
+			.where('owner.id = :characterId', { characterId })			
+			.orderBy('news.createdAt', 'DESC')
+			.select([ 'news', 'category.name', 'owner.id', 'owner.name', 'server.name', 'owner.newsPseudonym' ])
+			.getMany();
+
+		return articles.map(article => this.toArticle(article, user));
+	}
+
+	private toArticle(article: News, user?: UserInfo): NewsArticleDto {
 		return {
 			id: article.id,
-			canEdit: false,
+			canEdit: this.canEdit(article, user),
 			canDelete: false,
+			status: article.status,
 			title: article.title,
 			subtitle: article.subtitle,
 			slug: article.slug,
@@ -154,5 +174,24 @@ export class NewsService {
 				pseudonym: article.owner.newsPseudonym || article.owner.name,
 			},
 		};
+	}
+
+	private canEdit(article: News, user?: UserInfo): boolean {
+		if (!user) {
+			return false;
+		}
+
+		if (user.characters.find(ch => ch.newsRole === NewsRole.EDITOR)) {
+			return true; // Editors can edit everything
+		}
+
+		const character = user.characters.find(ch => ch.id === article.owner.id);
+
+		if (!character) {
+			return false;
+		}
+
+		// Authors can edit their own articles, guests can edit their own unpublished articles
+		return article.status !== NewsStatus.PUBLISHED || character.newsRole === NewsRole.AUTHOR;
 	}
 }

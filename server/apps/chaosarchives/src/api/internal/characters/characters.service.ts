@@ -306,6 +306,7 @@ export class CharactersService {
           lodestoneId: character.lodestoneId,
           race: character.race,
           newsRole: character.newsRole,
+          newsPseudonym: character.newsPseudonym,
           verified: false
         };
       });

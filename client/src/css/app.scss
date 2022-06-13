@@ -58,6 +58,17 @@ h2 {
 	margin-bottom: 24px;
 }
 
+h2.with-subtitle {
+	margin-bottom: 0;
+}
+
+.subtitle {
+	text-align: center;
+	font-family: $header-font;
+	font-size: 1.6em;
+	margin-bottom: 24px;
+}
+
 h2.regular-header-font {
 	font-family: $header-font;
 }
