@@ -48,7 +48,7 @@ import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue'
 import StoryList from 'components/stories/StoryList.vue';
 import VenueList from 'components/venues/VenueList.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from '@common/common/notify';
+import { notifyError } from 'src/common/notify';
 import CommunityList from 'src/components/communities/CommunityList.vue';
 import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
 import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';

@@ -116,7 +116,7 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError, notifySuccess } from '@common/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import CarrdEditSection from 'src/components/common/CarrdEditSection.vue';
 import { useStore } from 'src/store';

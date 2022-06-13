@@ -72,7 +72,7 @@ import { NoticeboardLocation } from '@app/shared/enums/noticeboard-location.enum
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import NoticeboardItemView from 'components/noticeboard/NoticeboardItemView.vue';
 import { displayOptions } from 'src/boot/display';
-import { notifyError, notifySuccess } from '@common/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 

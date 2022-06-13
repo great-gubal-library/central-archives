@@ -74,7 +74,7 @@ import { StoryType } from '@app/shared/enums/story-type.enum';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import StoryView from 'components/stories/StoryView.vue';
 import { displayOptions } from 'src/boot/display';
-import { notifyError, notifySuccess } from '@common/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 

@@ -76,7 +76,7 @@
 
 <script lang="ts">
 import SharedConstants from '@app/shared/SharedConstants';
-import { notifyError, notifySuccess } from '@common/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { CharacterSearchModel } from 'src/components/character/character-search-model';
 import CharacterFinderField from 'src/components/character/CharacterFinderField.vue';
 import rules from 'src/markdown/rules.md';

@@ -50,7 +50,7 @@ import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
 import { useApi } from 'src/boot/axios';
 import { useRouter } from 'src/router';
 import { RouteParams } from 'vue-router';
-import { notifyError } from '@common/common/notify';
+import { notifyError } from 'src/common/notify';
 import { createMetaMixin } from 'quasar';
 
 const $api = useApi();

@@ -186,7 +186,7 @@ import { Options, Vue } from 'vue-class-component';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
-import { notifySuccess } from '@common/common/notify';
+import { notifySuccess } from 'src/common/notify';
 
 @Options({
   

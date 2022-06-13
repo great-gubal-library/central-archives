@@ -11,7 +11,7 @@
 import { NewsArticleDto } from '@app/shared/dto/news/news-article.dto';
 import { useApi } from 'src/boot/axios';
 import { useRouter } from 'src/router';
-import { notifyError } from '@common/common/notify';
+import { notifyError } from 'src/common/notify';
 import ArticleView from 'src/components/article/ArticleView.vue';
 import MountedTeleport from 'src/components/common/MountedTeleport.vue';
 import { Options, Vue } from 'vue-class-component';

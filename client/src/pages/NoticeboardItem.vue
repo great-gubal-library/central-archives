@@ -13,7 +13,7 @@ import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import NoticeboardItemView from 'components/noticeboard/NoticeboardItemView.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from '@common/common/notify';
+import { notifyError } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';

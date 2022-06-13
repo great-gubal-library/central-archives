@@ -17,7 +17,7 @@ import VenueProfile from 'components/venues/VenueProfile.vue';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import { notifyError, notifySuccess } from '@common/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { createMetaMixin } from 'quasar';

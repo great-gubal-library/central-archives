@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { QInput } from 'quasar';
-import { notifyError, notifySuccess } from '@common/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 
 @Options({
