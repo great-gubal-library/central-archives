@@ -20,6 +20,17 @@
             v-model="article.subtitle"
             label="Subtitle"
           />
+          <h6>Summary *</h6>
+          <div class="text-caption">A short summary of what the article is about. It will not be displayed on the Harborwatch website, but will be displayed on the Chaos Archives front page.</div>
+          <q-input
+            class="page-edit-article__summary"
+            type="textarea"
+            outlined
+            v-model="article.summary"
+            :rules="[
+              $rules.required('This field is required.'),
+            ]"
+          />
           <h6>Content *</h6>
           <html-editor v-model="article.content" />
         </section>
@@ -133,6 +144,7 @@ export default class PageEditArticle extends Vue {
         publishedAt: null as unknown as number,
         title: '',
 				subtitle: '',
+        summary: '',
         content: '',
         slug: '',
         category: '',
@@ -161,7 +173,13 @@ export default class PageEditArticle extends Vue {
     (this.$refs.form as QForm).submit();
   }
 
-  submitForPublication() {
+  async submitForPublication() {
+    const form = this.$refs.form as QForm;
+
+    if (!(await form.validate())) {
+      return;
+    }
+
     this.$q.dialog({
       title: 'Confirm Submitting for Publication',
       message: "You're almost done! If you believe your article is ready, you can submit it for publication, so the Harborwatch editor can review it and include it in a future issue of the paper.",
@@ -178,7 +196,7 @@ export default class PageEditArticle extends Vue {
     })
     .onOk(() => {
       this.submittingForPublication = true;
-      (this.$refs.form as QForm).submit();
+      form.submit();
     });    
   }
 
@@ -219,6 +237,10 @@ export default class PageEditArticle extends Vue {
 .page-edit-article__form-controls {
   max-width: 900px;
   margin: auto;
+}
+
+.page-edit-article__summary .q-field__inner {
+  background: white;
 }
 
 .page-edit-article__preview {

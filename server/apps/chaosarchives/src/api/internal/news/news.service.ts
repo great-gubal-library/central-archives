@@ -264,6 +264,7 @@ export class NewsService {
 	private async mergeArticleFromDto(em: EntityManager, article: News, articleDto: NewsArticleDto): Promise<void> {
 		article.title = articleDto.title;
 		article.subtitle = articleDto.subtitle;
+		article.summary = articleDto.summary;
 		article.content = articleDto.content;
 
 		if (article.status === NewsStatus.PUBLISHED) {
@@ -308,6 +309,7 @@ export class NewsService {
 			title: article.title,
 			subtitle: article.subtitle,
 			slug: article.slug,
+			summary: article.summary,
 			content: article.content,
 			category: article.category.name,
 			publishedAt: article.publishedAt ? article.publishedAt.getTime() : null,

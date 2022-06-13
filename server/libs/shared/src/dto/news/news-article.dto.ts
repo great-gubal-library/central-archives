@@ -29,6 +29,10 @@ export class NewsArticleDto {
 
 	@IsString()
 	@IsNotEmpty()
+  summary: string;
+
+	@IsString()
+	@IsNotEmpty()
   content: string;
 
 	@IsEnum(NewsStatus)
