@@ -198,7 +198,6 @@ export default class HtmlEditor extends Vue.with(Props) {
   }
 
   private async onGalleryClick(editor: TinyMceEditor) {
-    /*
     const GalleryDialog = (await import('./GalleryDialog.vue')).default;
 
     this.$q.dialog({
@@ -206,7 +205,6 @@ export default class HtmlEditor extends Vue.with(Props) {
     }).onOk((image: ImageSummaryDto) => {
       this.insertImage(editor, image.url, image.width, image.height, image.title);
     });
-    */
   }
 
   private async onUploadClick(editor: TinyMceEditor) {
