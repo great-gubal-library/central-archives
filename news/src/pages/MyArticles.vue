@@ -10,7 +10,12 @@
         <q-item v-for="article in articles" :key="article.id">
           <q-item-section>
             <q-item-label>{{ article.title }}</q-item-label>
-            <q-item-label caption>{{ $display.articleStatuses[article.status] }}</q-item-label>
+            <q-item-label caption>
+              {{ $display.articleStatuses[article.status] }}
+              <template v-if="article.status === NewsStatus.PUBLISHED">
+                on {{ $display.formatDateEorzean(article.publishedAt) }}
+              </template>
+            </q-item-label>
           </q-item-section>
           <q-item-section side>
             <q-btn v-if="article.canEdit" flat color="primary" label="Edit" :to="`/edit-article/${article.id}`" />
@@ -23,6 +28,7 @@
 
 <script lang="ts">
 import { NewsArticleDto } from '@app/shared/dto/news/news-article.dto';
+import { NewsStatus } from '@app/shared/enums/news-status.enum';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import { useRouter } from 'src/router';
@@ -51,6 +57,8 @@ async function load(): Promise<NewsArticleDto[]> {
   },
 })
 export default class PageMyArticles extends Vue {
+  readonly NewsStatus = NewsStatus;
+
   articles: NewsArticleDto[] = [];
 
   setContent(articles: NewsArticleDto[]) {
