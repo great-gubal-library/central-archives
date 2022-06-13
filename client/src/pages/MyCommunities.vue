@@ -14,7 +14,7 @@
 <script lang="ts">
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import { useStore } from 'src/store';
 import MyCommunityList from 'components/communities/MyCommunityList.vue';
 import { Options, Vue } from 'vue-class-component';

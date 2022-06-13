@@ -66,7 +66,7 @@ import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 import { ImageDetailsModel } from './image-details-model';
 import { ImageSelectModel } from './image-select-model';

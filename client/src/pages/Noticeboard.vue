@@ -9,7 +9,7 @@
 import { NoticeboardItemSummaryDto } from '@app/shared/dto/noticeboard/noticeboard-item-summary.dto';
 import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();

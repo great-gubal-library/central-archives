@@ -9,7 +9,7 @@
 <script lang="ts">
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
 import { Options, Vue } from 'vue-class-component';
 

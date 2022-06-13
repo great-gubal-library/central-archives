@@ -23,7 +23,7 @@ import CharacterNameList from 'components/mainpage/CharacterNameList.vue';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import { useRouter } from 'src/router';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { createMetaMixin } from 'quasar';

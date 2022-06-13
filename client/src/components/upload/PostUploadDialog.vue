@@ -25,7 +25,7 @@
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { copyToClipboard } from 'quasar';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 
 interface DialogRef {

@@ -19,7 +19,7 @@
 <script lang="ts">
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 
 interface DialogRef {

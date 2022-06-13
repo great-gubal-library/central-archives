@@ -15,7 +15,7 @@
 import { ImageDto } from '@app/shared/dto/image/image.dto';
 import MyImage from 'components/images/MyImage.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 

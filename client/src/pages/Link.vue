@@ -16,7 +16,7 @@ import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { LinkResultDto } from '@app/shared/dto/links/link-result.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import { getPageLink } from 'src/common/pagelinks';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';

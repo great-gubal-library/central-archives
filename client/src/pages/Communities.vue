@@ -8,7 +8,7 @@
 <script lang="ts">
 import { CommunitySummaryDto } from '@app/shared/dto/communities/community-summary.dto';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import CommunityList from 'components/communities/CommunityList.vue';
 import { Options, Vue } from 'vue-class-component';
 

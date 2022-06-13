@@ -34,7 +34,7 @@ import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import { createMetaMixin } from 'quasar';
 import { useApi } from 'src/boot/axios';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import HtmlViewer from 'src/components/common/HtmlViewer.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';

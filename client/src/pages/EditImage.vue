@@ -10,7 +10,7 @@ import { ImageDto } from '@app/shared/dto/image/image.dto';
 import errors from '@app/shared/errors';
 import ImageEditor from 'components/images/ImageEditor.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';

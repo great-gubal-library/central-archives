@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import SharedConstants from '@app/shared/SharedConstants';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { Vue } from 'vue-class-component';
 
 export default class PageLogIn extends Vue {

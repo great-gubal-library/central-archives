@@ -27,7 +27,7 @@ import StoryList from 'components/stories/StoryList.vue';
 import { createMetaMixin } from 'quasar';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';

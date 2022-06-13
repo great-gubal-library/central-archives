@@ -30,7 +30,7 @@
 <script lang="ts">
 import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-summary.dto';
 import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { prop, Options, Vue } from 'vue-class-component';
 
 class Props {

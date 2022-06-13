@@ -20,7 +20,7 @@ import errors from '@app/shared/errors';
 import { createMetaMixin } from 'quasar';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import EventView from 'src/components/event/EventView.vue';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';

@@ -38,7 +38,7 @@
 import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-summary.dto';
 import FreeCompanyCrest from 'components/free-company/FreeCompanyCrest.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import minXIVAPI from 'src/common/xivapi-min';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';

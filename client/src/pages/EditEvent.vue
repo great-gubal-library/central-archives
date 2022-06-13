@@ -152,7 +152,7 @@ import HtmlEditor from 'components/common/HtmlEditor.vue';
 import EventAnnouncementEditor from 'components/event/EventAnnouncementEditor.vue';
 import { DateTime } from 'luxon/src/luxon';
 import { useApi } from 'src/boot/axios';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import EventView from 'src/components/event/EventView.vue';
 import { useRouter } from 'src/router';

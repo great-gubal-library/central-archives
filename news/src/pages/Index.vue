@@ -13,7 +13,7 @@
 <script lang="ts">
 import { NewsIssueDto } from '@app/shared/dto/news/news-issue.dto';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import ArticleView from 'src/components/article/ArticleView.vue';
 import MountedTeleport from 'src/components/common/MountedTeleport.vue';
 import { Options, Vue } from 'vue-class-component';

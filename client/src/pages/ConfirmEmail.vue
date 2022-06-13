@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { Vue } from 'vue-class-component';
 
 export default class PageConfirmEmail extends Vue {

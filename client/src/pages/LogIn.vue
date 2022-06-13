@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { Vue } from 'vue-class-component';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 
 export default class PageLogIn extends Vue {
   private email = '';

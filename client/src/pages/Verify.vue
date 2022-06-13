@@ -106,7 +106,7 @@ import { copyToClipboard } from 'quasar';
 import errors from '@app/shared/errors';
 import { Vue } from 'vue-class-component';
 import { Role } from '@app/shared/enums/role.enum';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 
 const REFRESH_INTERVAL = 5000;
 

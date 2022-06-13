@@ -198,7 +198,7 @@ import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import CarrdEditSection from 'src/components/common/CarrdEditSection.vue';
 import VenueProfile from 'src/components/venues/VenueProfile.vue';

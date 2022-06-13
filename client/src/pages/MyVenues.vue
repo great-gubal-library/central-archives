@@ -14,7 +14,7 @@
 import VenueList from 'components/venues/VenueList.vue';
 import { VenueSummaryDto } from '@app/shared/dto/venues/venue-summary.dto';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 

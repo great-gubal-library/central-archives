@@ -31,7 +31,7 @@
 <script lang="ts">
 import { PageType } from '@app/shared/enums/page-type.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 
 interface DialogRef {

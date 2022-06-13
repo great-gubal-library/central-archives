@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { notifySuccess, notifyError } from 'src/common/notify';
+import { notifySuccess, notifyError } from '@common/common/notify';
 import { QInput } from 'quasar';
 import { Options, Vue } from 'vue-class-component';
 

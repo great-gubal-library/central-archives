@@ -9,7 +9,7 @@
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError } from '@common/common/notify';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';

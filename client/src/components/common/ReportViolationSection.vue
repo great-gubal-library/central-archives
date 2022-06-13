@@ -12,7 +12,7 @@
 import { PageType } from '@app/shared/enums/page-type.enum';
 import { Options, prop, Vue } from 'vue-class-component';
 import { copyToClipboard } from 'quasar';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { Role, roleImplies } from '@app/shared/enums/role.enum';
 
 class Props {

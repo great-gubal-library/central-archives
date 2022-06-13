@@ -73,7 +73,7 @@
 import { CommunityMemberDto } from '@app/shared/dto/communities/community-member.dto';
 import { CommunityDto } from '@app/shared/dto/communities/community.dto';
 import { MemberFlagsDto } from '@app/shared/dto/communities/member-flags.dto';
-import { notifyError, notifySuccess } from 'src/common/notify';
+import { notifyError, notifySuccess } from '@common/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 
 class Props {
