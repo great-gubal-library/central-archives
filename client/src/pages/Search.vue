@@ -49,7 +49,7 @@ import { PageType } from '@app/shared/enums/page-type.enum';
 import { escapeStringRegexp, toSearchKeywords } from '@app/shared/search-utils';
 import { useApi } from 'src/boot/axios';
 import { getPageLink } from 'src/common/pagelinks';
-import { parseWikilinksInHtml } from 'src/common/wikilinks';
+import { parseWikilinksInHtml } from '@common/common/wikilinks';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';

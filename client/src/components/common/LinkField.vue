@@ -5,7 +5,7 @@
 <script lang="ts">
 import html from '@app/shared/html';
 import { onHtmlViewClickCapture } from 'src/common/html-view-utils';
-import { parseWikilinksInHtml } from 'src/common/wikilinks';
+import { parseWikilinksInHtml } from '@common/common/wikilinks';
 import { Options, prop, Vue } from 'vue-class-component';
 
 class Props {

@@ -1,6 +1,6 @@
 import { BaseLinkResultDto } from '@app/shared/dto/common/base-link-result.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
-import { wikify } from './wikilinks';
+import { wikify } from '@common/common/wikilinks';
 
 export function getPageLink(type: PageType, result: BaseLinkResultDto): string {
 	switch (type) {
