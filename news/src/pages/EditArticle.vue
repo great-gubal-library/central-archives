@@ -139,7 +139,7 @@ export default class PageEditArticle extends Vue {
 				author: {
 					name: character.name,
         	server: character.server,
-					pseudonym: character.name,
+					pseudonym: character.newsPseudonym || character.name,
 				}
       });
       this.loaded = true;

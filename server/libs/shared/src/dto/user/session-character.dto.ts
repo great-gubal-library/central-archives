@@ -9,5 +9,6 @@ export interface SessionCharacterDto {
   avatar: string;
   race: Race;
   newsRole: NewsRole;
+  newsPseudonym: string | null;
   verified: boolean;
 }

@@ -68,6 +68,7 @@ export class AuthImplService {
         avatar: character.avatar,
         race: character.race,
         newsRole: character.newsRole,
+        newsPseudonym: character.newsPseudonym,
         verified: character.verifiedAt !== null
       })),
     });

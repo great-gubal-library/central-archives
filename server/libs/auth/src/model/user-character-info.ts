@@ -16,6 +16,8 @@ export class UserCharacterInfo {
 
   readonly newsRole: NewsRole;
 
+  readonly newsPseudonym: string | null;
+
   readonly verified: boolean;
 
   constructor(properties: Readonly<UserCharacterInfo>) {
