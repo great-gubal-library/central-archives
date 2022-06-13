@@ -3,9 +3,9 @@
 		<user-navigation />
 		<issue-navigation />
 		<site-header />
-		<section class="layout__page-container">
+		<main class="layout__page-container">
 			<router-view />
-		</section>
+		</main>
 		<site-footer />
   </section>
 </template>

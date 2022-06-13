@@ -20,6 +20,9 @@
 				<q-item clickable v-ripple @click="switchCharacter">
 					<q-icon name="switch_account" size="36px" title="Switch character" />
 				</q-item>
+				<q-item clickable v-ripple to="/create-article">
+					<q-icon name="add" size="36px" title="Submit new article" />
+				</q-item>
 				<q-item clickable v-ripple @click="logOut">
 					<q-icon name="logout" size="36px" title="Log out" />
 				</q-item>

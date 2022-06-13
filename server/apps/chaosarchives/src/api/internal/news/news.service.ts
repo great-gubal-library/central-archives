@@ -140,6 +140,8 @@ export class NewsService {
 	private toArticle(article: News): NewsArticleDto {
 		return {
 			id: article.id,
+			canEdit: false,
+			canDelete: false,
 			title: article.title,
 			subtitle: article.subtitle,
 			slug: article.slug,

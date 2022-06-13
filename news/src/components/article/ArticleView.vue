@@ -1,7 +1,10 @@
 <template>
 	<section class="article">
 		<header>
-			<h2><router-link :to="link">{{article.title}}</router-link></h2>
+			<h2>
+				<router-link v-if="isDraft" :to="link">{{article.title}}</router-link>
+				<template v-else>{{article.title}}</template>
+			</h2>
 			<div class="article__subtitle">{{article.subtitle}}</div>
 			<div class="article__author">by <a :href="authorLink" target="_blank">{{article.author.pseudonym}}</a></div>
 		</header>
@@ -23,6 +26,10 @@ class Props {
 }
 
 export default class ArticleView extends Vue.with(Props) {
+	get isDraft() {
+		return !!this.article.publishedAt;
+	}
+
 	get link() {
 		const dateTime = DateTime.fromMillis(this.article.publishedAt, {
 			zone: SharedConstants.FFXIV_SERVER_TIMEZONE

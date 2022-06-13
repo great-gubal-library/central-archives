@@ -19,6 +19,24 @@ const routes: RouteRecordRaw[] = [
     }
   },
 
+  { 
+    path: '/create-article',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditArticle.vue') }],
+    meta: {
+      title: 'Create Article'
+    },
+  },
+
+  { 
+    path: '/edit-article/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditArticle.vue') }],
+    meta: {
+      title: 'Edit Article'
+    },
+  },
+
   {
     path: '/issue/:id([0-9]+)',
     component: () => import('layouts/MainLayout.vue'),
