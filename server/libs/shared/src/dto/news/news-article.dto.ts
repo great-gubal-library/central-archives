@@ -1,5 +1,6 @@
+import { NewsStatus } from "@app/shared/enums/news-status.enum";
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { NewsAuthorDto } from "./news-author.dto";
 
 export class NewsArticleDto {
@@ -27,6 +28,9 @@ export class NewsArticleDto {
 
 	@IsString()
   content: string;
+
+	@IsEnum(NewsStatus)
+	status: NewsStatus;
 
 	@IsNumber()
 	@IsOptional()

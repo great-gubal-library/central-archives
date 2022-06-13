@@ -2,10 +2,12 @@
   <section class="page-edit-article">
     <template v-if="loaded">
       <h2>{{ article.id ? 'Edit Article' : 'Submit New Article' }}</h2>
-      <q-form @submit="onSubmit">
+      <q-form ref="form" @submit="onSubmit">
         <template v-if="!preview">
           <label>
-            {{ article.publishedAt ? 'Published on ' + $display.formatDateEorzean(article.publishedAt) : 'DRAFT' }}
+            <template v-if="article.status === NewsStatus.SUBMITTED">Submitted for publication</template>
+            <template v-else-if="article.status === NewsStatus.PUBLISHED">Published on {{ $display.formatDateEorzean(article.publishedAt) }}</template>
+            <template v-else>DRAFT</template>
           </label>
           <q-input
             v-model="article.title"
@@ -32,7 +34,13 @@
           />
           <div class="page-edit-article__revert-submit">
             <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
-            <q-btn label="Save changes" type="submit" color="primary" />
+            <template v-if="article.status === NewsStatus.DRAFT">
+              <q-btn label="Save draft" color="primary" @click="saveDraft" />&nbsp;
+              <q-btn label="Submit for publication" color="negative" @click="submitForPublication" />
+            </template>
+            <template v-else>
+              <q-btn label="Save changes" type="submit" color="primary" />
+            </template>
           </div>
         </div>
         <q-inner-loading :showing="saving" />
@@ -71,6 +79,8 @@ import ArticleView from 'components/article/ArticleView.vue';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
+import { NewsStatus } from '@app/shared/enums/news-status.enum';
+import { QForm } from 'quasar';
 
 @Options({
   name: 'PageEditArticle',
@@ -86,6 +96,8 @@ import { RouteParams } from 'vue-router';
   },
 })
 export default class PageEditArticle extends Vue {
+  readonly NewsStatus = NewsStatus;
+
   readonly previewOptions = [
     { label: 'Edit', value: false },
     { label: 'Preview', value: true },
@@ -96,6 +108,7 @@ export default class PageEditArticle extends Vue {
   preview = false;
   loaded = false;
   saving = false;
+  submittingForPublication = false;
 
   confirmRevert = false;
 
@@ -116,6 +129,7 @@ export default class PageEditArticle extends Vue {
       this.articleBackup = new NewsArticleDto({
         canEdit: true,
         canDelete: true,
+        status: NewsStatus.DRAFT,
         publishedAt: null as unknown as number,
         title: '',
 				subtitle: '',
@@ -142,15 +156,31 @@ export default class PageEditArticle extends Vue {
     this.article = new NewsArticleDto(this.articleBackup);
   }
 
+  saveDraft() {
+    this.submittingForPublication = false;
+    (this.$refs.form as QForm).submit();
+  }
+
+  submitForPublication() {
+    this.submittingForPublication = true;
+    (this.$refs.form as QForm).submit();
+  }
+
   async onSubmit() {
     this.saving = true;
 
     try {
+      const savedArticle = new NewsArticleDto(this.article);
+
+      if (this.submittingForPublication && this.article.status === NewsStatus.DRAFT) {
+        savedArticle.status = NewsStatus.SUBMITTED;
+      }
+
       if (!this.article.id) {
-        this.article = new NewsArticleDto(await this.$api.news.createArticle(this.article));
+        this.article = new NewsArticleDto(await this.$api.news.createArticle(savedArticle));
         void this.$router.replace(`/edit-article/${this.article.id!}`);
       } else {
-        this.article = new NewsArticleDto(await this.$api.news.editArticle(this.article));
+        this.article = new NewsArticleDto(await this.$api.news.editArticle(savedArticle));
       }
 
       this.articleBackup = new NewsArticleDto(this.article);
@@ -193,5 +223,9 @@ export default class PageEditArticle extends Vue {
 
 .page-edit-article__type-label {
   margin-top: 12px;
+}
+
+.page-edit-article .article__content {
+  columns: 2;
 }
 </style>
