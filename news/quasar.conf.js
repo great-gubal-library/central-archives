@@ -104,7 +104,7 @@ module.exports = configure(function (ctx) {
       config: {
         loadingBar: {
           position: 'top',
-          color: 'accent',
+          color: 'secondary',
           size: '4px',
         }
       },
