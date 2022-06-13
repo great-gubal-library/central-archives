@@ -34,8 +34,11 @@ body {
 }
 
 a {
-	color: #556;
 	text-decoration: none;
+	color: #556;
+}
+
+.layout__page-container a {
 	border-bottom: 1px dashed;
 }
 
@@ -45,4 +48,5 @@ a:hover {
 
 h2 {
 	/*font-size: 4rem; */
+	text-align: center;
 }

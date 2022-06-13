@@ -1,5 +1,6 @@
 <template>
   <section class="layout">
+		<user-navigation />
 		<issue-navigation />
 		<site-header />
 		<section class="layout__page-container">
@@ -13,10 +14,12 @@
 import SiteFooter from 'src/components/footer/SiteFooter.vue';
 import SiteHeader from 'src/components/header/SiteHeader.vue';
 import IssueNavigation from 'src/components/sidebars/IssueNavigation.vue';
+import UserNavigation from 'src/components/sidebars/UserNavigation.vue';
 import { Vue, Options } from 'vue-class-component';
 
 @Options({
   components: {
+		UserNavigation,
 		IssueNavigation,
     SiteHeader,
 		SiteFooter,
