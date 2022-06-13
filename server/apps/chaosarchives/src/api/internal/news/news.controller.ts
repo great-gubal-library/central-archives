@@ -1,10 +1,11 @@
 import { CurrentUser } from "@app/auth/decorators/current-user.decorator";
 import { RoleRequired } from "@app/auth/decorators/role-required.decorator";
+import { OptionalJwtAuthGuard } from "@app/auth/guards/optional-jwt-auth.guard";
 import { UserInfo } from "@app/auth/model/user-info";
 import { NewsArticleDto } from "@app/shared/dto/news/news-article.dto";
 import { NewsIssueDto } from "@app/shared/dto/news/news-issue.dto";
 import { Role } from "@app/shared/enums/role.enum";
-import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
 import { NewsService } from "./news.service";
 
 @Controller('news')
@@ -33,7 +34,13 @@ export class NewsController {
 
 	@Get('my-articles')
 	@RoleRequired(Role.USER)
-	async getMyArticles(@CurrentUser() user: UserInfo, @Query('characterId', ParseIntPipe) characterId: number): Promise<NewsArticleDto[]> {
-		return this.newsService.getMyArticles(user, characterId);
+	async getMyArticles(@Query('characterId', ParseIntPipe) characterId: number, @CurrentUser() user: UserInfo): Promise<NewsArticleDto[]> {
+		return this.newsService.getMyArticles(characterId, user);
+	}
+
+	@Get('articles/:id')
+	@UseGuards(OptionalJwtAuthGuard)
+	async getArticleById(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<NewsArticleDto> {
+		return this.newsService.getArticleById(id, user);
 	}
 }

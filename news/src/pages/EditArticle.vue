@@ -3,7 +3,7 @@
     <template v-if="loaded">
       <h2>{{ article.id ? 'Edit Article' : 'Submit New Article' }}</h2>
       <q-form ref="form" @submit="onSubmit">
-        <template v-if="!preview">
+        <section v-if="!preview" class="page-edit-article__form-controls">
           <label>
             <template v-if="article.status === NewsStatus.SUBMITTED">Submitted for publication</template>
             <template v-else-if="article.status === NewsStatus.PUBLISHED">Published on {{ $display.formatDateEorzean(article.publishedAt) }}</template>
@@ -22,11 +22,11 @@
           />
           <h6>Content *</h6>
           <html-editor v-model="article.content" />
-        </template>
+        </section>
         <section v-else class="page-edit-article__preview">
           <article-view :article="article" :preview="true" />
         </section>
-        <div class="page-edit-article__button-bar">
+        <div class="page-edit-article__button-bar page-edit-article__form-controls">
           <q-btn-toggle
             v-model="preview"
             :options="previewOptions"
@@ -201,9 +201,8 @@ export default class PageEditArticle extends Vue {
 
 <style lang="scss">
 .page-edit-article__form-controls {
-  max-width: 500px;
-  flex-basis: 0;
-  flex-grow: 1;
+  max-width: 900px;
+  margin: auto;
 }
 
 .page-edit-article__preview {

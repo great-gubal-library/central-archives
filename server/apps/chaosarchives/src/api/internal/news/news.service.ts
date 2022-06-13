@@ -100,24 +100,6 @@ export class NewsService {
 		return this.toIssue(issue);
 	}
 
-	async getArticleBySlug(slug: string): Promise<NewsArticleDto> {
-		const article = await this.newsRepo.createQueryBuilder('news')
-			.innerJoinAndSelect('news.owner', 'owner')
-			.innerJoinAndSelect('owner.server', 'server')
-			.innerJoinAndSelect('news.category', 'category')
-			.where('news.status = :status', { status: NewsStatus.PUBLISHED })
-			.andWhere('news.publishedAt IS NOT NULL')
-			.andWhere('news.slug = :slug', { slug })
-			.select([ 'news', 'category.name', 'owner.name', 'server.name', 'owner.newsPseudonym' ])
-			.getOne();
-
-		if (!article) {
-			throw new NotFoundException('Article not found');
-		}
-
-		return this.toArticle(article);
-	}
-
 	private async toIssue(issue: NewsIssue): Promise<NewsIssueDto> {
 		const articles = await this.newsRepo.createQueryBuilder('news')
 			.innerJoinAndSelect('news.owner', 'owner')
@@ -139,7 +121,43 @@ export class NewsService {
 		};
 	}
 
-	async getMyArticles(user: UserInfo, characterId: number): Promise<NewsArticleDto[]> {
+	async getArticleBySlug(slug: string): Promise<NewsArticleDto> {
+		const article = await this.newsRepo.createQueryBuilder('news')
+			.innerJoinAndSelect('news.owner', 'owner')
+			.innerJoinAndSelect('owner.server', 'server')
+			.innerJoinAndSelect('news.category', 'category')
+			.where('news.status = :status', { status: NewsStatus.PUBLISHED })
+			.andWhere('news.publishedAt IS NOT NULL')
+			.andWhere('news.slug = :slug', { slug })
+			.select([ 'news', 'category.name', 'owner.name', 'server.name', 'owner.newsPseudonym' ])
+			.getOne();
+
+		if (!article) {
+			throw new NotFoundException('Article not found');
+		}
+
+		return this.toArticle(article);
+	}
+
+	async getArticleById(id: number, user?: UserInfo): Promise<NewsArticleDto> {
+		const article = await this.newsRepo.createQueryBuilder('news')
+			.innerJoinAndSelect('news.owner', 'owner')
+			.innerJoinAndSelect('owner.server', 'server')
+			.innerJoinAndSelect('owner.user', 'user')
+			.innerJoinAndSelect('news.category', 'category')
+			.where('news.id = :id', { id })
+			.andWhere(':userId IS NULL OR user.id = :userId', { userId: user?.id || null })			
+			.select([ 'news', 'category.name', 'owner.id', 'owner.name', 'server.name', 'owner.newsPseudonym' ])
+			.getOne();
+
+		if (!article) {
+			throw new NotFoundException('Article not found');
+		}
+
+		return this.toArticle(article, user);
+	}
+
+	async getMyArticles(characterId: number, user: UserInfo): Promise<NewsArticleDto[]> {
 		if (!user.characters.find(ch => ch.id === characterId && ch.verified)) {
 			throw new ForbiddenException('Invalid character');
 		}
