@@ -208,7 +208,6 @@ export default class HtmlEditor extends Vue.with(Props) {
   }
 
   private async onUploadClick(editor: TinyMceEditor) {
-    /*
     const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
 
     this.$q.dialog({
@@ -216,7 +215,6 @@ export default class HtmlEditor extends Vue.with(Props) {
     }).onOk((image: ImageSummaryDto) => {
       this.insertImage(editor, image.url, image.width, image.height, image.title);
     });
-    */
   }
 
   private insertImage(editor: TinyMceEditor, src: string, width: number, height: number, title: string) {

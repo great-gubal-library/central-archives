@@ -75,7 +75,6 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
   }
 
   async onUploadClick() {
-		/*
     const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
 
     this.$q.dialog({
@@ -86,7 +85,6 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
     }).onOk((image: ImageSummaryDto) => {
       this.onImageSelect(image);
     });
-		*/
   }
 
   onCancelClick() {

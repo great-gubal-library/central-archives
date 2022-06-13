@@ -1,3 +1,4 @@
+import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { NewsRole } from '@app/shared/enums/news-role.enum';
 import { NewsStatus } from '@app/shared/enums/news-status.enum';
 import SharedConstants from '@app/shared/SharedConstants';
@@ -13,6 +14,8 @@ declare module '@vue/runtime-core' {
   }
 }
 
+const DATE_FORMAT = 'd MMMM yyyy';
+
 const EORZEAN_MONTH_NAMES: string[] = [];
 
 for (const ordinal of [ 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth' ]) {
@@ -21,16 +24,27 @@ for (const ordinal of [ 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth' ]
 }
 
 class Display {
-	newsRoles = {
+	readonly newsRoles = {
 		[NewsRole.NONE]: 'Guest',
 		[NewsRole.AUTHOR]: 'Author',
 		[NewsRole.EDITOR]: 'Editor',
 	};
 
-	articleStatuses = {
+	readonly articleStatuses = {
 		[NewsStatus.DRAFT]: 'Draft',
 		[NewsStatus.SUBMITTED]: 'Submitted for publication',
 		[NewsStatus.PUBLISHED]: 'Published',
+	}
+
+	readonly imageCategories: { [k: string]: string } = {
+		[ImageCategory.UNLISTED]: 'Unlisted',
+		[ImageCategory.ARTWORK]: 'Artwork',
+		[ImageCategory.SCREENSHOT]: 'Screenshot',
+	};
+
+	formatDate(date: number|string) {
+		const dateTime = typeof date === 'string' ?  DateTime.fromISO(date) : DateTime.fromMillis(date);
+		return dateTime.toFormat(DATE_FORMAT, { locale: 'en-GB' });
 	}
 
 	formatDateEorzean(date: number|string) {
@@ -48,6 +62,19 @@ class Display {
 		const month = EORZEAN_MONTH_NAMES[dateTime.month - 1]; // January is 1
 
 		return `${day}${suffix} Sun of the ${month}`;
+	}
+
+	formatFileSize(fileSize: number) {
+		if (fileSize < 1024) {
+			return `${fileSize} bytes`;
+		} else if (fileSize < 1024 * 1024) {
+			const sizeKiB = Math.round(fileSize / 1024);
+			return `${sizeKiB} KiB`;
+		} else {
+			const sizeMiB = fileSize / (1024 * 1024);
+			const sizeMiBDisplay = Math.round(sizeMiB * 100) / 100; // 2 decimal digits
+			return `${sizeMiBDisplay} MiB`;
+		}
 	}
 }
 
