@@ -162,8 +162,24 @@ export default class PageEditArticle extends Vue {
   }
 
   submitForPublication() {
-    this.submittingForPublication = true;
-    (this.$refs.form as QForm).submit();
+    this.$q.dialog({
+      title: 'Confirm Submitting for Publication',
+      message: "You're almost done! If you believe your article is ready, you can submit it for publication, so the Harborwatch editor can review it and include it in a future issue of the paper.",
+      ok: {
+        label: 'Submit',
+        color: 'primary',
+        flat: true,
+      },
+      cancel: {
+        label: 'Cancel',
+        color: 'secondary',
+        flat: true,
+      }
+    })
+    .onOk(() => {
+      this.submittingForPublication = true;
+      (this.$refs.form as QForm).submit();
+    });    
   }
 
   async onSubmit() {
