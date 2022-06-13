@@ -3,7 +3,7 @@
     <h2>Log In</h2>
     <q-form class="page-login__form" @submit="onSubmit">
       <p>
-        Please fill in the form below to log in to the Harborwatch.
+        Please fill in the form below to log in to the Harborwatch with your Chaos Archives account.
       </p>
       <section>
         <q-input
