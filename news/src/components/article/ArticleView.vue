@@ -31,7 +31,7 @@ export default class ArticleView extends Vue.with(Props) {
 	}
 
 	get link() {
-		const dateTime = DateTime.fromMillis(this.article.publishedAt, {
+		const dateTime = DateTime.fromMillis(this.article.publishedAt!, {
 			zone: SharedConstants.FFXIV_SERVER_TIMEZONE
 		});
 		const year = dateTime.year;

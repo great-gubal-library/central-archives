@@ -1,6 +1,6 @@
 import { NewsStatus } from "@app/shared/enums/news-status.enum";
 import { Type } from "class-transformer";
-import { IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { NewsAuthorDto } from "./news-author.dto";
 
 export class NewsArticleDto {
@@ -17,6 +17,7 @@ export class NewsArticleDto {
 	canDelete: boolean;
 
 	@IsString()
+	@IsNotEmpty()
   title: string;
 
 	@IsString()
@@ -27,6 +28,7 @@ export class NewsArticleDto {
   slug: string;
 
 	@IsString()
+	@IsNotEmpty()
   content: string;
 
 	@IsEnum(NewsStatus)
@@ -34,7 +36,7 @@ export class NewsArticleDto {
 
 	@IsNumber()
 	@IsOptional()
-  publishedAt: number;
+  publishedAt: number | null;
 
 	@IsString()
 	@IsOptional()

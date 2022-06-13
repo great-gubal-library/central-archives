@@ -67,6 +67,7 @@
     "rxjs": "^7.5.5",
     "sanitize-html": "^2.5.1",
     "sharp": "^0.29.1",
+    "slugify": "^1.6.5",
     "swagger-ui-express": "^4.3.0",
     "typeorm": "^0.2.32"
   },

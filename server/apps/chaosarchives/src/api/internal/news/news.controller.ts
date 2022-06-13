@@ -5,7 +5,7 @@ import { UserInfo } from "@app/auth/model/user-info";
 import { NewsArticleDto } from "@app/shared/dto/news/news-article.dto";
 import { NewsIssueDto } from "@app/shared/dto/news/news-issue.dto";
 import { Role } from "@app/shared/enums/role.enum";
-import { Controller, Get, Param, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { NewsService } from "./news.service";
 
 @Controller('news')
@@ -42,5 +42,17 @@ export class NewsController {
 	@UseGuards(OptionalJwtAuthGuard)
 	async getArticleById(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<NewsArticleDto> {
 		return this.newsService.getArticleById(id, user);
+	}
+
+	@Post('articles')
+	@RoleRequired(Role.USER)
+	async createArticle(@Body() article: NewsArticleDto, @CurrentUser() user: UserInfo): Promise<NewsArticleDto> {
+		return this.newsService.createArticle(article, user);
+	}
+
+	@Put('articles/:id')
+	@RoleRequired(Role.USER)
+	async updateArticle(@Body() article: NewsArticleDto, @CurrentUser() user: UserInfo): Promise<NewsArticleDto> {
+		return this.newsService.updateArticle(article, user);
 	}
 }
