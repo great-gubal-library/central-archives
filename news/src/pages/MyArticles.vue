@@ -53,7 +53,7 @@ async function load(): Promise<NewsArticleDto[]> {
   name: 'PageMyArticles',
   async beforeRouteEnter(_, __, next) {
     const articles = await load();
-    next((vm) => vm.setContent(articles));
+    next((vm) => (vm as PageMyArticles).setContent(articles));
   },
 })
 export default class PageMyArticles extends Vue {
