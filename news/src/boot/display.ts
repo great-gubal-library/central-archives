@@ -1,3 +1,4 @@
+import { NewsRole } from '@app/shared/enums/news-role.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { DateTime } from 'luxon';
 import { boot } from 'quasar/wrappers';
@@ -19,6 +20,12 @@ for (const ordinal of [ 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth' ]
 }
 
 class Display {
+	newsRoles = {
+		[NewsRole.NONE]: 'Guest',
+		[NewsRole.AUTHOR]: 'Author',
+		[NewsRole.EDITOR]: 'Editor',
+	};
+
 	formatDateEorzean(date: number|string) {
 		const dateTime = typeof date === 'string' ?  DateTime.fromISO(date, {
 			zone: SharedConstants.FFXIV_SERVER_TIMEZONE

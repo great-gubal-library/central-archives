@@ -17,6 +17,9 @@
 				</q-item>
 			</template>
 			<template v-else>
+				<q-item clickable v-ripple @click="switchCharacter">
+					<q-icon name="switch_account" size="36px" title="Switch character" />
+				</q-item>
 				<q-item clickable v-ripple @click="logOut">
 					<q-icon name="logout" size="36px" title="Log out" />
 				</q-item>
@@ -26,6 +29,7 @@
 </template>
 
 <script lang="ts">
+import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { notifySuccess } from 'src/common/notify';
 import { Vue } from 'vue-class-component';
 
@@ -35,6 +39,20 @@ export default class UserNavigation extends Vue {
 	async created() {
 		this.issues = await this.$api.news.getIssues();
 	}
+
+  async switchCharacter() {
+    const SwitchCharacterDialog = (await import('./SwitchCharacterDialog.vue')).default;
+
+    this.$q.dialog({
+      component: SwitchCharacterDialog
+    }).onOk((character: SessionCharacterDto) => {
+      if (character.verified) {
+        void this.$router.push('/');
+      } else {
+        void this.$router.push('/verify');
+      }
+    });
+  }
 
 	logOut() {
     this.$store.commit('setUser', null);

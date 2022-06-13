@@ -1,3 +1,4 @@
+import { NewsRole } from "@app/shared/enums/news-role.enum";
 import { Race } from "@app/shared/enums/race.enum";
 
 export interface CharacterSummaryDto {
@@ -6,4 +7,5 @@ export interface CharacterSummaryDto {
 	server: string;
 	avatar: string;
 	race: Race;
+	newsRole?: NewsRole;
 }

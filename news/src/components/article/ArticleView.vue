@@ -13,6 +13,7 @@
 import { NewsArticleDto } from '@app/shared/dto/news/news-article.dto';
 import SharedConstants from '@app/shared/SharedConstants';
 import { DateTime } from 'luxon';
+import { CHAOS_ARCHIVES_ROOT } from 'src/common/interop';
 import { prop, Vue } from 'vue-class-component';
 
 class Props {
@@ -39,7 +40,7 @@ export default class ArticleView extends Vue.with(Props) {
 	get authorLink() {
 		const name = this.article.author.name.replace(/ /g, '_');
 		const server = this.article.author.server;
-		return `https://chaosarchives.org/${server}/${name}`;
+		return `${CHAOS_ARCHIVES_ROOT}/${server}/${name}`;
 	}
 }
 </script>
