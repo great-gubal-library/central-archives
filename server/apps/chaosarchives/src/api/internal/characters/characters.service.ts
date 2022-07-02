@@ -351,8 +351,8 @@ export class CharactersService {
     }
 
     // Try two possible ways XIVAPI can return the data
-    if (characterInfo.Character.DC !== SharedConstants.DATACENTER
-        && characterInfo.Character.Server.replace(/^[^ ]+ \[(.+)\]$/, '$1') !== SharedConstants.DATACENTER ) {
+    if (!SharedConstants.DATACENTERS.includes(characterInfo.Character.DC)
+        && !SharedConstants.DATACENTERS.includes(characterInfo.Character.Server.replace(/^[^ ]+ \[(.+)\]$/, '$1'))) {
       throw new BadRequestException('This character is from the wrong datacenter');
     }
 

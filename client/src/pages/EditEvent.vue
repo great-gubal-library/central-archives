@@ -54,20 +54,13 @@
                 <q-icon name="place" />
               </template>
             </q-input>
-            <q-select
-              label="World"
-              icon="public"
-              class="page-edit-event__server-select"
+            <world-select
               v-model="event.locationServer"
-              :options="serverOptions"
+              label="World"
               :rules="[
                 $rules.required('This field is required.'),
               ]"
-            >
-              <template v-slot:prepend>
-                <q-icon name="public" />
-              </template>
-            </q-select>
+            />
             <q-input
               v-model="event.locationTags"
               label="Location tags"
@@ -154,6 +147,7 @@ import { DateTime } from 'luxon/src/luxon';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
+import WorldSelect from 'src/components/common/WorldSelect.vue';
 import EventView from 'src/components/event/EventView.vue';
 import { useRouter } from 'src/router';
 import { useStore } from 'src/store';
@@ -198,6 +192,7 @@ async function load(params: RouteParams): Promise<{event: EventEditDto, eventId:
     BannerEditSection,
     EventView,
     EventAnnouncementEditor,
+    WorldSelect,
   },
 	async beforeRouteEnter(to, _, next) {
 		const content = await load(to.params);
@@ -237,9 +232,6 @@ export default class PageEditEvent extends Vue {
     { label: 'Edit', value: false },
     { label: 'Preview', value: true },
   ];
-
-  // TODO: Temp, refactor
-  readonly serverOptions = SharedConstants.allowedServers;
 
 	eventId: number|null = null;
   event = new EventEditDto();

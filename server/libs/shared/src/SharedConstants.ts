@@ -1,6 +1,6 @@
 export default Object.freeze({
 	FFXIV_SERVER_TIMEZONE: 'UTC',
-	DATACENTER: 'Chaos',
+	DATACENTERS: [ 'Chaos', 'Light' ],
 	PASSWORD_MIN_LENGTH: 8,
 	MAX_UPLOAD_SIZE: 1024 * 1024,
 	MIN_BANNER_ASPECT_RATIO: 4 / 1,
@@ -19,12 +19,22 @@ export default Object.freeze({
 		MAX_APARTMENT_NUMBER: 90,
 	}),
 
-	allowedServers: [
-		'Cerberus',
-		'Louisoix',
-		'Moogle',
-		'Omega',
-		'Ragnarok',
-		'Spriggan',
-	],
+	ALLOWED_SERVERS: {
+		'Chaos': [
+			'Cerberus',
+			'Louisoix',
+			'Moogle',
+			'Omega',
+			'Ragnarok',
+			'Spriggan',
+		],
+		'Light': [
+			'Lich',
+			'Odin',
+			'Phoenix',
+			'Shiva',
+			'Twintania',
+			'Zodiark',
+		]
+	}
 })

@@ -12,20 +12,13 @@
                 $rules.required('This field is required.'),
               ]"
             />
-            <q-select
-              label="World *"
-              icon="public"
-              class="page-edit-venue__server-select"
+            <world-select
               v-model="venue.server"
-              :options="serverOptions"
+              label="World *"
               :rules="[
                 $rules.required('This field is required.'),
               ]"
-            >
-              <template v-slot:prepend>
-                <q-icon name="public" />
-              </template>
-            </q-select>
+            />
             <q-input
               class="page-edit-venue__founded-at"
               label="Founded"
@@ -201,6 +194,7 @@ import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import CarrdEditSection from 'src/components/common/CarrdEditSection.vue';
+import WorldSelect from 'src/components/common/WorldSelect.vue';
 import VenueProfile from 'src/components/venues/VenueProfile.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
@@ -238,6 +232,7 @@ async function load(params: RouteParams): Promise<VenueDto|null> {
     HtmlEditor,
     BannerEditSection,
     CarrdEditSection,
+    WorldSelect,
   },
 	async beforeRouteEnter(to, _, next) {
 		const content = await load(to.params);
@@ -252,9 +247,6 @@ export default class PageEditVenue extends Vue {
     { label: 'Edit', value: false },
     { label: 'Preview', value: true },
   ];
-
-  // TODO: Temp, refactor
-  readonly serverOptions = SharedConstants.allowedServers;
 
   readonly VenueLocation = VenueLocation;
 

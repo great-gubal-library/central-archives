@@ -62,14 +62,20 @@ import minXIVAPI from 'src/common/xivapi-min';
 import { Options, prop, Vue } from 'vue-class-component';
 import { CharacterSearchModel } from './character-search-model';
 
+function flat<T>(array: T[][]): T[] {
+	return array.reduce((acc, val) => acc.concat(val), []);
+}
+
 class Props {
 	modelValue = prop<CharacterSearchModel>({
 		required: true
 	});
 }
 
+const allAllowedServers = flat(Object.values(SharedConstants.ALLOWED_SERVERS));
+
 function isAllowedServer(characterInfo: string): boolean {
-	return SharedConstants.allowedServers.indexOf(normalizeXivapiServerName(characterInfo)) !== -1;
+	return allAllowedServers.indexOf(normalizeXivapiServerName(characterInfo)) !== -1;
 }
 
 @Options({
@@ -95,8 +101,10 @@ export default class CharacterFinderField extends Vue.with(Props) {
     try {
       this.characterOptionsSearchString = value;
 
-			const dc = `_dc_${SharedConstants.DATACENTER}`;
-      const results = (await minXIVAPI.character.search(value, { server: dc })).Results;
+			// Search in all DCs
+			const resultsArray = await Promise.all(SharedConstants.DATACENTERS.map(dc => `_dc_${dc}`)
+				.map(dcParam => minXIVAPI.character.search(value, { server: dcParam })));
+			const results = flat(resultsArray.map(searchEntry => searchEntry.Results));
 
       if (this.characterOptionsSearchString !== value) {
         // Too late
