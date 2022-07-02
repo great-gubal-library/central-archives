@@ -162,7 +162,7 @@ export class VenuesService {
 						}
 					},
 				},
-				relations: [ 'banner', 'banner.owner', 'owner', 'tags' ]
+				relations: [ 'owner', 'banner', 'banner.owner', 'tags' ]
 			});
 
 			if (!venue) {
