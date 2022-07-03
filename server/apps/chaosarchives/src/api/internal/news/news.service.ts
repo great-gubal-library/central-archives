@@ -273,7 +273,7 @@ export class NewsService {
 			}
 
 			// check if we need to set the slug
-			const newSlug = slugify(article.title);
+			const newSlug = slugify(article.title).toLowerCase();
 
 			if (newSlug !== article.slug) {
 				article.slug = await this.getUniqueSlug(em, article, newSlug);
