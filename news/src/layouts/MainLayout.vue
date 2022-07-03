@@ -36,4 +36,9 @@ export default class MainLayout extends Vue {
 	max-width: 1280px;
 	font-size: 18px;
 }
+
+.layout__page-container img {
+	height: auto;
+	max-width: 100%;
+}
 </style>
