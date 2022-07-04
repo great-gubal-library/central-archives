@@ -10,6 +10,7 @@ import LinksAPI from './links-api';
 import NewsAPI from './news-api';
 import NoticeboardAPI from './noticeboard-api';
 import SearchAPI from './search-api';
+import ServersAPI from './servers-api';
 import StoriesAPI from './stories-api';
 import UserAPI from './user-api';
 import VenuesAPI from './venues-api';
@@ -32,6 +33,7 @@ export default class API {
   readonly news = new NewsAPI(this.transport);
   readonly noticeboard = new NoticeboardAPI(this.transport);
   readonly search = new SearchAPI(this.transport);
+  readonly servers = new ServersAPI(this.transport);
   readonly stories = new StoriesAPI(this.transport);
   readonly venues = new VenuesAPI(this.transport);
   readonly violations = new ViolationsAPI(this.transport);

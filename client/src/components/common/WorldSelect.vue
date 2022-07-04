@@ -28,8 +28,8 @@
 </template>
 
 <script lang="ts">
+import { notifyError } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
-import SharedConstants from '@app/shared/SharedConstants';
 
 interface OptionInterface {
   label: string;
@@ -47,32 +47,42 @@ class Props {
   });
 }
 
+const serverOptions: (OptionInterface | OptionGroupInterface)[] = [];
+let serverOptionsLoaded = false;
+
 @Options({
   name: 'WorldSelect',
   emits: ['update:model-value'],
 })
 export default class WorldSelect extends Vue.with(Props) {
-  serverOptions: (OptionInterface | OptionGroupInterface)[] = [];
+  readonly serverOptions: (OptionInterface | OptionGroupInterface)[] = [];
 
-  created() {
-		const allowedServers: { [ k: string ]: string[] } = SharedConstants.ALLOWED_SERVERS;
-		const serverOptions: (OptionInterface | OptionGroupInterface)[] = [];
+  async created() {
+    if (!serverOptionsLoaded) {
+      try {
+        const datacenters = await this.$api.servers.getDatacenters();
 
-		for (const dc of Object.keys(allowedServers)) {
-			serverOptions.push({
-				group: dc,
-				disable: true,
-			});
+        datacenters.forEach(dc => {
+          serverOptions.push({
+            group: dc.name,
+            disable: true,
+          });
 			
-			for (const server of allowedServers[dc]) {
-				serverOptions.push({
-					label: server,
-					value: server,
-				});
-			}
-		}
+          dc.servers.forEach(server => {
+            serverOptions.push({
+              label: server,
+              value: server,
+            });
+          });
+        });
 
-    this.serverOptions = serverOptions;
+        serverOptionsLoaded = true;
+      } catch (e) {
+        notifyError(e);
+      }
+    }
+
+    this.serverOptions.push(...serverOptions);
   }
 
   onUpdateModelValue(val: string) {

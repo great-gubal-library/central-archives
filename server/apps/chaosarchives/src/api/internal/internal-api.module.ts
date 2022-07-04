@@ -11,6 +11,7 @@ import { MainPageModule } from './mainpage/main-page.module';
 import { NewsModule } from "./news/news.module";
 import { NoticeboardModule } from './noticeboard/noticeboard.module';
 import { SearchModule } from './search/search.module';
+import { ServersModule } from "./servers/servers.module";
 import { StoriesModule } from './stories/stories.module';
 import { UserModule } from './user/user.module';
 import { VenuesModule } from './venues/venues.module';
@@ -32,6 +33,7 @@ const controllerModules = [
 	LinksModule,
 	ViolationsModule,
 	SearchModule,
+	ServersModule,
 ];
 
 @Module({

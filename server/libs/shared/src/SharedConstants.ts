@@ -18,27 +18,4 @@ export default Object.freeze({
 		MIN_APARTMENT_NUMBER: 1,
 		MAX_APARTMENT_NUMBER: 90,
 	}),
-
-	ALLOWED_SERVERS: {
-		'Chaos': [
-			'Cerberus',
-			'Louisoix',
-			'Moogle',
-			'Omega',
-			'Phantom',
-			'Ragnarok',
-			'Sagittarius',
-			'Spriggan',
-		],
-		'Light': [
-			'Alpha',
-			'Lich',
-			'Odin',
-			'Phoenix',
-			'Raiden',
-			'Shiva',
-			'Twintania',
-			'Zodiark',
-		]
-	}
 })

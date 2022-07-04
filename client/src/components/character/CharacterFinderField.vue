@@ -61,6 +61,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import minXIVAPI from 'src/common/xivapi-min';
 import { Options, prop, Vue } from 'vue-class-component';
 import { CharacterSearchModel } from './character-search-model';
+import { notifyError } from 'src/common/notify';
 
 function flat<T>(array: T[][]): T[] {
 	return array.reduce((acc, val) => acc.concat(val), []);
@@ -72,7 +73,8 @@ class Props {
 	});
 }
 
-const allAllowedServers = flat(Object.values(SharedConstants.ALLOWED_SERVERS));
+const allAllowedServers: string[] = [];
+let allowedServersLoaded = false;
 
 function isAllowedServer(characterInfo: string): boolean {
 	return allAllowedServers.indexOf(normalizeXivapiServerName(characterInfo)) !== -1;
@@ -87,6 +89,18 @@ export default class CharacterFinderField extends Vue.with(Props) {
 	characterOptions: CharacterSearchModel[] = [];
   characterOptionsSearchString = '';
 	registrationStatus: CharacterRegistrationStatus | null = null;
+
+	async created() {
+		if (!allowedServersLoaded) {
+			try {
+				const datacenters = await this.$api.servers.getDatacenters();
+				datacenters.forEach(dc => allAllowedServers.push(...dc.servers));
+				allowedServersLoaded = true;
+			} catch (e) {
+				notifyError(e);
+			}
+		}
+	}
 
 	async onCharacterFilter(value: string, update: () => void, abort: () => void) {
     value = value.trim();
