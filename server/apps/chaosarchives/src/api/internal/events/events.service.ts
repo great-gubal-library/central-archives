@@ -207,7 +207,6 @@ export class EventsService {
       location.server = server;
     }
 
-    console.log('event.locations', locations);
     event.locations = locations;
 
     // Update announcements; O(n^2) filters used for code clarity, since number of notifications is small
