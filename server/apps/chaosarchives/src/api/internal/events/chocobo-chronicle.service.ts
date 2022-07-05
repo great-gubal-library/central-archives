@@ -81,6 +81,7 @@ export class ChocoboChronicleService {
 						address,
 						server,
 						tags,
+						link: '',
 					};
 				} catch (e) {
 					this.log.error(`Error parsing HTML: ${column.outerHTML}`, (e as Error).stack);

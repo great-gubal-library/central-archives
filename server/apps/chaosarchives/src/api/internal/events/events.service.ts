@@ -15,6 +15,7 @@ import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
+import { isValidUrl } from '@app/shared/validation/validators';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
@@ -197,6 +198,11 @@ export class EventsService {
       location.name = dtoLocation.name;
       location.address = dtoLocation.address;
       location.tags = dtoLocation.tags;
+      location.link = dtoLocation.link;
+
+      if (location.link && !isValidUrl(location.link)) {
+        throw new BadRequestException(`Invalid location link: ${location.link}`);
+      }
 
       const server = locationServers.find(s => s.name === dtoLocation.server);
   
@@ -424,6 +430,11 @@ export class EventsService {
           location.name = locationDto.name;
           location.address = locationDto.address;
           location.tags = locationDto.tags;
+          location.link = locationDto.link;
+
+          if (location.link && !isValidUrl(location.link)) {
+            throw new BadRequestException(`Invalid location link: ${location.link}`);
+          }
 
           const server = serversByName.get(locationDto.server);
 
@@ -506,6 +517,7 @@ export class EventsService {
         address: location.address,
         server: location.server?.name || '',
         tags: location.tags,
+        link: location.link,
       })),
     };
   }
@@ -545,6 +557,7 @@ export class EventsService {
         address: location.address,
         server: location.server.name,
         tags: location.tags,
+        link: location.link,
       })),
     };
 

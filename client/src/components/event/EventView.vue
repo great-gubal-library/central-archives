@@ -13,7 +13,11 @@
 				</template>
 			</p>
 			<p v-for="(location, index) in event.locations" :key="index">
-				<strong>Location:</strong> {{location.name}}
+				<strong>Location: </strong>
+				<template v-if="location.link">
+					<a :href="location.link" target="_blank">{{location.name}}</a>
+				</template>
+				<template v-else>{{location.name}}</template>
 				<template v-if="location.address">
 					<br />
 					<strong>Address:</strong> <template v-if="location.server">{{location.server}}, </template> {{location.address}}

@@ -17,6 +17,9 @@ export class EventLocationDto {
 	@IsString()
 	tags: string;
 
+	@IsString()
+	link: string;
+
 	constructor(properties?: Readonly<EventLocationDto>) {
     if (properties) {
       Object.assign(this, properties);

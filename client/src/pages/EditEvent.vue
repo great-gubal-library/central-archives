@@ -63,6 +63,17 @@
                 ]"
               />
               <q-input
+                v-model="location.link"
+                label="Location link"
+                :rules="[
+                  $rules.url('Please enter a valid URL.'),
+                ]"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="link" />
+                </template>
+              </q-input>
+              <q-input
                 v-model="location.tags"
                 label="Location tags"
               />
@@ -354,6 +365,7 @@ export default class PageEditEvent extends Vue {
       address: '',
       server: this.$store.getters.character!.server,
       tags: '',
+      link: '',
     });
   }
 

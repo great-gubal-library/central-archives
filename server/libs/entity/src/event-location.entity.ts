@@ -23,6 +23,12 @@ export class EventLocation extends BasicEntity {
   })
   tags: string;
 
+  @Column({
+    nullable: false,
+    default: '',
+  })
+  link: string;
+
   @ManyToOne(() => Server, {
     nullable: false,
   })
