@@ -38,33 +38,41 @@
               v-model="event.recurring"
               label="This is a recurring event"
             />
-            <h6>Location</h6>
-            <q-input
-              v-model="event.locationName"
-              label="Name *"
-              :rules="[
-                $rules.required('This field is required.'),
-              ]"
-            />          
-            <q-input
-              v-model="event.locationAddress"
-              label="Address"
-            >
-              <template v-slot:prepend>
-                <q-icon name="place" />
-              </template>
-            </q-input>
-            <world-select
-              v-model="event.locationServer"
-              label="World"
-              :rules="[
-                $rules.required('This field is required.'),
-              ]"
-            />
-            <q-input
-              v-model="event.locationTags"
-              label="Location tags"
-            />
+            <template v-for="(location, index) in event.locations" :key="index">
+              <h6>Location</h6>
+              <q-input
+                v-model="location.name"
+                label="Name *"
+                :rules="[
+                  $rules.required('This field is required.'),
+                ]"
+              />          
+              <q-input
+                v-model="location.address"
+                label="Address"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="place" />
+                </template>
+              </q-input>
+              <world-select
+                v-model="location.server"
+                label="World"
+                :rules="[
+                  $rules.required('This field is required.'),
+                ]"
+              />
+              <q-input
+                v-model="location.tags"
+                label="Location tags"
+              />
+              <div v-if="event.locations.length > 1" class="page-edit-event__button-bar" style="justify-content: end">
+                <q-btn flat color="negative" icon="remove" label="Remove this location" @click="removeLocation(index)" />
+              </div>
+          </template>
+          <div class="page-edit-event__button-bar" style="justify-content: end">
+            <q-btn flat color="secondary" icon="add" label="Add location" @click="addLocation" />
+          </div>
           </section>
           <banner-edit-section v-model="event.banner" />
           <h6>Details</h6>
@@ -137,6 +145,7 @@
 <script lang="ts">
 import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
+import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import errors from '@app/shared/errors';
 import SharedConstants from '@app/shared/SharedConstants';
 import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker';
@@ -265,10 +274,7 @@ export default class PageEditEvent extends Vue {
         contact: '',
         recurring: false,
         banner: null,
-        locationName: '',
-        locationAddress: '',
-        locationServer: 'Omega',
-        locationTags: '',
+        locations: [ this.newLocation() ],
         announcements: []
       });
     }
@@ -336,6 +342,23 @@ export default class PageEditEvent extends Vue {
 
   removeAnnouncement(index: number) {
     this.event.announcements.splice(index, 1);
+  }
+
+  addLocation() {
+    this.event.locations.push(this.newLocation());
+  }
+
+  newLocation() {
+    return new EventLocationDto({
+      name: '',
+      address: '',
+      server: this.$store.getters.character!.server,
+      tags: '',
+    });
+  }
+
+  removeLocation(index: number) {
+    this.event.locations.splice(index, 1);
   }
 
   revert() {

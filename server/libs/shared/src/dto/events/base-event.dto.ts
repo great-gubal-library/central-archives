@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
-import { IsBoolean, IsNumber, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
 import { BannerDto } from "../characters/banner.dto";
+import { EventLocationDto } from "./event-location.dto";
 
 export abstract class BaseEventDto {
 	@IsString()
@@ -40,15 +41,8 @@ export abstract class BaseEventDto {
   @IsOptional()
   banner: BannerDto|null;
 
-	@IsString()
-	locationName: string;
-
-	@IsString()
-	locationAddress: string;
-
-	@IsString()
-	locationServer: string;
-
-	@IsString()
-	locationTags: string;
+	@Type(() => EventLocationDto)
+	@ValidateNested({ each: true })
+	@IsArray()
+	locations: EventLocationDto[];
 }

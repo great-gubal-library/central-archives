@@ -6,6 +6,7 @@ import { BaseEventDto } from '@app/shared/dto/events/base-event.dto';
 import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
 import { EventCreaterResultDto } from '@app/shared/dto/events/event-create-result.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
+import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
@@ -156,40 +157,68 @@ export class EventsService {
       event.banner = Promise.resolve(null as unknown as Image);
     }
 
-    let location: EventLocation;
-
-    if (event.locations.length > 0) {
-      location = event.locations[0];
-    } else {
-      location = new EventLocation();
-      location.event = event;
-      event.locations.push(location);
+    if (eventDto.locations.length === 0) {
+      throw new BadRequestException('Event must have at least one location');
     }
 
-    location.name = eventDto.locationName;
-    location.address = eventDto.locationAddress;
-    location.tags = eventDto.locationTags;
+    /// Update locations; O(n^2) filters used for code clarity, since number of notifications is small
+    const dtoLocationIds = eventDto.locations.map((location) => location.id).filter((id) => !!id);
+    const locations: EventLocation[] = [];
+    const reusedLocations: EventLocation[] = [];
+    const locationsToRemove: EventLocation[] = [];
 
-    const server = await em.getRepository(Server).findOne({
+    for (const location of event.locations) {
+      if (!dtoLocationIds.includes(location.id)) {
+        reusedLocations.push(location);
+      } else {
+        locationsToRemove.push(location);
+      }
+    }
+
+    if (locationsToRemove.length > 0) {
+      await Promise.all(locationsToRemove.map((location) => em.remove(location)));
+    }
+
+    const locationServers = await em.getRepository(Server).find({
       where: {
-        name: eventDto.locationServer,
+        name: In(eventDto.locations.map(location => location.server)),
       },
     });
 
-    if (!server) {
-      throw new BadRequestException(`Server ${eventDto.locationServer} not found`);
+    for (const dtoLocation of eventDto.locations) {
+      let location = reusedLocations.find((l) => l.id === dtoLocation.id);
+
+      if (!location) {
+        location = new EventLocation();
+        location.event = event;
+      }
+
+      locations.push(location);
+      location.name = dtoLocation.name;
+      location.address = dtoLocation.address;
+      location.tags = dtoLocation.tags;
+
+      const server = locationServers.find(s => s.name === dtoLocation.server);
+  
+      if (!server) {
+        throw new BadRequestException(`Server ${dtoLocation.server} not found`);
+      }
+  
+      location.server = server;
     }
 
-    location.server = server;
+    console.log('event.locations', locations);
+    event.locations = locations;
 
     // Update announcements; O(n^2) filters used for code clarity, since number of notifications is small
     const dtoAnnouncementIds = eventDto.announcements.map((notification) => notification.id).filter((id) => !!id);
     const announcements: EventAnnouncement[] = [];
+    const reusedAnnouncements: EventAnnouncement[] = [];
     const announcementsToRemove: EventAnnouncement[] = [];
 
     for (const announcement of await event.announcements) {
       if (dtoAnnouncementIds.includes(announcement.id)) {
-        announcements.push(announcement);
+        reusedAnnouncements.push(announcement);
       } else {
         announcementsToRemove.push(announcement);
       }
@@ -200,14 +229,14 @@ export class EventsService {
     }
 
     for (const dtoAnnouncement of eventDto.announcements) {
-      let announcement = announcements.find((n) => n.id === dtoAnnouncement.id);
+      let announcement = reusedAnnouncements.find((n) => n.id === dtoAnnouncement.id);
 
       if (!announcement) {
         announcement = new EventAnnouncement();
         announcement.event = event;
-        announcements.push(announcement);
       }
 
+      announcements.push(announcement);
       announcement.content = dtoAnnouncement.content;
       announcement.minutesBefore = dtoAnnouncement.minutesBefore;
       announcement.postAt = DateTime.fromJSDate(event.startDateTime)
@@ -483,7 +512,6 @@ export class EventsService {
   }
 
   private async toEventDto(event: Event, edit: boolean, user?: UserInfo): Promise<BaseEventDto> {
-    const location = event.locations.length > 0 ? event.locations[0] : null;
     const banner = await event.banner;
     let announcements: EventAnnouncement[] = [];
     let images: ImageSummaryDto[] = [];
@@ -512,10 +540,13 @@ export class EventsService {
             width: banner.width,
             height: banner.height,
           }),
-      locationName: location ? location.name : '',
-      locationAddress: location ? location.address : '',
-      locationServer: location ? location.server.name : '',
-      locationTags: location ? location.tags : '',
+      locations: event.locations.map(location => new EventLocationDto({
+        id: location.id,
+        name: location.name,
+        address: location.address,
+        server: location.server.name,
+        tags: location.tags,
+      })),
     };
 
     if (!edit) {

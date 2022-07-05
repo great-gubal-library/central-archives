@@ -12,15 +12,19 @@
 				<span class="event-view__local-time">({{$display.formatDateTimeLocal(event.endDateTime)}})</span>
 				</template>
 			</p>
-			<p v-if="event.locationName">
-				<strong>Location:</strong> {{event.locationName}}
-				<template v-if="event.locationAddress">
+			<p v-for="(location, index) in event.locations" :key="index">
+				<strong>Location:</strong> {{location.name}}
+				<template v-if="location.address">
 					<br />
-					<strong>Address:</strong> <template v-if="event.locationServer">{{event.locationServer}}, </template> {{event.locationAddress}}
+					<strong>Address:</strong> <template v-if="location.server">{{location.server}}, </template> {{location.address}}
 				</template>
-				<template v-if="event.locationTags">
+				<template v-else-if="location.server">
 					<br />
-					<strong>Tags:</strong> {{event.locationTags}}
+					<strong>World:</strong> {{location.server}}
+				</template>
+				<template v-if="location.tags">
+					<br />
+					<strong>Tags:</strong> {{location.tags}}
 				</template>
 			</p>
 			<html-viewer v-if="event.details" :content="event.details" />
