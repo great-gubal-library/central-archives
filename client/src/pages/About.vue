@@ -28,19 +28,85 @@
 			<dt><a href="https://ffxiv-roleplayers.com/topic/24360-getting-started-with-ffxiv-rp-for-wow-rpers/" target="_blank">Getting Started with FFXIV RP for WoW RPers <q-icon class="external-link-icon" name="launch" /></a></dt>
 			<dd>Read this if you're already familiar with RP in World of Warcraft.</dd>
 		</dl>
+		<template v-if="statistics">
+			<h3>Statistics</h3>
+			<h4>Characters by race</h4>
+			<q-markup-table class="striped-list">
+				<thead>
+					<th class="text-left">Race</th>
+					<th class="text-right">Count</th>
+				</thead>
+				<tbody>
+					<tr v-for="row in statistics.races" :key="row.race">
+						<td>{{ $display.races[row.race] }}</td>
+						<td class="text-right">{{ row.count }}</td>
+					</tr>
+				</tbody>
+			</q-markup-table>
+			<h4>Seeker Miqo'te by tribe</h4>
+			<q-markup-table class="striped-list">
+				<thead>
+					<th class="text-left">Tribe</th>
+					<th class="text-right">Count</th>
+				</thead>
+				<tbody>
+					<tr v-for="row in statistics.seekerTribes" :key="row.name">
+						<td>{{ row.name }}</td>
+						<td class="text-right">{{ row.count }}</td>
+					</tr>
+				</tbody>
+			</q-markup-table>
+			<h4>Characters by world</h4>
+			<q-markup-table class="striped-list">
+				<thead>
+					<th class="text-left">World</th>
+					<th class="text-right">Count</th>
+				</thead>
+				<tbody>
+					<tr v-for="row in statistics.servers" :key="row.name">
+						<td>{{ row.name }}</td>
+						<td class="text-right">{{ row.count }}</td>
+					</tr>
+				</tbody>
+			</q-markup-table>
+		</template>
 	</q-page>
 </template>
 
 <script lang="ts">
-import { Vue } from 'vue-class-component'
+import { StatisticsDto } from '@app/shared/dto/statistics/statistics.dto'
+import { useApi } from 'src/boot/axios';
+import { Options, Vue } from 'vue-class-component'
 
+const $api = useApi();
+
+async function load(): Promise<StatisticsDto> {
+	return $api.statistics.getStatistics();
+}
+
+@Options({
+	name: 'PageAbout',
+	async beforeRouteEnter(_, __, next) {
+		const statistics = await load();
+		next(vm => (vm as PageAbout).setContent(statistics));
+	},
+})
 export default class PageAbout extends Vue {
-	
+	statistics: StatisticsDto | null = null;
+
+	setContent(statistics: StatisticsDto) {
+		this.statistics = statistics;
+	}
 }
 </script>
 
 <style lang="scss">
 .page-about dd {
 	margin-bottom: 0.8em;
+}
+
+.page-about th {
+	background: #f0f0f0;
+	font-family: $form-header-font;
 }
 </style>
