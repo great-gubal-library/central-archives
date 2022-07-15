@@ -23,7 +23,7 @@ export default class HtmlViewer extends Vue.with(Props) {
 	}
 
 	onClickCapture(event: Event) {
-    onHtmlViewClickCapture(event);
+    onHtmlViewClickCapture(event, { links: true });
   }
 }
 </script>

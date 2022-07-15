@@ -190,7 +190,7 @@ export default class HtmlEditor extends Vue.with(Props) {
   }
 
   onClickCapture(event: Event) {
-    onHtmlViewClickCapture(event);
+    onHtmlViewClickCapture(event, { links: false });
   }
 
   onInput(newValue: string) {
