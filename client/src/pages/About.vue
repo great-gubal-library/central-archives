@@ -19,6 +19,7 @@
 		<p>
 			And thanks to everyone who has been testing and suggesting improvements to the Archives since their inception!
 		</p>
+		<section v-html="faq"></section>
 		<h3>Useful Links</h3>
 		<dl>
 			<dt><a href="https://discord.gg/rCHdUdSVsr" target="_blank">FFXIV Chaos Roleplaying Community <q-icon name="discord" /></a></dt>
@@ -77,6 +78,7 @@
 import { StatisticsDto } from '@app/shared/dto/statistics/statistics.dto'
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component'
+import faq from 'src/markdown/faq.md'
 
 const $api = useApi();
 
@@ -92,6 +94,8 @@ async function load(): Promise<StatisticsDto> {
 	},
 })
 export default class PageAbout extends Vue {
+	readonly faq = faq;
+
 	statistics: StatisticsDto | null = null;
 
 	setContent(statistics: StatisticsDto) {
