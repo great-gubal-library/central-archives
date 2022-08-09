@@ -1,6 +1,10 @@
 <template>
   <q-page class="page-story">
 		<template v-if="story.id">
+			<section v-if="story.mine" class="edit-bar">
+				<router-link :to="`/edit-story/${story.id}`">Edit story</router-link>
+				<q-btn flat color="negative" label="Delete story" @click="onDeleteClick" />
+			</section>
 			<story-view :story="story" />
     	<report-violation-section :pageType="PageType.STORY" :pageId="story.id" />
 		</template>
@@ -13,7 +17,7 @@ import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import StoryView from 'components/stories/StoryView.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
@@ -68,6 +72,28 @@ export default class PageStory extends Vue {
 	
 	setContent(story: StoryDto) {
 		this.story = story;
+	}
+
+	onDeleteClick() {
+		this.$q.dialog({
+        title: 'Confirm Delete',
+        message: `Do you want to delete the story “${this.story.title}”?`,
+				ok: {
+					label: 'Delete',
+					color: 'negative',
+					flat: true
+				},
+        cancel: 'Cancel',
+      }).onOk(async () => {
+        try {
+					await this.$api.stories.deleteStory(this.story.id!);
+
+					notifySuccess('Story deleted.');
+					void this.$router.replace('/');
+				} catch (e) {
+					notifyError(e);
+				}
+      });
 	}
 }
 </script>

@@ -28,6 +28,10 @@ export default class StoriesAPI {
     return this.transport.authPut<void>(`${story.id || -1}`, story);
   }
 
+  async deleteStory(id: number): Promise<void> {
+    return this.transport.authDelete<void>(`${id}`);
+  }
+
   async getTags(): Promise<string[]> {
     return this.transport.get<string[]>('tags');
   }
