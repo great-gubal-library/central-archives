@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-image">
-		<section v-if="image.mine" class="page-image__edit-bar">
+		<section v-if="image.mine" class="edit-bar">
 			<router-link :to="`/edit-image/${image.id}`">Edit image</router-link>
 			<q-btn flat color="negative" label="Delete image" @click="onDeleteClick" />
 		</section>
@@ -136,12 +136,6 @@ export default class PageImage extends Vue {
 
 <style lang="scss">
 @import url($extraGoogleFonts);
-
-.page-image__edit-bar {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
 
 .page-image__description {
 	margin-top: 24px;

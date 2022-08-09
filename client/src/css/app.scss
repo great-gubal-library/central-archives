@@ -192,6 +192,12 @@ ol li {
   color: black;
 }
 
+.edit-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
 // Custom HTML editor elements
 
 .hide-details {

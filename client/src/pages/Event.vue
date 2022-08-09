@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-event">
-		<section v-if="event.mine" class="page-event__edit-bar">
+		<section v-if="event.mine" class="edit-bar">
 			<router-link :to="`/edit-event/${eventId}`">Edit event</router-link>
 			<q-btn flat color="negative" label="Delete event" @click="onDeleteClick" />
 		</section>
@@ -130,9 +130,4 @@ export default class PageEvent extends Vue {
 </script>
 
 <style lang="scss">
-.page-event__edit-bar {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
 </style>

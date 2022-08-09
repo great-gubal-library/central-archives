@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-venue">
 		<template v-if="venue.id">
-			<section v-if="venue.mine" class="page-venue__edit-bar">
+			<section v-if="venue.mine" class="edit-bar">
 				<router-link :to="`/edit-venue/${venue.id}`">Edit venue</router-link>
 				<q-btn flat color="negative" label="Delete venue" @click="onDeleteClick" />
 			</section>
@@ -121,9 +121,4 @@ export default class PageVenue extends Vue {
 </script>
 
 <style lang="scss">
-.page-venue__edit-bar {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
 </style>
