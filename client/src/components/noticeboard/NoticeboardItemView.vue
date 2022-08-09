@@ -1,8 +1,5 @@
 <template>
   <div class="noticeboard-item-view">
-    <p v-if="!preview && noticeboardItem.mine">
-      <router-link :to="`/edit-noticeboard-item/${noticeboardItem.id}`">Edit noticeboard item</router-link>
-    </p>
     <h2 class="noticeboard-item-view__title">{{ noticeboardItem.title }}</h2>
     <section class="text-caption noticeboard-item-view__subtitle row">
       <div class="noticeboard-item-view__posted-by">

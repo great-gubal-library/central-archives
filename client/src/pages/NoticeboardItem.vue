@@ -1,6 +1,10 @@
 <template>
   <q-page class="page-noticeboardItem">
 		<template v-if="noticeboardItem.id">
+			<section v-if="noticeboardItem.mine" class="edit-bar">
+				<router-link :to="`/edit-noticeboard-item/${noticeboardItem.id}`">Edit noticeboard item</router-link>
+				<q-btn flat color="negative" label="Delete noticeboard item" @click="onDeleteClick" />
+			</section>
 			<noticeboard-item-view :noticeboard-item="noticeboardItem" />
     	<report-violation-section :pageType="PageType.NOTICEBOARD_ITEM" :pageId="noticeboardItem.id" />
 		</template>
@@ -13,7 +17,7 @@ import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import NoticeboardItemView from 'components/noticeboard/NoticeboardItemView.vue';
 import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
+import { notifyError, notifySuccess } from 'src/common/notify';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
@@ -66,8 +70,30 @@ export default class PageNoticeboardItem extends Vue {
 	
 	noticeboardItem: NoticeboardItemDto = new NoticeboardItemDto();
 	
-	setContent(story: NoticeboardItemDto) {
-		this.noticeboardItem = story;
+	setContent(noticeboardItem: NoticeboardItemDto) {
+		this.noticeboardItem = noticeboardItem;
+	}
+
+	onDeleteClick() {
+		this.$q.dialog({
+        title: 'Confirm Delete',
+        message: `Do you want to delete the noticeboard item “${this.noticeboardItem.title}”?`,
+				ok: {
+					label: 'Delete',
+					color: 'negative',
+					flat: true
+				},
+        cancel: 'Cancel',
+      }).onOk(async () => {
+        try {
+					await this.$api.noticeboard.deleteNoticeboardItem(this.noticeboardItem.id!);
+
+					notifySuccess('Noticeboard item deleted.');
+					void this.$router.replace('/');
+				} catch (e) {
+					notifyError(e);
+				}
+      });
 	}
 }
 </script>

@@ -25,4 +25,8 @@ export default class NoticeboardAPI {
   async editNoticeboardItem(noticeboardItem: NoticeboardItemDto): Promise<void> {
     return this.transport.authPut<void>(`${noticeboardItem.id || -1}`, noticeboardItem);
   }
+
+  async deleteNoticeboardItem(id: number): Promise<void> {
+    return this.transport.authDelete<void>(`${id}`);
+  }
 }
