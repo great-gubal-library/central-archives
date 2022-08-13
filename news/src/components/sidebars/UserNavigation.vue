@@ -27,6 +27,9 @@
 					<q-item clickable v-ripple to="/my-articles">
 						<q-icon name="list_alt" size="36px" title="My articles" />
 					</q-item>
+					<q-item v-if="$store.getters.character?.newsRole === NewsRole.EDITOR" clickable v-ripple to="/submitted">
+						<q-icon name="checklist" size="36px" title="Submitted articles" />
+					</q-item>
 				</template>
 				<q-item clickable v-ripple @click="logOut">
 					<q-icon name="logout" size="36px" title="Log out" />
@@ -38,10 +41,13 @@
 
 <script lang="ts">
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
+import { NewsRole } from '@app/shared/enums/news-role.enum';
 import { notifySuccess } from 'src/common/notify';
 import { Vue } from 'vue-class-component';
 
 export default class UserNavigation extends Vue {
+	readonly NewsRole = NewsRole;
+
 	issues: number[] = [];
 
 	async created() {

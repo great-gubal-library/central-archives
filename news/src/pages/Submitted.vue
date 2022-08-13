@@ -1,11 +1,7 @@
 <template>
-  <section class="page-my-articles">
-    <h2 class="with-subtitle">My Articles</h2>
-    <div class="subtitle">for {{ $store.getters.character?.newsPseudonym || $store.getters.character?.name }}</div>
-    <section class="page-my-articles__content">
-      <p class="text-right">
-        <q-btn color="secondary" label="Submit new article" icon="add" to="/create-article" />
-      </p>
+  <section class="page-submitted">
+    <h2>Submitted Articles</h2>
+    <section class="page-submitted__content">
       <article-list :articles="articles" />
     </section>
   </section>
@@ -17,16 +13,14 @@ import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import ArticleList from 'src/components/article/ArticleList.vue';
 import { useRouter } from 'src/router';
-import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();
 const $router = useRouter();
-const $store = useStore();
 
 async function load(): Promise<NewsArticleDto[]> {
   try {
-    return await $api.news.getMyArticles($store.getters.characterId!);
+    return await $api.news.getSubmittedArticles();
   } catch (e) {
     notifyError(e);
     void $router.replace('/');
@@ -35,16 +29,16 @@ async function load(): Promise<NewsArticleDto[]> {
 }
 
 @Options({
-  name: 'PageMyArticles',
+  name: 'PageSubmitted',
   components: {
     ArticleList,
   },
   async beforeRouteEnter(_, __, next) {
     const articles = await load();
-    next((vm) => (vm as PageMyArticles).setContent(articles));
+    next((vm) => (vm as PageSubmitted).setContent(articles));
   },
 })
-export default class PageMyArticles extends Vue {
+export default class PageSubmitted extends Vue {
   articles: NewsArticleDto[] = [];
 
   setContent(articles: NewsArticleDto[]) {
@@ -54,7 +48,7 @@ export default class PageMyArticles extends Vue {
 </script>
 
 <style lang="scss">
-.page-my-articles__content {
+.page-submitted__content {
   max-width: 700px;
   margin: auto;
 }

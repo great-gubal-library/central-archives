@@ -38,6 +38,12 @@ export class NewsController {
 		return this.newsService.getMyArticles(characterId, user);
 	}
 
+	@Get('submitted')
+	@RoleRequired(Role.USER)
+	async getSubmittedArticles(@CurrentUser() user: UserInfo): Promise<NewsArticleDto[]> {
+		return this.newsService.getSubmittedArticles(user);
+	}
+
 	@Get('articles/:id')
 	@UseGuards(OptionalJwtAuthGuard)
 	async getArticleById(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<NewsArticleDto> {

@@ -46,6 +46,15 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  { 
+    path: '/submitted',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Submitted.vue') }],
+    meta: {
+      title: 'Submitted Articles'
+    },
+  },
+
   {
     path: '/issue/:id([0-9]+)',
     component: () => import('layouts/MainLayout.vue'),

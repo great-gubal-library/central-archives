@@ -177,6 +177,23 @@ export class NewsService {
 		return articles.map(article => this.toArticle(article, user));
 	}
 
+	async getSubmittedArticles(user: UserInfo): Promise<NewsArticleDto[]> {
+		if (!user.characters.find(ch => ch.newsRole === NewsRole.EDITOR)) {
+			throw new ForbiddenException('This function can only be accessed by editors');
+		}
+
+		const articles = await this.newsRepo.createQueryBuilder('news')
+			.innerJoinAndSelect('news.owner', 'owner')
+			.innerJoinAndSelect('owner.server', 'server')
+			.innerJoinAndSelect('news.category', 'category')
+			.where('news.status = :status', { status: NewsStatus.SUBMITTED })	
+			.orderBy('news.createdAt', 'DESC')
+			.select([ 'news', 'category.name', 'owner.id', 'owner.name', 'server.name', 'owner.newsPseudonym' ])
+			.getMany();
+
+		return articles.map(article => this.toArticle(article, user));
+	}
+
 	async createArticle(articleDto: NewsArticleDto, user: UserInfo): Promise<NewsArticleDto> {
 		if (articleDto.id) {
 			throw new BadRequestException('Article ID must be empty');
@@ -277,6 +294,10 @@ export class NewsService {
 
 			if (newSlug !== article.slug) {
 				article.slug = await this.getUniqueSlug(em, article, newSlug);
+			}
+
+			if (!article.publishedAt) {
+				article.publishedAt = new Date();
 			}
 		} else {
 			article.status = articleDto.status;

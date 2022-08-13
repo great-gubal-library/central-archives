@@ -51,6 +51,9 @@
             </template>
             <template v-else>
               <q-btn label="Save changes" type="submit" color="primary" />
+              <template v-if="article.status === NewsStatus.SUBMITTED && $store.getters.character?.newsRole === NewsRole.EDITOR">&nbsp;
+              <q-btn label="Publish" color="negative" @click="publish" />
+              </template>
             </template>
           </div>
         </div>
@@ -92,6 +95,7 @@ import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 import { NewsStatus } from '@app/shared/enums/news-status.enum';
 import { QForm } from 'quasar';
+import { NewsRole } from '@app/shared/enums/news-role.enum';
 
 @Options({
   name: 'PageEditArticle',
@@ -108,6 +112,7 @@ import { QForm } from 'quasar';
 })
 export default class PageEditArticle extends Vue {
   readonly NewsStatus = NewsStatus;
+  readonly NewsRole = NewsRole;
 
   readonly previewOptions = [
     { label: 'Edit', value: false },
@@ -120,6 +125,7 @@ export default class PageEditArticle extends Vue {
   loaded = false;
   saving = false;
   submittingForPublication = false;
+  publishing = false;
 
   confirmRevert = false;
 
@@ -200,6 +206,33 @@ export default class PageEditArticle extends Vue {
     });    
   }
 
+  async publish() {
+    const form = this.$refs.form as QForm;
+
+    if (!(await form.validate())) {
+      return;
+    }
+
+    this.$q.dialog({
+      title: 'Confirm Publication',
+      message: "Are you sure you want to publish this article?",
+      ok: {
+        label: 'Publish',
+        color: 'primary',
+        flat: true,
+      },
+      cancel: {
+        label: 'Cancel',
+        color: 'secondary',
+        flat: true,
+      }
+    })
+    .onOk(() => {
+      this.publishing = true;
+      form.submit();
+    });    
+  }
+
   async onSubmit() {
     this.saving = true;
 
@@ -208,6 +241,8 @@ export default class PageEditArticle extends Vue {
 
       if (this.submittingForPublication && this.article.status === NewsStatus.DRAFT) {
         savedArticle.status = NewsStatus.SUBMITTED;
+      } else if (this.publishing && this.article.status === NewsStatus.SUBMITTED) {
+        savedArticle.status = NewsStatus.PUBLISHED;
       }
 
       if (!this.article.id) {
