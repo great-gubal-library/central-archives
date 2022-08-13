@@ -1,41 +1,47 @@
 <template>
   <q-page class="page-my-content">
-		<h2>My Content</h2>
+    <h2>My Content</h2>
     <div class="page-my-content__subtitle">for {{ $store.getters.character?.name }}</div>
 
-    <q-tabs
-          v-model="tab"
-          dense
-          align="justify"
-          narrow-indicator
-        >
-          <q-tab :name="PageType.EVENT" label="Events" />
-          <q-tab :name="PageType.STORY" label="Stories" />
-          <q-tab :name="PageType.NOTICEBOARD_ITEM" label="Noticeboard" />
-          <q-tab :name="PageType.IMAGE" label="Images" />
-        </q-tabs>
+    <q-tabs v-model="tab" dense align="justify" narrow-indicator>
+      <q-tab :name="PageType.EVENT" label="Events" />
+      <q-tab :name="PageType.STORY" label="Stories" />
+      <q-tab :name="PageType.NOTICEBOARD_ITEM" label="Noticeboard" />
+      <q-tab :name="PageType.IMAGE" label="Images" />
+    </q-tabs>
 
-        <q-separator />
+    <q-separator />
 
-        <q-tab-panels v-model="tab">
-          <q-tab-panel :name="PageType.EVENT">
-            <my-content-list :type="PageType.EVENT" :items="content.events" />
-          </q-tab-panel>
-          <q-tab-panel :name="PageType.STORY">
-            <my-content-list :type="PageType.STORY" :items="content.stories" />
-          </q-tab-panel>
-          <q-tab-panel :name="PageType.NOTICEBOARD_ITEM">
-            <my-content-list :type="PageType.NOTICEBOARD_ITEM" :items="content.noticeboardItems" />
-          </q-tab-panel>
-          <q-tab-panel :name="PageType.IMAGE">
-            <my-images :images="content.images" />
-          </q-tab-panel>
-        </q-tab-panels>
-	</q-page>	
+    <q-tab-panels v-model="tab">
+      <q-tab-panel :name="PageType.EVENT">
+        <my-content-list :type="PageType.EVENT" :items="content.events" />
+        <q-btn class="page-my-content__add" color="primary" icon="add" label="New event" to="/create-event" />
+      </q-tab-panel>
+      <q-tab-panel :name="PageType.STORY">
+        <my-content-list :type="PageType.STORY" :items="content.stories" />
+        <q-btn class="page-my-content__add" color="primary" icon="add" label="New story" to="/create-story" />
+      </q-tab-panel>
+      <q-tab-panel :name="PageType.NOTICEBOARD_ITEM">
+        <my-content-list :type="PageType.NOTICEBOARD_ITEM" :items="content.noticeboardItems" />
+        <q-btn
+          class="page-my-content__add"
+          color="primary"
+          icon="add"
+          label="New noticeboard item"
+          to="/create-noticeboard-item"
+        />
+      </q-tab-panel>
+      <q-tab-panel :name="PageType.IMAGE">
+        <my-images :images="content.images" />
+        <q-btn class="page-my-content__add" color="primary" icon="upload" label="Upload image" @click="uploadImage" />
+      </q-tab-panel>
+    </q-tab-panels>
+  </q-page>
 </template>
 
 <script lang="ts">
 import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
 import MyImages from 'components/images/MyImages.vue';
 import { useApi } from 'src/boot/axios';
@@ -45,14 +51,14 @@ import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 
 async function load(): Promise<MyContentDto> {
-	const $api = useApi();
+  const $api = useApi();
   const $store = useStore();
   const characterId = $store.getters.characterId;
 
-	if (!characterId) {
-		notifyError('Unauthorized');
-		throw new Error();
-	}
+  if (!characterId) {
+    notifyError('Unauthorized');
+    throw new Error();
+  }
 
   try {
     return await $api.characters.getMyContent(characterId);
@@ -63,45 +69,45 @@ async function load(): Promise<MyContentDto> {
 }
 
 @Options({
-	name: 'PageMyContent',
-	components: {
+  name: 'PageMyContent',
+  components: {
     MyContentList,
-		MyImages,
-	},
+    MyImages,
+  },
   watch: {
     tab: {
       handler(newValue: PageType, oldValue: PageType) {
         if (newValue !== oldValue) {
           (this as PageMyContent).setTab(newValue);
         }
-      }
-    }
+      },
+    },
   },
-	async beforeRouteEnter(to, _, next) {
+  async beforeRouteEnter(to, _, next) {
     try {
       const content = await load();
-      const tab = to.query.tab as PageType || null;
-      next(vm => (vm as PageMyContent).setContent(content, tab));
+      const tab = (to.query.tab as PageType) || null;
+      next((vm) => (vm as PageMyContent).setContent(content, tab));
     } catch (e) {
       console.log(e);
       notifyError(e);
     }
-  }
+  },
 })
 export default class PageMyContent extends Vue {
   readonly PageType = PageType;
 
-	content: MyContentDto = {
+  content: MyContentDto = {
     events: [],
     stories: [],
     noticeboardItems: [],
-    images: []
+    images: [],
   };
 
   tab: PageType | null = null;
 
-	setContent(content: MyContentDto, tab: PageType | null) {
-		this.content = content;
+  setContent(content: MyContentDto, tab: PageType | null) {
+    this.content = content;
 
     if (!tab) {
       if (content.events.length > 0) {
@@ -121,10 +127,27 @@ export default class PageMyContent extends Vue {
     } else {
       this.tab = tab;
     }
-	}
+  }
 
   private setTab(tab: PageType) {
     void this.$router.replace(`/my-content?tab=${tab}`);
+  }
+
+  async uploadImage() {
+    const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
+
+    this.$q.dialog({
+      component: UploadDialog
+    }).onOk(async (image: ImageSummaryDto) => {
+      const PostUploadDialog = (await import('components/upload/PostUploadDialog.vue')).default;
+
+      this.$q.dialog({
+        component: PostUploadDialog,
+        componentProps: {
+          image
+        }
+      });
+    });
   }
 }
 </script>
@@ -148,5 +171,10 @@ export default class PageMyContent extends Vue {
 .page-my-content .q-tab-panel {
   padding-left: 2px;
   padding-right: 2px;
+}
+
+.page-my-content__add {
+  float: right;
+  margin-top: 12px;
 }
 </style>
