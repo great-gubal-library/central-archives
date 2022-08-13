@@ -68,10 +68,20 @@ async function load(): Promise<MyContentDto> {
     MyContentList,
 		MyImages,
 	},
-	async beforeRouteEnter(_, __, next) {
+  watch: {
+    tab: {
+      handler(newValue: PageType, oldValue: PageType) {
+        if (newValue !== oldValue) {
+          (this as PageMyContent).setTab(newValue);
+        }
+      }
+    }
+  },
+	async beforeRouteEnter(to, _, next) {
     try {
       const content = await load();
-      next(vm => (vm as PageMyContent).setContent(content));
+      const tab = to.query.tab as PageType || null;
+      next(vm => (vm as PageMyContent).setContent(content, tab));
     } catch (e) {
       console.log(e);
       notifyError(e);
@@ -88,21 +98,34 @@ export default class PageMyContent extends Vue {
     images: []
   };
 
-  tab: PageType = PageType.EVENT;
+  tab: PageType | null = null;
 
-	setContent(content: MyContentDto) {
+	setContent(content: MyContentDto, tab: PageType | null) {
 		this.content = content;
 
-    if (content.events.length > 0) {
-      this.tab = PageType.EVENT;
-    } else if (content.images.length > 0) {
-      this.tab = PageType.IMAGE;
-    } else if (content.stories.length > 0) {
-      this.tab = PageType.STORY;
-    } else if (content.noticeboardItems.length > 0) {
-      this.tab = PageType.NOTICEBOARD_ITEM;
+    if (!tab) {
+      if (content.events.length > 0) {
+        this.tab = PageType.EVENT;
+      } else if (content.images.length > 0) {
+        this.tab = PageType.IMAGE;
+      } else if (content.stories.length > 0) {
+        this.tab = PageType.STORY;
+      } else if (content.noticeboardItems.length > 0) {
+        this.tab = PageType.NOTICEBOARD_ITEM;
+      } else {
+        // no content at all
+        this.tab = PageType.EVENT;
+      }
+
+      this.setTab(this.tab);
+    } else {
+      this.tab = tab;
     }
 	}
+
+  private setTab(tab: PageType) {
+    void this.$router.replace(`/my-content?tab=${tab}`);
+  }
 }
 </script>
 
