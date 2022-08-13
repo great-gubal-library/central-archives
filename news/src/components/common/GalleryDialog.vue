@@ -28,6 +28,10 @@ class Props {
 	banner = prop<boolean>({
 		default: false
 	});
+
+	images = prop<ImageSummaryDto[]>({
+		required: false,
+	});
 }
 
 @Options({
@@ -46,16 +50,18 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
 			return;
 		}
 
-		this.images = (await this.$api.characters.getMyImages(characterId)).map(image => ({
-			id: image.id,
-			title: image.title,
-			filename: image.filename,
-			thumbUrl: image.thumbUrl,
-			url: image.url,
-			createdAt: image.createdAt,
-			width: image.width,
-			height: image.height,
-		}));
+		if (!this.images) {
+			this.images = (await this.$api.characters.getMyImages(characterId)).map(image => ({
+				id: image.id,
+				title: image.title,
+				filename: image.filename,
+				thumbUrl: image.thumbUrl,
+				url: image.url,
+				createdAt: image.createdAt,
+				width: image.width,
+				height: image.height,
+			}));
+		}
 
 		if (this.banner) {
 			this.images = this.images.filter(image => image.width / image.height >= SharedConstants.MIN_BANNER_ASPECT_RATIO);

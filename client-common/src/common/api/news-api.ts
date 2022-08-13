@@ -1,3 +1,4 @@
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { NewsArticleDto } from '@app/shared/dto/news/news-article.dto';
 import { NewsIssueDto } from '@app/shared/dto/news/news-issue.dto';
 import APITransport from './api-transport';
@@ -27,6 +28,10 @@ export default class NewsAPI {
 
 	async getArticleById(id: number): Promise<NewsArticleDto> {
 		return this.transport.tokenGet(`articles/${id}`);
+	}
+
+	async getArticleImages(id: number): Promise<ImageSummaryDto[]> {
+		return this.transport.authGet(`articles/${id}/images`);
 	}
 
 	async getMyArticles(characterId: number): Promise<NewsArticleDto[]> {

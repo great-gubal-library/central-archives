@@ -2,6 +2,7 @@ import { CurrentUser } from "@app/auth/decorators/current-user.decorator";
 import { RoleRequired } from "@app/auth/decorators/role-required.decorator";
 import { OptionalJwtAuthGuard } from "@app/auth/guards/optional-jwt-auth.guard";
 import { UserInfo } from "@app/auth/model/user-info";
+import { ImageSummaryDto } from "@app/shared/dto/image/image-summary.dto";
 import { NewsArticleDto } from "@app/shared/dto/news/news-article.dto";
 import { NewsIssueDto } from "@app/shared/dto/news/news-issue.dto";
 import { Role } from "@app/shared/enums/role.enum";
@@ -48,6 +49,12 @@ export class NewsController {
 	@UseGuards(OptionalJwtAuthGuard)
 	async getArticleById(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<NewsArticleDto> {
 		return this.newsService.getArticleById(id, user);
+	}
+
+	@Get('articles/:id/images')
+	@RoleRequired(Role.USER)
+	async getArticleImages(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserInfo): Promise<ImageSummaryDto[]> {
+		return this.newsService.getArticleImages(id, user);
 	}
 
 	@Post('articles')

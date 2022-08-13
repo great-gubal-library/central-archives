@@ -6,36 +6,30 @@
         <section v-if="!preview" class="page-edit-article__form-controls">
           <label>
             <template v-if="article.status === NewsStatus.SUBMITTED">Submitted for publication</template>
-            <template v-else-if="article.status === NewsStatus.PUBLISHED">Published on {{ $display.formatDateEorzean(article.publishedAt) }}</template>
+            <template v-else-if="article.status === NewsStatus.PUBLISHED"
+              >Published on {{ $display.formatDateEorzean(article.publishedAt) }}</template
+            >
             <template v-else>DRAFT</template>
           </label>
-          <q-input
-            v-model="article.title"
-            label="Title *"
-            :rules="[
-              $rules.required('This field is required.'),
-            ]"
-          />
-					<q-input
-            v-model="article.subtitle"
-            label="Subtitle"
-          />
-          <template v-if="$store.getters.character?.newsRole === NewsRole.EDITOR">
-            <q-input
-              v-model.number="article.imageId"
-              label="Chaos Archives thumbnail"
-            />
+          <q-input v-model="article.title" label="Title *" :rules="[$rules.required('This field is required.')]" />
+          <q-input v-model="article.subtitle" label="Subtitle" />
+          <template v-if="article.id && $store.getters.character?.newsRole === NewsRole.EDITOR">
+            <div class="page-edit-article__thumb-choice">Chaos Archives thumbnail: <q-btn label="Choose..." @click="onSelectThumbnail" /></div>
+            <section v-if="image">
+              <q-img class="page-edit-article__image" src="image.url" :initial-ratio="750 / 422" loading="eager" />
+            </section>
           </template>
           <h6>Summary *</h6>
-          <div class="text-caption">A short summary of what the article is about. It will not be displayed on the Harborwatch website, but will be displayed on the Chaos Archives front page.</div>
+          <div class="text-caption">
+            A short summary of what the article is about. It will not be displayed on the Harborwatch website, but will
+            be displayed on the Chaos Archives front page.
+          </div>
           <q-input
             class="page-edit-article__summary"
             type="textarea"
             outlined
             v-model="article.summary"
-            :rules="[
-              $rules.required('This field is required.'),
-            ]"
+            :rules="[$rules.required('This field is required.')]"
           />
           <h6>Content *</h6>
           <html-editor v-model="article.content" />
@@ -44,11 +38,7 @@
           <article-view :article="article" :preview="true" />
         </section>
         <div class="page-edit-article__button-bar page-edit-article__form-controls">
-          <q-btn-toggle
-            v-model="preview"
-            :options="previewOptions"
-            toggle-color="secondary"
-          />
+          <q-btn-toggle v-model="preview" :options="previewOptions" toggle-color="secondary" />
           <div class="page-edit-article__revert-submit">
             <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
             <template v-if="article.status === NewsStatus.DRAFT">
@@ -57,8 +47,10 @@
             </template>
             <template v-else>
               <q-btn label="Save changes" type="submit" color="primary" />
-              <template v-if="article.status === NewsStatus.SUBMITTED && $store.getters.character?.newsRole === NewsRole.EDITOR">&nbsp;
-              <q-btn label="Publish" color="negative" @click="publish" />
+              <template
+                v-if="article.status === NewsStatus.SUBMITTED && $store.getters.character?.newsRole === NewsRole.EDITOR"
+                >&nbsp;
+                <q-btn label="Publish" color="negative" @click="publish" />
               </template>
             </template>
           </div>
@@ -71,21 +63,12 @@
     <q-dialog v-model="confirmRevert" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <span class="q-ml-sm"
-            >Do you want to revert your unsaved changes to the last saved
-            version?</span
-          >
+          <span class="q-ml-sm">Do you want to revert your unsaved changes to the last saved version?</span>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn flat label="Keep editing" color="secondary" v-close-popup />
-          <q-btn
-            flat
-            label="Revert"
-            color="negative"
-            v-close-popup
-            @click="onConfirmRevert"
-          />
+          <q-btn flat label="Revert" color="negative" v-close-popup @click="onConfirmRevert" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -102,6 +85,7 @@ import { RouteParams } from 'vue-router';
 import { NewsStatus } from '@app/shared/enums/news-status.enum';
 import { QForm } from 'quasar';
 import { NewsRole } from '@app/shared/enums/news-role.enum';
+import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 
 @Options({
   name: 'PageEditArticle',
@@ -127,6 +111,9 @@ export default class PageEditArticle extends Vue {
 
   article = new NewsArticleDto();
   articleBackup = new NewsArticleDto();
+
+  image: ImageSummaryDto | null = null;
+
   preview = false;
   loaded = false;
   saving = false;
@@ -155,22 +142,26 @@ export default class PageEditArticle extends Vue {
         status: NewsStatus.DRAFT,
         publishedAt: null as unknown as number,
         title: '',
-				subtitle: '',
+        subtitle: '',
         summary: '',
         content: '',
         slug: '',
         category: '',
         imageId: null,
-				author: {
-					name: character.name,
-        	server: character.server,
-					pseudonym: character.newsPseudonym || character.name,
-				}
+        author: {
+          name: character.name,
+          server: character.server,
+          pseudonym: character.newsPseudonym || character.name,
+        },
       });
       this.loaded = true;
     }
 
     this.article = new NewsArticleDto(this.articleBackup);
+
+    if (this.article.imageId) {
+      this.image = await this.$api.images.getImage(this.article.imageId);
+    }
   }
 
   revert() {
@@ -193,24 +184,26 @@ export default class PageEditArticle extends Vue {
       return;
     }
 
-    this.$q.dialog({
-      title: 'Confirm Submitting for Publication',
-      message: "You're almost done! If you believe your article is ready, you can submit it for publication, so the Harborwatch editor can review it and include it in a future issue of the paper.",
-      ok: {
-        label: 'Submit',
-        color: 'primary',
-        flat: true,
-      },
-      cancel: {
-        label: 'Cancel',
-        color: 'secondary',
-        flat: true,
-      }
-    })
-    .onOk(() => {
-      this.submittingForPublication = true;
-      form.submit();
-    });    
+    this.$q
+      .dialog({
+        title: 'Confirm Submitting for Publication',
+        message:
+          "You're almost done! If you believe your article is ready, you can submit it for publication, so the Harborwatch editor can review it and include it in a future issue of the paper.",
+        ok: {
+          label: 'Submit',
+          color: 'primary',
+          flat: true,
+        },
+        cancel: {
+          label: 'Cancel',
+          color: 'secondary',
+          flat: true,
+        },
+      })
+      .onOk(() => {
+        this.submittingForPublication = true;
+        form.submit();
+      });
   }
 
   async publish() {
@@ -220,24 +213,25 @@ export default class PageEditArticle extends Vue {
       return;
     }
 
-    this.$q.dialog({
-      title: 'Confirm Publication',
-      message: 'Are you sure you want to publish this article?',
-      ok: {
-        label: 'Publish',
-        color: 'primary',
-        flat: true,
-      },
-      cancel: {
-        label: 'Cancel',
-        color: 'secondary',
-        flat: true,
-      }
-    })
-    .onOk(() => {
-      this.publishing = true;
-      form.submit();
-    });    
+    this.$q
+      .dialog({
+        title: 'Confirm Publication',
+        message: 'Are you sure you want to publish this article?',
+        ok: {
+          label: 'Publish',
+          color: 'primary',
+          flat: true,
+        },
+        cancel: {
+          label: 'Cancel',
+          color: 'secondary',
+          flat: true,
+        },
+      })
+      .onOk(() => {
+        this.publishing = true;
+        form.submit();
+      });
   }
 
   async onSubmit() {
@@ -261,16 +255,41 @@ export default class PageEditArticle extends Vue {
 
       this.articleBackup = new NewsArticleDto(this.article);
 
-      notifySuccess('Article saved.' /*, {
+      notifySuccess(
+        'Article saved.' /*, {
         label: 'View',
         color: 'white',
         //handler: () => this.viewArticle(),
-      } */);
+      } */
+      );
     } catch (e) {
       notifyError(e);
     } finally {
       this.saving = false;
     }
+  }
+
+  async onSelectThumbnail() {
+    const thumbnails = await this.$api.news.getArticleImages(this.article.id!);
+
+    if (!thumbnails.length) {
+      notifyError('No images found in article');
+      return;
+    }
+
+    const GalleryDialog = (await import('components/common/GalleryDialog.vue')).default;
+
+    this.$q
+      .dialog({
+        component: GalleryDialog,
+        componentProps: {
+          images: thumbnails,
+        },
+      })
+      .onOk((image: ImageSummaryDto) => {
+        this.article.imageId = image.id;
+        this.image = image;
+      });
   }
 }
 </script>
@@ -306,5 +325,20 @@ export default class PageEditArticle extends Vue {
 
 .page-edit-article .article__content {
   columns: 2;
+}
+
+.page-edit-article__thumb-choice {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.page-edit-article__thumb-choice .q-btn {
+  margin-left: 12px;
+}
+
+.page-edit-article__image {
+  max-width: 250px;
+  min-width: 175px;
 }
 </style>

@@ -1,6 +1,7 @@
 import { UserInfo } from "@app/auth/model/user-info";
-import { serverConfiguration } from "@app/configuration";
+import { s3Configuration, serverConfiguration } from "@app/configuration";
 import { Character, Image, News, NewsCategory, NewsIssue } from "@app/entity";
+import { ImageSummaryDto } from "@app/shared/dto/image/image-summary.dto";
 import { NewsArticleDto } from "@app/shared/dto/news/news-article.dto";
 import { NewsIssueDto } from "@app/shared/dto/news/news-issue.dto";
 import { NewsDto } from "@app/shared/dto/news/news.dto";
@@ -12,8 +13,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import crypto from 'crypto';
 import { padStart } from "lodash";
 import { DateTime } from "luxon";
+import parse from "node-html-parser";
 import slugify from 'slugify';
-import { Connection, EntityManager, IsNull, Like, Not, Repository } from "typeorm";
+import { Connection, EntityManager, In, IsNull, Like, Not, Repository } from "typeorm";
 import { ImagesService } from "../images/images.service";
 
 @Injectable()
@@ -149,9 +151,10 @@ export class NewsService {
 			.innerJoinAndSelect('owner.server', 'server')
 			.innerJoinAndSelect('owner.user', 'user')
 			.innerJoinAndSelect('news.category', 'category')
+			.innerJoinAndSelect('news.image', 'image')
 			.where('news.id = :id', { id })
 			.andWhere('(:userId IS NULL OR user.id = :userId)', { userId: user?.id || null })			
-			.select([ 'news', 'category.name', 'owner.id', 'owner.name', 'server.name', 'owner.newsPseudonym' ])
+			.select([ 'news', 'category.name', 'owner.id', 'owner.name', 'server.name', 'owner.newsPseudonym', 'image.id' ])
 			.getOne();
 
 		if (!article) {
@@ -358,6 +361,45 @@ export class NewsService {
 				pseudonym: article.owner.newsPseudonym || article.owner.name,
 			},
 		};
+	}
+
+	async getArticleImages(articleId: number, user: UserInfo): Promise<ImageSummaryDto[]> {
+		const article = await this.newsRepo.createQueryBuilder('news')
+				.innerJoinAndSelect('news.owner', 'owner')
+				.where('news.id = :id', { id: articleId })	
+				.select([ 'news.id', 'news.content', 'news.status', 'owner.id' ])
+				.getOne();
+
+		if (!article || !this.canEdit(article, user)) {
+			throw new ForbiddenException('Cannot edit this article');
+		}
+
+		const doc = parse(article.content);
+		const images = doc.querySelectorAll('img');
+		const imageRegex = new RegExp(`^${s3Configuration.publicRootUrl}\\/\\d+\\/([0-9a-z]+)\\/.*$`);
+		const hashes: string[] = [];
+
+		images.forEach(image => {
+			const src = image.getAttribute('src');
+
+			if (!src) {
+				return;
+			}
+
+			const match = imageRegex.exec(src);
+
+			if (match) {
+				hashes.push(match[1]);
+			}
+		});
+
+		return (await this.imageRepo.find({
+			where: {
+				hash: In(hashes),
+			},
+			order: { createdAt: 'ASC' },
+			relations: [ 'owner' ],
+		})).map(image => this.imagesService.toImageSummaryDto(image))
 	}
 
 	private canEdit(article: News, user?: UserInfo): boolean {
