@@ -299,7 +299,11 @@ export class NewsService {
 			if (articleDto.status !== NewsStatus.PUBLISHED) {
 				throw new BadRequestException('Cannot unpublish a published article');
 			}
+		} else {
+			article.status = articleDto.status;
+		}
 
+		if (article.status === NewsStatus.PUBLISHED) {
 			// check if we need to set the slug
 			const newSlug = slugify(article.title).toLowerCase();
 
@@ -310,8 +314,6 @@ export class NewsService {
 			if (!article.publishedAt) {
 				article.publishedAt = new Date();
 			}
-		} else {
-			article.status = articleDto.status;
 		}
 
 		if (user.characters.find(ch => ch.newsRole === NewsRole.EDITOR)) {
