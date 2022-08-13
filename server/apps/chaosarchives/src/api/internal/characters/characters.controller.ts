@@ -13,7 +13,7 @@ import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summar
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
-import { MyContentDto } from '@app/shared/dto/links/my-content.dto';
+import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';

@@ -5,10 +5,10 @@ import { CharacterProfileDto } from '@app/shared/dto/characters/character-profil
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
 import { CharacterRegistrationStatusResultDto } from '@app/shared/dto/characters/character-registration-status-result.dto';
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
+import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
-import { MyContentDto } from '@app/shared/dto/links/my-content.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import APITransport, { QueryParams } from './api-transport';
 

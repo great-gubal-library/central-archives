@@ -1,11 +1,16 @@
 <template>
 	<div class="my-images">
-		<transition
-      v-for="image in images" :key="image.id"
-      leave-active-class="animated fadeOut"
-    >
-		  <my-image v-show="!deleted[image.id]" :image="image" @deleted="onImageDeleted" />
-    </transition>
+		<template v-if="images.length > 0">
+			<transition
+				v-for="image in images" :key="image.id"
+				leave-active-class="animated fadeOut"
+			>
+				<my-image v-show="!deleted[image.id]" :image="image" @deleted="onImageDeleted" />
+			</transition>
+		</template>
+		<p v-else>
+			You have no images.
+		</p>
 	</div>
 </template>
 

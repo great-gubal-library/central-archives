@@ -1,12 +1,13 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { Event, NoticeboardItem, Story } from '@app/entity';
-import { LinkResultDto } from '@app/shared/dto/links/link-result.dto';
-import { MyContentDto } from '@app/shared/dto/links/my-content.dto';
+import { BaseLinkResultDto } from '@app/shared/dto/common/base-link-result.dto';
+import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ImagesService } from '../images/images.service';
+import { MyContentItemDto } from '@app/shared/dto/characters/my-content-item.dto';
 
 @Injectable()
 export class MyContentService {
@@ -37,7 +38,7 @@ export class MyContentService {
     };
   }
 
-  private async getEvents(characterId: number): Promise<LinkResultDto[]> {
+  private async getEvents(characterId: number): Promise<MyContentItemDto[]> {
     return (
       await this.eventRepo.find({
         where: {
@@ -45,15 +46,17 @@ export class MyContentService {
 						id: characterId
 					},
         },
-        select: ['id'],
+        order: { 'createdAt': 'DESC' },
+        select: ['id', 'title', 'createdAt'],
       })
     ).map((event) => ({
-      type: PageType.EVENT,
       id: event.id,
+      title: event.title,
+      createdAt: event.createdAt.getTime(),
     }));
   }
 
-  private async getStories(characterId: number): Promise<LinkResultDto[]> {
+  private async getStories(characterId: number): Promise<MyContentItemDto[]> {
     return (
       await this.storyRepo.find({
         where: {
@@ -61,15 +64,17 @@ export class MyContentService {
 						id: characterId
 					}
         },
-        select: ['id'],
+        order: { 'createdAt': 'DESC' },
+        select: ['id', 'title', 'createdAt'],
       })
     ).map((story) => ({
-      type: PageType.STORY,
       id: story.id,
+      title: story.title,
+      createdAt: story.createdAt.getTime(),
     }));
   }
 
-  private async getNoticeboardItems(characterId: number): Promise<LinkResultDto[]> {
+  private async getNoticeboardItems(characterId: number): Promise<MyContentItemDto[]> {
     return (
       await this.noticeboardItemRepo.find({
         where: {
@@ -77,11 +82,13 @@ export class MyContentService {
 						id: characterId
 					}
         },
-        select: ['id'],
+        order: { 'createdAt': 'DESC' },
+        select: ['id', 'title', 'createdAt'],
       })
     ).map((noticeboardItem) => ({
-      type: PageType.NOTICEBOARD_ITEM,
       id: noticeboardItem.id,
+      title: noticeboardItem.title,
+      createdAt: noticeboardItem.createdAt.getTime(),
     }));
   }
 }
