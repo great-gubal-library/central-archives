@@ -146,14 +146,21 @@ export class NewsService {
 	}
 
 	async getArticleById(id: number, user?: UserInfo): Promise<NewsArticleDto> {
-		const article = await this.newsRepo.createQueryBuilder('news')
+		const isEditor = !!user && user.characters.find(ch => ch.newsRole === NewsRole.EDITOR);
+
+		const query = this.newsRepo.createQueryBuilder('news')
 			.innerJoinAndSelect('news.owner', 'owner')
 			.innerJoinAndSelect('owner.server', 'server')
 			.innerJoinAndSelect('owner.user', 'user')
 			.innerJoinAndSelect('news.category', 'category')
 			.innerJoinAndSelect('news.image', 'image')
-			.where('news.id = :id', { id })
-			.andWhere('(:userId IS NULL OR user.id = :userId)', { userId: user?.id || null })			
+			.where('news.id = :id', { id });
+
+		if (!isEditor) {
+			query.andWhere('(:userId IS NULL OR user.id = :userId)', { userId: user?.id || null });
+		}
+
+		const article = await query
 			.select([ 'news', 'category.name', 'owner.id', 'owner.name', 'server.name', 'owner.newsPseudonym', 'image.id' ])
 			.getOne();
 
