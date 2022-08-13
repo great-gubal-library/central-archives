@@ -20,6 +20,12 @@
             v-model="article.subtitle"
             label="Subtitle"
           />
+          <template v-if="$store.getters.character?.newsRole === NewsRole.EDITOR">
+            <q-input
+              v-model.number="article.imageId"
+              label="Chaos Archives thumbnail"
+            />
+          </template>
           <h6>Summary *</h6>
           <div class="text-caption">A short summary of what the article is about. It will not be displayed on the Harborwatch website, but will be displayed on the Chaos Archives front page.</div>
           <q-input
@@ -154,6 +160,7 @@ export default class PageEditArticle extends Vue {
         content: '',
         slug: '',
         category: '',
+        imageId: null,
 				author: {
 					name: character.name,
         	server: character.server,
@@ -215,7 +222,7 @@ export default class PageEditArticle extends Vue {
 
     this.$q.dialog({
       title: 'Confirm Publication',
-      message: "Are you sure you want to publish this article?",
+      message: 'Are you sure you want to publish this article?',
       ok: {
         label: 'Publish',
         color: 'primary',

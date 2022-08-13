@@ -1,6 +1,6 @@
 import { UserInfo } from "@app/auth/model/user-info";
 import { serverConfiguration } from "@app/configuration";
-import { Character, News, NewsCategory, NewsIssue } from "@app/entity";
+import { Character, Image, News, NewsCategory, NewsIssue } from "@app/entity";
 import { NewsArticleDto } from "@app/shared/dto/news/news-article.dto";
 import { NewsIssueDto } from "@app/shared/dto/news/news-issue.dto";
 import { NewsDto } from "@app/shared/dto/news/news.dto";
@@ -21,6 +21,7 @@ export class NewsService {
 	constructor(
 		@InjectRepository(News) private newsRepo: Repository<News>,
 		@InjectRepository(NewsIssue) private newsIssueRepo: Repository<NewsIssue>,
+		@InjectRepository(Image) private imageRepo: Repository<Image>,
 		private connection: Connection,
 		private imagesService: ImagesService,
 	) {}
@@ -232,7 +233,7 @@ export class NewsService {
 				slug: crypto.randomUUID(),
 			});
 
-			await this.mergeArticleFromDto(em, article, articleDto);
+			await this.mergeArticleFromDto(em, article, articleDto, user);
 			await newsRepo.save(article);
 			return article;
 		});
@@ -270,7 +271,7 @@ export class NewsService {
 				throw new ForbiddenException('You cannot edit this article');
 			}
 
-			await this.mergeArticleFromDto(em, article, articleDto);
+			await this.mergeArticleFromDto(em, article, articleDto, user);
 			await newsRepo.save(article);
 			return article;
 		});
@@ -278,7 +279,7 @@ export class NewsService {
 		return this.toArticle(articleEntity, user);
 	}
 
-	private async mergeArticleFromDto(em: EntityManager, article: News, articleDto: NewsArticleDto): Promise<void> {
+	private async mergeArticleFromDto(em: EntityManager, article: News, articleDto: NewsArticleDto, user: UserInfo): Promise<void> {
 		article.title = articleDto.title;
 		article.subtitle = articleDto.subtitle;
 		article.summary = articleDto.summary;
@@ -301,6 +302,22 @@ export class NewsService {
 			}
 		} else {
 			article.status = articleDto.status;
+		}
+
+		if (user.characters.find(ch => ch.newsRole === NewsRole.EDITOR)) {
+			if (!articleDto.imageId) {
+				article.image = null;
+			} else {
+				const image = await this.imageRepo.findOne(articleDto.imageId, {
+					select: [ 'id' ]
+				});
+
+				if (!image) {
+					throw new NotFoundException('Image not found');
+				}
+
+				article.image = image;
+			}
 		}
 	}
 
@@ -333,6 +350,7 @@ export class NewsService {
 			summary: article.summary,
 			content: article.content,
 			category: article.category.name,
+			imageId: article.image ? article.image.id : null,
 			publishedAt: article.publishedAt ? article.publishedAt.getTime() : null,
 			author: {
 				name: article.owner.name,

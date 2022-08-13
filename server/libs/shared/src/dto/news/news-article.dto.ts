@@ -35,6 +35,10 @@ export class NewsArticleDto {
 	@IsNotEmpty()
   content: string;
 
+	@IsNumber()
+	@IsOptional()
+  imageId: number | null;
+
 	@IsEnum(NewsStatus)
 	status: NewsStatus;
 
