@@ -1,8 +1,8 @@
 <template>
   <q-page class="page-my-images">
-		<h2>My Images</h2>
+		<h2>My Content</h2>
     <div class="page-my-images__subtitle">for {{ $store.getters.character?.name }}</div>
-    <my-images :images="images" />
+    <my-images :images="content.images" />
 	</q-page>	
 </template>
 
@@ -13,8 +13,9 @@ import { notifyError } from 'src/common/notify';
 import MyImages from 'components/images/MyImages.vue';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
+import { MyContentDto } from '@app/shared/dto/links/my-content.dto';
 
-async function load(): Promise<ImageDto[]> {
+async function load(): Promise<MyContentDto> {
 	const $api = useApi();
   const $store = useStore();
   const characterId = $store.getters.characterId;
@@ -25,7 +26,7 @@ async function load(): Promise<ImageDto[]> {
 	}
 
   try {
-    return await $api.characters.getMyImages(characterId);
+    return await $api.characters.getMyContent(characterId);
   } catch (e) {
     notifyError(e);
     throw e;
@@ -33,31 +34,31 @@ async function load(): Promise<ImageDto[]> {
 }
 
 @Options({
-	name: 'PageMyImages',
+	name: 'PageMyContent',
 	components: {
 		MyImages,
 	},
 	async beforeRouteEnter(_, __, next) {
     try {
-      const images = await load();
-      next(vm => (vm as PageMyImages).setContent(images));
+      const content = await load();
+      next(vm => (vm as PageMyContent).setContent(content));
     } catch (e) {
       console.log(e);
       notifyError(e);
     }
   }
 })
-export default class PageMyImages extends Vue {
-	images: ImageDto[] = [];
-  deleted: { [k: number]: boolean } = {};
+export default class PageMyContent extends Vue {
+	content: MyContentDto = {
+    events: [],
+    stories: [],
+    noticeboardItems: [],
+    images: []
+  };
 
-	setContent(images: ImageDto[]) {
-		this.images = images;
+	setContent(content: MyContentDto) {
+		this.content = content;
 	}
-
-  onImageDeleted(image: ImageDto) {
-    this.deleted[image.id] = true;
-  }
 }
 </script>
 

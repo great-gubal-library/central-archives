@@ -270,11 +270,11 @@ const routes: RouteRecordRaw[] = [
   },
 
   { 
-    path: '/my-images',
+    path: '/my-content',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/MyImages.vue') }],
+    children: [{ path: '', component: () => import('pages/MyContent.vue') }],
     meta: {
-      title: 'My Images'
+      title: 'My Content'
     },
   },
 

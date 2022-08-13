@@ -70,44 +70,6 @@
             <q-item-label>My Free Company</q-item-label>
           </q-item-section>
         </q-item>
-        <!--
-        <q-item
-          clickable
-          v-ripple
-          to="/my-communities"
-        >
-          <q-item-section>
-            <q-item-label>My communities</q-item-label>
-          </q-item-section>
-        </q-item>
-        -->
-        <q-item
-          clickable
-          v-ripple
-          to="/create-story"
-        >
-          <q-item-section>
-            <q-item-label>New story</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item
-          clickable
-          v-ripple
-          to="/create-event"
-        >
-          <q-item-section>
-            <q-item-label>New event</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item
-          clickable
-          v-ripple
-          to="/create-noticeboard-item"
-        >
-          <q-item-section>
-            <q-item-label>New noticeboard item</q-item-label>
-          </q-item-section>
-        </q-item>
         <q-separator dark />
         <q-item
           clickable
@@ -150,6 +112,33 @@
         <q-item
           clickable
           v-ripple
+          to="/create-story"
+        >
+          <q-item-section>
+            <q-item-label>New story</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
+          to="/create-event"
+        >
+          <q-item-section>
+            <q-item-label>New event</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
+          to="/create-noticeboard-item"
+        >
+          <q-item-section>
+            <q-item-label>New noticeboard item</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
           @click="uploadImage"
         >
           <q-item-section>
@@ -159,10 +148,10 @@
         <q-item
           clickable
           v-ripple
-          to="/my-images"
+          to="/my-content"
         >
           <q-item-section>
-            <q-item-label>My images</q-item-label>
+            <q-item-label>My content</q-item-label>
           </q-item-section>
         </q-item>
       </template>

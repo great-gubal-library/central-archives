@@ -8,6 +8,7 @@ import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summar
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { MyContentDto } from '@app/shared/dto/links/my-content.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import APITransport, { QueryParams } from './api-transport';
 
@@ -51,5 +52,9 @@ export default class CharactersAPI {
 
   async getMyImages(characterId: number): Promise<ImageDto[]> {
     return this.transport.authGet<ImageDto[]>(`${characterId}/my-images`);
+  }
+
+  async getMyContent(characterId: number): Promise<MyContentDto> {
+    return this.transport.authGet<MyContentDto>(`${characterId}/my-content`);
   }
 }
