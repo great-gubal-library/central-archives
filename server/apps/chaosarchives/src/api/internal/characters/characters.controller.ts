@@ -13,12 +13,14 @@ import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summar
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
+import { MyContentDto } from '@app/shared/dto/links/my-content.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ImagesService } from '../images/images.service';
 import { StoriesService } from '../stories/stories.service';
 import { CharactersService } from './characters.service';
+import { MyContentService } from './my-content.service';
 
 @Controller('characters')
 export class CharactersController {
@@ -26,6 +28,7 @@ export class CharactersController {
     private charactersService: CharactersService,
     private storiesService: StoriesService,
     private imagesService: ImagesService,
+    private myContentService: MyContentService,
   ) {}
 
   @Get('profile/:server/:name')
@@ -87,6 +90,15 @@ export class CharactersController {
     @CurrentUser() user: UserInfo,
   ): Promise<ImageDto[]> {
     return this.imagesService.getMyImages(characterId, user);
+  }
+
+  @Get(':id/my-content')
+  @RoleRequired(Role.USER)
+  async getMyContent(
+    @Param('id', ParseIntPipe) characterId: number,
+    @CurrentUser() user: UserInfo,
+  ): Promise<MyContentDto> {
+    return this.myContentService.getMyContent(characterId, user);
   }
 
   @Get('registration-status')
