@@ -146,14 +146,14 @@ export class NewsService {
 	}
 
 	async getArticleById(id: number, user?: UserInfo): Promise<NewsArticleDto> {
-		const isEditor = !!user && user.characters.find(ch => ch.newsRole === NewsRole.EDITOR);
+		const isEditor = !!user && user.characters.some(ch => ch.newsRole === NewsRole.EDITOR);
 
 		const query = this.newsRepo.createQueryBuilder('news')
 			.innerJoinAndSelect('news.owner', 'owner')
 			.innerJoinAndSelect('owner.server', 'server')
 			.innerJoinAndSelect('owner.user', 'user')
 			.innerJoinAndSelect('news.category', 'category')
-			.innerJoinAndSelect('news.image', 'image')
+			.leftJoinAndSelect('news.image', 'image')
 			.where('news.id = :id', { id });
 
 		if (!isEditor) {
@@ -172,7 +172,7 @@ export class NewsService {
 	}
 
 	async getMyArticles(characterId: number, user: UserInfo): Promise<NewsArticleDto[]> {
-		if (!user.characters.find(ch => ch.id === characterId && ch.verified)) {
+		if (!user.characters.some(ch => ch.id === characterId && ch.verified)) {
 			throw new ForbiddenException('Invalid character');
 		}
 
@@ -414,7 +414,7 @@ export class NewsService {
 			return false;
 		}
 
-		if (user.characters.find(ch => ch.newsRole === NewsRole.EDITOR)) {
+		if (user.characters.some(ch => ch.newsRole === NewsRole.EDITOR)) {
 			return true; // Editors can edit everything
 		}
 
