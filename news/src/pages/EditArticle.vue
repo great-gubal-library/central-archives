@@ -16,7 +16,7 @@
           <template v-if="article.id && $store.getters.character?.newsRole === NewsRole.EDITOR">
             <div class="page-edit-article__thumb-choice">Chaos Archives thumbnail: <q-btn label="Choose..." @click="onSelectThumbnail" /></div>
             <section v-if="image">
-              <q-img class="page-edit-article__image" src="image.url" :initial-ratio="750 / 422" loading="eager" />
+              <q-img class="page-edit-article__image" :src="image.url" :initial-ratio="750 / 422" loading="eager" />
             </section>
           </template>
           <h6>Summary *</h6>
@@ -160,7 +160,8 @@ export default class PageEditArticle extends Vue {
     this.article = new NewsArticleDto(this.articleBackup);
 
     if (this.article.imageId) {
-      this.image = await this.$api.images.getImage(this.article.imageId);
+      this.image = (await this.$api.news.getArticleImages(this.article.id!))
+        .find(image => image.id === this.article.imageId) || null;
     }
   }
 
