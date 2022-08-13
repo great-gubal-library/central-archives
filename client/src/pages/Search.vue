@@ -75,30 +75,46 @@ async function load(to: RouteLocationNormalized): Promise<{ query: string; resul
   components: {
     ThumbGallery,
   },
+  watch: {
+    tab: {
+      handler(newValue: PageType, oldValue: PageType) {
+        if (newValue !== oldValue) {
+          (this as PageSearch).setTab(newValue);
+        }
+      },
+    },
+  },
   async beforeRouteEnter(to, _, next) {
     const { query, results } = await load(to);
-    next((vm) => (vm as PageSearch).setContent(query, results));
+    const tab = to.query.tab as PageType || null;
+    next((vm) => (vm as PageSearch).setContent(query, results, tab));
   },
-  async beforeRouteUpdate(to) {
-    const { query, results } = await load(to);
-    (this as PageSearch).setContent(query, results);
+  async beforeRouteUpdate(to, from) {
+    if (to.query.q !== from.query.q) {
+      const { query, results } = await load(to);
+      const tab = to.query.tab as PageType || null;
+      (this as PageSearch).setContent(query, results, tab);
+    }
   },
 })
 export default class PageSearch extends Vue {
   query = '';
   keywords: string[] = [];
   results: SearchResultsDto[] = [];
-  tab: PageType = PageType.PROFILE;
+  tab: PageType | null = null;
 
   private keywordsRegexps: RegExp[];
 
-  setContent(query: string, results: SearchResultsDto[]) {
+  setContent(query: string, results: SearchResultsDto[], tab: PageType | null) {
     this.query = query;
     this.keywords = toSearchKeywords(query);
     this.results = results;
 
-    if (!this.isEmpty) {
+    if (tab) {
+      this.tab = tab;
+    } else if (!this.isEmpty) {
       this.tab = this.results[0].type;
+      this.setTab(this.tab);
     }
 
     this.keywordsRegexps = this.keywords.map((keyword) => {
@@ -107,6 +123,16 @@ export default class PageSearch extends Vue {
         `^(${escapedKeyword})$|^(${escapedKeyword})[^\\w]|[^\\w](${escapedKeyword})$|[^\\w](${escapedKeyword})[^\\w]`,
         'ig'
       );
+    });
+  }
+
+  setTab(tab: PageType) {
+    void this.$router.replace({
+      path: '/search',
+      query: {
+        q: this.query,
+        tab,
+      }
     });
   }
 

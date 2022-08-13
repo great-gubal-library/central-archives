@@ -130,7 +130,12 @@ export default class PageMyContent extends Vue {
   }
 
   private setTab(tab: PageType) {
-    void this.$router.replace(`/my-content?tab=${tab}`);
+    void this.$router.replace({
+      path: '/my-content',
+      query: {
+        tab,
+      },
+    });
   }
 
   async uploadImage() {
