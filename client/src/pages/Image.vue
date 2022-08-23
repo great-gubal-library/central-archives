@@ -20,7 +20,7 @@
 				<hr />
 			</template>
 			<section class="page-image__credits">
-				<p><strong>Credits:</strong> {{image.credits}}</p>
+				<p><strong>Credits:</strong> <link-field :content="image.credits" /></p>
 				<p v-if="image.eventId"><strong>Event:</strong> <router-link :to="`/event/${image.eventId}`">{{image.eventTitle}}</router-link></p>
 			</section>
     	<report-violation-section :pageType="PageType.IMAGE" :pageId="image.id" />
@@ -40,6 +40,7 @@ import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
+import LinkField from 'src/components/common/LinkField.vue';
 
 const $api = useApi();
 const $router = useRouter();
@@ -73,6 +74,7 @@ async function load(params: RouteParams): Promise<ImageDto> {
 	components: {
 		HtmlViewer,
 		ReportViolationSection,
+		LinkField,
 	},
 	async beforeRouteEnter(to, _, next) {
 		const image = await load(to.params);
