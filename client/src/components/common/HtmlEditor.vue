@@ -65,7 +65,7 @@ const TINYMCE_OPTIONS = {
     help: { title: 'Help', items: 'help' }
   },
   menubar: 'edit view insert format list table help',
-  image_title: false,
+  image_title: true,
   image_description: false,
   image_advtab: true,
   link_title: false,
