@@ -118,42 +118,49 @@ export class Character extends BasicEntity {
 
   @Column({
     nullable: false,
+    length: 1000,
     default: '',
   })
   motto: string;
 
   @Column({
     nullable: false,
+    length: 1000,
     default: '',
   })
   loves: string;
 
   @Column({
     nullable: false,
+    length: 1000,
     default: '',
   })
   hates: string;
 
   @Column({
     nullable: false,
+    length: 1000,
     default: '',
   })
   friends: string;
 
   @Column({
     nullable: false,
+    length: 1000,
     default: '',
   })
   relatives: string;
 
   @Column({
     nullable: false,
+    length: 1000,
     default: '',
   })
   enemies: string;
 
   @Column({
     nullable: false,
+    length: 1000,
     default: '',
   })
   motivation: string;
