@@ -17,6 +17,7 @@ export class WikiPage extends BasicEntity {
 
   @Column({
     nullable: false,
+    unique: true,
   })
   title: string;
 
