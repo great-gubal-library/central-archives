@@ -71,6 +71,7 @@ class Display {
 		[PageType.EVENT]: 'Event',
 		[PageType.STORY]: 'Story',
 		[PageType.NOTICEBOARD_ITEM]: 'Noticeboard item',
+		[PageType.WIKI_PAGE]: 'Wiki page',
 		[PageType.IMAGE]: 'Image',
 	};
 
@@ -82,6 +83,7 @@ class Display {
 		[PageType.EVENT]: 'Events',
 		[PageType.STORY]: 'Stories',
 		[PageType.NOTICEBOARD_ITEM]: 'Noticeboard items',
+		[PageType.WIKI_PAGE]: 'Wiki pages',
 		[PageType.IMAGE]: 'Images',
 	};
 

@@ -35,8 +35,8 @@ export class SearchService {
       return [];
     }
 
-    const [profiles, freeCompanies, communities, venues, events, stories, noticeboardItems, images] = await Promise.all(
-      [
+    const [profiles, freeCompanies, communities, venues, events, stories, noticeboardItems, wikiPages, images] =
+      await Promise.all([
         this.searchCharacters(keywords),
         this.searchFreeCompanies(keywords),
         this.searchCommunities(keywords),
@@ -44,9 +44,9 @@ export class SearchService {
         this.searchEvents(keywords),
         this.searchStories(keywords),
         this.searchNoticeboardItems(keywords),
+        this.searchWikiPages(keywords),
         this.searchImages(keywords),
-      ],
-    );
+      ]);
 
     return [
       { type: PageType.PROFILE, results: this.filter(profiles) },
@@ -56,6 +56,7 @@ export class SearchService {
       { type: PageType.EVENT, results: this.filter(events) },
       { type: PageType.STORY, results: this.filter(stories) },
       { type: PageType.NOTICEBOARD_ITEM, results: this.filter(noticeboardItems) },
+      { type: PageType.WIKI_PAGE, results: this.filter(wikiPages) },
       { type: PageType.IMAGE, results: this.filter(images) },
     ];
   }
@@ -185,6 +186,24 @@ export class SearchService {
       name: noticeboardItem.title,
       content: this.getContent(noticeboardItem, properties, keywords),
       updatedAt: noticeboardItem.updatedAt.getTime(),
+    }));
+  }
+
+  private async searchWikiPages(keywords: string[]): Promise<SearchResultDto[]> {
+    const properties = SearchFields.wikiPage;
+    const qb = this.noticeboardItemRepo.createQueryBuilder('wp');
+
+    return (
+      await andWhereMatches(qb, 'wp', properties, keywords)
+        .select(['wp.id', ...this.expandProperties('wp', properties), 'wp.updatedAt'])
+        .orderBy('wp.updatedAt', 'DESC')
+        .limit(this.MAX_RESULTS)
+        .getMany()
+    ).map((wikiPage) => ({
+      id: wikiPage.id,
+      name: wikiPage.title,
+      content: this.getContent(wikiPage, properties, keywords),
+      updatedAt: wikiPage.updatedAt.getTime(),
     }));
   }
 

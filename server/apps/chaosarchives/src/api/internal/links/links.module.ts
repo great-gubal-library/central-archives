@@ -1,4 +1,4 @@
-import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, Venue } from '@app/entity';
+import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, Venue, WikiPage } from '@app/entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImagesModule } from '../images/images.module';
@@ -15,6 +15,7 @@ import { LinksService } from './links.service';
       Event,
       Story,
       NoticeboardItem,
+      WikiPage,
       Image,
     ]),
     ImagesModule,

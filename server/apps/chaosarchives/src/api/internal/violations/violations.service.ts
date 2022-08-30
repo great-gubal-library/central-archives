@@ -1,5 +1,5 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, User, Venue, Violation } from '@app/entity';
+import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, User, Venue, Violation, WikiPage } from '@app/entity';
 import { ViolationReportDto } from '@app/shared/dto/violations/violation-report.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
 import { BadRequestException, ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
@@ -16,6 +16,7 @@ export class ViolationsService {
 		[PageType.EVENT]: Event,
 		[PageType.STORY]: Story,
 		[PageType.NOTICEBOARD_ITEM]: NoticeboardItem,
+		[PageType.WIKI_PAGE]: WikiPage,
 		[PageType.IMAGE]: Image,
 	};
 

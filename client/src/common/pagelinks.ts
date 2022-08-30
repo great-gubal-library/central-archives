@@ -18,6 +18,8 @@ export function getPageLink(type: PageType, result: BaseLinkResultDto): string {
 		return `/story/${result.id!}`;
 	case PageType.NOTICEBOARD_ITEM:
 		return `/noticeboard-item/${result.id!}`;
+	case PageType.WIKI_PAGE:
+		return `/wiki/${wikify(result.name!)}`;
 	case PageType.IMAGE:
 		return `/image/${result.id!}`;
 	}

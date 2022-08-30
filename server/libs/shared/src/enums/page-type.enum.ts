@@ -6,5 +6,6 @@ export enum PageType {
 	EVENT = 'event',
 	STORY = 'story',
 	NOTICEBOARD_ITEM = 'noticeboard_item',
+	WIKI_PAGE = 'wiki_page',
 	IMAGE = 'image',
 }

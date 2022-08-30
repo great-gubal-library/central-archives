@@ -19,3 +19,4 @@ export { User } from './user.entity';
 export { Venue } from './venue.entity';
 export { VenueTag } from './venue-tag.entity';
 export { Violation } from './violation.entity';
+export { WikiPage } from './wiki-page.entity';

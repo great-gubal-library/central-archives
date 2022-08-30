@@ -1,4 +1,4 @@
-import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, Venue } from '@app/entity';
+import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, Venue, WikiPage } from '@app/entity';
 import { LinkResultDto } from '@app/shared/dto/links/link-result.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { PageType } from '@app/shared/enums/page-type.enum';
@@ -17,6 +17,7 @@ export class LinksService {
 		@InjectRepository(Event) private eventRepo: Repository<Event>,
 		@InjectRepository(Story) private storyRepo: Repository<Story>,
 		@InjectRepository(NoticeboardItem) private noticeboardItemRepo: Repository<NoticeboardItem>,
+		@InjectRepository(WikiPage) private wikiPageRepo: Repository<WikiPage>,
 		@InjectRepository(Image) private imageRepo: Repository<Image>,
 		private imageService: ImagesService,
 	) {}
@@ -30,6 +31,7 @@ export class LinksService {
 			this.getEvents(name),
 			this.getStories(name),
 			this.getNoticeboardItems(name),
+			this.getWikiPages(name),
 			this.getImages(name),
 		]);
 
@@ -123,6 +125,19 @@ export class LinksService {
 		})).map(noticeboardItem => ({
 			type: PageType.NOTICEBOARD_ITEM,
 			id: noticeboardItem.id,
+		}));
+	}
+
+	private async getWikiPages(name: string): Promise<LinkResultDto[]> {
+		return (await this.wikiPageRepo.find({
+			where: {
+				title: name
+			},
+			select: [ 'id', 'title' ]
+		})).map(wikiPage => ({
+			type: PageType.WIKI_PAGE,
+			id: wikiPage.id,
+			name: wikiPage.title,
 		}));
 	}
 

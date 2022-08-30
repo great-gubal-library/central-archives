@@ -54,6 +54,11 @@ export const SearchFields = {
     'content',
   ],
 
+  wikiPage: [
+    'title',
+    'content',
+  ],
+
   image: [
     'title',
     'description',
