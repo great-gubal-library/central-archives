@@ -421,6 +421,14 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Wiki
+
+  {
+    path: '/wiki/:title',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Wiki.vue') }],
+  },
+
   // Links
   
   {

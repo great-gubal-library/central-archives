@@ -13,7 +13,6 @@ import { Connection, IsNull, Not, Repository } from 'typeorm';
 export class WikiService {
   constructor(
     private connection: Connection,
-    @InjectRepository(Character) private characterRepo: Repository<Character>,
     @InjectRepository(WikiPage) private wikiPageRepo: Repository<WikiPage>,
   ) {}
 
@@ -33,14 +32,14 @@ export class WikiService {
     const wikiPage = await this.wikiPageRepo
       .createQueryBuilder('wp')
       .innerJoinAndSelect('wp.owner', 'character')
-      .innerJoinAndSelect('wp.user', 'user')
-      .innerJoinAndSelect('wp.server', 'server')
+      .innerJoinAndSelect('character.user', 'user')
+      .innerJoinAndSelect('character.server', 'server')
       .where(where, params)
       .select(['wp', 'character.id', 'character.name', 'user.id', 'server.name'])
       .getOne();
 
     if (!wikiPage) {
-      throw new NotFoundException('Story not found');
+      throw new NotFoundException('Wiki page not found');
     }
 
     return this.toWikiPageDto(wikiPage, user);
