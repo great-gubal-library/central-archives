@@ -16,6 +16,7 @@ import StoriesAPI from './stories-api';
 import UserAPI from './user-api';
 import VenuesAPI from './venues-api';
 import ViolationsAPI from './violations-api';
+import WikiAPI from './wiki-api';
 
 export default class API {
   private readonly transport = new APITransport();
@@ -39,6 +40,7 @@ export default class API {
   readonly stories = new StoriesAPI(this.transport);
   readonly venues = new VenuesAPI(this.transport);
   readonly violations = new ViolationsAPI(this.transport);
+  readonly wiki = new WikiAPI(this.transport);
 
   // Access token management
 

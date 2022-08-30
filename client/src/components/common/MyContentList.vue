@@ -54,6 +54,8 @@ export default class MyContentList extends Vue.with(Props) {
 				return `/edit-story/${item.id}`;
 			case PageType.NOTICEBOARD_ITEM:
 				return `/edit-noticeboard-item/${item.id}`;
+			case PageType.WIKI_PAGE:
+				return `/edit-wiki-page/${item.id}`;
 			default:
 				throw new Error('Unexpected page type');
 		}
@@ -94,6 +96,8 @@ export default class MyContentList extends Vue.with(Props) {
 				return this.$api.stories.deleteStory(item.id);
 			case PageType.NOTICEBOARD_ITEM:
 				return this.$api.noticeboard.deleteNoticeboardItem(item.id);
+			case PageType.WIKI_PAGE:
+				return this.$api.wiki.deleteWikiPage(item.id);
 			default:
 				throw new Error('Unexpected page type');
 		}

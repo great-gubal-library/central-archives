@@ -2,7 +2,7 @@ import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-
 import { EventDto } from '@app/shared/dto/events/event.dto'
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto'
 import { SessionDto } from '@app/shared/dto/user/session.dto'
-import { Role } from '@app/shared/enums/role.enum'
+import { Role, roleImplies } from '@app/shared/enums/role.enum'
 import { LocalStorage } from 'quasar'
 import { store } from 'quasar/wrappers'
 import { useApi } from 'src/boot/axios'
@@ -39,6 +39,7 @@ export interface GettersInterface {
   character: SessionCharacterDto|null;
   role: Role|null;
   realRole: Role|null;
+  isTrusted: boolean;
 }
 
 type CAStore = Omit<VuexStore<StateInterface>, 'getters'> & { getters: GettersInterface };
@@ -170,7 +171,15 @@ export default store(function (/* { ssrContext } */) {
         }
 
         return state.user.role;
-      }
+      },
+
+      isTrusted(state): boolean {
+        if (!state.user) {
+          return false;
+        }
+
+        return roleImplies(state.user.role, Role.TRUSTED);
+      },
     },
 
     // enable strict mode (adds overhead!)

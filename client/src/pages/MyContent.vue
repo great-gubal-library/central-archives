@@ -7,6 +7,7 @@
       <q-tab :name="PageType.EVENT" label="Events" />
       <q-tab :name="PageType.STORY" label="Stories" />
       <q-tab :name="PageType.NOTICEBOARD_ITEM" label="Noticeboard" />
+      <q-tab v-if="$store.getters.isTrusted" :name="PageType.WIKI_PAGE" label="Wiki" />
       <q-tab :name="PageType.IMAGE" label="Images" />
     </q-tabs>
 
@@ -31,6 +32,16 @@
           to="/create-noticeboard-item"
         />
       </q-tab-panel>
+      <q-tab-panel v-if="$store.getters.isTrusted" :name="PageType.WIKI_PAGE">
+        <my-content-list :type="PageType.WIKI_PAGE" :items="content.noticeboardItems" />
+        <q-btn
+          class="page-my-content__add"
+          color="primary"
+          icon="add"
+          label="New wiki page"
+          to="/create-wiki-page"
+        />
+      </q-tab-panel>
       <q-tab-panel :name="PageType.IMAGE">
         <my-images :images="content.images" />
         <q-btn class="page-my-content__add" color="primary" icon="upload" label="Upload image" @click="uploadImage" />
@@ -43,6 +54,7 @@
 import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
+import { Role, roleImplies } from '@app/shared/enums/role.enum';
 import MyImages from 'components/images/MyImages.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';

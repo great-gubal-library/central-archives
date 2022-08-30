@@ -137,6 +137,16 @@
           </q-item-section>
         </q-item>
         <q-item
+          v-if="$store.getters.isTrusted"
+          clickable
+          v-ripple
+          to="/create-wiki-page"
+        >
+          <q-item-section>
+            <q-item-label>New wiki page</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
           clickable
           v-ripple
           @click="uploadImage"

@@ -7,7 +7,7 @@
       will be embedded on the page. Otherwise leave this field blank.
     </p>
     <q-checkbox
-      v-if="isTrusted"
+      v-if="$store.getters.isTrusted"
       v-model="customDomain"
       label="Custom domain"
       @update:modelValue="onCustomDomainChanged"
@@ -41,7 +41,6 @@
 </template>
 
 <script lang="ts">
-import { Role, roleImplies } from '@app/shared/enums/role.enum';
 import { QField } from 'quasar';
 import { Options, prop, Vue } from 'vue-class-component';
 
@@ -69,15 +68,11 @@ export default class CarrdEditSection extends Vue.with(Props) {
   customDomain = false;
 
   created() {
-    if (DOMAIN_REGEX.test(this.modelValue) && this.isTrusted) {
+    if (DOMAIN_REGEX.test(this.modelValue) && this.$store.getters.isTrusted) {
       this.customDomain = true;
     }
   }
-
-  get isTrusted(): boolean {
-    return roleImplies(this.$store.getters.role!, Role.TRUSTED);
-  }
-
+  
 	onCustomDomainChanged() {
 		void this.$nextTick(() => void (this.$refs.inputField as QField).validate());
 	}
