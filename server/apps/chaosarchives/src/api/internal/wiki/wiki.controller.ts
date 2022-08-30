@@ -8,7 +8,7 @@ import { Role } from '@app/shared/enums/role.enum';
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { WikiService } from './wiki.service';
 
-@Controller('stories')
+@Controller('wiki')
 export class WikiController {
 	constructor(private wikiService: WikiService) { }
 
