@@ -1,13 +1,12 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Event, NoticeboardItem, Story } from '@app/entity';
-import { BaseLinkResultDto } from '@app/shared/dto/common/base-link-result.dto';
+import { Event, NoticeboardItem, Story, WikiPage } from '@app/entity';
+import { MyContentItemDto } from '@app/shared/dto/characters/my-content-item.dto';
 import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';
-import { PageType } from '@app/shared/enums/page-type.enum';
+import { Role, roleImplies } from '@app/shared/enums/role.enum';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ImagesService } from '../images/images.service';
-import { MyContentItemDto } from '@app/shared/dto/characters/my-content-item.dto';
 
 @Injectable()
 export class MyContentService {
@@ -15,6 +14,7 @@ export class MyContentService {
     @InjectRepository(Event) private eventRepo: Repository<Event>,
     @InjectRepository(Story) private storyRepo: Repository<Story>,
     @InjectRepository(NoticeboardItem) private noticeboardItemRepo: Repository<NoticeboardItem>,
+    @InjectRepository(WikiPage) private wikiPageRepo: Repository<WikiPage>,
     private imagesService: ImagesService,
   ) {}
 
@@ -23,10 +23,12 @@ export class MyContentService {
       throw new NotFoundException('Invalid character ID');
     }
 
-		const [ events, stories, noticeboardItems, images ] = await Promise.all([
+    const isTrusted = roleImplies(user.role, Role.TRUSTED);
+		const [ events, stories, noticeboardItems, wikiPages, images ] = await Promise.all([
 			this.getEvents(characterId),
 			this.getStories(characterId),
 			this.getNoticeboardItems(characterId),
+			isTrusted ? this.getWikiPages(characterId) : Promise.resolve([]),
 			this.imagesService.getMyImages(characterId, user),
 		]);
 
@@ -34,6 +36,7 @@ export class MyContentService {
       events,
       stories,
       noticeboardItems,
+      wikiPages,
       images,
     };
   }
@@ -89,6 +92,24 @@ export class MyContentService {
       id: noticeboardItem.id,
       title: noticeboardItem.title,
       createdAt: noticeboardItem.createdAt.getTime(),
+    }));
+  }
+
+  private async getWikiPages(characterId: number): Promise<MyContentItemDto[]> {
+    return (
+      await this.wikiPageRepo.find({
+        where: {
+          owner: {
+						id: characterId
+					}
+        },
+        order: { 'createdAt': 'DESC' },
+        select: ['id', 'title', 'createdAt'],
+      })
+    ).map((wikiPage) => ({
+      id: wikiPage.id,
+      title: wikiPage.title,
+      createdAt: wikiPage.createdAt.getTime(),
     }));
   }
 }

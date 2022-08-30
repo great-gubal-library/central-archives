@@ -54,7 +54,6 @@
 import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
-import { Role, roleImplies } from '@app/shared/enums/role.enum';
 import MyImages from 'components/images/MyImages.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
@@ -113,6 +112,7 @@ export default class PageMyContent extends Vue {
     events: [],
     stories: [],
     noticeboardItems: [],
+    wikiPages: [],
     images: [],
   };
 
