@@ -17,6 +17,7 @@ import { StoriesModule } from './stories/stories.module';
 import { UserModule } from './user/user.module';
 import { VenuesModule } from './venues/venues.module';
 import { ViolationsModule } from './violations/violations.module';
+import { WikiModule } from "./wiki/wiki.module";
 
 const controllerModules = [
 	MainPageModule,
@@ -36,6 +37,7 @@ const controllerModules = [
 	SearchModule,
 	ServersModule,
 	StatisticsModule,
+	WikiModule,
 ];
 
 @Module({
