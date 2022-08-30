@@ -1,3 +1,4 @@
+import { EditPermission } from '@app/shared/enums/edit-permission.enum';
 import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
@@ -25,4 +26,12 @@ export class WikiPage extends BasicEntity {
     default: ''
   })
   content: string;
+
+  @Column({
+    type: 'enum',
+    enum: EditPermission,
+    nullable: false,
+    default: EditPermission.ME,
+  })
+  editPermission: EditPermission;
 }
