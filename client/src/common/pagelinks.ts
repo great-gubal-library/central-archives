@@ -19,7 +19,7 @@ export function getPageLink(type: PageType, result: BaseLinkResultDto): string {
 	case PageType.NOTICEBOARD_ITEM:
 		return `/noticeboard-item/${result.id!}`;
 	case PageType.WIKI_PAGE:
-		return `/wiki/${wikify(result.name!)}`;
+		return `/wiki/${encodeURIComponent(wikify(result.name!))}`;
 	case PageType.IMAGE:
 		return `/image/${result.id!}`;
 	}

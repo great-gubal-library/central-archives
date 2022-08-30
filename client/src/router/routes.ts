@@ -429,6 +429,24 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Wiki.vue') }],
   },
 
+  { 
+    path: '/create-wiki-page',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditWikiPage.vue') }],
+    meta: {
+      title: 'Create Wiki Page'
+    },
+  },
+
+  { 
+    path: '/edit-wiki-page/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditWikiPage.vue') }],
+    meta: {
+      title: 'Edit Wiki Page'
+    },
+  },
+
   // Links
   
   {

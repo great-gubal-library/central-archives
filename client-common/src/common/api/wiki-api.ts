@@ -14,10 +14,10 @@ export default class WikiAPI {
   }
 
   async getWikiPageByTitle(title: string): Promise<WikiPageDto> {
-    return this.transport.tokenGet<WikiPageDto>(`by-title/${title}`);
+    return this.transport.tokenGet<WikiPageDto>(`by-title/${encodeURIComponent(title)}`);
   }
 
-  async createNoticeboardItem(wikiPage: WikiPageDto): Promise<IdWrapper> {
+  async createWikiPage(wikiPage: WikiPageDto): Promise<IdWrapper> {
     return this.transport.authPost<IdWrapper>('', wikiPage);
   }
 

@@ -43,7 +43,7 @@ class Props {
 
 export default class MyContentList extends Vue.with(Props) {
 	getLink(item: MyContentItemDto) {
-		return getPageLink(this.type, item);
+		return getPageLink(this.type, { id: item.id, name: item.title });
 	}
 
 	getEditLink(item: MyContentItemDto) {
