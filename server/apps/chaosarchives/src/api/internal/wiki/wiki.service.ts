@@ -22,7 +22,7 @@ export class WikiService {
   }
 
   async getWikiPageByName(name: string, user?: UserInfo): Promise<WikiPageDto> {
-    return this.getWikiPageInternal('wp.name = :name', { name }, user);
+    return this.getWikiPageInternal('wp.title = :name', { name }, user);
   }
 
   private async getWikiPageInternal(
