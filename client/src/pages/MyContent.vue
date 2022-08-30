@@ -33,7 +33,7 @@
         />
       </q-tab-panel>
       <q-tab-panel v-if="$store.getters.isTrusted" :name="PageType.WIKI_PAGE">
-        <my-content-list :type="PageType.WIKI_PAGE" :items="content.noticeboardItems" />
+        <my-content-list :type="PageType.WIKI_PAGE" :items="content.wikiPages" />
         <q-btn
           class="page-my-content__add"
           color="primary"
