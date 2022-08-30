@@ -26,7 +26,7 @@
 			<dd>Our Discord server.</dd>
 			<dt><a href="https://ffxiv-roleplayers.com/topic/1674-the-role-play-handbook/" target="_blank">The Role-Play Handbook <q-icon class="external-link-icon" name="launch" /></a></dt>
 			<dd>Introduction to RP in MMO games, and in FFXIV in particular.</dd>
-			<dt><a href="https://ffxiv-roleplayers.com/topic/24360-getting-started-with-ffxiv-rp-for-wow-rpers/" target="_blank">Getting Started with FFXIV RP for WoW RPers <q-icon class="external-link-icon" name="launch" /></a></dt>
+			<dt><router-link to="/wiki/Getting_Started_with_FFXIV_RP_for_WoW_RPers">Getting Started with FFXIV RP for WoW RPers</router-link></dt>
 			<dd>Read this if you're already familiar with RP in World of Warcraft.</dd>
 		</dl>
 		<template v-if="statistics">
