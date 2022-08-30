@@ -1,12 +1,12 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { Character, WikiPage } from '@app/entity';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
-import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import { WikiPageDto } from '@app/shared/dto/wiki/wiki-page.dto';
 import { EditPermission } from '@app/shared/enums/edit-permission.enum';
 import html from '@app/shared/html';
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import crypto from 'crypto';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 
 @Injectable()
@@ -135,13 +135,16 @@ export class WikiService {
         .innerJoinAndSelect('character.user', 'user')
         .where('wp.id = :id', { id })
         .andWhere('user.id = :userId', { userId: user.id })
-        .select(['wp.id'])
+        .select(['wp'])
         .getOne();
 
       if (!wikiPage) {
         throw new NotFoundException('Wiki page not found');
       }
 
+      // Free the name for new wiki pages, but keep the record with a deleted flag
+			wikiPage.title = `${crypto.randomUUID()} ${wikiPage.title}`;
+      await wikiPageRepo.save(wikiPage);
       await wikiPageRepo.softRemove(wikiPage);
     });
   }
