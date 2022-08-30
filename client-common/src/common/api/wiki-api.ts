@@ -13,6 +13,10 @@ export default class WikiAPI {
     return this.transport.tokenGet<WikiPageDto>(`${id}`);
   }
 
+  async getWikiPageByTitle(title: string): Promise<WikiPageDto> {
+    return this.transport.tokenGet<WikiPageDto>(`by-title/${title}`);
+  }
+
   async createNoticeboardItem(wikiPage: WikiPageDto): Promise<IdWrapper> {
     return this.transport.authPost<IdWrapper>('', wikiPage);
   }

@@ -21,8 +21,8 @@ export class WikiService {
     return this.getWikiPageInternal('wp.id = :id', { id }, user);
   }
 
-  async getWikiPageByName(name: string, user?: UserInfo): Promise<WikiPageDto> {
-    return this.getWikiPageInternal('wp.title = :name', { name }, user);
+  async getWikiPageByTitle(title: string, user?: UserInfo): Promise<WikiPageDto> {
+    return this.getWikiPageInternal('wp.title = :title', { title }, user);
   }
 
   private async getWikiPageInternal(

@@ -12,10 +12,10 @@ import { WikiService } from './wiki.service';
 export class WikiController {
 	constructor(private wikiService: WikiService) { }
 
-	@Get('by-name/:name')
+	@Get('by-title/:title')
 	@UseGuards(OptionalJwtAuthGuard)
-	async getWikiPageByName(@Param('name') name: string, @CurrentUser() user?: UserInfo): Promise<WikiPageDto> {
-		return this.wikiService.getWikiPageByName(name, user);
+	async getWikiPageByTitle(@Param('title') title: string, @CurrentUser() user?: UserInfo): Promise<WikiPageDto> {
+		return this.wikiService.getWikiPageByTitle(title, user);
 	}
 
 	@Get(':id')
