@@ -2,7 +2,7 @@ import { HousingArea } from '@app/shared/enums/housing-area.enum';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { noticeboardLocations } from '@app/shared/enums/noticeboard-location.enum';
 import { PageType } from '@app/shared/enums/page-type.enum';
-import { Race } from '@app/shared/enums/race.enum';
+import { races } from '@app/shared/enums/race.enum';
 import { StoryType } from '@app/shared/enums/story-type.enum';
 import { VenueLocation } from '@app/shared/enums/venue-location.enum';
 import SharedConstants from '@app/shared/SharedConstants';
@@ -22,16 +22,7 @@ const DATE_FORMAT = 'd MMMM yyyy';
 const DATE_TIME_FORMAT = "d MMMM yyyy 'at' HH:mm";
 
 class Display {
-	readonly races: { [k: string]: string } = {
-		[Race.HYUR]: 'Hyur',
-		[Race.ELEZEN]: 'Elezen',
-		[Race.LALAFELL]: 'Lalafell',
-		[Race.MIQOTE]: "Miqo'te",
-		[Race.ROEGADYN]: 'Roegadyn',
-		[Race.AURA]: 'Au Ra',
-		[Race.HROTHGAR]: 'Hrothgar',
-		[Race.VIERA]: 'Viera',
-	};
+	readonly races = races;
 
 	readonly storyTypes: { [k: string]: string } = {
 		[StoryType.PUBLISHED_WORK]: 'Published Work',

@@ -190,6 +190,27 @@ export class Character extends BasicEntity {
   })
   combinedDescription: boolean;
 
+  @Column({
+    nullable: false,
+    length: 1000,
+    default: '',
+  })
+  currently: string;
+
+  @Column({
+    nullable: false,
+    length: 1000,
+    default: '',
+  })
+  oocInfo: string;
+
+  @Column({
+    nullable: false,
+    length: 20,
+    default: '',
+  })
+  pronouns: string;
+
   @ManyToOne(() => Image, {
     lazy: true,
   })

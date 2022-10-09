@@ -9,6 +9,17 @@ export enum Race {
   VIERA = 'viera',
 }
 
+export const races: { [k: string]: string } = {
+  [Race.HYUR]: 'Hyur',
+  [Race.ELEZEN]: 'Elezen',
+  [Race.LALAFELL]: 'Lalafell',
+  [Race.MIQOTE]: "Miqo'te",
+  [Race.ROEGADYN]: 'Roegadyn',
+  [Race.AURA]: 'Au Ra',
+  [Race.HROTHGAR]: 'Hrothgar',
+  [Race.VIERA]: 'Viera',
+};
+
 // IDs returned by XIVAPI's Lodestone queries.
 const racesById = {
   1: Race.HYUR,

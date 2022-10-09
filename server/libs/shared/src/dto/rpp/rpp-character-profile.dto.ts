@@ -22,6 +22,12 @@ export class RppCharacterProfileDto extends BaseCharacterProfileDto {
   occupation: string;
 
 	@ApiProperty({
+    example: 'Elezen',
+  })
+  @IsString()
+  race: string;
+
+	@ApiProperty({
     example: 'Middle-aged',
   })
   @IsString()
@@ -98,6 +104,18 @@ export class RppCharacterProfileDto extends BaseCharacterProfileDto {
   })
   @IsString()
   currently: string;
+
+	@ApiProperty({
+    example: 'My Discord is: Example#1234',
+  })
+  @IsString()
+  oocInfo: string;
+
+	@ApiProperty({
+    example: 'She/her',
+  })
+  @IsString()
+  pronouns: string;
 
 	constructor(properties?: Readonly<RppCharacterProfileDto>) {
     super();

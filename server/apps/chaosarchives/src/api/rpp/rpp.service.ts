@@ -4,6 +4,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { convert } from 'html-to-text';
+import { races } from "@app/shared/enums/race.enum";
 
 @Injectable()
 export class RppService {
@@ -37,11 +38,11 @@ export class RppService {
 			}
 		});
 
-		// temp; will use a new table for RPP profiles specifically
 		return {
 			appearance: this.htmlToText(character.appearance),
       background: character.combinedDescription ? '' : this.htmlToText(character.background),
       occupation: character.occupation,
+			race: races[character.race],
       age: character.age,
       birthplace: character.birthplace,
       residence: character.residence,
@@ -54,7 +55,9 @@ export class RppService {
       loves: character.loves,
       hates: character.hates,
       motivation: character.motivation,
-			currently: '',
+			currently: character.currently,
+			oocInfo: character.oocInfo,
+			pronouns: character.pronouns,
 		};
 	}
 
