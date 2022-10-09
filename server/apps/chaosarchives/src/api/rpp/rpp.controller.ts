@@ -1,11 +1,14 @@
 import { AuthService } from "@app/auth/auth.service";
 import { CurrentUser } from "@app/auth/decorators/current-user.decorator";
+import { RoleRequired } from "@app/auth/decorators/role-required.decorator";
+import { Scope } from "@app/auth/decorators/scope.decorator";
 import { AuthScope } from "@app/auth/model/auth-scope.enum";
 import { UserInfo } from "@app/auth/model/user-info";
 import { RppCharacterProfileDto } from "@app/shared/dto/rpp/rpp-character-profile.dto";
 import { RppLogInDto } from "@app/shared/dto/rpp/rpp-log-in.dto";
 import { RppLoginResponseDto } from "@app/shared/dto/rpp/rpp-login-response.dto";
-import { Controller, Get, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
+import { Role } from "@app/shared/enums/role.enum";
+import { Body, Controller, Get, HttpStatus, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import {
 	ApiBody,
@@ -60,5 +63,37 @@ export class RppController {
     @Param('server') server: string,
   ): Promise<RppCharacterProfileDto> {
     return this.rppService.getCharacterProfile(name, server);
+  }
+
+	@Put('profile/:server/:name')
+	@RoleRequired(Role.USER)
+	@Scope(AuthScope.RPP)
+	@ApiOperation({
+		summary: 'Update a character profile by character name and server name',
+	})
+	@ApiResponse({
+		status: HttpStatus.OK,
+		type: RppCharacterProfileDto,
+		description: 'Character updated'
+	})
+	@ApiResponse({
+		status: HttpStatus.NOT_FOUND,
+		description: 'Character not found'
+	})
+	@ApiResponse({
+		status: HttpStatus.FORBIDDEN,
+		description: 'This is not your character'
+	})
+	@ApiResponse({
+		status: HttpStatus.BAD_REQUEST,
+		description: 'Invalid character data'
+	})
+  async updateCharacterProfile(
+    @Param('name') name: string,
+    @Param('server') server: string,
+		@Body() profile: RppCharacterProfileDto,
+		@CurrentUser() user: UserInfo,
+  ): Promise<void> {
+    await this.rppService.updateCharacterProfile(name, server, profile, user);
   }
 }
