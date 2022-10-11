@@ -3,6 +3,7 @@ import { dbConfiguration, redisConfiguration } from '@app/configuration';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InternalApiModule } from './api/internal/internal-api.module';
 import { RppModule } from './api/rpp/rpp.module';
@@ -16,6 +17,7 @@ import { UpdatesModule } from './websocket/updates/updates.module';
   imports: [
     TypeOrmModule.forRootAsync({ useFactory: () => dbConfiguration }),
     RedisModule.forRootAsync({ useFactory: () => ({ config: redisConfiguration }) }),
+    EventEmitterModule.forRoot(),
     MailModule,
     AuthModule,
     InternalApiModule,

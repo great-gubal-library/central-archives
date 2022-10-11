@@ -6,15 +6,17 @@ import { Connection, Repository } from 'typeorm';
 import { convert } from 'html-to-text';
 import { races } from '@app/shared/enums/race.enum';
 import { UserInfo } from '@app/auth/model/user-info';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class RppService {
   constructor(
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     private connection: Connection,
+    private eventEmitter: EventEmitter2,
   ) {}
 
-  async getCharacterProfile(name: string, server: string): Promise<RppCharacterProfileDto> {
+  async getCharacterProfile(name: string, server: string, sessionToken: string): Promise<RppCharacterProfileDto> {
     const character = await this.characterRepo
       .createQueryBuilder('character')
       .innerJoinAndSelect('character.server', 'server')
@@ -26,6 +28,13 @@ export class RppService {
 
     if (!character) {
       throw new NotFoundException('Character not found');
+    }
+
+    if (sessionToken) {
+      void this.eventEmitter.emitAsync('rpp.subscribed', {
+        characterId: character.id,
+        sessionToken
+      });
     }
 
     return {

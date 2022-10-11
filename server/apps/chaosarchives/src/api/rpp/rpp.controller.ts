@@ -8,7 +8,7 @@ import { RppCharacterProfileDto } from "@app/shared/dto/rpp/rpp-character-profil
 import { RppLogInDto } from "@app/shared/dto/rpp/rpp-log-in.dto";
 import { RppLoginResponseDto } from "@app/shared/dto/rpp/rpp-login-response.dto";
 import { Role } from "@app/shared/enums/role.enum";
-import { Body, Controller, Get, HttpStatus, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import {
 	ApiBody,
@@ -61,8 +61,9 @@ export class RppController {
   async getCharacterProfile(
     @Param('name') name: string,
     @Param('server') server: string,
+    @Query('sessionToken') sessionToken: string,
   ): Promise<RppCharacterProfileDto> {
-    return this.rppService.getCharacterProfile(name, server);
+    return this.rppService.getCharacterProfile(name, server, sessionToken);
   }
 
 	@Put('profile/:server/:name')
