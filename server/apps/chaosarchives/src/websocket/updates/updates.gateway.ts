@@ -2,8 +2,8 @@ import { Character } from "@app/entity";
 import { generateVerificationCode } from "@app/security";
 import { Logger } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
-import { WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Server, Socket } from "socket.io";
+import { WebSocketGateway } from "@nestjs/websockets";
+import { Socket } from "socket.io";
 import { RppSubscribedEvent } from "../../common/events/rpp-subscribed.event";
 
 @WebSocketGateway({ namespace: 'updates' })
@@ -17,13 +17,6 @@ export class UpdatesGateway {
   private readonly socketsBySubscription = new Map<number, Set<Socket>>();
 
   private readonly subscriptionsBySocket = new Map<Socket, Set<number>>();
-
-  @WebSocketServer()
-  private server: Server;
-
-  constructor() {
-    this.log.log("WebSocket gateway created");
-  }
 
 	handleConnection(socket: Socket): void {
     const sessionToken = generateVerificationCode();
