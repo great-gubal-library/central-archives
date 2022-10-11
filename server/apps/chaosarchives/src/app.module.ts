@@ -10,7 +10,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GlobalExceptionsFilter } from './global-exceptions.filter';
 import { MailModule } from './mail/mail.module';
-import { EventsModule } from './websocket/events/events.module';
+import { UpdatesModule } from './websocket/updates/updates.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { EventsModule } from './websocket/events/events.module';
     AuthModule,
     InternalApiModule,
     RppModule,
-    EventsModule,
+    UpdatesModule,
   ],
   controllers: [AppController],
   providers: [

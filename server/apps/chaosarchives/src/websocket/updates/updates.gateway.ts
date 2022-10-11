@@ -3,9 +3,9 @@ import { Logger } from "@nestjs/common";
 import { WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 
-@WebSocketGateway({ namespace: 'events' })
-export class EventsGateway {
-  private readonly log = new Logger(EventsGateway.name);
+@WebSocketGateway({ namespace: 'updates' })
+export class UpdatesGateway {
+  private readonly log = new Logger(UpdatesGateway.name);
 
   private readonly socketsByToken = new Map<string, Socket>();
 
