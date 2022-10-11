@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "socket.io-client": "^4.5.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
