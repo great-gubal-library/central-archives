@@ -74,7 +74,7 @@ export class RppService {
     profile: RppCharacterProfileDto,
     user: UserInfo,
   ): Promise<void> {
-		await this.connection.transaction(async em => {
+		const characterEntity = await this.connection.transaction(async em => {
 			const characterRepo = em.getRepository(Character);
 			const character = await characterRepo
 				.createQueryBuilder('character')
@@ -82,7 +82,7 @@ export class RppService {
 				.where('character.verifiedAt IS NOT NULL')
 				.andWhere('character.name = :name', { name })
 				.andWhere('server.name = :server', { server })
-				.select(['character'])
+				.select(['character', 'server.name'])
 				.getOne();
 
 			if (!character) {
@@ -112,7 +112,9 @@ export class RppService {
 				pronouns: profile.pronouns,
 			});
 
-			await characterRepo.save(character);
+			return characterRepo.save(character);
 		});
+
+    void this.eventEmitter.emitAsync('character.updated', characterEntity);
 	}
 }

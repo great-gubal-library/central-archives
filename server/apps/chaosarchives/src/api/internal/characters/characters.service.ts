@@ -3,7 +3,6 @@ import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { UserInfo } from '@app/auth/model/user-info';
 import { Character, CommunityMembership, Image, Server, User } from '@app/entity';
 import { generateVerificationCode } from '@app/security';
-import { normalizeXivapiServerName } from '@app/shared/xivapi-utils';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-profile-filter.dto';
@@ -19,12 +18,14 @@ import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import { getRaceById } from '@app/shared/enums/race.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
+import { normalizeXivapiServerName } from '@app/shared/xivapi-utils';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../../../common/api-checks';
 import { andWhereExists, escapeForLike, isQueryFailedError } from '../../../common/db';
-import { getLodestoneCharacter, } from '../../../common/lodestone';
+import { getLodestoneCharacter } from '../../../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
@@ -35,6 +36,7 @@ export class CharactersService {
     private connection: Connection,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     @InjectRepository(CommunityMembership) private communityMembershipRepo: Repository<CommunityMembership>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async getCharacterProfile(
@@ -108,49 +110,52 @@ export class CharactersService {
     };
   }
 
-  async saveCharacter(character: CharacterProfileDto, user: UserInfo): Promise<void> {
-    await this.connection.transaction(async em => {
+  async saveCharacter(characterDto: CharacterProfileDto, user: UserInfo): Promise<void> {
+    const characterEntity = await this.connection.transaction(async em => {
 			const repo = em.getRepository(Character);
-			const characterEntity = await repo.findOne({
-				id: character.id,
-				user: {
-					id: user.id,
-				},
-				verifiedAt: Not(IsNull())
-			});
+			const character = await repo.findOne({
+        where: {
+          id: characterDto.id,
+          user: {
+            id: user.id,
+          },
+          verifiedAt: Not(IsNull())
+        },
+        relations: [ 'server' ]
+      });
 
-			if (!characterEntity) {
+			if (!character) {
 				throw new NotFoundException('Character not found');
 			}
 
 			// TODO: Refactor
-			Object.assign(characterEntity, {
-				appearance: html.sanitize(character.appearance),
-				background: html.sanitize(character.background),
-				occupation: character.occupation,
-				age: character.age,
-				birthplace: character.birthplace,
-				residence: character.residence,
-				title: character.title,
-				nickname: character.nickname,
-				motto: character.motto,
-        friends: character.friends,
-        relatives: character.relatives,
-        enemies: character.enemies,
-				loves: character.loves,
-				hates: character.hates,
-				motivation: character.motivation,
-        carrdProfile: checkCarrdProfile(character.carrdProfile, user),
-        showAvatar: character.showAvatar,
-        showInfoboxes: character.showInfoboxes,
-        combinedDescription: character.combinedDescription,
+			Object.assign(character, {
+				appearance: html.sanitize(characterDto.appearance),
+				background: html.sanitize(characterDto.background),
+				occupation: characterDto.occupation,
+				age: characterDto.age,
+				birthplace: characterDto.birthplace,
+				residence: characterDto.residence,
+				title: characterDto.title,
+				nickname: characterDto.nickname,
+				motto: characterDto.motto,
+        friends: characterDto.friends,
+        relatives: characterDto.relatives,
+        enemies: characterDto.enemies,
+				loves: characterDto.loves,
+				hates: characterDto.hates,
+				motivation: characterDto.motivation,
+        carrdProfile: checkCarrdProfile(characterDto.carrdProfile, user),
+        showAvatar: characterDto.showAvatar,
+        showInfoboxes: characterDto.showInfoboxes,
+        combinedDescription: characterDto.combinedDescription,
 			});
 
-      if (character.banner && character.banner.id) {
+      if (characterDto.banner && characterDto.banner.id) {
         const banner = await em.getRepository(Image).findOne({
           where: {
-            id: character.banner.id,
-            owner: characterEntity
+            id: characterDto.banner.id,
+            owner: character
           }
         });
 
@@ -162,13 +167,15 @@ export class CharactersService {
           throw new BadRequestException('Banner is too tall for its width');
         }
 
-        characterEntity.banner = Promise.resolve(banner);
+        character.banner = Promise.resolve(banner);
       } else {
-        characterEntity.banner = Promise.resolve(null as unknown as Image);
+        character.banner = Promise.resolve(null as unknown as Image);
       }
 
-			await repo.save(characterEntity);
+			return repo.save(character);
 		});
+
+    void this.eventEmitter.emitAsync('character.updated', characterEntity);
   }
 
   async getCharacterList(filter: CharacterProfileFilterDto): Promise<PagingResultDto<CharacterSummaryDto>> {
@@ -229,24 +236,24 @@ export class CharactersService {
     // Note that we intentionally don't check if the character is verified.
     // It is safe to update the Lodestone info of unverified characters,
     // though unverified users cannot access this API via the website.
-		return this.connection.transaction(async em => {
+		const characterEntity = await this.connection.transaction(async em => {
 			const repo = em.getRepository(Character);
-			const characterEntity = await repo.findOne({
+			const character = await repo.findOne({
 				id: characterId.id,
 				user: {
 					id: user.id,
 				},
 			});
 
-			if (!characterEntity) {
+			if (!character) {
 				throw new NotFoundException('Character not found');
 			}
 
-      if (!characterEntity.active) {
+      if (!character.active) {
         throw new ConflictException('You cannot refresh inactive characters from Lodestone');
       }
 
-      const lodestoneInfo = await getLodestoneCharacter(characterEntity.lodestoneId);
+      const lodestoneInfo = await getLodestoneCharacter(character.lodestoneId);
 
       if (!lodestoneInfo) {
         throw new GoneException('Character not found on Lodestone');
@@ -264,25 +271,29 @@ export class CharactersService {
       }
 
       // Info parsed from Lodestone - update it in database
-			Object.assign(characterEntity, {
+			Object.assign(character, {
         name: lodestoneInfo.Character.Name,
         race: getRaceById(lodestoneInfo.Character.Race),
         avatar: lodestoneInfo.Character.Avatar,
 				server,
 			});
 
-			await repo.save(characterEntity);
+			await repo.save(character);
 
       // But that's not all! We need to invalidate the session cache, since character data is cached there.
       await this.publicAuthService.notifyUserChanged(user.id);
 
-      return {
-        name: characterEntity.name,
-        race: characterEntity.race,
-        avatar: characterEntity.avatar,
-        server: server.name
-      };
+      return character;
 		});
+
+    void this.eventEmitter.emitAsync('character.updated', characterEntity);
+
+    return {
+      name: characterEntity.name,
+      race: characterEntity.race,
+      avatar: characterEntity.avatar,
+      server: characterEntity.server.name
+    };
 	}
   
   async addAccountCharacter(request: AddCharacterRequestDto, user: UserInfo): Promise<SessionCharacterDto> {

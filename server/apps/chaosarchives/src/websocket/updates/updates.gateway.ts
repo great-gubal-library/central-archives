@@ -1,3 +1,4 @@
+import { Character } from "@app/entity";
 import { generateVerificationCode } from "@app/security";
 import { Logger } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
@@ -27,7 +28,6 @@ export class UpdatesGateway {
 	handleConnection(socket: Socket): void {
     const sessionToken = generateVerificationCode();
 
-    this.log.log('Connection established');
     socket.emit('session', {
       sessionToken
     });
@@ -35,6 +35,8 @@ export class UpdatesGateway {
     this.socketsByToken.set(sessionToken, socket);
     this.tokensBySocket.set(socket, sessionToken);
     this.subscriptionsBySocket.set(socket, new Set());
+
+    this.log.debug('Connection established');
   }
 
   handleDisconnect(socket: Socket): void {
@@ -57,7 +59,7 @@ export class UpdatesGateway {
       });
     }
 
-    this.log.log('Connection closed');
+    this.log.debug('Connection closed');
   }
 
   @OnEvent('rpp.subscribed', { async: true })
@@ -78,5 +80,29 @@ export class UpdatesGateway {
     }
 
     sockets.add(socket);
+    this.log.debug('RPP subscribed: ', characterId);
+  }
+
+  @OnEvent('character.updated', { async: true })
+  handleCharacterUpdated(character: Character): void {
+    const sockets = this.socketsBySubscription.get(character.id);
+
+    if (!sockets) {
+      return;
+    }
+
+    // Subscriptions are one-shot: a client receiving an update notification is unsubscribed from this character
+    // and should requery the character via the RPP API, which will resubscribe them
+    sockets.forEach(socket => {
+      socket.emit('character.updated', {
+        name: character.name,
+        server: character.server.name,
+      });
+
+      this.subscriptionsBySocket.get(socket)!.delete(character.id);
+    });
+
+    sockets.clear();
+    this.log.debug('Character updated: ', character.id);
   }
 }
