@@ -33,4 +33,4 @@ cd server
 docker-compose up -d
 ```
 
-Set up your web server to proxy the `/api` directory to the API server (runs HTTP on port 8111 by default).
+Set up your web server to proxy the `/api` directory to the API server (runs HTTP on port 8111 by default). Also, for RPP character update subscriptions to work, the `/socket.io` directory needs to be proxied to the same server as a WebSocket endpoint (see [Socket.io documentation](https://socket.io/docs/v4/reverse-proxy/) for details).
