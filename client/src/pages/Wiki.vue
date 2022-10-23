@@ -12,19 +12,18 @@
 </template>
 
 <script lang="ts">
+import { WikiPageDto } from '@app/shared/dto/wiki/wiki-page.dto';
+import { EditPermission } from '@app/shared/enums/edit-permission.enum';
 import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
-import StoryView from 'components/stories/StoryView.vue';
+import { unwikify } from '@common/common/wikilinks';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
+import WikiPageView from 'src/components/wiki/WikiPageView.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
-import { unwikify } from '@common/common/wikilinks';
-import { WikiPageDto } from '@app/shared/dto/wiki/wiki-page.dto';
-import { EditPermission } from '@app/shared/enums/edit-permission.enum';
-import WikiPageView from 'src/components/wiki/WikiPageView.vue';
 
 const $api = useApi();
 const $router = useRouter();
