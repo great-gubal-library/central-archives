@@ -274,6 +274,7 @@ export default class PageEditEvent extends Vue {
 			this.eventId = content.eventId;
 			this.eventBackup = new EventEditDto(content.event);
     } else {
+      this.eventId = null;
       this.eventBackup = new EventEditDto({
         mine: true,
         startDateTime: null as unknown as number,
