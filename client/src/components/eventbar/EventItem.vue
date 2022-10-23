@@ -7,8 +7,8 @@
       </q-item-label>
       <q-item-label caption>
         <template v-if="!expanded">
-          {{ formatDateServer(event.startDateTime) }}
-          <q-tooltip>{{ formatDateLocal(event.startDateTime) }}</q-tooltip>
+          <span v-html="serverDateHtml"></span>
+          <q-tooltip>{{ localDate }}</q-tooltip>
         </template>
         <template v-else>&nbsp;</template>
       </q-item-label>
@@ -67,6 +67,8 @@
 
 <script lang="ts">
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
+import SharedConstants from '@app/shared/SharedConstants';
+import { DateTime } from 'luxon';
 import { prop, Vue } from 'vue-class-component';
 
 class Props {
@@ -86,11 +88,39 @@ export default class EventItem extends Vue.with(Props) {
     this.expanded = false;
   }
 
-  formatDateServer(date: number) {
+  private get multipleDays(): boolean {
+    if (!this.event.endDateTime) {
+      return false;
+    }
+
+    const options = { zone: SharedConstants.FFXIV_SERVER_TIMEZONE };
+    const startDateTime = DateTime.fromMillis(this.event.startDateTime, options);
+    const endDateTime = DateTime.fromMillis(this.event.endDateTime, options);
+
+    return !startDateTime.startOf('day').equals(endDateTime.startOf('day'));
+  }
+
+  get serverDateHtml(): string {
+    if (this.multipleDays) {
+      return `${this.formatDateServer(this.event.startDateTime)} –<br />${this.formatDateServer(this.event.endDateTime!)}`;
+    }
+
+    return this.formatDateServer(this.event.startDateTime);
+  }
+
+  get localDate(): string {
+    if (this.multipleDays) {
+      return `${this.formatDateLocal(this.event.startDateTime)} – ${this.formatDateLocal(this.event.endDateTime!)}`;
+    }
+
+    return this.formatDateLocal(this.event.startDateTime);
+  }
+
+  formatDateServer(date: number): string {
     return this.$display.formatDateTimeServer(date);
   }
 
-  formatDateLocal(date: number) {
+  formatDateLocal(date: number): string {
     return this.$display.formatDateTimeLocal(date);
   }
 }
