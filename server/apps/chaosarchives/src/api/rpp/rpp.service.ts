@@ -17,6 +17,14 @@ export class RppService {
   ) {}
 
   async getCharacterProfile(name: string, server: string, sessionToken: string): Promise<RppCharacterProfileDto> {
+    if (sessionToken) {
+      void this.eventEmitter.emitAsync('rpp.subscribed', {
+        name,
+        server,
+        sessionToken
+      });
+    }
+
     const character = await this.characterRepo
       .createQueryBuilder('character')
       .innerJoinAndSelect('character.server', 'server')
@@ -28,13 +36,6 @@ export class RppService {
 
     if (!character) {
       throw new NotFoundException('Character not found');
-    }
-
-    if (sessionToken) {
-      void this.eventEmitter.emitAsync('rpp.subscribed', {
-        characterId: character.id,
-        sessionToken
-      });
     }
 
     return {

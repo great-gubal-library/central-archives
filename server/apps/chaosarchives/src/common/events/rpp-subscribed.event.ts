@@ -1,4 +1,5 @@
 export interface RppSubscribedEvent {
-	characterId: number;
+	name: string;
+	server: string;
 	sessionToken: string;
 }

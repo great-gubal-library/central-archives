@@ -14,9 +14,9 @@ export class UpdatesGateway {
 
   private readonly tokensBySocket = new Map<Socket, string>();
 
-  private readonly socketsBySubscription = new Map<number, Set<Socket>>();
+  private readonly socketsBySubscription = new Map<string, Set<Socket>>();
 
-  private readonly subscriptionsBySocket = new Map<Socket, Set<number>>();
+  private readonly subscriptionsBySocket = new Map<Socket, Set<string>>();
 
 	handleConnection(socket: Socket): void {
     const sessionToken = generateVerificationCode();
@@ -56,29 +56,36 @@ export class UpdatesGateway {
   }
 
   @OnEvent('rpp.subscribed', { async: true })
-  handleRppSubscribed({ characterId, sessionToken }: RppSubscribedEvent): void {
+  handleRppSubscribed({ name, server, sessionToken }: RppSubscribedEvent): void {
+    if (server.includes('/')) {
+      this.log.error(`Invalid server: ${server}`);
+      return;
+    }
+
+    const fullName = `${server}/${name}`;
     const socket = this.socketsByToken.get(sessionToken);
 
     if (!socket) {
       return;
     }
 
-    this.subscriptionsBySocket.get(socket)!.add(characterId);
+    this.subscriptionsBySocket.get(socket)!.add(fullName);
 
-    let sockets = this.socketsBySubscription.get(characterId);
+    let sockets = this.socketsBySubscription.get(fullName);
 
     if (!sockets) {
       sockets = new Set();
-      this.socketsBySubscription.set(characterId, sockets);
+      this.socketsBySubscription.set(fullName, sockets);
     }
 
     sockets.add(socket);
-    this.log.debug('RPP subscribed: ', characterId);
+    this.log.debug('RPP subscribed: ', fullName);
   }
 
   @OnEvent('character.updated', { async: true })
   handleCharacterUpdated(character: Character): void {
-    const sockets = this.socketsBySubscription.get(character.id);
+    const fullName = `${character.server}/${character.name}`;
+    const sockets = this.socketsBySubscription.get(fullName);
 
     if (!sockets) {
       return;
@@ -92,7 +99,7 @@ export class UpdatesGateway {
         server: character.server.name,
       });
 
-      this.subscriptionsBySocket.get(socket)!.delete(character.id);
+      this.subscriptionsBySocket.get(socket)!.delete(fullName);
     });
 
     sockets.clear();
