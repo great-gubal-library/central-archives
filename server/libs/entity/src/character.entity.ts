@@ -1,5 +1,6 @@
 import { NewsRole } from '@app/shared/enums/news-role.enum';
 import { Race } from '@app/shared/enums/race.enum';
+import SharedConstants from '@app/shared/SharedConstants';
 import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { FreeCompany } from './free-company.entity';
@@ -206,7 +207,7 @@ export class Character extends BasicEntity {
 
   @Column({
     nullable: false,
-    length: 20,
+    length: SharedConstants.MAX_PRONOUNS_LENGTH,
     default: '',
   })
   pronouns: string;

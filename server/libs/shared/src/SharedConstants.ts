@@ -7,6 +7,7 @@ export default Object.freeze({
 	DEFAULT_ROWS_PER_PAGE: 20,
 	MAX_NEWS_ENTRIES: 3,
 	MIN_VIOLATION_REPORT_LENGTH: 10,
+	MAX_PRONOUNS_LENGTH: 20,
 	
 	housing: Object.freeze({
 		MIN_WARD_NUMBER: 1,

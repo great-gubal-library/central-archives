@@ -22,6 +22,7 @@
       <character-detail label="Race" :value="$display.races[character.race]" v-if="character.race" />
       <character-detail label="Occupation" :value="character.occupation" v-if="character.occupation" />
       <character-detail label="Age" :value="character.age" v-if="character.age" />
+      <character-detail label="Pronouns" :value="character.pronouns" v-if="character.pronouns" />
       <character-detail label="Birthplace" :value="character.birthplace" v-if="character.birthplace" />
       <character-detail label="Residence" :value="character.residence" v-if="character.residence" />
       <character-detail label="Free&nbsp;Company" :value="character.freeCompany.name" :router-link="fcLink" v-if="character.freeCompany" />

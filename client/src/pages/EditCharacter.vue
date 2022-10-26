@@ -56,6 +56,7 @@
             <h6>Biography</h6>
             <q-input v-model="character.occupation" label="Occupation" />
             <q-input v-model="character.age" class="page-edit-character__age" label="Age" />
+            <q-input v-model="character.pronouns" class="page-edit-character__pronouns" label="Pronouns" :maxlength="SharedConstants.MAX_PRONOUNS_LENGTH" />
             <q-input v-model="character.birthplace" label="Birthplace" />
             <q-input v-model="character.residence" label="Residence" />
             <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in all biography fields.</div>
@@ -114,6 +115,7 @@
 <script lang="ts">
 import { CharacterProfileDto } from '@app/shared/dto/characters/character-profile.dto';
 import { CharacterRefreshResultDto } from '@app/shared/dto/characters/character-refresh-result.dto';
+import SharedConstants from '@app/shared/SharedConstants';
 import CharacterProfile from 'components/character/CharacterProfile.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
@@ -153,6 +155,8 @@ async function load(params: RouteParams): Promise<CharacterProfileDto> {
   },
 })
 export default class PageEditCharacter extends Vue {
+  readonly SharedConstants = SharedConstants;
+
   readonly previewOptions = [
     { label: 'Edit', value: false },
     { label: 'Preview', value: true },
@@ -243,7 +247,7 @@ export default class PageEditCharacter extends Vue {
   margin-bottom: 24px;
 }
 
-.page-edit-character__age {
+.page-edit-character__age, .page-edit-character__pronouns {
   width: 200px;
 }
 

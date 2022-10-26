@@ -47,4 +47,7 @@ export class BaseCharacterProfileDto {
 
   @IsString()
   motivation: string;
+
+  @IsString()
+  pronouns: string;
 }
