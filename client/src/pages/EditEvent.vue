@@ -163,7 +163,7 @@ import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepi
 import '@toby.mosque/quasar-ui-qdatetimepicker/dist/index.css'; // Temp, move somewhere
 import HtmlEditor from 'components/common/HtmlEditor.vue';
 import EventAnnouncementEditor from 'components/event/EventAnnouncementEditor.vue';
-import { DateTime } from 'luxon/src/luxon';
+import { DateTime } from 'luxon';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
