@@ -1,9 +1,9 @@
 <template>
 	<div class="thumb-gallery">
-		<div v-for="image in images" :key="image.id">
-			<router-link v-if="links" class="thumb-gallery__image-wrapper thumb-link" :to="`/image/${image.id}`" :title="image.title">
+		<div v-for="(image, index) in images" :key="image.id">
+			<a v-if="links" class="thumb-gallery__image-wrapper thumb-link" :href="`/image/${image.id}`" :title="image.title" @click.prevent="openSlides(index)">
 				<img :src="image.thumbUrl" :alt="image.title" />
-			</router-link>
+			</a>
 			<div v-else class="thumb-gallery__image-wrapper thumb-link" @click="select(image)">
 				<img :src="image.thumbUrl" :alt="image.title" />
 			</div>
@@ -31,6 +31,18 @@ class Props {
 export default class ThumbGallery extends Vue.with(Props) {
 	select(image: ImageSummaryDto) {
 		this.$emit('select', image);
+	}
+
+	async openSlides(index: number) {
+		const ImageSlidesDialog = (await import('./ImageSlidesDialog.vue')).default;
+
+		this.$q.dialog({
+			component: ImageSlidesDialog,
+			componentProps: {
+				images: this.images,
+				initialIndex: index,
+			}
+		});
 	}
 }
 </script>
