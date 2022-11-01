@@ -292,6 +292,7 @@ export class ImagesService {
           url: this.storageService.getUrl(path),
           thumbUrl: this.storageService.getUrl(thumbPath),
           filename,
+          description: utils.htmlToText(this.stripWikilinks(image.description)),
           owner: character.name,
           ownerServer: character.server.name,
           width,
