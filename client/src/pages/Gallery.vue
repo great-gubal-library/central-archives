@@ -43,7 +43,7 @@ interface PageData {
 
 async function load(to: RouteLocationNormalized): Promise<PageData> {
   const category = to.params.category as ImageCategory;
-  const page = parseInt(to.query.page as string) || 1;
+  const page = Math.max(1, parseInt(to.query.page as string)) || 1;
   const searchQuery = (to.query.searchQuery as string) || '';
 
   if (!Object.values(ImageCategory).includes(category) || category == ImageCategory.UNLISTED) {
@@ -123,7 +123,7 @@ export default class PageGallery extends Vue {
   }
 
   setPage(newPage: number) {
-    if (newPage <= this.maxPage) {
+    if (newPage >= 1 && newPage <= this.maxPage) {
       this.page = newPage;
       this.refresh();
     }
