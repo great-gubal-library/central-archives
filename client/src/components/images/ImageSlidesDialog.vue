@@ -155,7 +155,7 @@ export default class ImageSlidesDialog extends Vue.with(Props) {
 .image-slides-dialog__description-wrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: calc(2em + 32px);
 }
 
 .image-slides-dialog__description {
@@ -166,7 +166,7 @@ export default class ImageSlidesDialog extends Vue.with(Props) {
   text-overflow: ellipsis;
 }
 
-.image-slides-dialog .q-carousel__navigation--bottom {
-  bottom: calc(1.2em + 32px);
+.image-slides-dialog .q-carousel__navigation--bottom::-webkit-scrollbar {
+  height: 6px;
 }
 </style>
