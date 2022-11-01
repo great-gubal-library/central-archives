@@ -2,6 +2,7 @@ import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, Event, Image } from '@app/entity';
 import { hashFile } from '@app/security';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
@@ -18,6 +19,7 @@ import {
   ServiceUnavailableException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { escapeForLike } from 'apps/chaosarchives/src/common/db';
 import utils from 'apps/chaosarchives/src/common/utils';
 import { Connection, EntityManager, FindConditions, IsNull, Not, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -75,12 +77,18 @@ export class ImagesService {
     return this.toImageDto(image, user);
   }
 
-  async getImages(filter: ImagesFilterDto): Promise<ImageSummaryDto[]> {
-    const { characterId, eventId, limit, category } = filter;
+  async getImages(filter: ImagesFilterDto): Promise<PagingResultDto<ImageSummaryDto>> {
+    const { searchQuery, characterId, eventId, offset, limit, category } = filter;
     const query = this.imageRepo.createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
       .leftJoinAndSelect('character.server', 'server')
       .leftJoinAndSelect('image.event', 'event');
+
+    if (searchQuery) {
+      query.andWhere('(image.title LIKE :searchQuery OR character.name LIKE :searchQuery)', {
+        searchQuery: `%${escapeForLike(searchQuery)}%`
+      });
+    }
 
     if (characterId) {
       query.andWhere('character.id = :characterId', { characterId });
@@ -96,16 +104,24 @@ export class ImagesService {
       query.andWhere('image.category <> :category', { category: ImageCategory.UNLISTED });
     }
 
+    if (offset) {
+      query.offset(offset);
+    }
+
     if (limit) {
       query.limit(limit);
     }
-      
-    const images = await query.orderBy('image.createdAt', 'DESC')
+    
+    query.orderBy('image.createdAt', 'DESC')
       .limit(limit)
-      .select(['image', 'character.id', 'character.name', 'server.name'])
-      .getMany();
+      .select(['image', 'character.id', 'character.name', 'server.name']);
+    
+    const [ total, images ] = await Promise.all([ query.getCount(), query.getMany() ]);
 
-    return images.map(image => this.toImageSummaryDto(image));
+    return {
+      total,
+      data: images.map(image => this.toImageSummaryDto(image))
+    };
   }
 
   toImageSummaryDto(image: Image): ImageSummaryDto {

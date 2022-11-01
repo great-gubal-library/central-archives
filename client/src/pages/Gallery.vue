@@ -27,7 +27,7 @@ async function load(params: RouteParams): Promise<{ category: ImageCategory, ima
 	}
 
 	try {
-		return { category, images: await $api.images.getImages({ category }) };
+		return { category, images: (await $api.images.getImages({ category })).data };
 	} catch (e) {
 		notifyError(e);
 		throw e;

@@ -2,6 +2,7 @@ import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
 import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
@@ -33,7 +34,7 @@ export class ImagesController {
   constructor(private imageService: ImagesService) {}
 
   @Get()
-  async getImages(@Query() filter: ImagesFilterDto): Promise<ImageSummaryDto[]> {
+  async getImages(@Query() filter: ImagesFilterDto): Promise<PagingResultDto<ImageSummaryDto>> {
     if (filter.category === ImageCategory.UNLISTED) {
       throw new BadRequestException('Invalid category');
     }

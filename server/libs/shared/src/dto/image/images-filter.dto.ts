@@ -1,7 +1,12 @@
 import { ImageCategory } from "@app/shared/enums/image-category.enum";
-import { IsEnum, IsNumber, IsOptional } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { PagingDto } from "../common/paging.dto";
 
-export class ImagesFilterDto {
+export class ImagesFilterDto extends PagingDto {
+	@IsString()
+	@IsOptional()
+	searchQuery?: string;
+
 	@IsNumber()
 	@IsOptional()
 	characterId?: number;
@@ -10,15 +15,13 @@ export class ImagesFilterDto {
 	@IsOptional()
 	eventId?: number;
 
-	@IsNumber()
-	@IsOptional()
-	limit?: number;
-
 	@IsEnum(ImageCategory)
 	@IsOptional()
 	category?: ImageCategory;
 
 	constructor(properties?: Readonly<ImagesFilterDto>) {
+		super();
+
     if (properties) {
       Object.assign(this, properties);
     }
