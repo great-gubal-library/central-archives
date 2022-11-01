@@ -6,6 +6,7 @@
         <q-input
           class="page-gallery__search-query"
           label="Search"
+					debounce="200"
           :model-value="searchQuery"
           @update:model-value="setSearchQuery"
         />
@@ -110,7 +111,7 @@ export default class PageGallery extends Vue {
   }
 
   get maxPage() {
-    return Math.max(1, Math.floor(this.total / SharedConstants.DEFAULT_ROWS_PER_PAGE));
+    return Math.max(1, Math.ceil(this.total / SharedConstants.DEFAULT_ROWS_PER_PAGE));
   }
 
   get first() {
