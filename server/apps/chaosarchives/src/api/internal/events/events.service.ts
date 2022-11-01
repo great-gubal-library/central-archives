@@ -530,7 +530,7 @@ export class EventsService {
     if (edit) {
       announcements = await event.announcements;
     } else {
-      images = await this.imagesService.getImages({ eventId: event.id });
+      images = (await this.imagesService.getImages({ eventId: event.id })).data;
     }
 
     const properties = {

@@ -34,8 +34,8 @@ export class MainPageService {
 		return {
 			newProfiles,
 			newFreeCompanies,
-			newArtwork,
-			newScreenshots,
+			newArtwork: newArtwork.data,
+			newScreenshots: newScreenshots.data,
 			newStories: [], // Will be loaded by StoriesService instead
 			newNoticeboardItems: [], // Will be loaded by NoticeboardService instead
 			newCommunities: [], // Will be loaded by CommunitiesService instead

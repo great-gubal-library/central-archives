@@ -79,7 +79,7 @@ export class CharactersController {
 
     return {
       stories: stories.data,
-      images,
+      images: images.data,
     };
   }
 
