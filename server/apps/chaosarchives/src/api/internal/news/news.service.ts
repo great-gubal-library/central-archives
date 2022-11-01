@@ -407,7 +407,7 @@ export class NewsService {
 				hash: In(hashes),
 			},
 			order: { createdAt: 'ASC' },
-			relations: [ 'owner' ],
+			relations: [ 'owner', 'owner.server' ],
 		})).map(image => this.imagesService.toImageSummaryDto(image))
 	}
 

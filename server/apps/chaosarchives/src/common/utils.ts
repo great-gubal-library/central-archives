@@ -1,3 +1,5 @@
+import { convert } from "html-to-text";
+
 export default {
   compareNumbers(a: number, b: number): -1 | 0 | 1 {
     if (a < b) {
@@ -9,5 +11,13 @@ export default {
     }
 
     return 0;
+  },
+
+  htmlToText(html: string): string {
+    return convert(html, {
+      wordwrap: false,
+      ignoreHref: true,
+      ignoreImage: true,
+    });
   },
 };

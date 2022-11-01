@@ -15,10 +15,29 @@
       >
         <template v-for="(image, i) in images" :key="image.id">
           <q-carousel-slide :name="i" :img-src="image.url">
-            <div class="absolute-top text-center custom-caption">
-              <router-link :to="`/image/${image.id}`" class="image-slides-dialog__title text-subtitle1">{{
-                image.title
-              }}</router-link>
+            <div class="image-slides-dialog__caption-wrapper absolute-top text-center custom-caption">
+              <div class="image-slides-dialog__caption">
+                <router-link :to="`/image/${image.id}`" class="image-slides-dialog__title"
+                  ><h6>{{ image.title }}</h6></router-link
+                >
+                <template v-if="image.owner">
+                  <router-link v-if="image.ownerServer" :to="getOwnerLink(image)" class="image-slides-dialog__owner">{{
+                    image.owner
+                  }}</router-link>
+                  <span v-else class="image-slides-dialog__owner">{{ image.owner }}</span>
+                </template>
+              </div>
+            </div>
+            <div
+              v-if="image.description"
+              class="image-slides-dialog__description-wrapper absolute-bottom custom-caption"
+            >
+              <div class="image-slides-dialog__description image-slides-dialog__caption">
+                {{ image.description }}
+                <q-tooltip v-if="image.description" anchor="top middle" self="bottom middle">{{
+                  image.description
+                }}</q-tooltip>
+              </div>
             </div>
           </q-carousel-slide>
         </template>
@@ -43,6 +62,7 @@
 
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
+import { wikify } from '@common/common/wikilinks';
 import { Options, prop, Vue } from 'vue-class-component';
 
 interface DialogRef {
@@ -82,6 +102,10 @@ export default class ImageSlidesDialog extends Vue.with(Props) {
   onDialogHide() {
     this.$emit('hide');
   }
+
+  getOwnerLink(image: ImageSummaryDto): string {
+    return `/${image.ownerServer!}/${wikify(image.owner!)}`;
+  }
 }
 </script>
 
@@ -103,20 +127,46 @@ export default class ImageSlidesDialog extends Vue.with(Props) {
   background-repeat: no-repeat;
 }
 
-.image-slides-dialog .custom-caption {
+.image-slides-dialog__caption-wrapper {
   display: flex;
   justify-content: center;
   margin-top: 8px;
 }
 
-.image-slides-dialog__title {
+.image-slides-dialog__caption {
   background-color: rgba(#333, 0.8);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
 }
 
-.image-slides-dialog__title:hover {
+.image-slides-dialog__caption a {
+  color: white;
+}
+
+.image-slides-dialog__caption h6 {
+  margin: 0;
+}
+
+.image-slides-dialog__caption a:hover {
   color: #aaa;
+}
+
+.image-slides-dialog__description-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.image-slides-dialog__description {
+  max-width: 90%;
+  max-height: calc(1.2em + 16px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.image-slides-dialog .q-carousel__navigation--bottom {
+  bottom: calc(1.2em + 32px);
 }
 </style>

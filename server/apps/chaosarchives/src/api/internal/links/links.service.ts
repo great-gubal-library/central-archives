@@ -147,7 +147,7 @@ export class LinksService {
 				title: name,
 				category: In([ImageCategory.ARTWORK, ImageCategory.SCREENSHOT]),
 			},
-			relations: [ 'owner' ],
+			relations: [ 'owner', 'owner.server' ],
 		})).map(image => ({
 			type: PageType.IMAGE,
 			id: image.id,

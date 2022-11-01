@@ -55,6 +55,9 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
 			createdAt: image.createdAt,
 			width: image.width,
 			height: image.height,
+			owner: null,
+			ownerServer: null,
+			description: null,
 		}));
 
 		if (this.banner) {

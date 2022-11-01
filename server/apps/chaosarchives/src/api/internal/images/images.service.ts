@@ -18,6 +18,7 @@ import {
   ServiceUnavailableException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import utils from 'apps/chaosarchives/src/common/utils';
 import { Connection, EntityManager, FindConditions, IsNull, Not, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import {
@@ -78,6 +79,7 @@ export class ImagesService {
     const { characterId, eventId, limit, category } = filter;
     const query = this.imageRepo.createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
+      .leftJoinAndSelect('character.server', 'server')
       .leftJoinAndSelect('image.event', 'event');
 
     if (characterId) {
@@ -100,7 +102,7 @@ export class ImagesService {
       
     const images = await query.orderBy('image.createdAt', 'DESC')
       .limit(limit)
-      .select(['image', 'character.id'])
+      .select(['image', 'character.id', 'character.name', 'server.name'])
       .getMany();
 
     return images.map(image => this.toImageSummaryDto(image));
@@ -112,12 +114,19 @@ export class ImagesService {
       url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
       thumbUrl: this.storageService.getUrl(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
       filename: image.filename,
+      owner: image.owner ? image.owner.name : null,
+      ownerServer: image.owner?.server ? image.owner.server.name : null,
+      description: image.description ? utils.htmlToText(this.stripWikilinks(image.description)) : null,
       width: image.width,
       height: image.height,
       title: image.title,
       createdAt: image.createdAt!.getTime(),
     };
   }
+
+	private stripWikilinks(text: string): string {
+		return text.replace(/\[\[(.+?\|)?(.+?)\]\]/g, '$2');
+	}
 
   async getMyImages(characterId: number, user: UserInfo): Promise<ImageDto[]> {
     const isMyCharacter = (await this.characterRepo.count({
@@ -178,7 +187,8 @@ export class ImagesService {
               id: user.id,
             },
           },
-          select: ['id'],
+          select: ['id', 'name'],
+          relations: [ 'server' ],
         });
 
         if (!character) {
@@ -282,6 +292,8 @@ export class ImagesService {
           url: this.storageService.getUrl(path),
           thumbUrl: this.storageService.getUrl(thumbPath),
           filename,
+          owner: character.name,
+          ownerServer: character.server.name,
           width,
           height,
           title: request.title,

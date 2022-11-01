@@ -1,12 +1,12 @@
+import { UserInfo } from '@app/auth/model/user-info';
 import { Character } from '@app/entity';
 import { RppCharacterProfileDto } from '@app/shared/dto/rpp/rpp-character-profile.dto';
+import { races } from '@app/shared/enums/race.enum';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { convert } from 'html-to-text';
-import { races } from '@app/shared/enums/race.enum';
-import { UserInfo } from '@app/auth/model/user-info';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import utils from '../../common/utils';
 
 @Injectable()
 export class RppService {
@@ -39,8 +39,8 @@ export class RppService {
     }
 
     return {
-      appearance: this.htmlToText(character.appearance),
-      background: character.combinedDescription ? '' : this.htmlToText(character.background),
+      appearance: utils.htmlToText(character.appearance),
+      background: character.combinedDescription ? '' : utils.htmlToText(character.background),
       occupation: character.occupation,
       race: races[character.race],
       age: character.age,
@@ -59,14 +59,6 @@ export class RppService {
       oocInfo: character.oocInfo,
       pronouns: character.pronouns,
     };
-  }
-
-  private htmlToText(html: string): string {
-    return convert(html, {
-      wordwrap: false,
-      ignoreHref: true,
-      ignoreImage: true,
-    });
   }
 
   async updateCharacterProfile(
