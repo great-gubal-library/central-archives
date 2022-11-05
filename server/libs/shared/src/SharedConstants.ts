@@ -19,4 +19,12 @@ export default Object.freeze({
 		MIN_APARTMENT_NUMBER: 1,
 		MAX_APARTMENT_NUMBER: 90,
 	}),
+
+	carrdDomains: Object.freeze([
+		'carrd.co',
+		'crd.co',
+		'drr.ac',
+		'ju.mp',
+		'uwu.ai',
+	]),
 })
