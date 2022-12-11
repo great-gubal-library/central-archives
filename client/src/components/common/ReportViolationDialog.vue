@@ -2,26 +2,27 @@
   <q-dialog ref="dialog" no-backdrop-dismiss @hide="onDialogHide">
     <q-card class="report-page-dialog">
 			<q-card-section>
-				<h5>Report Page</h5>
+				<h5>Diese Seite melden</h5>
 				<p>
-					You are reporting the page: <strong>{{pageTitle}}</strong>
+					Du bist im Inbegriff die folgende Seite zu melden:
+          <strong>{{pageTitle}}</strong>
 				</p>
         <p>
-					Please describe in brief why this page violates our rules.
+					Bitte erläutere kurz, wieso diese Seite gegen unsere Regeln verstößt.
 				</p>
         <q-input
         type="textarea"
         outlined
         v-model="reason"
         :rules="[
-          $rules.required('This field is required.'),
-          $rules.minLength(SharedConstants.MIN_VIOLATION_REPORT_LENGTH, `Please type at least ${SharedConstants.MIN_VIOLATION_REPORT_LENGTH} characters.`)
+          $rules.required('Dieses Feld ist erforderlich.'),
+          $rules.minLength(SharedConstants.MIN_VIOLATION_REPORT_LENGTH, `Ein Minimum an ${SharedConstants.MIN_VIOLATION_REPORT_LENGTH} Zeichen ist erforderlich.`)
         ]"
       />
 			</q-card-section>
       <q-card-actions align="right">
-        <q-btn flat color="primary" label="Cancel" @click="onCancelClick" />
-        <q-btn flat color="negative" label="Send Report" @click="onProceedClick" :disable="!isValid" />
+        <q-btn flat color="primary" label="Abbrechen" @click="onCancelClick" />
+        <q-btn flat color="negative" label="Bericht senden" @click="onProceedClick" :disable="!isValid" />
       </q-card-actions>
 			<q-inner-loading :showing="loading" />
     </q-card>
@@ -94,7 +95,7 @@ export default class ReportViolationDialog extends Vue.with(Props) {
         reason: this.reason,
       });
 
-			notifySuccess('Thanks for your report. Our moderators will look at it soon.');
+			notifySuccess('Danke für deine Meldung. Unsere Moderatoren werden sich zeitnah darum kümmern.');
 			this.$emit('ok');
 			this.hide();
 		} catch (e) {
