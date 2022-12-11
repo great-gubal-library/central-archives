@@ -24,7 +24,7 @@ services:
       - MARIADB_RANDOM_ROOT_PASSWORD=yes
       - MARIADB_USER=mariadb
       - MARIADB_PASSWORD=mariadb
-      - MARIADB_DATABASE=chaosarchives
+      - MARIADB_DATABASE=lightarchives
       - TZ=UTC
 
   steward:
