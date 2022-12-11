@@ -10,10 +10,10 @@ db:
   type: 'mariadb'
   host: 'mariadb'
   port: 3306
-  database: 'chaosarchives'
+  database: 'lightarchives'
   username: 'mariadb'
   password: 'mariadb'
-  synchronize: false
+  synchronize: true
   logging: true
 
 redis:
@@ -26,7 +26,7 @@ mail:
   secure: true
   username: 'user'
   password: 'password'
-  from: 'Chaos Archives <chaosarchives@localhost>'
+  from: 'Light Archives <lightarchives@localhost>'
 
 auth:
   jwtSecret: 'secret'
