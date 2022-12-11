@@ -108,7 +108,7 @@ export default class CommunityApplicantEditor extends Vue.with(Props) {
     this.$q
       .dialog({
         title: 'Confirm Reject',
-        message: `Möchtest du den Mitgliedschaftsantrag von ${member.name} ablehnen??`,
+        message: `Möchtest du den Mitgliedschaftsantrag von ${member.name} ablehnen?`,
         ok: {
           label: 'Ablehnen',
           color: 'negative',
