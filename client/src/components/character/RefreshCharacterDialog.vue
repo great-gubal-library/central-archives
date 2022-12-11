@@ -2,18 +2,17 @@
   <q-dialog ref="dialog" no-backdrop-dismiss @hide="onDialogHide">
     <q-card class="refresh-character-dialog">
 			<q-card-section>
-				<h5>Confirm Refresh from Lodestone</h5>
+				<h5>Aktualisierung bestätigen</h5>
 				<p>
-					This will query your new character name, race, and server for
-					<strong>{{ characterName }}</strong> from Lodestone and change them if they changed
-					in-game.
+					Dies wird den neuen Charakternamen, das neue Volk und den neuen Server von
+					<strong>{{ characterName }}</strong> via Lodestone abfragen und entsprechend anpassen.
 				</p>
-				<p><strong>This action cannot be undone.</strong></p>
-				<p>Proceed?</p>
+				<p><strong>Dieser Vorgang kann nicht rückgängig gemacht werden.</strong></p>
+				<p>Fortfahren?</p>
 			</q-card-section>
       <q-card-actions align="right">
-        <q-btn flat color="primary" label="Cancel" @click="onCancelClick" />
-        <q-btn flat color="negative" label="Proceed" @click="onProceedClick" />
+        <q-btn flat color="primary" label="Abbrechen" @click="onCancelClick" />
+        <q-btn flat color="negative" label="Bestätigen" @click="onProceedClick" />
       </q-card-actions>
 			<q-inner-loading :showing="loading" />
     </q-card>
@@ -73,7 +72,7 @@ export default class RefreshCharacterDialog extends Vue.with(Props) {
 				this.$store.commit('updateCharacter', result);
 			}
 
-			notifySuccess('Character data refreshed.');
+			notifySuccess('Charakterdaten aktualisiert.');
 			this.$emit('ok', result);
 			this.hide();
 		} catch (e) {
