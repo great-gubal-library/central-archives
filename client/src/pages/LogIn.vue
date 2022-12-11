@@ -1,17 +1,17 @@
 <template>
   <q-page>
-    <h2>Log In</h2>
+    <h2>Einloggen</h2>
     <q-form class="page-login__form" @submit="onSubmit">
       <p>
-        Please fill in the form below to log in to Chaos Archives.
+        Bitte füll die nachfolgenden Felder aus um dich auf PROJEKTNAME einzuloggen.
       </p>
       <section>
         <q-input
           v-model="email"
-          label="Email"
+          label="E-Mail-Adresse"
           :rules="[
-            $rules.required('This field is required.'),
-            $rules.email('Invalid email address.')
+            $rules.required('Dieses Feld ist erforderlich.'),
+            $rules.email('Ungültige E-Mail-Adresse.')
           ]"
         >
           <template v-slot:prepend>
@@ -20,10 +20,10 @@
         </q-input>
         <q-input
           v-model="password"
-          label="Password"
+          label="Passwort"
           type="password"
           :rules="[
-            $rules.required('This field is required.'),
+            $rules.required('Dieses Feld ist erforderlich.'),
           ]"
         >
           <template v-slot:prepend>
@@ -32,11 +32,11 @@
         </q-input>
       </section>
       <p>
-        <router-link :to="`/forgot-password/${email}`">Forgot your password?</router-link>
+        <router-link :to="`/forgot-password/${email}`">Passwort vergessen?</router-link>
       </p>
       <div class="page-login__button-bar">
         <q-btn
-          label="Log in"
+          label="Einloggen"
           type="submit"
           color="primary"
         />
@@ -65,7 +65,7 @@ export default class PageLogIn extends Vue {
         password: this.password,
       });
 
-      notifySuccess('You have successfully logged in.');
+      notifySuccess('Du wurdest erfolgreich eingeloggt.');
       this.$api.setAccessToken(result.accessToken);
       this.$store.commit('setUser', result.session);
       void this.$router.replace('/');
