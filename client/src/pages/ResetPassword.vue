@@ -3,7 +3,7 @@
     <h2>Passwortwiederherstellung</h2>
     <q-form v-if="!submitted" class="page-reset-password__form" @submit="onSubmit">
       <p>
-        Du kannst nun ein neues Passwort festlegen
+        Du kannst nun ein neues Passwort festlegen.
       </p>
       <section>
         <q-input
