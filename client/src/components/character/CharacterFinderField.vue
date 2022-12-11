@@ -10,12 +10,12 @@
 					hide-dropdown-icon
 					use-input
 					input-debounce="200"
-					label="Character name"
-					:hint="modelValue.server ? '' : 'Start typing, and we will attempt to find your character.'"
+					label="Charaktername"
+					:hint="modelValue.server ? '' : 'Gib den Namen deines Charakters ein, damit wir versuchen können ihn zu finden.'"
 					@filter="onCharacterFilter"
 					@update:model-value="onCharacterSelected"
 					:rules="[
-						val => !!val && !!val.server || 'You must select a character.',
+						val => !!val && !!val.server || 'Du musst einen Charakter auswählen.',
 					]"
 				>
 					<template v-slot:prepend>
@@ -37,17 +37,17 @@
 		</div>
 		<div class="character-finder-field__alerts" v-if="registrationStatus">
 			<q-banner v-if="registrationStatus === CharacterRegistrationStatus.CLAIMED_BY_ANOTHER_USER" class="bg-negative text-white">
-				This character has already been claimed by another user.
+				Dieser Charakter wurde bereits von einem anderen Nutzer beansprucht.
 			</q-banner>
 			<q-banner v-else-if="registrationStatus === CharacterRegistrationStatus.ALREADY_REGISTERED" class="bg-negative text-white">
-				You have already registered this character.
+				Du hast diesen Charakter bereits registriert.
 			</q-banner>
 			<q-banner v-else-if="registrationStatus === CharacterRegistrationStatus.RENAMED" class="bg-dark text-white">
 				<p>
-					You have renamed this character in-game, and you have a Chaos Archives character profile under the old name. You still <strong>can</strong> register a separate character profile for the new name; however, you will no longer be able to rename the old character on Chaos Archives to match the new name.
+					Du hast für diesen Charakter eine Charakterumbenennung benutzt und auf PROJEKTNAME ein Charakterprofil unter dem alten Namen. Du <strong>kannst</strong> ein gesondertes Profil unter dem neuen Namen erstellen; allerdings wirst du nicht mehr dazu in der Lage sein den alten Charakter auf PROJEKTNAME dem neuen Namen anzupassen.
 				</p>
 				<p>
-					If you would rather update your existing character profile to the new name, open your existing character profile and click “Refresh from Lodestone”.
+					Wenn du lieber ein existierendes Charakterprofil mit dem neuen Namen aktualisieren möchtest, öffne das Profil des betroffenen Charakters und klicke auf "Aktualisiere via Lodestone".
 				</p>
 			</q-banner>
 		</div>
