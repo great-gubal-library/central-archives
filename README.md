@@ -1,6 +1,6 @@
-# Chaos Archives
+# Light Archives
 
-The prototype of the RP portal for the Chaos EU datacenter in FFXIV.
+The prototype of the RP portal for the Light EU datacenter in FFXIV based on [chaos-archives](https://github.com/great-gubal-library/chaos-archives) from the great Maia-Everett. Thanks again!
 
 ## Building
 
