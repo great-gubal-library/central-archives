@@ -4,7 +4,7 @@ run-name: Build Client for PR Commit.
 on:
   pull_request:
 jobs:
-  build-and-deploy-client:
+  build-client:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
