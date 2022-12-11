@@ -3,7 +3,7 @@
     <h2 class="noticeboard-item-view__title">{{ noticeboardItem.title }}</h2>
     <section class="text-caption noticeboard-item-view__subtitle row">
       <div class="noticeboard-item-view__posted-by">
-        Von <router-link :to="authorLink">{{ noticeboardItem.author }}</router-link> am {{ date }} gepostet
+        Verfasst von <router-link :to="authorLink">{{ noticeboardItem.author }}</router-link> am {{ date }}
       </div>
       <div class="noticeboard-item-view__type">
         {{ $display.noticeboardLocations[noticeboardItem.location] }}
