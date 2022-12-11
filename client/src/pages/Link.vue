@@ -1,7 +1,7 @@
 <template>
 	<q-page class="page-link">
 		<h2 class="regular-header-font">{{name}}</h2>
-		The following results were found:
+		Die folgenden Ergebnisse wurden gefunden:
 		<ul v-if="nonImages">
 			<li v-for="(result, index) in nonImages" :key="index">
 				{{$display.pageTypes[result.type]}}: <router-link :to="getLink(result)">{{name}}</router-link>
