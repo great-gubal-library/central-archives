@@ -1,31 +1,31 @@
 <template>
   <q-page class="page-my-free-company">
-    <h2>My Free Company</h2>
+    <h2>Meine Freie Gesellschaft</h2>
     <section>
-      <div class="page-my-free-company__subtitle">for {{ $store.getters.character?.name }}</div>
+      <div class="page-my-free-company__subtitle">von {{ $store.getters.character?.name }}</div>
       <section class="page-my-free-company__fc" v-if="freeCompany">
         <free-company-crest :images="freeCompany.crest" />
         <div class="page-my-free-company__fc-info">
           <p class="page-my-free-company__fc-name">
             <router-link :to="fcLink">{{ freeCompany.name }}</router-link>
             <template v-if="freeCompany.isLeader">
-              — Leader <router-link :to="editFCLink">(Edit Free Company)</router-link>
+              — Leader <router-link :to="editFCLink">(Bearbeiten)</router-link>
             </template>
           </p>
-          <p v-if="freeCompany.goal"><strong>Goal:</strong> {{ freeCompany.goal }}</p>
+          <p v-if="freeCompany.goal"><strong>Ziel:</strong> {{ freeCompany.goal }}</p>
         </div>
       </section>
       <section v-else>
-        <p>You are not listed a member of a Free Company.</p>
+        <p>Du bist noch kein Mitglied einer Freien Gesellschaft.</p>
       </section>
       <p>
         <template v-if="freeCompany">
-          <q-btn color="secondary" icon="remove" label="Unset Free Company" @click="onUnsetFCClick" />&nbsp;
+          <q-btn color="secondary" icon="remove" label="Freie Gesellschaft entfernen" @click="onUnsetFCClick" />&nbsp;
         </template>
         <q-btn
           color="primary"
           icon="refresh"
-          :label="freeCompany ? 'Update Free Company from Lodestone' : 'Set Free Company from Lodestone'"
+          :label="freeCompany ? 'Freie Gesellschaft via Lodestone aktualisieren' : 'Freie Gesellschaft via Lodestone hinzufügen'"
           @click="onSetFCFromLodestoneClick"
         />
       </p>
@@ -93,18 +93,18 @@ export default class PageMyFreeCompany extends Vue {
         this.freeCompany &&
         characterInfo.Character.FreeCompanyName === this.freeCompany.name
       ) {
-        title = 'Confirm Updating Free Company';
-        message = `Update your Free Company "${fcName}" from Lodestone? This operation cannot be undone.`;
-        okTitle = 'Update Free Company';
+        title = 'Bestätige Aktualisierung';
+        message = `Deine Freie Gesellschaft "${fcName}" via Lodestone aktualisieren? Dieser Vorgang kann nicht rückgängig gemacht werden.`;
+        okTitle = 'Aktualisieren';
       } else {
-        title = 'Confirm Setting Free Company';
-        message = `Lodestone reports you are a member of ${fcName}. Set that as your Free Company?`;
-        okTitle = 'Set Free Company';
+        title = 'Bestätige Hinzufügung';
+        message = `Lodestone meldet, dass du ein Mitglied von ${fcName} bist. Diese Freie Gesellschaft hinzufügen?`;
+        okTitle = 'Hinzufügen';
       }
     } else {
-      title = 'Confirm Unsetting Free Company';
-      message = 'Lodestone reports you are not a member of any Free Company. Remove your Free Company association?';
-      okTitle = 'Unset Free Company';
+      title = 'Bestätige Entfernung';
+      message = 'Lodestone meldet, dass du kein Mitglied einer Freien Gesellschaft bist. Die Assoziation der Freien Gesellschaft entfernen?';
+      okTitle = 'Entfernen';
     }
 
     this.$q
@@ -133,11 +133,11 @@ export default class PageMyFreeCompany extends Vue {
       this.freeCompany = fc;
 
       if (!fc) {
-        notifySuccess('Free Company unset.');
+        notifySuccess('Freie Gesellschaft entfernt.');
       } else if (fc.name === oldName) {
-        notifySuccess('Free Company updated.');
+        notifySuccess('Freie Gesellschaft aktualisiert.');
       } else {
-        notifySuccess('Free Company set.');
+        notifySuccess('Freie Gesellschaft hinzugefügt.');
       }
     } catch (e) {
       notifyError(e);
@@ -151,15 +151,15 @@ export default class PageMyFreeCompany extends Vue {
 
     this.$q
       .dialog({
-        title: 'Confirm Unsetting Free Company',
-        message: `Do you want to remove your association with ${fcName}?`,
+        title: 'Entfernung der Freien Gesellschaft',
+        message: `Möchtest du deine Assoziation mit ${fcName} entfernen?`,
         ok: {
-          label: 'Unset Free Company',
+          label: 'Entfernen',
           color: 'negative',
           flat: true,
         },
         cancel: {
-          label: 'Cancel',
+          label: 'Abbrechen',
           color: 'secondary',
           flat: true,
         },
@@ -174,7 +174,7 @@ export default class PageMyFreeCompany extends Vue {
       await this.$api.freeCompanies.unsetFC($store.getters.characterId!);
       this.freeCompany = null;
 
-      notifySuccess('Free Company unset.');
+      notifySuccess('Freie Gesellschaft entfernt.');
     } catch (e) {
       notifyError(e);
     } finally {
