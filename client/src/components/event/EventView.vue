@@ -4,27 +4,27 @@
 		<h2 class="regular-header-font">{{event.title}}</h2>
 		<template v-if="event.title && event.startDateTime">
 			<p>
-				<strong>Starts:</strong> {{$display.formatDateTimeServer(event.startDateTime)}}
+				<strong>Beginn:</strong> {{$display.formatDateTimeServer(event.startDateTime)}}
 				<span class="event-view__local-time">({{$display.formatDateTimeLocal(event.startDateTime)}})</span>
 				<template v-if="event.endDateTime">
 					<br />
-					<strong>Ends:</strong> {{$display.formatDateTimeServer(event.endDateTime)}}
+					<strong>Ende:</strong> {{$display.formatDateTimeServer(event.endDateTime)}}
 				<span class="event-view__local-time">({{$display.formatDateTimeLocal(event.endDateTime)}})</span>
 				</template>
 			</p>
 			<p v-for="(location, index) in event.locations" :key="index">
-				<strong>Location: </strong>
+				<strong>Standort: </strong>
 				<template v-if="location.link">
 					<a :href="location.link" target="_blank">{{location.name}}</a>
 				</template>
 				<template v-else>{{location.name}}</template>
 				<template v-if="location.address">
 					<br />
-					<strong>Address:</strong> <template v-if="location.server">{{location.server}}, </template> {{location.address}}
+					<strong>Adresse:</strong> <template v-if="location.server">{{location.server}}, </template> {{location.address}}
 				</template>
 				<template v-else-if="location.server">
 					<br />
-					<strong>World:</strong> {{location.server}}
+					<strong>Welt:</strong> {{location.server}}
 				</template>
 				<template v-if="location.tags">
 					<br />
@@ -38,7 +38,7 @@
 			</template>
 			<hr />
 			<p v-if="event.link"><strong>Link: </strong> <a :href="event.link">{{ event.link }}</a></p>
-			<p v-if="event.contact"><strong>Contact: </strong> {{event.contact}}</p>
+			<p v-if="event.contact"><strong>Kontakt: </strong> {{event.contact}}</p>
 		</template>
 	</div>
 </template>
