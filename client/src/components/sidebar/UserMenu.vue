@@ -1,19 +1,19 @@
 <template>
   <q-list class="user-menu" dense dark>
     <template v-if="!$store.getters.role">
-      <q-item-label header> User </q-item-label>
+      <q-item-label header> Nutzer </q-item-label>
       <q-item class="user-menu__button-bar">
         <q-item-section>
           <q-item-label>
-            <q-btn class="user-menu__sign-up-button" label="Sign up" to="/signup" />&nbsp;
-            <q-btn class="user-menu__log-in-button" label="Log in" to="/login" />
+            <q-btn class="user-menu__sign-up-button" label="Anmelden" to="/signup" />&nbsp;
+            <q-btn class="user-menu__log-in-button" label="Einloggen" to="/login" />
           </q-item-label>
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple to="/forgot-password">
         <q-item-section>
           <q-item-label>
-            Forgot your password?
+            Passwort vergessen?
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -28,7 +28,7 @@
         @click="switchCharacter"
       >
         <q-item-section>
-          <q-item-label>Switch character</q-item-label>
+          <q-item-label>Charakter wechseln</q-item-label>
         </q-item-section>
       </q-item>
       <q-separator dark />
@@ -39,7 +39,7 @@
         to="/verify"
       >
         <q-item-section>
-          <q-item-label>{{ $store.getters.realRole === Role.UNVERIFIED ? 'Account verification' : 'Character verification'}}</q-item-label>
+          <q-item-label>{{ $store.getters.realRole === Role.UNVERIFIED ? 'Accountverzifizierung' : 'Charakterverifizierung'}}</q-item-label>
         </q-item-section>
       </q-item>
       <template v-else>
@@ -49,7 +49,7 @@
           :to="myProfileLink"
         >
           <q-item-section>
-            <q-item-label>View profile</q-item-label>
+            <q-item-label>Profil ansehen</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -58,7 +58,7 @@
           :to="`/edit-character/${$store.getters.characterId}`"
         >
           <q-item-section>
-            <q-item-label>Edit profile</q-item-label>
+            <q-item-label>Profil bearbeiten</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -67,7 +67,7 @@
           to="/my-free-company"
         >
           <q-item-section>
-            <q-item-label>My Free Company</q-item-label>
+            <q-item-label>Meine Freie Gesellschaft</q-item-label>
           </q-item-section>
         </q-item>
         <q-separator dark />
@@ -115,7 +115,7 @@
           to="/create-story"
         >
           <q-item-section>
-            <q-item-label>New story</q-item-label>
+            <q-item-label>Neue Geschichte</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -124,7 +124,7 @@
           to="/create-event"
         >
           <q-item-section>
-            <q-item-label>New event</q-item-label>
+            <q-item-label>Neues Event</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -143,7 +143,7 @@
           to="/create-wiki-page"
         >
           <q-item-section>
-            <q-item-label>New wiki page</q-item-label>
+            <q-item-label>Neuer Wikibeitrag</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -152,7 +152,7 @@
           @click="uploadImage"
         >
           <q-item-section>
-            <q-item-label>Upload image</q-item-label>
+            <q-item-label>Bild hochladen</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -161,19 +161,19 @@
           to="/my-content"
         >
           <q-item-section>
-            <q-item-label>My content</q-item-label>
+            <q-item-label>Meine Inhalte</q-item-label>
           </q-item-section>
         </q-item>
       </template>
       <q-separator dark />
       <q-item clickable v-ripple to="/my-account">
         <q-item-section>
-          <q-item-label>My account</q-item-label>
+          <q-item-label>Mein Account</q-item-label>
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple @click="logOut">
         <q-item-section>
-          <q-item-label>Log out</q-item-label>
+          <q-item-label>Ausloggen</q-item-label>
         </q-item-section>
       </q-item>
     </template>
@@ -233,7 +233,7 @@ export default class UserMenu extends Vue {
   logOut() {
     this.$store.commit('setUser', null);
     this.$api.setAccessToken(null);
-    notifySuccess('You have been logged out.');
+    notifySuccess('Du hast dich ausgeloggt.');
     void this.$router.push('/');
   }
 }
