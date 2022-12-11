@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-edit-free-company">
     <template v-if="fc.id">
-      <h2>Bearbeite diese Freie Gesellschaft</h2>
+      <h2>Freie Gesellschaft bearbeiten</h2>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
           <div class="page-edit-free-company__lodestone-info">
