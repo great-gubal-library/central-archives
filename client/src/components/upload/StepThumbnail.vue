@@ -2,15 +2,15 @@
 	<div class="step-thumbnail">
 		<div class="step-thumbnail__col">
 			<section class="step-thumbnail__description">
-				<h6>Full image</h6>
-				<div class="step-thumbnail__label">The full image will be uploaded.</div>
+				<h6>Gesamtes Bild</h6>
+				<div class="step-thumbnail__label">Das gesamte Bild wird hochgeladen.</div>
 			</section>
 			<section><img :src="image.src" /></section>
 		</div>
 		<div class="step-thumbnail__col">
 			<section class="step-thumbnail__description">
 				<h6>Thumbnail</h6>
-				<div class="step-thumbnail__label">This is what will be shown on your media library page and on gallery pages.</div>
+				<div class="step-thumbnail__label">Das wird in deinen Inhalten und den Galerien angezeigt.</div>
 			</section>
 			<section style="display: inline-block"><img ref="cropper" :src="image.src" /></section>
 		</div>
