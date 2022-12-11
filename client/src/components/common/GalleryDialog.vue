@@ -1,13 +1,13 @@
 <template>
 	<q-dialog ref="dialog" no-backdrop-dismiss @hide="onDialogHide">
     <q-card class="gallery-dialog">
-			<h5>Select Image</h5>
+			<h5>Bild auswählen</h5>
 			<section class="gallery-dialog__image-list">
 				<thumb-gallery :images="images" :links="false" @select="onImageSelect" />
 			</section>
 			<q-card-actions class="gallery-dialog__buttons">
-				<q-btn flat color="secondary" icon="upload" label="Upload new" @click="onUploadClick" />
-				<q-btn flat color="primary" label="Cancel" @click="onCancelClick" />
+				<q-btn flat color="secondary" icon="upload" label="Hochladen" @click="onUploadClick" />
+				<q-btn flat color="primary" label="Abbrechen" @click="onCancelClick" />
 			</q-card-actions>
     </q-card>
   </q-dialog>
