@@ -2,25 +2,24 @@
   <q-page>
     <template v-if="!verificationStatus.emailVerified || !verificationStatus.characterVerified">
       <template v-if="verifyingAccount">
-        <h2>Account Verification</h2>
+        <h2>Accountverifizierung</h2>
         <p>
-          Before you can post your own content on Chaos Archives, you will need to verify your email address and
-          ownership of your character.
+          Bevor du deine eigenen Inhalte auf PROJEKTNAME verfassen kannst, musst du deine E-Mail-Adresse und
+          die Eigentümerschaft deines Charakters bestätigen.
         </p>
       </template>
       <template v-else>
-        <h2>Character Verification</h2>
+        <h2>Charakterverifizierung</h2>
         <p>
-          Before you can post content on Chaos Archives under this character's name, you will need to verify your
-          ownership.
+          Bevor du Inhalte auf PROJEKTNAME unter diesem Charakter verfassen kannst, musst du deine Eigentümerschaft bestätigen.
         </p>
       </template>
     </template>
     <template v-else>
-      <h2>Verification Complete</h2>
+      <h2>Verifizierung abgeschlossen</h2>
       <p>
-        Congratulations! Your email address and character have been successfully verified. You may now fill in your
-        character profile and post content on Chaos Archives.
+        Glückwunsch! Deine E-Mail-Adresse und dein Charakter wurden erfolgreich bestätigt. Du kannst nun dein
+        Charakterprofil ausfüllen und Inhalte auf PROJEKTNAME veröffentlichen.
       </p>
     </template>
     <q-card class="page-verify__card" v-if="verifyingAccount">
@@ -30,23 +29,23 @@
           'text-white': verificationStatus.emailVerified,
         }"
       >
-        <h5>Email verification</h5>
+        <h5>E-Mail-Verifizierung</h5>
         <template v-if="verificationStatus.emailVerified">
           <p>
-            Your email address
-            <strong>{{ verificationStatus.email }}</strong> has been verified.
+            Deine E-Mail-Adresse
+            <strong>{{ verificationStatus.email }}</strong> wurde verifiziert.
           </p>
         </template>
         <template v-else>
           <p>
             Your email address
-            <strong>{{ verificationStatus.email }}</strong> still needs to be confirmed. Check your inbox for the
-            confirmation link.
+            <strong>{{ verificationStatus.email }}</strong> muss noch bestätigt werden. Überprüfe deinen Posteingang für den
+            Bestätigungslink.
           </p>
-          <p>If you have not received your confirmation email, click the button below:</p>
+          <p>Solltest du keine E-Mail zur Bestätigung erhalten haben, klicke auf die untenstehendene Schaltfläche:</p>
           <q-btn
             color="secondary"
-            label="Resend confirmation email"
+            label="Bestätigung erneut senden"
             :loading="resendingEmail"
             @click="resendConfirmationEmail"
           />
@@ -63,37 +62,37 @@
         <h5>Character verification</h5>
         <template v-if="verificationStatus.characterVerified">
           <p>
-            Your character
-            <strong>{{ $store.getters.character?.name }}</strong> has been verified.
+            Dein Charakter
+            <strong>{{ $store.getters.character?.name }}</strong> wurde verifiziert.
           </p>
         </template>
         <template v-else>
           <p>
-            You need to confirm that
-            <strong>{{ $store.getters.character?.name }}</strong> is your character by editing their character profile
-            on Lodestone. To confirm your ownership of your character, follow these steps:
+            Du musst bestätigen das
+            <strong>{{ $store.getters.character?.name }}</strong> dein Charakter ist, indem du das Profil im Lodestone
+            bearbeitest. Um die Eigentümerschaft dieses Charakters zu bestätigen, sind die folgenden Schritte erforderlich:
           </p>
           <ol>
             <li>
-              Open
+              Öffne
               <a :href="lodestoneCharacterLink" target="_blank"
-                >{{ $store.getters.character?.name }}'s page on Lodestone
+                >{{ $store.getters.character?.name }}'s Profilseite im Lodestone
                 <q-icon class="external-link-icon" name="launch" /></a
               >.
             </li>
-            <li>Edit the "Character Profile" section below your character portrait.</li>
+            <li>Bearbeite die "Vorstellung" unterhalb des Charakterbildes.</li>
             <li>
-              Paste the code below anywhere into your character profile.
+              Kopiere den untenstehenden Code irgendwo in deine Vorstellung.
               <q-input readonly filled dense :model-value="verificationStatus.characterVerificationCode">
                 <template v-slot:append>
-                  <q-btn flat dense icon="content_copy" title="Copy to clipboard" @click="copyVerificationCode" />
+                  <q-btn flat dense icon="content_copy" title="In Zwischenablage speichern" @click="copyVerificationCode" />
                 </template>
               </q-input>
             </li>
-            <li>Click Confirm to preview your changes.</li>
-            <li><strong>Click Confirm again</strong> to save your changes.</li>
+            <li>Klicke auf Bestätigen um eine Vorschau deiner Änderungen zu sehen.</li>
+            <li><strong>Klicke erneut auf Bestätigen</strong> um deine Änderungen zu speichern.</li>
           </ol>
-          <p>This page should update automatically when it detects the code in your character profile.</p>
+          <p>Diese Seite wird sich automatisch aktualisieren sobald sie den Code in deiner Vorstellung erkennt.</p>
         </template>
       </q-card-section>
     </q-card>
@@ -193,7 +192,7 @@ export default class PageVerify extends Vue {
 
     try {
       await copyToClipboard(this.verificationStatus.characterVerificationCode);
-      notifySuccess('Character verification code copied to clipboard.');
+      notifySuccess('Verifizierungscode wurde in der Zwischenablage gespeichert.');
     } catch (e) {
       notifyError(e);
     }
@@ -204,7 +203,7 @@ export default class PageVerify extends Vue {
 
     try {
       await this.$api.user.resendConfirmationEmail();
-      notifySuccess('Email sent. Check your inbox.');
+      notifySuccess('E-Mail versendet. Überprüfe Posteingang.');
     } catch (e) {
       notifyError(e);
     } finally {
