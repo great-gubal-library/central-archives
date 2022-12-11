@@ -1,10 +1,10 @@
 <template>
 	<q-form class="change-email" @submit="onSubmit">
-		<h3>Change Email</h3>
+		<h3>E-Mail-Adresse ändern</h3>
 		<q-input
 			class="change-email__email-field"
 			v-model="currentEmail"
-			label="Current email"
+			label="Aktuelle E-Mail-Adresse"
 			auto
 			readonly
 		>
@@ -15,11 +15,11 @@
 		<q-input
 			ref="currentPasswordField"
 			v-model="currentPassword"
-			label="Current password"
+			label="Aktuelles Passwort"
 			auto
 			type="password"
 			:rules="[
-				$rules.required('This field is required.'),
+				$rules.required('Dieses Feld ist erforderlich.'),
 			]"
 			@focus="onCurrentPasswordFocus"
 		>
@@ -29,9 +29,9 @@
 		</q-input>
 		<q-input
 			v-model="newEmail"
-			label="New email"
+			label="Neue E-Mail-Adresse"
 			:rules="[
-				$rules.required('This field is required.'),
+				$rules.required('Dieses Feld ist erforderlich.'),
 			]"
 		>
 			<template v-slot:prepend>
@@ -41,7 +41,7 @@
 		<p class="text-caption" v-if="success">{{ successMessage }}</p>
 		<div class="change-email__button-bar">
 			<q-btn
-				label="Change email"
+				label="Änderung bestätigen"
 				type="submit"
 				color="primary"
 			/>
@@ -59,7 +59,7 @@ import { Options, Vue } from 'vue-class-component';
 	name: 'ChangeEmail',
 })
 export default class ChangeEmail extends Vue {
-	readonly successMessage = 'An email message has been sent to your new email address. Follow its instructions to confirm the change.';
+	readonly successMessage = 'Es wurde eine Nachricht an deine neue E-Mail-Adresse gesendet. Befolge die Anweisungen um die Änderungen zu finalisieren.';
 
 	currentEmail = ' '; // single space to prevent autofill
 	currentPassword = ' '; // single space to prevent autofill
