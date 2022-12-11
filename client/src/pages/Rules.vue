@@ -1,6 +1,6 @@
 <template>
   <q-page>
-		<h2>Rules</h2>
+		<h2>Regelwerk</h2>
 		<div v-html="rules"></div>
 	</q-page>	
 </template>
