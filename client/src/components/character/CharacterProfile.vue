@@ -1,7 +1,7 @@
 <template>
   <div class="character-profile">
     <p v-if="!preview && character.mine">
-      <router-link :to="`/edit-character/${character.id}`">Edit profile</router-link>
+      <router-link :to="`/edit-character/${character.id}`">Profil bearbeiten</router-link>
     </p>
     <banner-view :banner="character.banner" />
     <header class="character-profile__header">
@@ -18,17 +18,17 @@
       <div class="layout__filler"></div>
     </header>
     <character-details-box v-if="character.showInfoboxes">
-      <character-detail label="World" :value="character.server" v-if="character.server" />
-      <character-detail label="Race" :value="$display.races[character.race]" v-if="character.race" />
-      <character-detail label="Occupation" :value="character.occupation" v-if="character.occupation" />
-      <character-detail label="Age" :value="character.age" v-if="character.age" />
+      <character-detail label="Welt" :value="character.server" v-if="character.server" />
+      <character-detail label="Volk" :value="$display.races[character.race]" v-if="character.race" />
+      <character-detail label="Profession" :value="character.occupation" v-if="character.occupation" />
+      <character-detail label="Alter" :value="character.age" v-if="character.age" />
       <character-detail label="Pronouns" :value="character.pronouns" v-if="character.pronouns" />
-      <character-detail label="Birthplace" :value="character.birthplace" v-if="character.birthplace" />
-      <character-detail label="Residence" :value="character.residence" v-if="character.residence" />
-      <character-detail label="Free&nbsp;Company" :value="character.freeCompany.name" :router-link="fcLink" v-if="character.freeCompany" />
+      <character-detail label="Geburtsort" :value="character.birthplace" v-if="character.birthplace" />
+      <character-detail label="Wohnort" :value="character.residence" v-if="character.residence" />
+      <character-detail label="Freie&nbsp;Gesellschaft" :value="character.freeCompany.name" :router-link="fcLink" v-if="character.freeCompany" />
     </character-details-box>
     <template v-if="character.appearance">
-      <h3 v-if="!character.combinedDescription">Outward appearance</h3>
+      <h3 v-if="!character.combinedDescription">Erscheinungsbild</h3>
       <html-viewer
         class="character-profile__appearance-background"
         :class="{ 'character-profile__appearance-background_no-header': character.combinedDescription }"
@@ -38,7 +38,7 @@
     <template v-if="!character.combinedDescription">
       <template v-if="character.background"><hr /></template>
       <template v-if="character.background">
-        <h3>Background</h3>
+        <h3>Hintergrund</h3>
         <html-viewer class="character-profile__appearance-background" :content="character.background" />
       </template>
     </template>
@@ -49,11 +49,11 @@
       v-if="character.showInfoboxes && hasPersonalityBox"
       class="character-profile__personality-box"
     >
-      <character-detail label="Friends" :value="character.friends" v-if="character.friends" />
-      <character-detail label="Relatives" :value="character.relatives" v-if="character.relatives" />
-      <character-detail label="Rivals/Enemies" :value="character.enemies" v-if="character.enemies" />
-      <character-detail label="Loves" :value="character.loves" v-if="character.loves" />
-      <character-detail label="Hates" :value="character.hates" v-if="character.hates" />
+      <character-detail label="Freunde" :value="character.friends" v-if="character.friends" />
+      <character-detail label="Verwandte" :value="character.relatives" v-if="character.relatives" />
+      <character-detail label="Rivalen/Feinde" :value="character.enemies" v-if="character.enemies" />
+      <character-detail label="Liebt" :value="character.loves" v-if="character.loves" />
+      <character-detail label="Hasst" :value="character.hates" v-if="character.hates" />
       <character-detail label="Motto" :value="character.motto" v-if="character.motto" />
       <character-detail label="Motivation" :value="character.motivation" v-if="character.motivation" />
     </character-details-box>
