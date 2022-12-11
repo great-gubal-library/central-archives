@@ -18,7 +18,7 @@
       </q-item>
     </q-list>
     <p v-else>
-      There are no stories on Chaos Archives. Yet!
+      Es gibt noch keine Geschichten auf PROJEKTNAME.
     </p>
   </div>
 </template>
