@@ -18,7 +18,7 @@
             <q-btn
               v-if="event.link"
               class="event-item__open-link-button"
-              label="Open link"
+              label="Link öffnen"
               icon="launch"
               type="a"
               target="_blank"
@@ -27,20 +27,20 @@
             <q-btn
               v-else
               class="event-item__open-link-button"
-              label="View"
+              label="Ansehen"
               icon="event"
               :to="`/event/${event.id}`"
             />
             <q-btn flat icon="expand_less" @click.stop="collapse" />
           </div>
           <dl>
-            <dt><q-icon name="schedule" /> Starts</dt>
+            <dt><q-icon name="schedule" /> Beginn</dt>
             <dd>
               {{ formatDateServer(event.startDateTime) }}
               <q-tooltip>{{ formatDateLocal(event.startDateTime) }}</q-tooltip>
             </dd>
             <template v-if="event.endDateTime">
-              <dt><q-icon name="schedule" /> Ends</dt>
+              <dt><q-icon name="schedule" /> Ende</dt>
               <dd>
                 {{ formatDateServer(event.endDateTime) }}
                 <q-tooltip>{{ formatDateLocal(event.endDateTime) }}</q-tooltip>
