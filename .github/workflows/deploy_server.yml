@@ -1,10 +1,10 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
+name: Deploy Server
+run-name: Released latest version of server to VM.
 on:
   workflow_dispatch:
   push:
-#    branches:
-#      - 'releases/**'
+    branches:
+      - 'releases/**'
 jobs:
   docker-compose:
     runs-on: ubuntu-latest
@@ -26,4 +26,4 @@ jobs:
           # Prefix for docker-compose containers.
           docker_compose_prefix: server
           # Docker compose file to use
-          docker_compose_filename: ./server/docker-commpose.yaml
+          docker_compose_filename: server/docker-commpose.yaml
