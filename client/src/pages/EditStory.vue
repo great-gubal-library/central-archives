@@ -1,17 +1,17 @@
 <template>
   <q-page class="page-edit-story">
     <template v-if="loaded">
-      <h2>{{ story.id ? 'Edit Story' : 'Create New Story' }}</h2>
+      <h2>{{ story.id ? 'Geschichte bearbeiten' : 'Neue Geschichte erstellen' }}</h2>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
           <q-input
             v-model="story.title"
-            label="Title *"
+            label="Titel *"
             :rules="[
-              $rules.required('This field is required.'),
+              $rules.required('Dieses Feld ist erforderlich.'),
             ]"
           />
-          <div class="page-edit-story__type-label"><label>Type:</label></div>
+          <div class="page-edit-story__type-label"><label>Art der Geschichte:</label></div>
           <q-option-group
             v-model="story.type"
             label="type"
@@ -20,9 +20,9 @@
           <q-input
             :model-value="tags"
             @update:model-value="onTagsChanged"
-            label="Tags (comma-separated)"
+            label="Tags (mit Komma getrennt)"
           />
-          <h6>Content *</h6>
+          <h6>Inhalt *</h6>
           <html-editor v-model="story.content" />
         </template>
         <section v-else class="page-edit-story__preview">
@@ -35,8 +35,8 @@
             toggle-color="secondary"
           />
           <div class="page-edit-story__revert-submit">
-            <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
-            <q-btn label="Save changes" type="submit" color="primary" />
+            <q-btn label="Zurücksetzen" color="secondary" @click="revert" />&nbsp;
+            <q-btn label="Änderungen speichern" type="submit" color="primary" />
           </div>
         </div>
         <q-inner-loading :showing="saving" />
@@ -48,16 +48,15 @@
       <q-card>
         <q-card-section class="row items-center">
           <span class="q-ml-sm"
-            >Do you want to revert your unsaved changes to the last saved
-            version?</span
+            >Möchtest du die ungespeicherten Änderungen auf die letzte gespeicherte Version zurücksetzen?</span
           >
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Keep editing" color="secondary" v-close-popup />
+          <q-btn flat label="Bearbeitung fortsetzen" color="secondary" v-close-popup />
           <q-btn
             flat
-            label="Revert"
+            label="Zurücksetzen"
             color="negative"
             v-close-popup
             @click="onConfirmRevert"
@@ -92,8 +91,8 @@ import { RouteParams } from 'vue-router';
 })
 export default class PageEditStory extends Vue {
   readonly previewOptions = [
-    { label: 'Edit', value: false },
-    { label: 'Preview', value: true },
+    { label: 'Bearbeitung', value: false },
+    { label: 'Vorschau', value: true },
   ];
 
   readonly typeOptions = Object.values(StoryType).map((storyType) => ({
