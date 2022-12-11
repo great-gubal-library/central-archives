@@ -1,6 +1,6 @@
 <template>
 	<q-page class="page-my-account">
-		<h2>Account Management</h2>
+		<h2>Accountverwaltung</h2>
 		<q-card>
 			<q-card-section>
 				<change-password />
