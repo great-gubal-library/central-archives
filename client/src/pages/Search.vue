@@ -1,8 +1,8 @@
 <template>
   <q-page class="page-search">
-    <h2 class="regular-header-font">Search Results</h2>
+    <h2 class="regular-header-font">Suchergebnisse</h2>
     <template v-if="!isEmpty">
-      <p>Search results for <strong>{{ query }}</strong>:</p>
+      <p>Suchergebnisse für <strong>{{ query }}</strong>:</p>
       <q-card>
         <q-tabs
           v-model="tab"
