@@ -1,17 +1,17 @@
 <template>
   <q-page class="page-reset-password">
-    <h2>Password Recovery</h2>
+    <h2>Passwortwiederherstellung</h2>
     <q-form v-if="!submitted" class="page-reset-password__form" @submit="onSubmit">
       <p>
-        You are now ready to set your new password.
+        Du kannst nun ein neues Passwort festlegen.
       </p>
       <section>
         <q-input
           v-model="email"
-          label="Email"
+          label="E-Mail-Adresse"
           :rules="[
-            $rules.required('This field is required.'),
-            $rules.email('Invalid email address.')
+            $rules.required('Dieses Feld ist erforderlich.'),
+            $rules.email('Ungültige E-Mail-Adresse.')
           ]"
         >
           <template v-slot:prepend>
@@ -20,11 +20,11 @@
         </q-input>
         <q-input
           v-model="password"
-          label="New password"
+          label="Neues Passwort"
           type="password"
           :rules="[
-            $rules.required('This field is required.'),
-            $rules.minLength(SharedConstants.PASSWORD_MIN_LENGTH, `Password must be at least ${SharedConstants.PASSWORD_MIN_LENGTH} characters long.`)
+            $rules.required('Dieses Feld ist erforderlich.'),
+            $rules.minLength(SharedConstants.PASSWORD_MIN_LENGTH, `Passwort muss mindestens ${SharedConstants.PASSWORD_MIN_LENGTH} Zeichen lang sein.`)
           ]"
         >
           <template v-slot:prepend>
@@ -33,11 +33,11 @@
         </q-input>
         <q-input
           v-model="confirmPassword"
-          label="Confirm new password"
+          label="Neues Passwort wiederholen"
           type="password"
           :rules="[
 						$rules.required('This field is required.'),
-						$rules.sameAs(password, 'Passwords do not match.')
+						$rules.sameAs(password, 'Passwörter stimmen nicht überein.')
 					]"
         >
           <template v-slot:prepend>
@@ -47,7 +47,7 @@
       </section>
       <div class="page-reset-password__button-bar">
         <q-btn
-          label="Set new password"
+          label="Neues Passwort festlegen"
           type="submit"
           color="primary"
         />
@@ -55,7 +55,7 @@
       <q-inner-loading :showing="loading" />
     </q-form>
     <section v-else class="page-reset-password__form">
-      <p>Your password has been changed. You can now <router-link to="/login">log in</router-link>.</p>
+      <p>Dein Passwort wurde geändert. Du kannst dich nun <router-link to="/login">einloggen</router-link>.</p>
     </section>
   </q-page>
 </template>
@@ -98,7 +98,7 @@ export default class PageLogIn extends Vue {
 
       this.submitted = true;
 
-      notifySuccess('You password has been changed.');
+      notifySuccess('Dein Passwort wurde geändert.');
     } catch (e) {
       notifyError(e);
     } finally {
