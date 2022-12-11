@@ -34,7 +34,7 @@ jobs:
         run: |
           npm i -g @quasar/cli
       - name: Quasar Build
+        working-directory: ./client
         run: |
-          cd client |
           quasar build 
 
