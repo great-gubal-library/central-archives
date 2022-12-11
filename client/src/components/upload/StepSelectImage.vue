@@ -52,7 +52,7 @@
             :label="
               modelValue.originalFormat === ImageFormat.PNG
                 ? 'Als PNG beibehalten'
-                : 'Convert to PNG'
+                : 'Zu PNG umwandeln'
             "
           />
           <q-radio
