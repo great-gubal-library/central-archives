@@ -7,8 +7,8 @@
     	<report-violation-section :pageType="PageType.FREE_COMPANY" :pageId="fc.id" />
 		</template>
 		<template v-else-if="notFound">
-			<h2>Free Company not found</h2>
-			<p>The Free Company {{name}} ({{server}}) is not registered on Chaos Archives.</p>
+			<h2>Freie Gesellschaft konnte nicht gefunden werden</h2>
+			<p>Die Freie Gesellschaft {{name}} ({{server}}) ist nicht auf PROJEKTNAME registriert.</p>
 		</template>
 	</q-page>	
 </template>
