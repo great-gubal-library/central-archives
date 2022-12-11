@@ -1,10 +1,10 @@
 <template>
   <q-list class="event-list" dark>
     <section>
-      <q-item-label header> Events </q-item-label>
+      <q-item-label header> Veranstaltungen </q-item-label>
       <q-item clickable v-ripple to="/event-calendar">
         <q-item-section>
-          <q-item-label><q-icon class="text-h6" name="event" /> Event calendar</q-item-label>
+          <q-item-label><q-icon class="text-h6" name="event" /> Eventkalender</q-item-label>
         </q-item-section>
       </q-item>
       <q-separator dark />
