@@ -1,14 +1,14 @@
 <template>
 	<q-form class="change-password" @submit="onSubmit">
-		<h3>Change Password</h3>
+		<h3>Passwort ändern</h3>
 		<q-input
 			ref="currentPasswordField"
 			v-model="currentPassword"
-			label="Current password"
+			label="Aktuelles Passwort"
 			auto
 			type="password"
 			:rules="[
-				$rules.required('This field is required.'),
+				$rules.required('Dieses Feld ist erforderlich.'),
 			]"
 			@focus="onCurrentPasswordFocus"
 		>
@@ -18,10 +18,10 @@
 		</q-input>
 		<q-input
 			v-model="newPassword"
-			label="New password"
+			label="Neues Passwort"
 			type="password"
 			:rules="[
-				$rules.required('This field is required.'),
+				$rules.required('Dieses Feld ist erforderlich.'),
 			]"
 		>
 			<template v-slot:prepend>
@@ -30,7 +30,7 @@
 		</q-input>
 		<div class="change-password__button-bar">
 			<q-btn
-				label="Change password"
+				label="Änderung bestätigen"
 				type="submit"
 				color="primary"
 			/>
@@ -66,7 +66,7 @@ export default class ChangePassword extends Vue {
 				newPassword: this.newPassword,
 			});
 
-			notifySuccess('Password has been changed.');
+			notifySuccess('Passwort wurde geändert.');
 		} catch (e) {
       notifyError(e);
     } finally {
