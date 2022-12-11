@@ -2,9 +2,9 @@
   <section class="carrd-edit-section">
     <h6>Carrd integration</h6>
     <p class="text-caption">
-      <a href="https://carrd.co/" target="_blank">Carrd <q-icon class="external-link-icon" name="launch" /></a> is a
-      service for creating one-page websites. If your {{ entityType }} has a Carrd website, you can add it here, and it
-      will be embedded on the page. Otherwise leave this field blank.
+      <a href="https://carrd.co/" target="_blank">Carrd <q-icon class="external-link-icon" name="launch" /></a> ist ein 
+      Anbieter für die Erstellung von einseitigen Webseiten. Wenn dein Charakter über eine Carrd-Webseite verfügt, kannst du 
+      sie hier verlinken. Die Carrd wird auf der Profilseite eingebettet. Andernfalls kannst du dieses Feld leer lassen.
     </p>
     <q-checkbox
       v-if="$store.getters.isTrusted"
@@ -17,7 +17,7 @@
 			ref="inputField"
       v-model="value"
       @update:modelValue="setCarrdProfileLink"
-      label="Carrd profile"
+      label="Carrdseite"
       :rules="[(val) => /^[A-Za-z0-9-]*$/.test(val) || 'Copy the part before .carrd.co in your Carrd website address here.']"
     >
       <template v-slot:prepend>
@@ -32,7 +32,7 @@
 			ref="inputField"
       v-model="value"
       @update:modelValue="setCarrdProfileLink"
-      label="Carrd profile"
+      label="Carrdseite"
       :rules="[(val) => DOMAIN_REGEX.test(val) || 'Copy your Carrd website URL here.']"
     >
       <template v-slot:prepend>
