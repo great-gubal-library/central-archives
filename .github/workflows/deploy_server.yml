@@ -26,4 +26,4 @@ jobs:
           # Prefix for docker-compose containers.
           docker_compose_prefix: server
           # Docker compose file to use
-          docker_compose_filename: server/docker-commpose.yml
+          docker_compose_filename: server/docker-compose.yml
