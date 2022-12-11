@@ -1,8 +1,8 @@
 <template>
   <q-page class="page-free-companies">
-		<h2>Free Companies</h2>
+		<h2>Freie Gesellschaften</h2>
 		<free-company-name-list v-if="freeCompanies.length > 0" :free-companies="freeCompanies" />
-		<div v-else>There are no claimed Free Companies... yet!</div>
+		<div v-else>Hier gibt es keine Freien Gesellschaften... noch!</div>
 	</q-page>	
 </template>
 
