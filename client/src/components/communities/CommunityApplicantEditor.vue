@@ -119,7 +119,7 @@ export default class CommunityApplicantEditor extends Vue.with(Props) {
       .onOk(async () => {
         try {
           await this.$api.communities.rejectMember(this.communityId, member.characterId);
-          notifySuccess(`MMitgliedschaftsantrag von ${member.name} abgelehnt.`);
+          notifySuccess(`Mitgliedschaftsantrag von ${member.name} abgelehnt.`);
           this.$emit('updated', member);
         } catch (e) {
           notifyError(e);
