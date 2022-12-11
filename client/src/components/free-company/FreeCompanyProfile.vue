@@ -1,7 +1,7 @@
 <template>
   <div class="free-company-profile">
     <p v-if="!preview && freeCompany.mine">
-      <router-link :to="editFCLink">Edit Free Company</router-link>
+      <router-link :to="editFCLink">Freie Gesellschaft bearbeiten</router-link>
     </p>
     <banner-view :banner="freeCompany.banner" />
     <header class="free-company-profile__header">
@@ -15,16 +15,16 @@
       <div class="layout__filler"></div>
     </header>
     <character-details-box class="free-company-profile__infobox">
-      <character-detail label="World" :value="freeCompany.server" v-if="freeCompany.server" />
-      <character-detail label="Founded" :value="$display.formatDate(freeCompany.foundedAt)" v-if="freeCompany.foundedAt" />
-      <character-detail label="Website" :value="freeCompany.website" :link="freeCompany.website" v-if="freeCompany.website" />
-      <character-detail label="Goal" :value="freeCompany.goal" v-if="freeCompany.goal" />
+      <character-detail label="Welt" :value="freeCompany.server" v-if="freeCompany.server" />
+      <character-detail label="Gründung" :value="$display.formatDate(freeCompany.foundedAt)" v-if="freeCompany.foundedAt" />
+      <character-detail label="Webseite" :value="freeCompany.website" :link="freeCompany.website" v-if="freeCompany.website" />
+      <character-detail label="Ziel" :value="freeCompany.goal" v-if="freeCompany.goal" />
       <character-detail label="Status" :value="freeCompany.status" v-if="freeCompany.status" />
-      <character-detail label="Main area of operations" :value="freeCompany.areaOfOperations" v-if="freeCompany.areaOfOperations" />
-      <character-detail label="Recruiting officers" :value="freeCompany.recruitingOfficers" v-if="freeCompany.recruitingOfficers" />
+      <character-detail label="Tätigkeitsbereich" :value="freeCompany.areaOfOperations" v-if="freeCompany.areaOfOperations" />
+      <character-detail label="Rekrutierer" :value="freeCompany.recruitingOfficers" v-if="freeCompany.recruitingOfficers" />
     </character-details-box>
     <template v-if="!freeCompany.claimed">
-      This Free Company's leader has not yet claimed it on Chaos Archives.
+      Der Anführer hat diese Freie Gesellschaft noch nicht auf PROJEKTNAME beansprucht.
     </template>
     <template v-if="freeCompany.description">
       <html-viewer class="free-company-profile__appearance-background" :content="freeCompany.description" />
@@ -39,7 +39,7 @@
     >
     </iframe>
     <template v-if="freeCompany.claimed && !freeCompany.description && !freeCompany.carrdProfile">
-      No description.
+      Keine Beschreibung.
     </template>
   </div>
 </template>
