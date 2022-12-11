@@ -4,7 +4,7 @@
     <editor
     class="html-editor__editor"
     :style="{ height: height }"
-    api-key="1217d90cccc68e718e09b87118d4261cb6409064a218b5f6e8dcec7ed3bf6248"
+    api-key="v9oemu64giqfvnrk8y7f0quf7ygl5dnrpgs382udlcbkv7jv"
     :init="options"
     :model-value="modelValue"
      @click.capture="onClickCapture"
