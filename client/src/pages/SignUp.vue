@@ -1,20 +1,20 @@
 <template>
   <q-page>
-    <h2>Sign Up</h2>
+    <h2>Anmeldung</h2>
     <q-form v-if="!signedUp" @submit="onSubmit">
       <p>
-        Welcome to Chaos Archives. Please fill in the form below to create your
-        account and register your first character.
+        Willkommen bei PROJEKTNAME. Bitte füll das nachfolgende Formular aus um deinen
+        Account zu erstellen und deinen ersten Charakter zu registrieren.
       </p>
       <section class="page-signup__form-controls">
         <h6>Account information</h6>
         <q-input
           v-model="email"
-          label="Email"
-          hint="We will send you an email message with a link to confirm your address."
+          label="E-Mail-Adresse"
+          hint="Wird senden dir einen Link um deine E-Mail-Adresse zu bestätigen."
           :rules="[
-            $rules.required('This field is required.'),
-            $rules.email('Invalid email address.')
+            $rules.required('Dieses Feld ist erforderlich.'),
+            $rules.email('Ungültige E-Mail-Adresse.')
           ]"
         >
           <template v-slot:prepend>
@@ -23,11 +23,11 @@
         </q-input>
         <q-input
           v-model="password"
-          label="Password"
+          label="Passwort"
           type="password"
           :rules="[
-            $rules.required('This field is required.'),
-            $rules.minLength(SharedConstants.PASSWORD_MIN_LENGTH, `Password must be at least ${SharedConstants.PASSWORD_MIN_LENGTH} characters long.`)
+            $rules.required('Dieses Feld ist erforderlich.'),
+            $rules.minLength(SharedConstants.PASSWORD_MIN_LENGTH, `Passwort muss mindestens ${SharedConstants.PASSWORD_MIN_LENGTH} Zeichen lang sein.`)
           ]"
         >
           <template v-slot:prepend>
@@ -36,11 +36,11 @@
         </q-input>
         <q-input
           v-model="confirmPassword"
-          label="Confirm password"
+          label="Passwort wiederholen"
           type="password"
           :rules="[
-						$rules.required('This field is required.'),
-						$rules.sameAs(password, 'Passwords do not match.')
+						$rules.required('Dieses Feld ist erforderlich.'),
+						$rules.sameAs(password, 'Passwörter stimmen nicht überein.')
 					]"
         >
           <template v-slot:prepend>
@@ -48,17 +48,17 @@
           </template>
         </q-input>
       </section>
-      <h6>Character information</h6>
+      <h6>Charakterinformation</h6>
       <character-finder-field class="page-signup__character-finder-field" v-model="character" />
-      <h6>Terms of use</h6>
+      <h6>Nutzungsbedingungen</h6>
       <div
         class="page-signup__terms-of-use rounded-borders"
         v-html="rules"
       ></div>
-      <q-toggle v-model="accept" label="I accept the terms of use" />
+      <q-toggle v-model="accept" label="Ich akzeptiere die Nutzungsbedingungen" />
       <div class="page-signup__button-bar">
         <q-btn
-          label="Create your account"
+          label="Account erstellen"
           type="submit"
           color="primary"
           :disable="!accept"
@@ -67,9 +67,9 @@
       <q-inner-loading :showing="loading" />
     </q-form>
     <template v-else>
-      <p>Thank you for signing up! Your account has been created.</p>
-      <p>You will now need to verify your email address and your ownership of the character. We have sent you an email message with a link for continuing your signup process.</p>
-      <p>You can now close this page, or <router-link to="/verify">check</router-link> what remains to be done to activate your account.</p>
+      <p>Danke das du dich bei uns angemeldet hast! Dein Account wurde erstellt.</p>
+      <p>Du wirst nun deine E-Mail-Adresse und die Eigentümerschaft deines Charakters bestätigen müssen. Wir haben dir einen Link an deine E-Mail-Adresse geschickt, damit du deinen Anmeldungsprozess abschließen kannst.</p>
+      <p>Du kannst diese Seite nun schließen, oder <router-link to="/verify">überprüfen</router-link> was zur Aktivierung deines Accounts noch aussteht.</p>
     </template>
   </q-page>
 </template>
@@ -119,7 +119,7 @@ export default class PageSignUp extends Vue {
       this.$api.setAccessToken(result.accessToken);
       this.$store.commit('setUser', result.session);
 
-      notifySuccess('Registration successful! Please check your inbox to confirm your email address.');
+      notifySuccess('Anmeldung erfolgreich! Bitte überprüfe deinen Posteingang um deine E-Mail-Adresse zu bestätigen.');
       this.signedUp = true; // hide form and show post-signup message
     } catch (e) {
       notifyError(e);
