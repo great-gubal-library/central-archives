@@ -2,11 +2,11 @@
 	<section class="banner-edit-section">
 		<h6>Banner</h6>
 		<p class="text-caption">
-			Banners can be no taller than 4:1 width:height. For example, 500&times;100 and 400&times;100 are fine, but
-			not 300&times;100.
+			Banner sollten ein Seitenverhältnis von 4:1 breite:höhe haben. Beispielsweise ist 500&times;100 und 400&times;100 in Ordnung, aber
+	    300&times;100 aber nicht.
 		</p>
 		<q-responsive v-if="!modelValue" class="banner-edit-section__placeholder" :ratio="4 / 1">
-			<div>No banner</div>
+			<div>Kein Banner</div>
 		</q-responsive>
 		<q-img
 			v-else
@@ -18,13 +18,13 @@
 			<q-btn
 				v-if="modelValue"
 				flat
-				label="Remove"
+				label="Entfernen"
 				icon="remove"
 				color="negative"
 				@click="onBannerRemoveClick"
 			/>&nbsp;
-			<q-btn flat label="Select" icon="collections" color="secondary" @click="onBannerSelectClick" />&nbsp;
-			<q-btn flat label="Upload" icon="upload" color="secondary" @click="onBannerUploadClick" />
+			<q-btn flat label="Auswählen" icon="collections" color="secondary" @click="onBannerSelectClick" />&nbsp;
+			<q-btn flat label="Hochladen" icon="upload" color="secondary" @click="onBannerUploadClick" />
 		</div>
 	</section>
 </template>
