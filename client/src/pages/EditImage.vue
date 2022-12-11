@@ -1,6 +1,6 @@
 <template>
 	<q-page>
-		<h2>Edit Image</h2>
+		<h2>Bild bearbeiten</h2>
 		<image-editor v-if="image && image.id" v-model="image" :full-page="true" @update:model-value="onSave" />
 	</q-page>
 </template>
@@ -63,8 +63,8 @@ export default class PageEditImage extends Vue {
 	}
 
 	onSave() {
-		notifySuccess('Image saved.', {
-			label: 'View',
+		notifySuccess('Bild gespeichert.', {
+			label: 'Anschauen',
 			color: 'white',
 			handler: () => this.viewImage(),
 		});
