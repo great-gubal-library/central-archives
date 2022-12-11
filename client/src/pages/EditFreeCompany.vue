@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-edit-free-company">
     <template v-if="fc.id">
-      <h2>Edit Free Company</h2>
+      <h2>Bearbeite diese Freie Gesellschaft</h2>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
           <div class="page-edit-free-company__lodestone-info">
@@ -12,12 +12,12 @@
           </div>
           <banner-edit-section v-model="fc.banner" />
           <section class="page-edit-free-company__form-controls">
-            <q-input v-model="fc.website" label="Website" />
-            <q-input v-model="fc.goal" label="Goal" />
+            <q-input v-model="fc.website" label="Webseite" />
+            <q-input v-model="fc.goal" label="Ziele" />
             <q-input v-model="fc.status" label="Status" />
-            <q-input v-model="fc.areaOfOperations" label="Main area of operations" />
-            <q-input v-model="fc.recruitingOfficers" label="Recruiting officers" />
-            <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in all fields except website.</div>
+            <q-input v-model="fc.areaOfOperations" label="Tätigkeitsbereich" />
+            <q-input v-model="fc.recruitingOfficers" label="Rekrutierer" />
+            <div class="text-caption">Du kannst [[wikilinks]], z.B. [[Charaktername]], in allen Feldern außer Webseite nutzen.</div>
           </section>
           <h6>Description</h6>
           <html-editor v-model="fc.description" />
@@ -33,8 +33,8 @@
         <div class="page-edit-free-company__button-bar">
           <q-btn-toggle v-model="preview" :options="previewOptions" toggle-color="secondary" />
           <div class="page-edit-free-company__revert-submit">
-            <q-btn label="Revert" color="secondary" @click="onRevertClick" />&nbsp;
-            <q-btn label="Save changes" type="submit" color="primary" />
+            <q-btn label="Zurücksetzen" color="secondary" @click="onRevertClick" />&nbsp;
+            <q-btn label="Änderungen speichern" type="submit" color="primary" />
           </div>
         </div>
         <q-inner-loading :showing="saving" />
@@ -45,12 +45,12 @@
     <q-dialog v-model="confirmRevert" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <span class="q-ml-sm">Do you want to revert your unsaved changes to the last saved version?</span>
+          <span class="q-ml-sm">Möchtest du die ungespeicherten Änderungen auf die letzte gespeicherte Version zurücksetzen?</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Keep editing" color="secondary" v-close-popup />
-          <q-btn flat label="Revert" color="negative" v-close-popup @click="onConfirmRevert" />
+          <q-btn flat label="Bearbeitung fortsetzen" color="secondary" v-close-popup />
+          <q-btn flat label="Zurücksetzen" color="negative" v-close-popup @click="onConfirmRevert" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -101,8 +101,8 @@ async function load(params: RouteParams): Promise<FreeCompanyDto> {
 })
 export default class PageEditFreeCompany extends Vue {
   readonly previewOptions = [
-    { label: 'Edit', value: false },
-    { label: 'Preview', value: true },
+    { label: 'Bearbeitung', value: false },
+    { label: 'Vorschau', value: true },
   ];
 
   fc = new FreeCompanyDto();
@@ -132,8 +132,8 @@ export default class PageEditFreeCompany extends Vue {
       await this.$api.freeCompanies.saveFreeCompany(this.fc);
       this.fcBackup = new FreeCompanyDto(this.fc);
 
-      notifySuccess('Free Company saved.', {
-        label: 'View',
+      notifySuccess('Freie Gesellschaft gespeichert.', {
+        label: 'Anschauen',
         color: 'white',
         handler: () => this.viewFreeCompany(),
       });
