@@ -18,12 +18,12 @@ export default class PageConfirmEmail extends Vue {
 		}
 
 		this.$q.loading.show({
-			message: 'Confirming your email...'
+			message: 'Bestätige deine E-Mail...'
 		});
 		
 		try {
 			await this.$api.user.confirmEmail({ code: verificationToken });
-			notifySuccess('Your email address has been confirmed.');
+			notifySuccess('Deine E-Mail-Adresse wurde bestätigt.');
 		} catch (e) {
 			notifyError(e);
 		} finally {
