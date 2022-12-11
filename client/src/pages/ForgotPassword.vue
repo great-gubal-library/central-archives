@@ -1,19 +1,19 @@
 <template>
   <q-page class="page-forgot-password">
-    <h2>Password Recovery</h2>
+    <h2>Passwort wiederherstellen</h2>
     <q-form
       v-if="!submitted"
       class="page-forgot-password__form"
       @submit="onSubmit"
     >
-      <p>If you have forgotten your password, fill in the email address you used to sign up, and we will send you a link to reset your password.</p>
+      <p>Solltest du dein Passwort vergessen haben, kannst du die E-Mail-Adresse angeben welche du für deine Registrierung verwendet hast. Wir werden dir einen Link zum zurücksetzen deines Passworts schicken.</p>
       <section>
         <q-input
           v-model="email"
-          label="Email"
+          label="E-Mail-Adresse"
           :rules="[
-            $rules.required('This field is required.'),
-            $rules.email('Invalid email address.'),
+            $rules.required('Dieses Feld ist erforderlich.'),
+            $rules.email('Ungültige E-Mail-Adresse.'),
           ]"
         >
           <template v-slot:prepend>
@@ -22,22 +22,22 @@
         </q-input>
       </section>
       <div class="page-forgot-password__button-bar">
-        <q-btn label="Send password reset link" type="submit" color="primary" />
+        <q-btn label="Wiederherstellungs-Link senden" type="submit" color="primary" />
       </div>
       <q-inner-loading :showing="loading" />
     </q-form>
     <section v-else class="page-forgot-password__form">
       <p>
-        Your password reset link has been sent. Check your inbox at
-        <strong>{{ email }}</strong>. If you are registered on Chaos Archives, you will receive an email
-        with further instructions.
+        Der Wiederherstellungs-Link für dein Passwort wurde gesendet. Prüfe den Posteingang von
+        <strong>{{ email }}</strong>. Solltest du auf WEBSEITENAME registriert sein, wirst du eine E-Mail
+         mit weiteren Anweisungen erhalten.
       </p>
-      <p>You can now close this page.</p>
+      <p>Du kannst diese Seite nun schließen.</p>
       <hr />
       <div class="row">
-        <p class="col">Did not receive your link?</p>
+        <p class="col">Keinen Link erhalten?</p>
         <div class="col text-right">
-          <q-btn label="Try again" color="primary" @click="tryAgain" />
+          <q-btn label="Erneut versuchen" color="primary" @click="tryAgain" />
         </div>
       </div>
     </section>
