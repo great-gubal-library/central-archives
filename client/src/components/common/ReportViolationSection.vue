@@ -1,9 +1,9 @@
 <template>
 	<section class="report-violation-section">
-		<q-btn flat color="secondary" label="Copy link" @click="copyLink" />
+		<q-btn flat color="secondary" label="Link kopieren" @click="copyLink" />
 		<template v-if="verified">
-			<q-btn v-if="!reported" flat color="secondary" label="Report this page" @click="reportPage" />
-			<q-btn v-else disable flat color="secondary" label="Page reported" />
+			<q-btn v-if="!reported" flat color="secondary" label="Seite melden" @click="reportPage" />
+			<q-btn v-else disable flat color="secondary" label="Seite gemeldet" />
 		</template>
 	</section>
 </template>
@@ -38,9 +38,9 @@ export default class ReportViolationSection extends Vue.with(Props) {
 	async copyLink() {
 		try {
 			await copyToClipboard(window.location.href);
-			notifySuccess('Page link copied to clipboard.');
+			notifySuccess('Seitenlink in Zwischenablage gespeichert.');
 		} catch (e) {
-			notifyError('Error copying page link to clipboard.');
+			notifyError('Fehler beim speichern des Seitenlinks in der Zwischenablage.');
 		}
 	}
 
