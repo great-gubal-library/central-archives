@@ -1,6 +1,6 @@
 <template>
   <q-select
-    label="World"
+    label="Welt"
     icon="public"
     class="world-select"
     :model-value="modelValue"
