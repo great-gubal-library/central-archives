@@ -11,7 +11,7 @@
       <template v-else>
         <h2>Charakterverifizierung</h2>
         <p>
-          Bevor du Inhalte auf PROJEKTNAME unter diesem Charakter verfassen kannst, under this character's name, musst du deine Eigentümerschaft bestätigen.
+          Bevor du Inhalte auf PROJEKTNAME unter diesem Charakter verfassen kannst, musst du deine Eigentümerschaft bestätigen.
         </p>
       </template>
     </template>
