@@ -13,13 +13,13 @@
 						<q-item-label caption>{{$display.relativeTime(item.createdAt)}}</q-item-label>
 				</q-item-section>
 				<q-item-section side class="my-content-list__buttons">
-					<q-btn color="secondary" flat icon="edit" title="Edit" :to="getEditLink(item)" @click.prevent="onEditClick(item)" />
-					<q-btn color="danger" flat icon="delete" title="Delete" @click.prevent="onDeleteClick(item)" />
+					<q-btn color="secondary" flat icon="Bearbeiten" title="Edit" :to="getEditLink(item)" @click.prevent="onEditClick(item)" />
+					<q-btn color="danger" flat icon="Löschen" title="Delete" @click.prevent="onDeleteClick(item)" />
 				</q-item-section>
 			</q-item>
 		</q-list>
 		<p v-else>
-			You have no {{$display.pageTypesPlural[type].toLowerCase()}}.
+			Du hast noch keine {{$display.pageTypesPlural[type].toLowerCase()}}.
 		</p>
 	</section>
 </template>
@@ -70,17 +70,17 @@ export default class MyContentList extends Vue.with(Props) {
 
 		this.$q.dialog({
         title: 'Confirm Delete',
-        message: `Do you want to delete the ${description.toLowerCase()} “${item.title}”?`,
+        message: `Willst du das/die ${description.toLowerCase()} “${item.title}” löschen?`,
 				ok: {
-					label: 'Delete',
+					label: 'Löschen',
 					color: 'negative',
 					flat: true
 				},
-        cancel: 'Cancel',
+        cancel: 'Abbrechen',
       }).onOk(async () => {
         try {
 					await this.delete(item);
-          notifySuccess(`${description} deleted.`);
+          notifySuccess(`${description} wurde gelöscht.`);
           this.items.splice(this.items.indexOf(item), 1);
 				} catch (e) {
 					notifyError(e);
