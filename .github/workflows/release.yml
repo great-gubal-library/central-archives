@@ -1,0 +1,28 @@
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions
+on:
+  push:
+#    branches:
+#      - 'releases/**'
+jobs:
+  docker-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: SSH-Compose
+        # You may pin to the exact commit or the version.
+        # uses: matiasnu/github-action-ssh-docker-compose@d2e13949c92cb86a69ea36e83ebaa01d6d01de9c
+        uses: matiasnu/github-action-ssh-docker-compose@v2.0.1
+        with:
+          # Private SSH key used for logging into remote system.
+          ssh_private_key: ${{ secrets.LIGHT_ARCHIVES_PRIVATESSHKEY }}
+          # Remote host name.
+          ssh_host: ${{ secrets.LIGHT_ARCHIVES_HOST }}
+          # Remote SSH port.
+          ssh_port: 22
+          # Remote user name.
+          ssh_user: ${{ secrets.LIGHT_ARCHIVES_USERNAME }}
+          # Prefix for docker-compose containers.
+          docker_compose_prefix: server
+          # Docker compose file to use
+          docker_compose_filename: ./server/docker-commpose.yaml
