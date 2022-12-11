@@ -9,31 +9,31 @@
       @drop.capture="onDrop"
     >
 			<q-stepper class="upload-dialog__stepper" v-model="step" color="primary" animated>
-				<q-step :name="Step.SELECT_IMAGE" title="Select image" icon="folder_open" active-icon="folder_open" :done="step !== Step.SELECT_IMAGE">
+				<q-step :name="Step.SELECT_IMAGE" title="Bild auswählen" icon="folder_open" active-icon="folder_open" :done="step !== Step.SELECT_IMAGE">
 					<step-select-image
             :banner="banner"
 						v-model="fileModel"
 					/>
 				</q-step>
-				<q-step :name="Step.THUMBNAIL" title="Customize thumbnail" icon="image" active-icon="image" :done="step === Step.IMAGE_DETAILS">
+				<q-step :name="Step.THUMBNAIL" title="Thumbnail anpassen" icon="image" active-icon="image" :done="step === Step.IMAGE_DETAILS">
 					<step-thumbnail
 						:image="fileModel.image"
 						v-model="thumbModel"
 					/>
 				</q-step>
-				<q-step :name="Step.IMAGE_DETAILS" title="Fill in details" icon="edit" active-icon="edit">
+				<q-step :name="Step.IMAGE_DETAILS" title="Details ausfüllen" icon="edit" active-icon="edit">
 					<step-image-details
 						v-model="detailsModel"
 					/>
 				</q-step>
 			</q-stepper>
 			<q-card-actions align="right">
-				<q-btn flat color="secondary" label="Cancel" @click="onCancelClick" />
+				<q-btn flat color="secondary" label="Abbrechen" @click="onCancelClick" />
 				<q-btn
 					v-if="canGoBack"
 					flat
 					color="secondary"
-					label="< Back"
+					label="< Zurück"
 					@click="goBack"
 				/>
 				<q-btn
@@ -41,7 +41,7 @@
 					:disable="!canGoNext"
 					flat
 					color="primary"
-					label="Next >"
+					label="Weiter >"
 					@click="goNext"
 				/>
 				<q-btn v-else :disable="!canUpload" color="primary" label="Upload" @click="onUploadClick" />
@@ -54,7 +54,7 @@
         @dragleave="onDragLeave"
         @drop.capture="onDrop"
       >
-        Drop file here
+        Datei hier einfügen
       </div>
       <q-inner-loading :showing="uploading" />
     </q-card>
@@ -248,7 +248,7 @@ export default class UploadDialog extends Vue.with(Props) {
 
       const imageDto = await this.upload();
 
-      notifySuccess('Image uploaded.');
+      notifySuccess('Bild hochgeladen.');
       this.$emit('ok', imageDto);
       this.hide();
     } catch (e) {
