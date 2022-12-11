@@ -1,6 +1,6 @@
 <template>
   <q-form class="step-image-details">
-    Category:
+    Kategorie:
     <q-option-group
       v-model="modelValue.category"
       :options="categories"
@@ -12,9 +12,9 @@
     <q-slide-transition>
       <section v-if="modelValue.category !== ImageCategory.UNLISTED">
         <q-input
-          label="Title *"
+          label="Titel *"
           v-model="modelValue.title"
-          :rules="[$rules.required('This field is required.')]"
+          :rules="[$rules.required('Dieses Feld ist erforderlich.')]"
           @update:model-value="onModelUpdated"
         />
         <div class="step-image-details__description-label">Description:</div>
@@ -42,7 +42,7 @@
           <template v-slot:no-option>
             <q-item>
               <q-item-section class="text-grey">
-                No results
+                Keine Ergebnisse
               </q-item-section>
             </q-item>
           </template>
@@ -53,13 +53,13 @@
       class="step-image-details__credits"
       label="Credits *"
       v-model="modelValue.credits"
-      :rules="[$rules.required('This field is required.')]"
+      :rules="[$rules.required('Dieses Feld ist erforderlich.')]"
       @update:model-value="onModelUpdated"
     />
     <div class="text-caption">
-      Please credit the creator of the image. If you made it yourself, write
-      “made by me” or similar. Do not post copyrighted content without
-      permission.
+      Bitte nenne den Künstler des Bildes. Solltest du es selbst gemacht haben, schreibe
+      "Von mir erstellt" oder etwas ähnliches. Poste keine urheberrechtlich geschützten Inhalte
+      ohne Erlaubnis.
     </div>
   </q-form>
 </template>
@@ -95,10 +95,10 @@ export default class StepImageDetails extends Vue.with(Props) {
 
   categoryHints = {
     [ImageCategory.UNLISTED]:
-      'Your image will not be shown on the front page and in galleries.',
-    [ImageCategory.ARTWORK]: 'Your image will be shown in artwork galleries.',
+      'Dein Bild wird nicht auf dem Dashbord und in den Galerien angezeigt.',
+    [ImageCategory.ARTWORK]: 'Dein Bild wird in der Künstlergalerie angezeigt.',
     [ImageCategory.SCREENSHOT]:
-      'Your image will be shown in screenshot galleries.',
+      'Dein Bild wird in der Screenshotgalerie angezeigt.',
   };
 
   created() {
