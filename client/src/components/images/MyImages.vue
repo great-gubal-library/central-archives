@@ -9,7 +9,7 @@
 			</transition>
 		</template>
 		<p v-else>
-			You have no images.
+			Du hast keine Bilder.
 		</p>
 	</div>
 </template>
