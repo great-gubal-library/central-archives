@@ -11,8 +11,8 @@
 								<html-viewer :content="image.description" />
 							</div>
 							<div class="text-right">
-								<q-btn flat color="primary" label="Edit" @click="onEditClick" />
-								<q-btn flat color="negative" label="Delete" @click="onDeleteClick" />
+								<q-btn flat color="primary" label="Bearbeiten" @click="onEditClick" />
+								<q-btn flat color="negative" label="Löschen" @click="onDeleteClick" />
 							</div>
 						</div>
 					</div>
