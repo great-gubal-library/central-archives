@@ -43,7 +43,7 @@
             </template>
             <template v-else>
               <q-icon size="28px" name="account_circle" />
-              <span>A Stranger</span>
+              <span>Ein Fremder</span>
             </template>
           </div>
         </div>
@@ -135,10 +135,10 @@
     <q-footer elevated>
       <q-toolbar>
         <div class="layout__footer text-body justify-center text-center">
-          Final Fantasy XIV is © 2010&ndash;2022 Square Enix Co., Ltd. All rights reserved. Chaos Archives is a fansite
-          and is not affiliated with Square Enix.<br />
-          All text and images on this site are © 2021–2022 by their respective owners.
-          <router-link to="/privacy-statement">(Privacy statement)</router-link>
+          Final Fantasy XIV © 2010&ndash;2023 Square Enix Co., Ltd. Alle Rechte vorbehalten. PROJEKTNAME ist eine Fanseite
+          und steht nicht mit Square Enix in Verbindung.<br />
+          Alle Rechte der Texte und Bilder © 2022–2023 liegen bei ihren jeweiligen Eigentümern.
+          <router-link to="/privacy-statement">(Datenschutzerklärung)</router-link>
         </div>
       </q-toolbar>
     </q-footer>
@@ -168,21 +168,21 @@ export default class MainLayout extends Vue {
   readonly DRAWER_WIDTH = 250;
 
   readonly navbarLinks = [
-    { label: 'About', to: '/about' },
-    { label: 'Rules', to: '/rules' },
+    { label: 'Über uns', to: '/about' },
+    { label: 'Regeln', to: '/rules' },
     { label: 'Wiki', to: '/wiki/Chaos_Archives_Wiki' },
-    { label: 'Contact', to: '/contact' },
+    { label: 'Kontakt', to: '/contact' },
   ];
 
   readonly siteLinks = [
-    { label: 'Profiles', to: '/profiles' },
-    { label: 'Stories', to: '/stories' },
-    { label: 'Artwork', to: '/gallery/artwork' },
-    { label: 'Screenshots', to: '/gallery/screenshot' },
-    { label: 'Noticeboard', to: '/noticeboard' },
-    { label: 'Free Companies', to: '/free-companies' },
-    { label: 'Communities', to: '/communities' },
+    { label: 'Charaktere', to: '/profiles' },
     { label: 'Venues', to: '/venues' },
+    { label: 'Anschlagbrett', to: '/noticeboard' },
+    { label: 'Communities', to: '/communities' },
+    { label: 'Freie Gesellschaften', to: '/free-companies' },
+    { label: 'Screenshots', to: '/gallery/screenshot' },
+    { label: 'Kunstwerke', to: '/gallery/artwork' },
+    { label: 'Geschichten', to: '/stories' },
   ];
 
   leftDrawerOpen = false;
