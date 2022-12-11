@@ -2,7 +2,7 @@
   <q-dialog ref="dialog" no-backdrop-dismiss @hide="onDialogHide">
     <q-card class="post-upload-dialog">
 			<h5>Bild hochgeladen!</h5>
-			Dein Bild wurde erfolgreich hochgeladen. Klicke hier um den URL in der Zwischenablage zu speichern.
+			Dein Bild wurde erfolgreich hochgeladen. Klicke hier um die URL in der Zwischenablage zu speichern.
 			<q-img :src="image.url" fit="contain" @click="copyUrl" />
 			<q-input
 			label="Image URL"
