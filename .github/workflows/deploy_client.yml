@@ -6,7 +6,7 @@ on:
     branches:
       - 'releases/**'
 jobs:
-  docker-compose:
+  build-and-deploy-client:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
