@@ -1,15 +1,15 @@
 <template>
   <q-page class="page-event-calendar">
-    <h2>Event Calendar</h2>
+    <h2>Eventkalender</h2>
 		<div class="page-event-calendar__subtitle">{{ yearMonth }}</div>
 		<section class="page-event-calendar__navbar">
 			<div>
-				<q-btn color="secondary" label="< Previous" :to="prevLink" />&nbsp;
-				<q-btn color="secondary" label="Today" to="/event-calendar" />&nbsp;
-				<q-btn color="secondary" label="Next >" :to="nextLink" />
+				<q-btn color="secondary" label="< Vorherige" :to="prevLink" />&nbsp;
+				<q-btn color="secondary" label="Heute" to="/event-calendar" />&nbsp;
+				<q-btn color="secondary" label="Nächste >" :to="nextLink" />
 			</div>
 			<div>
-				<q-btn v-if="$store.getters.role && $store.getters.role !== Role.UNVERIFIED" color="primary" label="New Event" icon="add" to="/create-event" />
+				<q-btn v-if="$store.getters.role && $store.getters.role !== Role.UNVERIFIED" color="primary" label="Neues Event" icon="add" to="/create-event" />
 			</div>
 		</section>
     <q-calendar-month
