@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-noticeboard">
-		<h2>Noticeboard</h2>
+		<h2>Anschlagbrett</h2>
 		<noticeboard-item-list :noticeboard-items="noticeboardItems" />
 	</q-page>	
 </template>
