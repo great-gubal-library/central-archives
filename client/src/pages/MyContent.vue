@@ -1,14 +1,14 @@
 <template>
   <q-page class="page-my-content">
-    <h2>My Content</h2>
+    <h2>Meine Inhalte</h2>
     <div class="page-my-content__subtitle">for {{ $store.getters.character?.name }}</div>
 
     <q-tabs v-model="tab" dense align="justify" narrow-indicator>
       <q-tab :name="PageType.EVENT" label="Events" />
-      <q-tab :name="PageType.STORY" label="Stories" />
-      <q-tab :name="PageType.NOTICEBOARD_ITEM" label="Noticeboard" />
+      <q-tab :name="PageType.STORY" label="Geschichten" />
+      <q-tab :name="PageType.NOTICEBOARD_ITEM" label="Anschlagbrett" />
       <q-tab v-if="$store.getters.isTrusted" :name="PageType.WIKI_PAGE" label="Wiki" />
-      <q-tab :name="PageType.IMAGE" label="Images" />
+      <q-tab :name="PageType.IMAGE" label="Bilder" />
     </q-tabs>
 
     <q-separator />
@@ -16,11 +16,11 @@
     <q-tab-panels v-model="tab">
       <q-tab-panel :name="PageType.EVENT">
         <my-content-list :type="PageType.EVENT" :items="content.events" />
-        <q-btn class="page-my-content__add" color="primary" icon="add" label="New event" to="/create-event" />
+        <q-btn class="page-my-content__add" color="primary" icon="add" label="Neues Event" to="/create-event" />
       </q-tab-panel>
       <q-tab-panel :name="PageType.STORY">
         <my-content-list :type="PageType.STORY" :items="content.stories" />
-        <q-btn class="page-my-content__add" color="primary" icon="add" label="New story" to="/create-story" />
+        <q-btn class="page-my-content__add" color="primary" icon="add" label="Neue Geschichte" to="/create-story" />
       </q-tab-panel>
       <q-tab-panel :name="PageType.NOTICEBOARD_ITEM">
         <my-content-list :type="PageType.NOTICEBOARD_ITEM" :items="content.noticeboardItems" />
@@ -38,7 +38,7 @@
           class="page-my-content__add"
           color="primary"
           icon="add"
-          label="New wiki page"
+          label="Neue Wikiseite"
           to="/create-wiki-page"
         />
       </q-tab-panel>
