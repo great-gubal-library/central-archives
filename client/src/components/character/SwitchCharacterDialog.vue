@@ -1,7 +1,7 @@
 <template>
   <q-dialog ref="dialog" no-backdrop-dismiss @hide="onDialogHide">
     <q-card class="switch-character-dialog">
-      <h5>Switch Character</h5>
+      <h5>Charakter wechseln</h5>
       <character-name-list
         class="switch-character-dialog__character-list"
         :profiles="characters"
@@ -12,17 +12,17 @@
       />
       <q-slide-transition>
         <q-form v-if="adding" @submit="onAddCharacterSubmit">
-          <h6>Add character to account</h6>
+          <h6>Neuen Charakter zu diesem Account hinzufügen</h6>
           <character-finder-field v-model="newCharacter" />
           <q-card-actions align="right" class="switch-character-dialog__add-form-buttons">
-            <q-btn flat color="secondary" label="Cancel" @click="onAddCharacterCancelClick" />
-            <q-btn color="primary" label="Add character" type="submit" :disable="newCharacter.lodestoneId === -1" />
+            <q-btn flat color="secondary" label="Abbrechen" @click="onAddCharacterCancelClick" />
+            <q-btn color="primary" label="Charakter hinzufügen" type="submit" :disable="newCharacter.lodestoneId === -1" />
           </q-card-actions>
         </q-form>
       </q-slide-transition>
       <q-card-actions class="switch-character-dialog__buttons" v-if="!adding">
-        <q-btn flat color="secondary" icon="add" label="Add Character" @click="onAddCharacterClick" />
-        <q-btn flat color="primary" label="Close" @click="onCloseClick" />
+        <q-btn flat color="secondary" icon="add" label="Neuen Charakter hinzufügen" @click="onAddCharacterClick" />
+        <q-btn flat color="primary" label="Schließen" @click="onCloseClick" />
       </q-card-actions>
       <q-inner-loading :showing="submitting" />
     </q-card>
@@ -93,7 +93,7 @@ export default class SwitchCharacterDialog extends Vue {
     this.hide();
 
     if (character.id !== oldCharacterId) {
-      notifySuccess(`${character.name} is now your active character.`);
+      notifySuccess(`${character.name} ist jetzt dein aktiver Charakter.`);
     }
   }
 
@@ -111,7 +111,7 @@ export default class SwitchCharacterDialog extends Vue {
     try {
       const character = await this.$api.characters.addAccountCharacter({ lodestoneId: this.newCharacter.lodestoneId });
 
-      notifySuccess('Character added successfully. You will need to verify it.');
+      notifySuccess('Charakter erfolgreich hinzugefügt. Du wirst ihn verifizieren müssen.');
       this.$store.commit('addCharacter', character);
       this.onCharacterSelect(character);
     } catch (e) {
