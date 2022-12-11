@@ -3,12 +3,12 @@
     <banner-view :banner="community.banner" />
     <h2 class="community-profile__header-title">{{ community.name }}</h2>
     <character-details-box class="community-profile__infobox">
-      <character-detail label="Founded" :value="$display.formatDate(community.foundedAt)" v-if="community.foundedAt" />
-      <character-detail label="Website" :value="community.website" :link="community.website" v-if="community.website" />
+      <character-detail label="Gründung" :value="$display.formatDate(community.foundedAt)" v-if="community.foundedAt" />
+      <character-detail label="Webseite" :value="community.website" :link="community.website" v-if="community.website" />
       <character-detail label="Discord" :value="community.discord" :link="community.discord" v-if="community.discord" />
-      <character-detail label="Goal" :value="community.goal" v-if="community.goal" />
+      <character-detail label="Ziel" :value="community.goal" v-if="community.goal" />
       <character-detail label="Status" :value="community.status" v-if="community.status" />
-      <character-detail label="Recruiting officers" :value="community.recruitingOfficers" v-if="community.recruitingOfficers" />
+      <character-detail label="Rekrutierer" :value="community.recruitingOfficers" v-if="community.recruitingOfficers" />
     </character-details-box>
     <template v-if="community.description">
       <html-viewer class="community-profile__description" :content="community.description" />
@@ -23,7 +23,7 @@
     >
     </iframe>
     <template v-if="!community.description && !community.carrdProfile">
-      No description.
+      Keine Beschreibung.
     </template>
     <template v-if="community.tags.length > 0">
       <hr />
