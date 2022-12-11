@@ -25,66 +25,66 @@ class Display {
 	readonly races = races;
 
 	readonly storyTypes: { [k: string]: string } = {
-		[StoryType.PUBLISHED_WORK]: 'Published Work',
-		[StoryType.DIARY]: 'Diary',
-		[StoryType.POETRY]: 'Poetry',
-		[StoryType.IC_HAPPENING]: 'IC Happening',
-		[StoryType.CONCEPTUAL]: 'Conceptual',
+		[StoryType.PUBLISHED_WORK]: 'Publizierte Werk',
+		[StoryType.DIARY]: 'Tagebuch',
+		[StoryType.POETRY]: 'Poesi',
+		[StoryType.IC_HAPPENING]: 'IC-Geschehen',
+		[StoryType.CONCEPTUAL]: 'konzeptionell',
 	};
 
 	readonly noticeboardLocations = noticeboardLocations;
 
 	readonly imageCategories: { [k: string]: string } = {
-		[ImageCategory.UNLISTED]: 'Unlisted',
-		[ImageCategory.ARTWORK]: 'Artwork',
+		[ImageCategory.UNLISTED]: 'Ungelistet',
+		[ImageCategory.ARTWORK]: 'Kunstwerk',
 		[ImageCategory.SCREENSHOT]: 'Screenshot',
 	};
 
 	readonly venueLocations: { [k: string]: string } = {
-		[VenueLocation.OPEN_WORLD]: 'Open world',
-		[VenueLocation.HOUSE]: 'House',
-		[VenueLocation.APARTMENT]: 'Apartment',
+		[VenueLocation.OPEN_WORLD]: 'Offene Welt',
+		[VenueLocation.HOUSE]: 'Haus',
+		[VenueLocation.APARTMENT]: 'Wohnung',
 	};
 
 	readonly housingAreas: { [k: string]: string } = {
-		[HousingArea.MIST]: 'Mist',
-		[HousingArea.LAVENDER_BEDS]: 'Lavender Beds',
-		[HousingArea.GOBLET]: 'The Goblet',
+		[HousingArea.MIST]: 'Dorf des Nebels',
+		[HousingArea.LAVENDER_BEDS]: 'Lavendelbeete',
+		[HousingArea.GOBLET]: 'Kelchkuppe',
 		[HousingArea.SHIROGANE]: 'Shirogane',
 		[HousingArea.EMPYREUM]: 'Empyreum',
 	};
 
 	readonly pageTypes: { [k: string]: string } = {
-		[PageType.PROFILE]: 'Profile',
-		[PageType.FREE_COMPANY]: 'Free Company',
+		[PageType.PROFILE]: 'Profil',
+		[PageType.FREE_COMPANY]: 'Freie Gesellschaft',
 		[PageType.COMMUNITY]: 'Community',
 		[PageType.VENUE]: 'Venue',
 		[PageType.EVENT]: 'Event',
-		[PageType.STORY]: 'Story',
+		[PageType.STORY]: 'Geschichte',
 		[PageType.NOTICEBOARD_ITEM]: 'Noticeboard item',
-		[PageType.WIKI_PAGE]: 'Wiki page',
-		[PageType.IMAGE]: 'Image',
+		[PageType.WIKI_PAGE]: 'Wikibeitrag',
+		[PageType.IMAGE]: 'Bild',
 	};
 
 	readonly pageTypesPlural: { [k: string]: string } = {
-		[PageType.PROFILE]: 'Profiles',
-		[PageType.FREE_COMPANY]: 'Free Companies',
+		[PageType.PROFILE]: 'Profile',
+		[PageType.FREE_COMPANY]: 'Freie Gesellschaften',
 		[PageType.COMMUNITY]: 'Communities',
 		[PageType.VENUE]: 'Venues',
 		[PageType.EVENT]: 'Events',
-		[PageType.STORY]: 'Stories',
+		[PageType.STORY]: 'Geschichten',
 		[PageType.NOTICEBOARD_ITEM]: 'Noticeboard items',
-		[PageType.WIKI_PAGE]: 'Wiki pages',
-		[PageType.IMAGE]: 'Images',
+		[PageType.WIKI_PAGE]: 'Wikibeiträge',
+		[PageType.IMAGE]: 'Bilder',
 	};
 
 	relativeTime(timestamp: number) {
 		const result = DateTime.fromMillis(timestamp).toRelative({
 			locale: 'en',
-			unit: [ 'years', 'months', 'days', 'hours', 'minutes' ]
+			unit: [ 'Jahre', 'Monate', 'Tage', 'Stunden', 'Minuten' ]
 		}) || '';
 
-		return result === '0 minutes ago' ? 'Just now' : result;
+		return result === 'vor 0 Minuten' ? 'Gerade' : result;
 	}
 
 	formatDate(date: number|string) {
