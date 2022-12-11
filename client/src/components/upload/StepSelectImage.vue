@@ -2,7 +2,7 @@
   <div class="step-select-image">
     <q-file
       filled
-      label="Select image"
+      label="Bild auswählen"
       :model-value="modelValue.file"
       @update:model-value="selectFile"
     >
@@ -18,10 +18,10 @@
       </template>
     </q-file>
     <section v-if="!modelValue.file" class="text-caption">
-			You can also drop a file here from your file manager.
+			Du kannst deine Bilddatei auch per Drag & Drop hier hochladen.
 		</section>
     <template v-if="modelValue.image">
-      <h6>Preview</h6>
+      <h6>Vorschau</h6>
       <img :src="modelValue.image.src" />
     </template>
     <q-banner
@@ -51,14 +51,14 @@
             :val="ImageFormat.PNG"
             :label="
               modelValue.originalFormat === ImageFormat.PNG
-                ? 'Keep as PNG'
+                ? 'Als PNG beibehalten'
                 : 'Convert to PNG'
             "
           />
           <q-radio
             v-model="modelValue.format"
             :val="ImageFormat.JPEG"
-            label="Convert to JPEG"
+            label="Zu JPEG umwandeln"
           />
         </div>
         <div
@@ -70,9 +70,9 @@
         </div>
       </section>
       <section v-if="canChooseFormat" class="text-caption">
-        PNG files are larger, but exactly preserve the original pixels. JPEG
-        files are smaller and faster to download, but may have slight, often
-        unnoticeable differences from the original.
+        PNG Dateien sind größer, erhalten aber die ursprünglichen Pixel. JPEG
+        Dateien sind kleiner und schneller herunterzuladen, können aber leichte, oftmals
+        unauffällige Abweichungen zum Original aufweisen.
       </section>
     </template>
   </div>
