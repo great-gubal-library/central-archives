@@ -2,30 +2,30 @@
   <q-page>
     <news-timeline :news="content.news" />
     <section>
-      <h5><router-link to="/stories">New stories</router-link></h5>
+      <h5><router-link to="/stories">Neue Geschichten</router-link></h5>
       <story-list :stories="content.newStories" />
     </section>
     <section v-if="content.newArtwork.length > 0">
-      <h5><router-link to="/gallery/artwork">New artwork</router-link></h5>
+      <h5><router-link to="/gallery/artwork">Neue Kunstwerke</router-link></h5>
       <thumb-gallery :images="content.newArtwork" />
     </section>
     <section>
-      <h5><router-link to="/noticeboard">Noticeboard</router-link></h5>
+      <h5><router-link to="/noticeboard">Anschlagbrett</router-link></h5>
       <noticeboard-item-list :noticeboardItems="content.newNoticeboardItems" />
     </section>
     <section class="page-index__profiles-and-fcs">
       <section>
-        <h5><router-link to="/profiles">New profiles</router-link></h5>
+        <h5><router-link to="/profiles">Neue Charaktere</router-link></h5>
         <character-name-list :profiles="content.newProfiles" />
       </section>
       <section v-if="content.newFreeCompanies.length > 0">
-        <h5><router-link to="/free-companies">New Free Companies</router-link></h5>
+        <h5><router-link to="/free-companies">Neue Freie Gesellschaften</router-link></h5>
         <free-company-name-list :free-companies="content.newFreeCompanies" />
       </section>
     </section>
     <section class="page-index__profiles-and-fcs">
       <section>
-        <h5><router-link to="/venues">New Venues</router-link></h5>
+        <h5><router-link to="/venues">New venues</router-link></h5>
         <venue-list :venues="content.newVenues" />
       </section>
       <section>
@@ -34,7 +34,7 @@
       </section>
     </section>
     <section v-if="content.newScreenshots.length > 0">
-      <h5><router-link to="/gallery/screenshot">New screenshots</router-link></h5>
+      <h5><router-link to="/gallery/screenshot">Neue Screenshots</router-link></h5>
       <thumb-gallery :images="content.newScreenshots" />
     </section>
   </q-page>
