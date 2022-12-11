@@ -1,25 +1,25 @@
 <template>
   <q-card class="event-announcement-editor">
     <q-card-section>
-      <div>Post a Discord announcement at the following time before the event:</div>
+      <div>Poste eine Ankündigung auf Discord zur folgenden Zeit vor deinem Event:</div>
       <div>
         <q-option-group :options="options" :model-value="minutesBefore" @update:model-value="setMinutesBefore" />
       </div>
-      <q-input v-model.number="modelValue.minutesBefore" v-if="custom" label="Custom value" style="width: 200px">
-        <template v-slot:after><span style="font-size: 16px">minutes</span></template>
+      <q-input v-model.number="modelValue.minutesBefore" v-if="custom" label="Benutzerdefiniert" style="width: 200px">
+        <template v-slot:after><span style="font-size: 16px">Minuten</span></template>
       </q-input>
-      <div>Content of the announcement post:</div>
+      <div>Inhalt der Ankündigung:</div>
       <q-input
 				input-style="height: 300px"
         type="textarea"
         outlined
         v-model="modelValue.content"
-        :rules="[ $rules.required('This field is required.') ]"
+        :rules="[ $rules.required('Dieses Feld ist erforderlich.') ]"
       />
-      <div class="text-caption">Discord markup (Markdown) can be used. To mention a role, put an @ before it: <strong>@rp-social</strong>. To mention a user, use their Discord username <strong>@UserName#1234</strong> or server nickname in curly brackets: <strong>@{Alice Kingsleigh [Omega]}</strong>.</div>
+      <div class="text-caption">Discordformatierung (Markdown) kann genutzt werden. Um eine Rolle zu erwähnen, füge ein @-Symbol vor die Rolle: <strong>@eventankündigungen</strong>. Um einen Nutzer zu erwähnen, verwende deren Discordname <strong>@UserName#1234</strong> oder Nickname auf dem Server in geschweiften Klammern: <strong>@{Sharshulam Noykin [Shiva]}</strong>.</div>
     </q-card-section>
     <q-card-actions align="right">
-      <q-btn flat color="negative" label="Remove" @click="onRemoveClick" />
+      <q-btn flat color="negative" label="Ankündigung entfernen" @click="onRemoveClick" />
     </q-card-actions>
   </q-card>
 </template>
@@ -40,15 +40,15 @@ class Props {
 export default class EventAnnouncementEditor extends Vue.with(Props) {
   readonly options = [
     {
-      label: '15 minutes',
+      label: '15 Minuten',
       value: 15,
     },
     {
-      label: '1 hour',
+      label: '1 Stunde',
       value: 60,
     },
     {
-      label: 'Custom',
+      label: 'Benutzerdefiniert',
       value: -1,
     },
   ];
