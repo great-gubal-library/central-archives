@@ -3,8 +3,8 @@
 		<a class="thumb-link" :href="modelValue.url" target="_blank"><img :src="modelValue.thumbUrl" /></a>
 		<step-image-details v-model="imageDetails" />
 		<div class="image-editor__button-bar">
-			<q-btn v-if="!fullPage" flat color="secondary" label="Cancel" @click="onCancelClick" />
-			<q-btn :flat="!fullPage" :disable="!isValid" color="primary" label="Save Changes" @click="onSaveClick" />
+			<q-btn v-if="!fullPage" flat color="secondary" label="Abbrechen" @click="onCancelClick" />
+			<q-btn :flat="!fullPage" :disable="!isValid" color="primary" label="Änderungen speichern" @click="onSaveClick" />
 		</div>
 		<q-inner-loading :showing="saving" />
 	</div>
