@@ -56,10 +56,10 @@ const TINYMCE_OPTIONS = {
   toolbar_mode: 'wrap',
   toolbar_persist: true,
   menu: {
-    edit: { title: 'Bearbeitung', items: 'undo redo | cut copy paste | selectall | searchreplace' },
+    edit: { title: 'Bearbeiten', items: 'undo redo | cut copy paste | selectall | searchreplace' },
     view: { title: 'Ansicht', items: 'code | visualaid visualchars visualblocks' },
     insert: { title: 'Einfügen', items: 'image gallery upload link | charmap nonbreaking hr | hidedetails' },
-    format: { title: 'Formatierung', items: 'bold italic underline strikethrough superscript subscript | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat' },
+    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat' },
     list: { title: 'Listen', items: 'outdent indent' },
     table: { title: 'Tabelle', items: 'inserttable | cell row column | tableprops deletetable' },
     help: { title: 'Hilfe', items: 'help' }
