@@ -1,12 +1,12 @@
 <template>
   <q-page class="page-event">
 		<section v-if="event.mine" class="edit-bar">
-			<router-link :to="`/edit-event/${eventId}`">Edit event</router-link>
-			<q-btn flat color="negative" label="Delete event" @click="onDeleteClick" />
+			<router-link :to="`/edit-event/${eventId}`">Event bearbeiten</router-link>
+			<q-btn flat color="negative" label="Event löschen" @click="onDeleteClick" />
 		</section>
 		<event-view v-if="event.title" :event="event" />
 		<template v-if="event.images && event.images.length > 0">
-			<h3>Images related to this event</h3>
+			<h3>Bilder zu diesem Event</h3>
 			<thumb-gallery :images="event.images" />
 		</template>
 		<report-violation-section :pageType="PageType.EVENT" :pageId="eventId" />
@@ -44,7 +44,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 		return { event, eventId: id };
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			notifyError('Event not found.');
+			notifyError('Event konnte nicht gefunden werden.');
 			void $router.replace('/');
 		} else {
 			notifyError(e);
@@ -106,19 +106,19 @@ export default class PageEvent extends Vue {
 
 	onDeleteClick() {
 		this.$q.dialog({
-        title: 'Confirm Delete',
-        message: `Do you want to delete the event “${this.event.title}”?`,
+        title: 'Löschbestätigung',
+        message: `Möchtest du “${this.event.title}” wirklich löschen?`,
 				ok: {
-					label: 'Delete',
+					label: 'Löschen',
 					color: 'negative',
 					flat: true
 				},
-        cancel: 'Cancel',
+        cancel: 'Abbrechen',
       }).onOk(async () => {
         try {
 					await this.$api.events.deleteEvent(this.eventId);
 
-					notifySuccess('Event deleted.');
+					notifySuccess('Event gelöscht.');
 					void this.$router.replace('/');
 					void this.$store.dispatch('updateEvents');
 				} catch (e) {
