@@ -2,8 +2,8 @@
   <q-page class="page-wiki">
     <template v-if="wikiPage.id">
       <section v-if="canEdit || canDelete" class="edit-bar">
-        <router-link v-if="canEdit" :to="`/edit-wiki-page/${wikiPage.id}`">Edit wiki page</router-link>
-        <q-btn v-if="canDelete" flat color="negative" label="Delete wiki page" @click="onDeleteClick" />
+        <router-link v-if="canEdit" :to="`/edit-wiki-page/${wikiPage.id}`">Wikibeitrag bearbeiten</router-link>
+        <q-btn v-if="canDelete" flat color="negative" label="Wikibeitrag löschen" @click="onDeleteClick" />
       </section>
       <wiki-page-view :wikiPage="wikiPage" />
       <report-violation-section :pageType="PageType.WIKI_PAGE" :pageId="wikiPage.id" />
@@ -40,11 +40,11 @@ async function load(params: RouteParams): Promise<WikiPageDto> {
 
   try {
     const wikiPage = await $api.wiki.getWikiPageByTitle(title);
-    document.title = `${wikiPage.title} — Chaos Archives`;
+    document.title = `${wikiPage.title} — Elpisgarten`;
     return wikiPage;
   } catch (e) {
     if (errors.getStatusCode(e) === 404) {
-      notifyError('Wiki page not found.');
+      notifyError('Wikibeitrag konnte nicht gefunden werden.');
       void $router.replace('/');
     } else {
       notifyError(e);
@@ -91,20 +91,20 @@ export default class PageWiki extends Vue {
   onDeleteClick() {
     this.$q
       .dialog({
-        title: 'Confirm Delete',
-        message: `Do you want to delete the wiki page “${this.wikiPage.title}”?`,
+        title: 'Löschbestätigung',
+        message: `Möchtest du “${this.wikiPage.title}” wirklich löschen?`,
         ok: {
-          label: 'Delete',
+          label: 'Löschen',
           color: 'negative',
           flat: true,
         },
-        cancel: 'Cancel',
+        cancel: 'Abbrechen',
       })
       .onOk(async () => {
         try {
           await this.$api.wiki.deleteWikiPage(this.wikiPage.id!);
 
-          notifySuccess('Wiki page deleted.');
+          notifySuccess('Wikibeitrag gelöscht.');
           void this.$router.replace('/');
         } catch (e) {
           notifyError(e);
