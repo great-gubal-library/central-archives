@@ -4,14 +4,14 @@
       <template v-if="verifyingAccount">
         <h2>Accountverifizierung</h2>
         <p>
-          Bevor du deine eigenen Inhalte auf PROJEKTNAME verfassen kannst, musst du deine E-Mail-Adresse und
+          Bevor du deine eigenen Inhalte auf <strong>Elpisgarten</strong> verfassen kannst, musst du deine E-Mail-Adresse und
           die Eigentümerschaft deines Charakters bestätigen.
         </p>
       </template>
       <template v-else>
         <h2>Charakterverifizierung</h2>
         <p>
-          Bevor du Inhalte auf PROJEKTNAME unter diesem Charakter verfassen kannst, musst du deine Eigentümerschaft bestätigen.
+          Bevor du Inhalte auf <strong>Elpisgarten</strong> unter diesem Charakter verfassen kannst, musst du deine Eigentümerschaft bestätigen.
         </p>
       </template>
     </template>
@@ -19,7 +19,7 @@
       <h2>Verifizierung abgeschlossen</h2>
       <p>
         Glückwunsch! Deine E-Mail-Adresse und dein Charakter wurden erfolgreich bestätigt. Du kannst nun dein
-        Charakterprofil ausfüllen und Inhalte auf PROJEKTNAME veröffentlichen.
+        Charakterprofil ausfüllen und Inhalte auf <strong>Elpisgarten</strong> veröffentlichen.
       </p>
     </template>
     <q-card class="page-verify__card" v-if="verifyingAccount">
@@ -203,7 +203,7 @@ export default class PageVerify extends Vue {
 
     try {
       await this.$api.user.resendConfirmationEmail();
-      notifySuccess('E-Mail versendet. Überprüfe Posteingang.');
+      notifySuccess('E-Mail versendet. Überprüfe deinen Posteingang.');
     } catch (e) {
       notifyError(e);
     } finally {
