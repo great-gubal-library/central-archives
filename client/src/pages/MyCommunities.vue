@@ -1,12 +1,12 @@
 <template>
   <q-page class="page-my-communities">
-    <h2>My Communities</h2>
+    <h2>Meine Communities</h2>
     <section>
       <div class="page-my-communities__subtitle">for {{ $store.getters.character?.name }}</div>
     </section>
     <my-community-list :communities="communities" @deleted="onCommunityDeleted" />
     <div class="page-my-communities__button-bar">
-      <q-btn color="primary" icon="add" label="New community" to="create-community" />
+      <q-btn color="primary" icon="add" label="Neue Community" to="create-community" />
     </div>
   </q-page>
 </template>
