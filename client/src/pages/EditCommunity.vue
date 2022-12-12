@@ -1,7 +1,7 @@
 <template>
   <q-page class="page-edit-community">
     <template v-if="loaded">
-      <h2>{{ communityId ? 'Edit Community' : 'Create Community' }}</h2>
+      <h2>{{ communityId ? 'Community bearbeiten' : 'Community erstellen' }}</h2>
       <q-form ref="form" @submit="onSubmit">
         <template v-if="!preview">
           <section class="page-edit-community__form-controls">
@@ -9,16 +9,16 @@
               v-model="community.name"
               label="Name *"
               :rules="[
-                $rules.required('This field is required.'),
+                $rules.required('Dieses Feld ist erforderlich.'),
               ]"
             />
             <q-input
               class="page-edit-community__founded-at"
-              label="Founded"
+              label="Gründung"
               :model-value="foundedAtDisplay"
               readonly
               :rules="[
-                $rules.required('This field is required.'),
+                $rules.required('Dieses Feld ist erforderlich.'),
               ]"
             >
               <template v-slot:append>
@@ -29,7 +29,7 @@
                   <q-popup-proxy ref="qDateProxy" cover transition-show="scale" transition-hide="scale">
                     <q-date v-model="community.foundedAt" mask="YYYY-MM-DD">
                       <div class="row items-center justify-end">
-                        <q-btn v-close-popup label="Close" color="primary" flat />
+                        <q-btn v-close-popup label="Schließen" color="primary" flat />
                       </div>
                     </q-date>
                   </q-popup-proxy>
@@ -38,21 +38,21 @@
             </q-input>
             <q-input
               v-model="community.website"
-              label="Website"
+              label="Webseite"
               :rules="[
-                $rules.url('Please enter a link.'),
+                $rules.url('Bitte hinterlasse einen Link.'),
               ]"
             />
             <q-input
               v-model="community.discord"
-              label="Discord link"
+              label="Discordeinladung"
               :rules="[
-                $rules.url('Please enter a link.'),
+                $rules.url('Bitte hinterlasse einen Link.'),
               ]"
             />
             <q-input
               v-model="community.goal"
-              label="Goal"
+              label="Ziel"
             />
             <q-input
               v-model="community.status"
@@ -60,17 +60,17 @@
             />
             <q-input
               v-model="community.recruitingOfficers"
-              label="Recruiting officers"
+              label="Rekrutierer"
             />
-            <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in goal, status, and recruiting officers.</div>
+            <div class="text-caption">Du kannst [[Wikilinks]], z.B. [[Charaktername]], in <strong>Ziel</strong>, <strong>Status</strong> und <strong>Rekrutierer</strong> nutzen.</div>
             <q-input
               :model-value="tags"
               @update:model-value="onTagsChanged"
-              label="Tags (comma-separated)"
+              label="Schlagworte (mit Komma getrennt)"
             />
           </section>
           <banner-edit-section v-model="community.banner" />
-          <h6>Description</h6>
+          <h6>Beschreibung</h6>
           <html-editor v-model="community.description" />
           <carrd-edit-section
             class="page-edit-community__form-controls"
@@ -88,8 +88,8 @@
             toggle-color="secondary"
           />
           <div class="page-edit-community__revert-submit">
-            <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
-            <q-btn label="Save changes" type="submit" color="primary" />
+            <q-btn label="Zurücksetzen" color="secondary" @click="revert" />&nbsp;
+            <q-btn label="Änderungen speichern" type="submit" color="primary" />
           </div>
         </div>
         <q-inner-loading :showing="saving" />
@@ -101,16 +101,15 @@
       <q-card>
         <q-card-section class="row items-center">
           <span class="q-ml-sm"
-            >Do you want to revert your unsaved changes to the last saved
-            version?</span
+            >Möchtest du die ungespeicherten Änderungen auf die letzte gespeicherte Version zurücksetzen?</span
           >
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Keep editing" color="secondary" v-close-popup />
+          <q-btn flat label="Bearbeitung fortsetzen" color="secondary" v-close-popup />
           <q-btn
             flat
-            label="Revert"
+            label="Zurücksetzen"
             color="negative"
             v-close-popup
             @click="onConfirmRevert"
@@ -152,7 +151,7 @@ async function load(params: RouteParams): Promise<CommunityDto|null> {
 		return await $api.communities.getCommunity(id, $store.getters.characterId!);
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			notifyError('Community not found.');
+			notifyError('Community konnte nicht gefunden werden.');
 		} else {
 			notifyError(errors.getMessage(e));
 		}
@@ -263,8 +262,8 @@ export default class PageEditCommunity extends Vue {
 
       this.communityBackup = new CommunityDto(this.community);
 
-      notifySuccess('Community saved.', {
-        label: 'View',
+      notifySuccess('Community gespeichert.', {
+        label: 'Anschauen',
         color: 'white',
         handler: () => this.viewCommunity(),
       });
