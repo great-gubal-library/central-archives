@@ -2,8 +2,8 @@
   <q-page class="page-story">
 		<template v-if="story.id">
 			<section v-if="story.mine" class="edit-bar">
-				<router-link :to="`/edit-story/${story.id}`">Edit story</router-link>
-				<q-btn flat color="negative" label="Delete story" @click="onDeleteClick" />
+				<router-link :to="`/edit-story/${story.id}`">Geschichte bearbeiten</router-link>
+				<q-btn flat color="negative" label="Geschichte löschen" @click="onDeleteClick" />
 			</section>
 			<story-view :story="story" />
     	<report-violation-section :pageType="PageType.STORY" :pageId="story.id" />
@@ -36,11 +36,11 @@ async function load(params: RouteParams): Promise<StoryDto> {
 
 	try {
 		const story = await $api.stories.getStory(id);
-		document.title = `${story.title} — Chaos Archives`;
+		document.title = `${story.title} — Elpisgarten`;
 		return story;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			notifyError('Story not found.');
+			notifyError('Geschichte konnte nicht gefunden werden.');
 			void $router.replace('/');
 		} else {
 			notifyError(e);
@@ -76,19 +76,19 @@ export default class PageStory extends Vue {
 
 	onDeleteClick() {
 		this.$q.dialog({
-        title: 'Confirm Delete',
-        message: `Do you want to delete the story “${this.story.title}”?`,
+        title: 'Löschbestätigung',
+        message: `Möchtest du “${this.story.title}” wirklich löschen?`,
 				ok: {
-					label: 'Delete',
+					label: 'Löschen',
 					color: 'negative',
 					flat: true
 				},
-        cancel: 'Cancel',
+        cancel: 'Abbrechen',
       }).onOk(async () => {
         try {
 					await this.$api.stories.deleteStory(this.story.id!);
 
-					notifySuccess('Story deleted.');
+					notifySuccess('Geschichte gelöscht.');
 					void this.$router.replace('/');
 				} catch (e) {
 					notifyError(e);
