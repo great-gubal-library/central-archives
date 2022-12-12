@@ -6,7 +6,7 @@
       </div>
 
       <div class="text-h2" style="opacity:.4">
-        Oops. Alles leer hier...
+        Huch... wo sind die ganzen Blumen hin?
       </div>
 
       <q-btn
@@ -15,7 +15,7 @@
         text-color="blue"
         unelevated
         to="/"
-        label="Go Home"
+        label="Zurückkehren"
         no-caps
       />
     </div>
