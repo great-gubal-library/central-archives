@@ -1,79 +1,77 @@
 <template>
   <q-page class="page-edit-character">
     <template v-if="character.id">
-      <h2>Edit Profile</h2>
+      <h2>Profil bearbeiten</h2>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
           <q-banner v-if="!character.active" class="bg-dark text-white">
-            This character has been renamed in-game, and you have created a new profile for the renamed character. This
-            character is now inactive. You can no longer update their info from Lodestone.
+            Dieser Charakter wurde im Spiel umbenannt, daher musst du ein neues Profil für den umbenannten Charakter anlegen. Dieser
+            Charakter ist nun inaktiv. Du kannst die Informationen nicht mehr via Lodestone aktualisieren.
           </q-banner>
           <div class="page-edit-character__lodestone-info">
             <section class="page-edit-character__form-controls">
               <q-input :model-value="character.name" label="Name" readonly />
-              <q-input :model-value="$display.races[character.race]" label="Race" readonly />
+              <q-input :model-value="$display.races[character.race]" label="Volk" readonly />
             </section>
             <section v-if="character.active">
               <q-btn outline color="secondary" @click="onRefreshClick" style="max-width: 140px"
-                ><i class="material-icons q-icon">refresh</i>Refresh from Lodestone</q-btn
+                ><i class="material-icons q-icon">refresh</i>Aktualisiere via Lodestone</q-btn
               >
             </section>
           </div>
           <section class="page-edit-character__form-controls">
             <p></p>
-            <p>All fields are optional.</p>
-            <h6>Profile display</h6>
+            <p>Alle Felder sind optional.</p>
+            <h6>Profilanzeige</h6>
             <q-field class="page-edit-character__checkbox" borderless>
               <template v-slot:control>
-                <q-checkbox v-model="character.showAvatar" label="Show avatar" />
+                <q-checkbox v-model="character.showAvatar" label="Zeige Avatar" />
               </template>
             </q-field>
-            <div class="text-caption">Displays the character avatar to the left of their name.</div>
+            <div class="text-caption">Zeigt den Avatar des Charakters links vom Namen an.</div>
             <q-field class="page-edit-character__checkbox" borderless>
               <template v-slot:control>
-                <q-checkbox v-model="character.showInfoboxes" label="Show infoboxes" />
+                <q-checkbox v-model="character.showInfoboxes" label="Zeige Infoboxen" />
               </template>
             </q-field>
             <div class="text-caption">
-              Displays character information in infoboxes. If unchecked, all infoboxes will be hidden from the public
-              profile page.
+              Zeigt die Charakterinformationen in Infoboxen an. Wenn nicht ausgewählt, werden alle Infoboxen von der öffentlichen Profilseite
+              verborgen.
             </div>
             <q-field class="page-edit-character__checkbox" borderless>
               <template v-slot:control>
-                <q-checkbox v-model="character.combinedDescription" label="Merge appearance and background" />
+                <q-checkbox v-model="character.combinedDescription" label="Erscheinungsbild und Hintergrund verbinden" />
               </template>
             </q-field>
             <div class="text-caption">
-              Uses a single "Description" field with no header instead of separate "Outward appearance" and "Background"
-              with headers.
+              Wandelt die Felder für Erscheinung und Hintergrund in ein einziges Beschreibungsfeld ohne Überschrift um.
             </div>
           </section>
           <banner-edit-section v-model="character.banner" />
           <section class="page-edit-character__form-controls">
-            <h6>Names</h6>
-            <q-input v-model="character.title" label="Title" />
-            <q-input v-model="character.nickname" label="Nickname" />
-            <h6>Biography</h6>
-            <q-input v-model="character.occupation" label="Occupation" />
-            <q-input v-model="character.age" class="page-edit-character__age" label="Age" />
-            <q-input v-model="character.pronouns" class="page-edit-character__pronouns" label="Pronouns" :maxlength="SharedConstants.MAX_PRONOUNS_LENGTH" />
-            <q-input v-model="character.birthplace" label="Birthplace" />
-            <q-input v-model="character.residence" label="Residence" />
-            <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in all biography fields.</div>
-            <h6>Personality</h6>
-            <q-input v-model="character.friends" label="Friends" />
-            <q-input v-model="character.relatives" label="Relatives" />
-            <q-input v-model="character.enemies" label="Rivals/Enemies" />
-            <q-input v-model="character.loves" label="Loves" />
-            <q-input v-model="character.hates" label="Hates" />
+            <h6>Namen & Titel</h6>
+            <q-input v-model="character.title" label="Titel" />
+            <q-input v-model="character.nickname" label="Spitzname" />
+            <h6>Biografie</h6>
+            <q-input v-model="character.occupation" label="Profession" />
+            <q-input v-model="character.age" class="page-edit-character__age" label="Alter" />
+            <q-input v-model="character.birthplace" label="Geburtsort" />
+            <q-input v-model="character.residence" label="Wohnort" />
+            <div class="text-caption">Du kannst [[Wikilinks]], z.B. [[Charaktername]], in allen obigen Feldern nutzen.</div>
+            <h6>Persönlichkeit</h6>
+            <q-input v-model="character.friends" label="Freunde" />
+            <q-input v-model="character.relatives" label="Verwandte" />
+            <q-input v-model="character.enemies" label="Rivalen/Feinde" />
+            <q-input v-model="character.loves" label="Liebt" />
+            <q-input v-model="character.hates" label="Hasst" />
             <q-input v-model="character.motto" label="Motto" />
             <q-input v-model="character.motivation" label="Motivation" />
-            <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name|my friend]], in all personality fields.</div>
+            <div class="text-caption">Du kannst [[Wikilinks]], z.B. [[Charaktername|mein bester Freund]], in allen obigen Feldern nutzen.</div>
           </section>
-          <h6>{{ character.combinedDescription ? 'Description' : 'Outward appearance' }}</h6>
+          <h6>{{ character.combinedDescription ? 'Beschreibung' : 'Erscheinungsbild' }}</h6>
           <html-editor v-model="character.appearance" />
           <template v-if="!character.combinedDescription">
-            <h6>Background</h6>
+            <h6>Hintergrund</h6>
             <html-editor v-model="character.background" />
           </template>
           <carrd-edit-section
@@ -88,8 +86,8 @@
         <div class="page-edit-character__button-bar">
           <q-btn-toggle v-model="preview" :options="previewOptions" toggle-color="secondary" />
           <div class="page-edit-character__revert-submit">
-            <q-btn label="Revert" color="secondary" @click="onRevertClick" />&nbsp;
-            <q-btn label="Save changes" type="submit" color="primary" />
+            <q-btn label="Zurücksetzen" color="secondary" @click="onRevertClick" />&nbsp;
+            <q-btn label="Änderungen speichern" type="submit" color="primary" />
           </div>
         </div>
         <q-inner-loading :showing="saving" />
@@ -100,12 +98,12 @@
     <q-dialog v-model="confirmRevert" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <span class="q-ml-sm">Do you want to revert your unsaved changes to the last saved version?</span>
+          <span class="q-ml-sm">Möchtest du die ungespeicherten Änderungen auf die letzte gespeicherte Version zurücksetzen?</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Keep editing" color="secondary" v-close-popup />
-          <q-btn flat label="Revert" color="negative" v-close-popup @click="onConfirmRevert" />
+          <q-btn flat label="Bearbeitung fortsetzen" color="secondary" v-close-popup />
+          <q-btn flat label="Zurücksetzen" color="negative" v-close-popup @click="onConfirmRevert" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -158,8 +156,8 @@ export default class PageEditCharacter extends Vue {
   readonly SharedConstants = SharedConstants;
 
   readonly previewOptions = [
-    { label: 'Edit', value: false },
-    { label: 'Preview', value: true },
+    { label: 'Bearbeitung', value: false },
+    { label: 'Vorschau', value: true },
   ];
 
   character = new CharacterProfileDto();
@@ -206,8 +204,8 @@ export default class PageEditCharacter extends Vue {
       await this.$api.characters.saveCharacter(this.character);
       this.characterBackup = new CharacterProfileDto(this.character);
 
-      notifySuccess('Character saved.', {
-        label: 'View',
+      notifySuccess('Charakter gespeichert.', {
+        label: 'Anschauen',
         color: 'white',
         handler: () => this.viewCharacter(),
       });
