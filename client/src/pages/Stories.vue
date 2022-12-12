@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-stories">
-    <h2>Stories</h2>
+    <h2>Geschichten</h2>
     <q-table
       class="page-stories__table striped-list paged-link-table"
       :columns="columns"
@@ -16,12 +16,12 @@
 						<q-input
 							class="page-stories__filter-search"
 							v-model="searchQuery"
-							label="Search"
+							label="Suche"
 							debounce="200"
 							@update:model-value="refresh"
 						/>
 						<label class="page-stories__filter-type">
-							<span class="page-stories__type-label">Type:</span>
+							<span class="page-stories__type-label">Typ:</span>
 							<q-select
 								class="page-stories__type-select"
 								v-model="type"
@@ -34,7 +34,7 @@
 						</label>
 					</q-form>
 					<label class="page-stories__filter-tag">
-						<span class="page-stories__tag-label">Tag:</span>
+						<span class="page-stories__tag-label">Schlagworte:</span>
 						<q-select
 							class="page-stories__tag-select"
 							v-model="tag"
@@ -126,7 +126,7 @@ export default class PageStories extends Vue {
 
   get typeOptions() {
     return [
-      { label: '(All)', value: null },
+      { label: '(Alle)', value: null },
       ...Object.values(StoryType).map((type) => ({ value: type, label: this.$display.storyTypes[type] })),
     ];
   }
@@ -136,7 +136,7 @@ export default class PageStories extends Vue {
       {
         name: 'title',
         field: 'title',
-        label: 'Title',
+        label: 'Titel',
         align: 'left',
         sortable: false,
       },
@@ -144,7 +144,7 @@ export default class PageStories extends Vue {
         name: 'createdAt',
         field: 'createdAt',
         format: (val: number) => this.$display.relativeTime(val),
-        label: 'Posted',
+        label: 'Verfasst',
         align: 'left',
         classes: 'page-stories__column-createdAt',
         sortable: false,
@@ -155,7 +155,7 @@ export default class PageStories extends Vue {
   setContent(stories: PagingResultDto<StorySummaryDto>, tags: string[]) {
 		this.allTagOptions = [
 			{
-				label: '(All)',
+				label: '(Alle)',
 				value: '',
 			},
 			...tags.map(tag => ({
