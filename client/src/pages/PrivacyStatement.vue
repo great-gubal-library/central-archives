@@ -1,6 +1,6 @@
 <template>
   <q-page>
-		<h2>Privacy Statement</h2>
+		<h2>Datenschutzerklärung</h2>
 		<div v-html="privacyStatement"></div>
 	</q-page>	
 </template>
