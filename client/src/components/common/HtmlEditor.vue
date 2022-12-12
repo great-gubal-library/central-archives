@@ -10,7 +10,7 @@
      @click.capture="onClickCapture"
     @update:model-value="onInput"
   />
-    <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]] or [[Character Name|my teacher]].</div>
+    <div class="text-caption">Du kannst [[Wikilinks]], z.B. [[Charaktername]] oder [[Charaktername|Mein Lehrer]], nutzen.</div>
   </div>
 </template>
 
@@ -56,13 +56,13 @@ const TINYMCE_OPTIONS = {
   toolbar_mode: 'wrap',
   toolbar_persist: true,
   menu: {
-    edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
-    view: { title: 'View', items: 'code | visualaid visualchars visualblocks' },
-    insert: { title: 'Insert', items: 'image gallery upload link | charmap nonbreaking hr | hidedetails' },
+    edit: { title: 'Bearbeiten', items: 'undo redo | cut copy paste | selectall | searchreplace' },
+    view: { title: 'Ansicht', items: 'code | visualaid visualchars visualblocks' },
+    insert: { title: 'Einfügen', items: 'image gallery upload link | charmap nonbreaking hr | hidedetails' },
     format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat' },
-    list: { title: 'List', items: 'outdent indent' },
-    table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' },
-    help: { title: 'Help', items: 'help' }
+    list: { title: 'Listen', items: 'outdent indent' },
+    table: { title: 'Tabelle', items: 'inserttable | cell row column | tableprops deletetable' },
+    help: { title: 'Hilfe', items: 'help' }
   },
   menubar: 'edit view insert format list table help',
   image_title: true,
@@ -72,19 +72,19 @@ const TINYMCE_OPTIONS = {
   block_formats: 'Paragraph=p; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6',
   font_formats: FONT_OPTION,
   style_formats: [
-    { title: 'Headings', items: [
-      { title: 'Heading 3', format: 'h3' },
-      { title: 'Heading 4', format: 'h4' },
-      { title: 'Heading 5', format: 'h5' },
-      { title: 'Heading 6', format: 'h6' }
+    { title: 'Überschriften', items: [
+      { title: 'Überschrift 3', format: 'h3' },
+      { title: 'Überschrift 4', format: 'h4' },
+      { title: 'Überschrift 5', format: 'h5' },
+      { title: 'Überschrift 6', format: 'h6' }
     ]},
     { title: 'Inline', items: [
-      { title: 'Bold', format: 'bold' },
-      { title: 'Italic', format: 'italic' },
-      { title: 'Underline', format: 'underline' },
-      { title: 'Strikethrough', format: 'strikethrough' },
-      { title: 'Superscript', format: 'superscript' },
-      { title: 'Subscript', format: 'subscript' },
+      { title: 'Fett', format: 'bold' },
+      { title: 'Kursiv', format: 'italic' },
+      { title: 'Unterstrichen', format: 'underline' },
+      { title: 'Durchgestrichen', format: 'strikethrough' },
+      { title: 'Hochgestellt', format: 'superscript' },
+      { title: 'Tiefgestellt', format: 'subscript' },
       { title: 'Code', format: 'code' }
     ]},
     { title: 'Blocks', items: [
@@ -93,11 +93,11 @@ const TINYMCE_OPTIONS = {
       { title: 'Div', format: 'div' },
       { title: 'Pre', format: 'pre' }
     ]},
-    { title: 'Align', items: [
-      { title: 'Left', format: 'alignleft' },
-      { title: 'Center', format: 'aligncenter' },
-      { title: 'Right', format: 'alignright' },
-      { title: 'Justify', format: 'alignjustify' }
+    { title: 'Ausrichtung', items: [
+      { title: 'Links', format: 'alignleft' },
+      { title: 'Zentriert', format: 'aligncenter' },
+      { title: 'Rechts', format: 'alignright' },
+      { title: 'Blocksatz', format: 'alignjustify' }
     ]}
   ],
   fontsize_formats: '8pt 10.5pt 12pt 14pt 18pt 24pt 36pt',
@@ -143,44 +143,44 @@ export default class HtmlEditor extends Vue.with(Props) {
       fixed_toolbar_container: `#${this.toolbarId}`,
       setup: (editor: TinyMceEditor) => {
         editor.ui.registry.addMenuItem('outdent', {
-          text: 'Decrease indent',
+          text: 'Einzug verkleinern',
           icon: 'outdent',
           onAction: () => editor.execCommand('Outdent')
         });
 
         editor.ui.registry.addMenuItem('indent', {
-          text: 'Increase indent',
+          text: 'Einzug vergrößern',
           icon: 'indent',
           onAction: () => editor.execCommand('Indent')
         });
 
         editor.ui.registry.addMenuItem('hidedetails', {
-          text: 'Hide details',
+          text: 'Details verbergen',
           icon: 'chevron-right',
           onAction: () => this.onHideDetailsClick(editor)
         });
 
         if (this.allowImages) {
           editor.ui.registry.addMenuItem('gallery', {
-            text: 'Image from my gallery...',
+            text: 'Bild aus meiner Galerie...',
             icon: 'gallery',
             onAction: () => this.onGalleryClick(editor)
           });
 
           editor.ui.registry.addButton('gallery', {
-            tooltip: 'Insert image from my gallery',
+            tooltip: 'Bild aus meiner Galerie einfügen',
             icon: 'gallery',
             onAction: () => this.onGalleryClick(editor)
           });
 
           editor.ui.registry.addMenuItem('upload', {
-            text: 'Upload image...',
+            text: 'Bild hochladen...',
             icon: 'upload',
             onAction: () => this.onUploadClick(editor)
           });
 
           editor.ui.registry.addButton('upload', {
-            tooltip: 'Upload image',
+            tooltip: 'Bild hochladen',
             icon: 'upload',
             onAction: () => this.onUploadClick(editor)
           });
