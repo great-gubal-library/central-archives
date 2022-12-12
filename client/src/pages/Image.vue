@@ -1,14 +1,14 @@
 <template>
   <q-page class="page-image">
 		<section v-if="image.mine" class="edit-bar">
-			<router-link :to="`/edit-image/${image.id}`">Edit image</router-link>
-			<q-btn flat color="negative" label="Delete image" @click="onDeleteClick" />
+			<router-link :to="`/edit-image/${image.id}`">Bild bearbeiten</router-link>
+			<q-btn flat color="negative" label="Bild löschen" @click="onDeleteClick" />
 		</section>
 		<h2 class="regular-header-font">{{image.title}}</h2>
 		<template v-if="image.id">
 			<section class="text-caption page-image__subtitle row">
 				<div class="page-image__posted-by">
-				Posted by <router-link :to="authorLink">{{ image.author }}</router-link> on {{ date }}
+				Hochgeladen von <router-link :to="authorLink">{{ image.author }}</router-link> am {{ date }}
 				</div>
 				<div class="page-image__category">
 					<router-link :to="`/gallery/${image.category}`">{{ $display.imageCategories[image.category] }}</router-link>
@@ -55,7 +55,7 @@ async function load(params: RouteParams): Promise<ImageDto> {
 
 	try {
 		const image = await $api.images.getImage(id);
-		document.title = `${image.title} — Chaos Archives`;
+		document.title = `${image.title} — Elpisgarten`;
 		return image;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
@@ -129,7 +129,7 @@ export default class PageImage extends Vue {
 				image: this.image
 			}
 		}).onOk(() => {
-			notifySuccess('Image deleted.');
+			notifySuccess('Bild gelöscht.');
 			void this.$router.push('/');
 		});
 	}
