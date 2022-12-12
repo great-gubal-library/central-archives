@@ -8,12 +8,12 @@
         row-key="id"
         wrap-cells
     >
-      <template v-slot:no-data>No pending applicants.</template>
+      <template v-slot:no-data>Keine ausstehenden Bewerber.</template>
       <template v-slot:header-cell-avatar="props">
         <q-th :props="props" auto-width />
       </template>
       <template v-slot:header-cell-actions="props">
-        <q-th :props="props" auto-width>Actions</q-th>
+        <q-th :props="props" auto-width>Aktionen</q-th>
       </template>
       <template v-slot:body-cell-avatar="props">
         <q-td :props="props">
@@ -83,7 +83,7 @@ export default class CommunityApplicantEditor extends Vue.with(Props) {
       {
         name: 'actions',
         field: 'status',
-        label: 'Actions',
+        label: 'Aktionen',
         align: 'center',
         sortable: false,
       },
@@ -97,7 +97,7 @@ export default class CommunityApplicantEditor extends Vue.with(Props) {
   async onApproveClick(member: CommunityMemberDto) {
     try {
       await this.$api.communities.approveMember(this.communityId, member.characterId);
-      notifySuccess(`Membership request for ${member.name} approved.`);
+      notifySuccess(`Mitgliedschaftsantrag von ${member.name} angenommen.`);
       this.$emit('updated');
     } catch (e) {
       notifyError(e);
@@ -108,18 +108,18 @@ export default class CommunityApplicantEditor extends Vue.with(Props) {
     this.$q
       .dialog({
         title: 'Confirm Reject',
-        message: `Do you want to reject ${member.name}'s membership application?`,
+        message: `Möchtest du den Mitgliedschaftsantrag von ${member.name} ablehnen?`,
         ok: {
-          label: 'Reject',
+          label: 'Ablehnen',
           color: 'negative',
           flat: true,
         },
-        cancel: 'Cancel',
+        cancel: 'Abbrechen',
       })
       .onOk(async () => {
         try {
           await this.$api.communities.rejectMember(this.communityId, member.characterId);
-          notifySuccess(`Membership request for ${member.name} rejected.`);
+          notifySuccess(`Mitgliedschaftsantrag von ${member.name} abgelehnt.`);
           this.$emit('updated', member);
         } catch (e) {
           notifyError(e);
