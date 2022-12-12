@@ -3,11 +3,11 @@
     <h2>Anmeldung</h2>
     <q-form v-if="!signedUp" @submit="onSubmit">
       <p>
-        Willkommen bei PROJEKTNAME. Bitte füll das nachfolgende Formular aus um deinen
+        Willkommen bei <strong>Elpisgarten</strong>. Bitte fülle das nachfolgende Formular aus um deinen
         Account zu erstellen und deinen ersten Charakter zu registrieren.
       </p>
       <section class="page-signup__form-controls">
-        <h6>Account information</h6>
+        <h6>Accountinformation</h6>
         <q-input
           v-model="email"
           label="E-Mail-Adresse"
