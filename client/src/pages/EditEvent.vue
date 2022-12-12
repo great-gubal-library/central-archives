@@ -1,32 +1,32 @@
 <template>
   <q-page class="page-edit-event">
     <template v-if="loaded">
-      <h2>{{ eventId ? 'Edit Event' : 'Create New Event' }}</h2>
+      <h2>{{ eventId ? 'Event bearbeiten' : 'Neues Event erstellen' }}</h2>
       <q-form ref="form" @submit="onSubmit">
         <template v-if="!preview">
           <section class="page-edit-event__form-controls">
             <q-input
               v-model="event.title"
-              label="Title *"
+              label="Titel *"
               :rules="[
-                $rules.required('This field is required.'),
+                $rules.required('Dieses Feld ist erforderlich.'),
               ]"
             />
             <q-date-time-picker
               v-if="startDateTimeVisible"
-              label="Start date/time *"
+              label="Datum/Uhrzeit Beginn *"
               v-model="startDateTime"
               :display-value="startDateTimeDisplay"
               mode="datetime"
               first-day-of-week="1"
               format24h
               :rules="[
-                $rules.required('This field is required.'),
+                $rules.required('Dieses Feld ist erforderlich.'),
               ]"
             />
             <q-date-time-picker
               v-if="endDateTimeVisible"
-              label="End date/time"
+              label="Datum/Uhrzeit Ende"
               v-model="endDateTime"
               :display-value="endDateTimeDisplay"
               mode="datetime"
@@ -36,20 +36,20 @@
             />
             <q-checkbox
               v-model="event.recurring"
-              label="This is a recurring event"
+              label="Dies ist ein wiederkehrendes Event."
             />
             <template v-for="(location, index) in event.locations" :key="index">
-              <h6>Location</h6>
+              <h6>Standort</h6>
               <q-input
                 v-model="location.name"
                 label="Name *"
                 :rules="[
-                  $rules.required('This field is required.'),
+                  $rules.required('Dieses Feld ist erforderlich.'),
                 ]"
               />          
               <q-input
                 v-model="location.address"
-                label="Address"
+                label="Adresse"
               >
                 <template v-slot:prepend>
                   <q-icon name="place" />
@@ -57,16 +57,16 @@
               </q-input>
               <world-select
                 v-model="location.server"
-                label="World"
+                label="Welt"
                 :rules="[
-                  $rules.required('This field is required.'),
+                  $rules.required('Dieses Feld ist erforderlich.'),
                 ]"
               />
               <q-input
                 v-model="location.link"
-                label="Location link"
+                label="Standortlink"
                 :rules="[
-                  $rules.url('Please enter a valid URL.'),
+                  $rules.url('Bitte hinterlasse eine gültige URL.'),
                 ]"
               >
                 <template v-slot:prepend>
@@ -75,14 +75,14 @@
               </q-input>
               <q-input
                 v-model="location.tags"
-                label="Location tags"
+                label="Standort Schlagworte"
               />
               <div v-if="event.locations.length > 1" class="page-edit-event__button-bar" style="justify-content: end">
-                <q-btn flat color="negative" icon="remove" label="Remove this location" @click="removeLocation(index)" />
+                <q-btn flat color="negative" icon="remove" label="Diesen Standort entfernen" @click="removeLocation(index)" />
               </div>
           </template>
           <div class="page-edit-event__button-bar" style="justify-content: end">
-            <q-btn flat color="secondary" icon="add" label="Add location" @click="addLocation" />
+            <q-btn flat color="secondary" icon="add" label="Standort hinzufügen" @click="addLocation" />
           </div>
           </section>
           <banner-edit-section v-model="event.banner" />
@@ -94,20 +94,20 @@
             v-model="event.link"
             label="Link"
             :rules="[
-              $rules.url('Please enter a link.'),
+              $rules.url('Bitte hinterlasse einen Link.'),
             ]"
           />
           <q-input
             v-model="event.contact"
-            label="Contact"
+            label="Kontakt"
           />
-          <h6>Announcements</h6>
+          <h6>Ankündigungen</h6>
           <p>You can let the Chaos Archives Discord bot announce the event on the <tt>#rp-event-announcements</tt> channel some time before the event starts. You can add as many announcements as you like.</p>
           <template v-for="(_, index) in event.announcements" :key="index">
             <event-announcement-editor v-model="event.announcements[index]" @remove="removeAnnouncement(index)" />
           </template>
           <div class="page-edit-event__button-bar" style="justify-content: end">
-            <q-btn flat color="secondary" icon="add" label="Add announcement" @click="addAnnouncement" />
+            <q-btn flat color="secondary" icon="add" label="Ankündigung hinzufügen" @click="addAnnouncement" />
           </div>
         </template>
         <section v-else class="page-edit-event__preview">
@@ -120,8 +120,8 @@
             toggle-color="secondary"
           />
           <div class="page-edit-event__revert-submit">
-            <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
-            <q-btn label="Save changes" type="submit" color="primary" />
+            <q-btn label="Zurücksetzen" color="secondary" @click="revert" />&nbsp;
+            <q-btn label="Änderungen speichern" type="submit" color="primary" />
           </div>
         </div>
         <q-inner-loading :showing="saving" />
@@ -133,16 +133,15 @@
       <q-card>
         <q-card-section class="row items-center">
           <span class="q-ml-sm"
-            >Do you want to revert your unsaved changes to the last saved
-            version?</span
-          >
+            >Möchtest du die ungespeicherten Änderungen auf die letzte gespeicherte Version zurücksetzen?
+            </span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Keep editing" color="secondary" v-close-popup />
+          <q-btn flat label="Bearbeitung fortsetzen" color="secondary" v-close-popup />
           <q-btn
             flat
-            label="Revert"
+            label="Zurücksetzen"
             color="negative"
             v-close-popup
             @click="onConfirmRevert"
@@ -191,11 +190,11 @@ async function load(params: RouteParams): Promise<{event: EventEditDto, eventId:
 
 	try {
 		const event = await $api.events.getEventForEdit(id);
-		document.title = `${event.title} — Chaos Archives`;
+		document.title = `${event.title} — Elpisgarten`;
 		return { event, eventId: id };
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			notifyError('Event not found.');
+			notifyError('Event konnte nicht gefunden werden.');
 			void $router.replace('/');
 		} else {
 			notifyError(errors.getMessage(e));
@@ -249,8 +248,8 @@ async function load(params: RouteParams): Promise<{event: EventEditDto, eventId:
 })
 export default class PageEditEvent extends Vue {
   readonly previewOptions = [
-    { label: 'Edit', value: false },
-    { label: 'Preview', value: true },
+    { label: 'Bearbeitung', value: false },
+    { label: 'Vorschau', value: true },
   ];
 
 	eventId: number|null = null;
@@ -407,8 +406,8 @@ export default class PageEditEvent extends Vue {
 
       this.eventBackup = new EventEditDto(this.event);
 
-      notifySuccess('Event saved.', {
-        label: 'View',
+      notifySuccess('Event gespeichert.', {
+        label: 'Anschauen',
         color: 'white',
         handler: () => this.viewEvent(),
       });
