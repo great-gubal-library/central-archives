@@ -64,7 +64,7 @@ export default class PostUploadDialog extends Vue.with(Props) {
 			await copyToClipboard(this.image.url);
 			notifySuccess('URL in Zwischenablage gespeichert.');
 		} catch (e) {
-			notifyError('Fehler beim speichern in die Zwischenablage.');
+			notifyError('Fehler beim Speichern in die Zwischenablage.');
 		}
 	}
 }
