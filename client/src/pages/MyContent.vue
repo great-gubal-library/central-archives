@@ -28,7 +28,7 @@
           class="page-my-content__add"
           color="primary"
           icon="add"
-          label="New noticeboard item"
+          label="Neuer Aushang"
           to="/create-noticeboard-item"
         />
       </q-tab-panel>
@@ -38,13 +38,13 @@
           class="page-my-content__add"
           color="primary"
           icon="add"
-          label="Neue Wikiseite"
+          label="Neuer Wikibeitrag"
           to="/create-wiki-page"
         />
       </q-tab-panel>
       <q-tab-panel :name="PageType.IMAGE">
         <my-images :images="content.images" />
-        <q-btn class="page-my-content__add" color="primary" icon="upload" label="Upload image" @click="uploadImage" />
+        <q-btn class="page-my-content__add" color="primary" icon="upload" label="Bild hochladen" @click="uploadImage" />
       </q-tab-panel>
     </q-tab-panels>
   </q-page>
