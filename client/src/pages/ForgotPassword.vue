@@ -6,7 +6,7 @@
       class="page-forgot-password__form"
       @submit="onSubmit"
     >
-      <p>Solltest du dein Passwort vergessen haben, kannst du die E-Mail-Adresse angeben welche du für deine Registrierung verwendet hast. Wir werden dir einen Link zum zurücksetzen deines Passworts schicken.</p>
+      <p>Solltest du dein Passwort vergessen haben, kannst du die E-Mail-Adresse angeben welche du für deine Registrierung verwendet hast. Wir werden dir einen Wiederherstellungslink zum Zurücksetzen deines Passworts schicken.</p>
       <section>
         <q-input
           v-model="email"
@@ -22,20 +22,20 @@
         </q-input>
       </section>
       <div class="page-forgot-password__button-bar">
-        <q-btn label="Wiederherstellungs-Link senden" type="submit" color="primary" />
+        <q-btn label="Wiederherstellungslink senden" type="submit" color="primary" />
       </div>
       <q-inner-loading :showing="loading" />
     </q-form>
     <section v-else class="page-forgot-password__form">
       <p>
-        Der Wiederherstellungs-Link für dein Passwort wurde gesendet. Prüfe den Posteingang von
-        <strong>{{ email }}</strong>. Solltest du auf WEBSEITENAME registriert sein, wirst du eine E-Mail
+        Der Wiederherstellungslink für dein Passwort wurde gesendet. Prüfe den Posteingang von
+        <strong>{{ email }}</strong>. Solltest du auf Elpisgarten registriert sein, wirst du eine E-Mail
          mit weiteren Anweisungen erhalten.
       </p>
       <p>Du kannst diese Seite nun schließen.</p>
       <hr />
       <div class="row">
-        <p class="col">Keinen Link erhalten?</p>
+        <p class="col">Keinen Wiederherstellungslink erhalten?</p>
         <div class="col text-right">
           <q-btn label="Erneut versuchen" color="primary" @click="tryAgain" />
         </div>
@@ -68,7 +68,7 @@ export default class PageLogIn extends Vue {
 
       this.submitted = true;
 
-      notifySuccess('Password reset link sent.');
+      notifySuccess('Wiederherstellungslink gesendet.');
     } catch (e) {
       notifyError(e);
     } finally {
