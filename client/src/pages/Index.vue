@@ -10,7 +10,7 @@
       <thumb-gallery :images="content.newArtwork" />
     </section>
     <section>
-      <h5><router-link to="/noticeboard">Anschlagbrett</router-link></h5>
+      <h5><router-link to="/noticeboard">Neue Aushänge</router-link></h5>
       <noticeboard-item-list :noticeboardItems="content.newNoticeboardItems" />
     </section>
     <section class="page-index__profiles-and-fcs">
@@ -25,11 +25,11 @@
     </section>
     <section class="page-index__profiles-and-fcs">
       <section>
-        <h5><router-link to="/venues">New venues</router-link></h5>
+        <h5><router-link to="/venues">Neue Treffpunkte</router-link></h5>
         <venue-list :venues="content.newVenues" />
       </section>
       <section>
-        <h5><router-link to="/communities">New Communities</router-link></h5>
+        <h5><router-link to="/communities">Neue Communities</router-link></h5>
         <community-list :communities="content.newCommunities" />
       </section>
     </section>
@@ -61,7 +61,7 @@ async function load(): Promise<MainPageContentDto> {
     return await $api.getMainPageContent();
   } catch (e) {
     console.log(e);
-    notifyError('Cannot retrieve main page');
+    notifyError('Hauptseite konnte nicht abgerufen werden');
     throw e;
   }
 }
