@@ -1,11 +1,11 @@
 <template>
   <q-page class="page-my-venues">
-    <h2>My Venues</h2>
+    <h2>Meine Treffpunkte</h2>
     <div class="page-my-venues__subtitle">for {{ $store.getters.character?.name }}</div>
     <venue-list v-if="venues.length > 0" :venues="venues" />
-		<p v-else>You have not yet registered any venues.</p>
+		<p v-else>Du hast noch keine Treffpunkte hinzugefügt.</p>
 		<p class="page-my-venues__button-bar">
-			<q-btn label="New venue" color="primary" icon="add" to="/create-venue" />
+			<q-btn label="Neuer Treffpunkt" color="primary" icon="add" to="/create-venue" />
 		</p>
   </q-page>
 </template>
