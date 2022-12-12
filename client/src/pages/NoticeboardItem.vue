@@ -2,8 +2,8 @@
   <q-page class="page-noticeboardItem">
 		<template v-if="noticeboardItem.id">
 			<section v-if="noticeboardItem.mine" class="edit-bar">
-				<router-link :to="`/edit-noticeboard-item/${noticeboardItem.id}`">Edit noticeboard item</router-link>
-				<q-btn flat color="negative" label="Delete noticeboard item" @click="onDeleteClick" />
+				<router-link :to="`/edit-noticeboard-item/${noticeboardItem.id}`">Aushang bearbeiten</router-link>
+				<q-btn flat color="negative" label="Aushang löschen" @click="onDeleteClick" />
 			</section>
 			<noticeboard-item-view :noticeboard-item="noticeboardItem" />
     	<report-violation-section :pageType="PageType.NOTICEBOARD_ITEM" :pageId="noticeboardItem.id" />
@@ -36,11 +36,11 @@ async function load(params: RouteParams): Promise<NoticeboardItemDto> {
 
 	try {
 		const noticeboardItem = await $api.noticeboard.getNoticeboardItem(id);
-		document.title = `${noticeboardItem.title} — Chaos Archives`;
+		document.title = `${noticeboardItem.title} — Elpisgarten`;
 		return noticeboardItem;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
-			notifyError('Noticeboard item not found.');
+			notifyError('Aushang konnte nicht gefunden werden.');
 			void $router.replace('/');
 		} else {
 			notifyError(e);
@@ -76,19 +76,19 @@ export default class PageNoticeboardItem extends Vue {
 
 	onDeleteClick() {
 		this.$q.dialog({
-        title: 'Confirm Delete',
-        message: `Do you want to delete the noticeboard item “${this.noticeboardItem.title}”?`,
+        title: 'Löschbestätigung',
+        message: `Möchtest du “${this.noticeboardItem.title}” wirklich löschen?`,
 				ok: {
-					label: 'Delete',
+					label: 'Löschen',
 					color: 'negative',
 					flat: true
 				},
-        cancel: 'Cancel',
+        cancel: 'Abbrechen',
       }).onOk(async () => {
         try {
 					await this.$api.noticeboard.deleteNoticeboardItem(this.noticeboardItem.id!);
 
-					notifySuccess('Noticeboard item deleted.');
+					notifySuccess('Aushang gelöscht.');
 					void this.$router.replace('/');
 				} catch (e) {
 					notifyError(e);
