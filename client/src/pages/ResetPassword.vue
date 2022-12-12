@@ -36,7 +36,7 @@
           label="Neues Passwort wiederholen"
           type="password"
           :rules="[
-						$rules.required('This field is required.'),
+						$rules.required('Dieses Feld ist erforderlich.'),
 						$rules.sameAs(password, 'Passwörter stimmen nicht überein.')
 					]"
         >
