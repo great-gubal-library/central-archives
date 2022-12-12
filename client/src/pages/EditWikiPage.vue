@@ -1,14 +1,14 @@
 <template>
   <q-page class="page-edit-wiki-page">
     <template v-if="loaded">
-      <h2>{{ wikiPage.id ? 'Edit Wiki Page' : 'Create New Wiki Page' }}</h2>
+      <h2>{{ wikiPage.id ? 'Wikibeitrag bearbeiten' : 'Neuen Wikibeitrag erstellen' }}</h2>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
           <q-input
             v-model="wikiPage.title"
-            label="Title *"
+            label="Titel *"
             :rules="[
-              $rules.required('This field is required.'),
+              $rules.required('Dieses Feld ist erforderlich.'),
             ]"
           />
           <h6>Content *</h6>
@@ -27,8 +27,8 @@
             toggle-color="secondary"
           />
           <div class="page-edit-wiki-page__revert-submit">
-            <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
-            <q-btn label="Save changes" type="submit" color="primary" />
+            <q-btn label="Zurücksetzen" color="secondary" @click="revert" />&nbsp;
+            <q-btn label="Änderungen speichern" type="submit" color="primary" />
           </div>
         </div>
         <q-inner-loading :showing="saving" />
@@ -40,16 +40,15 @@
       <q-card>
         <q-card-section class="row items-center">
           <span class="q-ml-sm"
-            >Do you want to revert your unsaved changes to the last saved
-            version?</span
+            >Möchtest du die ungespeicherten Änderungen auf die letzte gespeicherte Version zurücksetzen?</span
           >
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Keep editing" color="secondary" v-close-popup />
+          <q-btn flat label="Bearbeitung fortsetzen" color="secondary" v-close-popup />
           <q-btn
             flat
-            label="Revert"
+            label="Zurücksetzen"
             color="negative"
             v-close-popup
             @click="onConfirmRevert"
@@ -87,8 +86,8 @@ import { RouteParams } from 'vue-router';
 })
 export default class PageEditWikiPage extends Vue {
   readonly previewOptions = [
-    { label: 'Edit', value: false },
-    { label: 'Preview', value: true },
+    { label: 'Bearbeitung', value: false },
+    { label: 'Vorschau', value: true },
   ];
 
   readonly typeOptions = Object.values(StoryType).map((storyType) => ({
@@ -155,8 +154,8 @@ export default class PageEditWikiPage extends Vue {
 
       this.wikiPageBackup = new WikiPageDto(this.wikiPage);
 
-      notifySuccess('Wiki page saved.', {
-        label: 'View',
+      notifySuccess('Wikibeitrag gespeichert.', {
+        label: 'Anschauen',
         color: 'white',
         handler: () => this.viewWikiPage(),
       });
