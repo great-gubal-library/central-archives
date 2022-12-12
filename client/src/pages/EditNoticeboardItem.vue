@@ -1,17 +1,17 @@
 <template>
   <q-page class="page-edit-noticeboard-item">
     <template v-if="loaded">
-      <h2>{{ noticeboardItem.id ? 'Edit Noticeboard Item' : 'Create New Noticeboard Item' }}</h2>
+      <h2>{{ noticeboardItem.id ? 'Aushang bearbeiten' : 'Neuen Aushang erstellen' }}</h2>
       <q-form @submit="onSubmit">
         <template v-if="!preview">
           <q-input
             v-model="noticeboardItem.title"
-            label="Title *"
+            label="Titel *"
             :rules="[
-              $rules.required('This field is required.'),
+              $rules.required('Dieses Feld ist erforderlich.'),
             ]"
           />
-          <div class="page-edit-noticeboard-item__type-label"><label>Location:</label></div>
+          <div class="page-edit-noticeboard-item__type-label"><label>Gebiet:</label></div>
           <q-option-group
             v-model="noticeboardItem.location"
             :options="locationOptions"
@@ -19,8 +19,8 @@
           <h6>Content *</h6>
           <html-editor v-model="noticeboardItem.content" />
           <template v-if="!noticeboardItem.id">
-            <q-checkbox v-model="postOnDiscord" label="Post on Discord (on #ic-billboard-and-rumours)" />
-            <div class="text-caption">Only limited formatting — bold, italic, and blockquotes — will carry over to Discord. You will be unable to edit the Discord post after creating the noticeboard item.</div>
+            <q-checkbox v-model="postOnDiscord" label="Auf Discord posten" />
+            <div class="text-caption">Nur eingeschränkte Formatierung — fett, kursiv und Blockzitate — werden von Discord übernommen. Es ist nicht möglich den Discordpost nach der Erstellung des Aushangs zu bearbeiten.</div>
           </template>
         </template>
         <section v-else class="page-edit-noticeboard-item__preview">
@@ -33,8 +33,8 @@
             toggle-color="secondary"
           />
           <div class="page-edit-noticeboard-item__revert-submit">
-            <q-btn label="Revert" color="secondary" @click="revert" />&nbsp;
-            <q-btn label="Save changes" type="submit" color="primary" />
+            <q-btn label="Zurücksetzen" color="secondary" @click="revert" />&nbsp;
+            <q-btn label="Änderungen speichern" type="submit" color="primary" />
           </div>
         </div>
         <q-inner-loading :showing="saving" />
@@ -46,16 +46,15 @@
       <q-card>
         <q-card-section class="row items-center">
           <span class="q-ml-sm"
-            >Do you want to revert your unsaved changes to the last saved
-            version?</span
+            >Möchtest du die ungespeicherten Änderungen auf die letzte gespeicherte Version zurücksetzen?</span
           >
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Keep editing" color="secondary" v-close-popup />
+          <q-btn flat label="Bearbeitung fortsetzen" color="secondary" v-close-popup />
           <q-btn
             flat
-            label="Revert"
+            label="Zurücksetzen"
             color="negative"
             v-close-popup
             @click="onConfirmRevert"
@@ -91,8 +90,8 @@ import { RouteParams } from 'vue-router';
 })
 export default class PageEditNoticeboardItem extends Vue {
   readonly previewOptions = [
-    { label: 'Edit', value: false },
-    { label: 'Preview', value: true },
+    { label: 'Bearbeitung', value: false },
+    { label: 'Vorschau', value: true },
   ];
 
   readonly locationOptions = Object.values(NoticeboardLocation).map((location) => ({
@@ -160,8 +159,8 @@ export default class PageEditNoticeboardItem extends Vue {
 
       this.noticeboardItemBackup = new NoticeboardItemDto(this.noticeboardItem);
 
-      notifySuccess('Noticeboard item saved.', {
-        label: 'View',
+      notifySuccess('Aushang gespeichert.', {
+        label: 'Anschauen',
         color: 'white',
         handler: () => this.viewNoticeboardItem(),
       });
