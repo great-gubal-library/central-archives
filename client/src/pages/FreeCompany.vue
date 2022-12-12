@@ -2,13 +2,13 @@
   <q-page class="page-free-company">
 		<template v-if="fc && fc.id">
 			<free-company-profile :free-company="fc" />
-			<h3>Members</h3>
+			<h3>Mitglieder</h3>
 			<character-name-list :profiles="members.data" />
     	<report-violation-section :pageType="PageType.FREE_COMPANY" :pageId="fc.id" />
 		</template>
 		<template v-else-if="notFound">
 			<h2>Freie Gesellschaft konnte nicht gefunden werden</h2>
-			<p>Die Freie Gesellschaft {{name}} ({{server}}) ist nicht auf PROJEKTNAME registriert.</p>
+			<p>Die Freie Gesellschaft {{name}} ({{server}}) ist nicht auf <strong>Elpisgarten</strong> vertreten.</p>
 		</template>
 	</q-page>	
 </template>
