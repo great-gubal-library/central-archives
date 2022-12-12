@@ -3,45 +3,45 @@
     <template v-if="community.id">
       <section v-if="!$store.getters.characterId"><!-- Not logged in --></section>
       <section v-else-if="!community.membershipStatus" class="page-community__join-button-bar">
-        <q-btn outline color="primary" label="Join community" @click="onJoinClick" />
+        <q-btn outline color="primary" label="Community beitreten" @click="onJoinClick" />
       </section>
       <section
         v-else-if="community.membershipStatus === MembershipStatus.APPLIED"
         class="page-community__edit-bar page-community__membership-status"
       >
-        You have applied to join this community. An officer will have to review your application before you can join.
-      </section>
+        Du hast eine Anfrage für eine Mitgliedschaft in dieser Community gesendet. Eine Führungsperson muss deine Bewerbung überprüfen bevor du beitreten kannst.
+        </section>
       <section
         v-else-if="community.membershipStatus === MembershipStatus.REJECTED"
         class="page-community__edit-bar page-community__membership-status"
       >
-        Your membership application has been rejected.
+        Deine Mitgliedschaftsanfrage wurde abgelehnt.
       </section>
       <section v-else-if="community.canEdit" class="page-community__edit-bar">
-        <router-link :to="`/edit-community/${community.id}`">Edit community</router-link>
-        <q-btn flat color="negative" label="Delete community" @click="onDeleteClick" />
+        <router-link :to="`/edit-community/${community.id}`">Community bearbeiten</router-link>
+        <q-btn flat color="negative" label="Community löschen" @click="onDeleteClick" />
       </section>
       <section
         v-else-if="community.membershipStatus === MembershipStatus.CONFIRMED"
         class="page-community__edit-bar page-community__membership-status"
       >
-        You are a member of this community.
+        Du bist ein Mitglied dieser Community.
       </section>
       <community-profile :community="community" />
       <template v-if="!community.canManageMembers">
-        <h3>Members</h3>
+        <h3>Mitglieder</h3>
         <character-name-list :profiles="members" />
       </template>
       <template v-else>
 				<template v-if="applicants.length > 0">
-					<h3>Applicants</h3>
+					<h3>Bewerber</h3>
 					<community-applicant-editor
 						:community-id="community.id"
 						:members="applicants"
 						@updated="refreshEditableMembers"
 					/>
 				</template>
-				<h3>Members</h3>
+				<h3>Mitglieder</h3>
         <community-member-editor
           :community="community"
           :members="confirmedMembers"
@@ -167,20 +167,20 @@ export default class PageCommunity extends Vue {
   onDeleteClick() {
     this.$q
       .dialog({
-        title: 'Confirm Delete',
-        message: `Do you want to delete the community “${this.community.name}”?`,
+        title: 'Löschbestätigung',
+        message: `Möchtest du “${this.community.name}” wirklich löschen?`,
         ok: {
-          label: 'Delete',
+          label: 'Löschen',
           color: 'negative',
           flat: true,
         },
-        cancel: 'Cancel',
+        cancel: 'Abbrechen',
       })
       .onOk(async () => {
         try {
           await this.$api.communities.deleteCommunity(this.community.id);
 
-          notifySuccess('Community deleted.');
+          notifySuccess('Community wurde gelöscht.');
           void this.$router.replace('/');
         } catch (e) {
           notifyError(e);
@@ -193,15 +193,15 @@ export default class PageCommunity extends Vue {
 
     this.$q
       .dialog({
-        title: 'Confirm Join',
-        message: `Do you want to apply for membership in “${this.community.name}” as ${character.name}? An officer will have to confirm your application.`,
+        title: 'Mitgliedschaftsantrag',
+        message: `Möchtest du dich bei “${this.community.name}” als ${character.name} bewerben? Eine Führungsperson muss deine Bewerbung bestätigen.`,
         ok: {
-          label: 'Apply',
+          label: 'Bewerben',
           color: 'primary',
           flat: true,
         },
         cancel: {
-          label: 'Cancel',
+          label: 'Abbrechen',
           color: 'secondary',
           flat: true,
         },
@@ -210,7 +210,7 @@ export default class PageCommunity extends Vue {
         try {
           await this.$api.communities.applyForMembership(this.community.id, character.id);
           this.community.membershipStatus = MembershipStatus.APPLIED;
-          notifySuccess('You have applied for membership.');
+          notifySuccess('Du hast dich beworben.');
         } catch (e) {
           notifyError(e);
         }
