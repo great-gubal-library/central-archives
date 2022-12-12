@@ -12,7 +12,7 @@
         />
       </div>
       <q-pagination :model-value="page" :max="maxPage" input @update:model-value="setPage" />
-      <div class="page-gallery__pagination-side page-gallery__stats">{{ first }}–{{ last }} of {{ total }}</div>
+      <div class="page-gallery__pagination-side page-gallery__stats">{{ first }}–{{ last }} von {{ total }}</div>
     </div>
     <thumb-gallery :images="images" />
   </q-page>
@@ -107,7 +107,7 @@ export default class PageGallery extends Vue {
   }
 
   get title() {
-    return this.$display.imageCategories[this.category] + ' Gallery';
+    return this.$display.imageCategories[this.category] + ' Galerie';
   }
 
   get maxPage() {
