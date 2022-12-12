@@ -3,7 +3,7 @@
     <h2>Einloggen</h2>
     <q-form class="page-login__form" @submit="onSubmit">
       <p>
-        Bitte füll die nachfolgenden Felder aus um dich auf PROJEKTNAME einzuloggen.
+        Bitte fülle die nachfolgenden Felder aus um dich auf <strong>Elpisgarten</strong> einzuloggen.
       </p>
       <section>
         <q-input
