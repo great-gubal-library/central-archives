@@ -2,8 +2,8 @@
   <q-page class="page-venue">
 		<template v-if="venue.id">
 			<section v-if="venue.mine" class="edit-bar">
-				<router-link :to="`/edit-venue/${venue.id}`">Edit venue</router-link>
-				<q-btn flat color="negative" label="Delete venue" @click="onDeleteClick" />
+				<router-link :to="`/edit-venue/${venue.id}`">Treffpunkt bearbeiten</router-link>
+				<q-btn flat color="negative" label="Treffpunkt löschen" @click="onDeleteClick" />
 			</section>
 			<venue-profile :venue="venue" />
     	<report-violation-section :pageType="PageType.VENUE" :pageId="venue.id" />
@@ -66,7 +66,7 @@ async function load(params: RouteParams): Promise<VenueDto> {
 	mixins: [
 		createMetaMixin(function(this: PageVenue) {
 			const result: MetaOptions = {
-				title: `${this.venue.name} — Chaos Archives`,
+				title: `${this.venue.name} — Elpisgarten`,
 				meta: {}
 			};
 
@@ -98,19 +98,19 @@ export default class PageVenue extends Vue {
 
 	onDeleteClick() {
 		this.$q.dialog({
-        title: 'Confirm Delete',
-        message: `Do you want to delete the venue “${this.venue.name}”?`,
+        title: 'Löschbestätigung',
+        message: `Möchtest du “${this.venue.name}” wirklich löschen?`,
 				ok: {
-					label: 'Delete',
+					label: 'Löschen',
 					color: 'negative',
 					flat: true
 				},
-        cancel: 'Cancel',
+        cancel: 'Abbrechen',
       }).onOk(async () => {
         try {
 					await this.$api.venues.deleteVenue(this.venue.id);
 
-					notifySuccess('Venue deleted.');
+					notifySuccess('Treffpunkt gelöscht.');
 					void this.$router.replace('/');
 				} catch (e) {
 					notifyError(e);
