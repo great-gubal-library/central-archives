@@ -2,8 +2,8 @@
   <q-page class="page-character">
 		<character-profile v-if="character && character.id" :character="character" />		
 		<template v-else-if="notFound">
-			<h2>Charakter konnte nicht gefunden werden</h2>
-			<p>Der Charakter {{name}} ({{server}}) ist nicht auf PROJEKTNAME registriert.</p>
+			<h2>Charakter konnte nicht gefunden werden.</h2>
+			<p>Der Charakter {{name}} ({{server}}) ist nicht auf <strong>Elpisgarten</strong> registriert.</p>
 		</template>
 		<template v-if="content.stories.length > 0">
 			<h3>{{name}}'s Geschichten</h3>
