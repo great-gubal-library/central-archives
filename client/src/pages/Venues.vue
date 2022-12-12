@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-venues">
-		<h2>Venues</h2>
+		<h2>Treffpunkte</h2>
 		<venue-list :venues="venues" />
 	</q-page>	
 </template>
