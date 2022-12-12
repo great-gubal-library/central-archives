@@ -20,7 +20,7 @@
           <q-input
             :model-value="tags"
             @update:model-value="onTagsChanged"
-            label="Tags (mit Komma getrennt)"
+            label="Schlagworte (mit Komma getrennt)"
           />
           <h6>Inhalt *</h6>
           <html-editor v-model="story.content" />
