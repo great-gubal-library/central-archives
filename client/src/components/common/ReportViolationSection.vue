@@ -40,7 +40,7 @@ export default class ReportViolationSection extends Vue.with(Props) {
 			await copyToClipboard(window.location.href);
 			notifySuccess('Seitenlink in Zwischenablage gespeichert.');
 		} catch (e) {
-			notifyError('Fehler beim speichern des Seitenlinks in der Zwischenablage.');
+			notifyError('Fehler beim Speichern des Seitenlinks in der Zwischenablage.');
 		}
 	}
 
