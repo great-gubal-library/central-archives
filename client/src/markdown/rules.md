@@ -6,6 +6,7 @@ Welcome to Chaos Archives! By registering your account, you agree to the followi
 - Refrain from posting content that references real-life politics or religion.
 - Refrain from posting content that promotes real-life racism, sexism, and other forms of bigotry.
 - Refrain from posting links that lead to <a id="nsfw-ref" href="/rules#nsfw">NSFW</a> sources or malware. When adding external links in your content, check where they lead.
+- Refrain from posting AI-generated art.
 
 ##### Out of Universe Content
 
@@ -27,6 +28,8 @@ You may not edit or use someone else's work without their permission. Any form o
 **Special note:** If the author in question hosts <a href="/rules#nsfw">NSFW</a> art/photography, state this in the credits and refrain from embedding a link.
 
 If the artwork or screenshot is made by you, the uploader, do state such in the credits.
+
+Posting AI-generated art on Chaos Archives is not allowed. AI art generators are trained on an enormous number of works created and copyrighted by humans, without the consent of their creators. You can generate AI art for personal use, but distributing it, including publishing it here, is a copyright violation.
 
 
 ##### Sexual and Violent Content
