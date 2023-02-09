@@ -11,7 +11,7 @@ export default Object.freeze({
 	
 	housing: Object.freeze({
 		MIN_WARD_NUMBER: 1,
-		MAX_WARD_NUMBER: 24,
+		MAX_WARD_NUMBER: 30,
 		MIN_MAIN_WARD_PLOT: 1,
 		MAX_MAIN_WARD_PLOT: 30,
 		MIN_SUBDIVISION_PLOT: 31,
