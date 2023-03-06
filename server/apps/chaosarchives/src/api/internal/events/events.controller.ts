@@ -2,14 +2,12 @@ import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
 import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
-import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { BaseEventDto } from '@app/shared/dto/events/base-event.dto';
 import { EventCreaterResultDto } from '@app/shared/dto/events/event-create-result.dto';
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventSearchResultDto } from '@app/shared/dto/events/event-search-result.dto';
 import { EventSummariesDto } from '@app/shared/dto/events/event-summaries.dto';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';
-import { EventDto } from '@app/shared/dto/events/event.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import {
   Body,
@@ -22,7 +20,7 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';

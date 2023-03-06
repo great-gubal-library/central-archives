@@ -27,7 +27,6 @@ import { Contains } from '../../../common/db';
 import utils from '../../../common/utils';
 import { ImagesService } from '../images/images.service';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
-import { CrescentMoonPublishingService } from './crescent-moon-publishing.service';
 import { ExternalEvent } from './model/external-event';
 
 @Injectable()
@@ -39,7 +38,6 @@ export class EventsService {
   private readonly MAX_RESULTS = 10;
 
   constructor(
-    private readonly cmpService: CrescentMoonPublishingService,
     private readonly ccService: ChocoboChronicleService,
     private readonly imagesService: ImagesService,
     private readonly connection: Connection,
@@ -312,9 +310,9 @@ export class EventsService {
     }
 
     // Not cached - fetch and cache
-    const [cmpEvents, ccEvents] = await Promise.all([this.cmpService.fetchEvents(), this.ccService.fetchEvents()]);
+    const [ccEvents] = await Promise.all([this.ccService.fetchEvents()]);
 
-    const events = [...cmpEvents, ...ccEvents].sort((e1, e2) =>
+    const events = [...ccEvents].sort((e1, e2) =>
       utils.compareNumbers(e1.startDateTime, e2.startDateTime),
     );
     await this.saveEvents(events);
