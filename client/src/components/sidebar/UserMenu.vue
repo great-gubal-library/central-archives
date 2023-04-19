@@ -184,8 +184,8 @@
 import { Options, Vue } from 'vue-class-component';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { notifySuccess } from 'src/common/notify';
+import { switchCharacter } from 'src/common/switch-character';
 
 @Options({
   
@@ -200,17 +200,7 @@ export default class UserMenu extends Vue {
 	}
 
   async switchCharacter() {
-    const SwitchCharacterDialog = (await import('components/character/SwitchCharacterDialog.vue')).default;
-
-    this.$q.dialog({
-      component: SwitchCharacterDialog
-    }).onOk((character: SessionCharacterDto) => {
-      if (character.verified) {
-        void this.$router.push('/');
-      } else {
-        void this.$router.push('/verify');
-      }
-    });
+    await switchCharacter();
   }
 
   async uploadImage() {

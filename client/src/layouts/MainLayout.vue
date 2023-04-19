@@ -34,7 +34,7 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <div class="gt-sm layout__char-name">
+          <q-btn class="gt-sm layout__char-name" flat dense title="Switch character" @click="switchCharacter">
             <template v-if="$store.getters.character">
               <q-avatar round>
                 <img :src="$store.getters.character.avatar" />
@@ -45,7 +45,7 @@
               <q-icon size="28px" name="account_circle" />
               <span>A Stranger</span>
             </template>
-          </div>
+          </q-btn>
         </div>
 
         <q-toolbar-title class="layout__toolbar-title text-center">
@@ -154,6 +154,7 @@ import EventList from '../components/eventbar/EventList.vue';
 import UserMenu from '../components/sidebar/UserMenu.vue';
 import InlineSvg from 'vue-inline-svg';
 import SiteSearchField from 'src/components/search/SiteSearchField.vue';
+import { switchCharacter } from 'src/common/switch-character';
 
 @Options({
   components: {
@@ -195,6 +196,10 @@ export default class MainLayout extends Vue {
   toggleRightDrawer() {
     this.rightDrawerOpen = !this.rightDrawerOpen;
   }
+
+  async switchCharacter() {
+    await switchCharacter();
+  }
 }
 </script>
 
@@ -217,6 +222,8 @@ $max-layout-width: 1280px;
   font-size: 1rem;
   display: flex;
   align-items: center;
+  padding-left: 0;
+  text-transform: inherit;
 }
 
 .layout__char-name span {
