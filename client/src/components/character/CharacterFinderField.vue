@@ -25,9 +25,9 @@
 						<q-btn v-if="modelValue.server" flat dense icon="delete" title="Clear" @click="clearCharacter" />
 					</template>
 				</q-select>
-				<q-input :model-value="modelValue.server" label="Server" readonly>
+				<q-input :model-value="modelValue.server" label="World" readonly>
 					<template v-slot:prepend>
-						<q-icon name="computer" />
+						<q-icon name="public" />
 					</template>
 				</q-input>
 			</div>
