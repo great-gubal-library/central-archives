@@ -108,7 +108,7 @@ export class CommunitiesService {
   async getCommunities(filter: { limit?: number }, orderByDate: boolean): Promise<CommunitySummaryDto[]> {
     const query = this.communityRepo
       .createQueryBuilder('community')
-      .orderBy(orderByDate ? { 'community.foundedAt': 'DESC' } : { 'community.name': 'ASC' })
+      .orderBy(orderByDate ? { 'community.createdAt': 'DESC' } : { 'community.name': 'ASC' })
       .select(['community.id', 'community.name', 'community.goal']);
 
     if (filter.limit) {

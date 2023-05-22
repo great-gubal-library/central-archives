@@ -37,7 +37,7 @@ export class MainPageController {
         this.storiesService.getStoryList({ limit: this.MAX_STORIES }),
         this.noticeboardService.getNoticeboardItemList({ limit: this.MAX_NOTICEBOARD_ITEMS }),
         this.venuesService.getVenues({ limit: this.MAX_NEW_VENUES }),
-        this.communitiesService.getCommunities({ limit: this.MAX_NEW_VENUES }, true),
+        this.communitiesService.getCommunities({ limit: this.MAX_NEW_COMMUNITIES }, true),
       ]);
 
     mainPageContent.news = newsResult;
