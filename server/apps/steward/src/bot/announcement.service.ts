@@ -1,5 +1,5 @@
 import { serverConfiguration } from '@app/configuration';
-import { EventAnnouncement, NoticeboardItem } from '@app/entity';
+import { EventAnnouncement, EventLocation, NoticeboardItem } from '@app/entity';
 import { noticeboardLocations } from '@app/shared/enums/noticeboard-location.enum';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,11 @@ import sanitizeHtml from 'sanitize-html';
 import { Repository } from 'typeorm';
 import { BotGateway } from './bot.gateway';
 
+interface EventDatacenterResult {
+	eventId: number;
+	datacenter: string;
+}
+
 @Injectable()
 export class AnnouncementService {
   private readonly logger = new Logger(AnnouncementService.name);
@@ -19,9 +24,10 @@ export class AnnouncementService {
   constructor(
     private readonly botGateway: BotGateway,
     @InjectRepository(EventAnnouncement) private eventAnnouncementRepo: Repository<EventAnnouncement>,
+		@InjectRepository(EventLocation) private eventLocationRepo: Repository<EventLocation>,
 		@InjectRepository(NoticeboardItem) private noticeboardItemRepo: Repository<NoticeboardItem>,
   ) {
-    this.load();
+    void this.load();
   }
 
 	async postNoticeboardItem(noticeboardItemId: number): Promise<void> {
@@ -73,6 +79,7 @@ export class AnnouncementService {
   async load(eventId?: number): Promise<void> {
     this.logger.log(`Refreshing event timers for ${eventId ? `event ${eventId}` : 'all events'}`);
 
+		// Query announcements
 		const query = this.eventAnnouncementRepo.createQueryBuilder('ea')
 			.innerJoinAndSelect('ea.event', 'event')
 			.select([ 'ea.id', 'ea.content', 'ea.postAt', 'event.id' ])
@@ -83,6 +90,36 @@ export class AnnouncementService {
 		}
 
 		const announcements = await query.getMany();
+
+		if (announcements.length === 0) {
+			return;
+		}
+
+		// Query event location datacenters
+		const datacentersByEventId = new Map<number, Set<string>>();
+
+		const eventIds = Array.from(new Set(announcements.map(announcement => announcement.event.id)));
+		const eventDatacenterResults = await this.eventLocationRepo.createQueryBuilder('el')
+			.innerJoinAndSelect('el.event', 'event')
+			.innerJoinAndSelect('el.server', 'server')
+			.where('event.id IN (:...eventIds)', { eventIds })
+			.select('event.id', 'eventId')
+			.addSelect('server.datacenter', 'datacenter')
+			.distinct()
+			.getRawMany<EventDatacenterResult>();
+		
+		eventDatacenterResults.forEach(result => {
+			let datacenters = datacentersByEventId.get(result.eventId);
+
+			if (!datacenters) {
+				datacenters = new Set<string>();
+				datacentersByEventId.set(result.eventId, datacenters);
+			}
+
+			datacenters.add(result.datacenter);
+		});
+
+		// Schedule announcements
 		const now = Date.now();
 
 		for (const announcement of announcements) {
@@ -91,19 +128,26 @@ export class AnnouncementService {
 			const eventUrl = `${serverConfiguration.frontendRoot}/event/${announcementEventId}`;
 			const content = `${announcement.content}\n\n${eventUrl}`;
 			
-			const timerId = schedule.scheduleJob(announcement.postAt, async () => {
-				this.unregisterTimer(announcementEventId, timerId);
-				await this.postAnnouncement(content);
-			});
+			const eventDatacenters = datacentersByEventId.get(announcementEventId) || new Set<string>();
 
-			this.registerTimer(announcementEventId, timerId);
-			this.logger.log(`Event ${announcementEventId} firing in ${remainingMS} msec`);
+			// Schedule once announcement per each datacenter used in event locations
+			eventDatacenters.forEach(datacenter => {
+				const timerId = schedule.scheduleJob(announcement.postAt, async () => {
+					this.unregisterTimer(announcementEventId, timerId);
+					await this.postAnnouncement(content, datacenter);
+				});
+
+				this.registerTimer(announcementEventId, timerId);
+			})
+
+			this.logger.log(
+				`Event ${announcementEventId} firing in ${remainingMS} msec for datacenters: ${Array.from(eventDatacenters)}`);
 		}
   }
 
-	private async postAnnouncement(content: string) {
+	private async postAnnouncement(content: string, datacenter: string) {
 		try {
-			await this.botGateway.sendAnnouncement(content);
+			await this.botGateway.sendAnnouncement(content, datacenter);
 		} catch (e) {
 			if (e instanceof Error) {
 				this.logger.error(e.message, e.stack);

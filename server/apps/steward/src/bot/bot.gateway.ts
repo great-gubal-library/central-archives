@@ -19,8 +19,8 @@ export class BotGateway {
 		this.ready = true;
   }
 
-	async sendAnnouncement(message: string): Promise<void> {
-		return this.send(message, discordConfiguration.announcementChannel);
+	async sendAnnouncement(message: string, datacenter: string): Promise<void> {
+		return this.send(message, discordConfiguration.announcementChannels[datacenter]);
 	}
 
 	async sendNoticeboardItem(message: string): Promise<void> {
