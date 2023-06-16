@@ -96,28 +96,8 @@ export class AnnouncementService {
 		}
 
 		// Query event location datacenters
-		const datacentersByEventId = new Map<number, Set<string>>();
-
-		const eventIds = Array.from(new Set(announcements.map(announcement => announcement.event.id)));
-		const eventDatacenterResults = await this.eventLocationRepo.createQueryBuilder('el')
-			.innerJoinAndSelect('el.event', 'event')
-			.innerJoinAndSelect('el.server', 'server')
-			.where('event.id IN (:...eventIds)', { eventIds })
-			.select('event.id', 'eventId')
-			.addSelect('server.datacenter', 'datacenter')
-			.distinct()
-			.getRawMany<EventDatacenterResult>();
-		
-		eventDatacenterResults.forEach(result => {
-			let datacenters = datacentersByEventId.get(result.eventId);
-
-			if (!datacenters) {
-				datacenters = new Set<string>();
-				datacentersByEventId.set(result.eventId, datacenters);
-			}
-
-			datacenters.add(result.datacenter);
-		});
+		const eventIds = Array.from(new Set(announcements.map(announcement => announcement.event.id))); // remove duplicates
+		const datacentersByEventId = await this.getEventDatacenters(eventIds);
 
 		// Schedule announcements
 		const now = Date.now();
@@ -144,6 +124,31 @@ export class AnnouncementService {
 				`Event ${announcementEventId} firing in ${remainingMS} msec for datacenters: ${Array.from(eventDatacenters)}`);
 		}
   }
+
+	private async getEventDatacenters(eventIds: number[]): Promise<Map<number, Set<string>>> {
+		const datacentersByEventId = new Map<number, Set<string>>();
+		const eventDatacenterResults = await this.eventLocationRepo.createQueryBuilder('el')
+			.innerJoinAndSelect('el.event', 'event')
+			.innerJoinAndSelect('el.server', 'server')
+			.where('event.id IN (:...eventIds)', { eventIds })
+			.select('event.id', 'eventId')
+			.addSelect('server.datacenter', 'datacenter')
+			.distinct()
+			.getRawMany<EventDatacenterResult>();
+		
+		eventDatacenterResults.forEach(result => {
+			let datacenters = datacentersByEventId.get(result.eventId);
+
+			if (!datacenters) {
+				datacenters = new Set<string>();
+				datacentersByEventId.set(result.eventId, datacenters);
+			}
+
+			datacenters.add(result.datacenter);
+		});
+
+		return datacentersByEventId;
+	}
 
 	private async postAnnouncement(content: string, datacenter: string) {
 		try {
