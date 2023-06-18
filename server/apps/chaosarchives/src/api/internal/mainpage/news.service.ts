@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { DateTime, Duration } from 'luxon';
 import utils from '../../../common/utils';
-import { DailyMoogleService } from './daily-moogle.service';
 import { LimsaInsiderService } from './limsa-insider.service';
 
 export enum NewsCacheType {
@@ -21,7 +20,6 @@ export class NewsService {
 	constructor(
 		@InjectRedis()
 		private readonly redisService: Redis,
-		private dailyMoogleService: DailyMoogleService,
 		private limsaInsiderService: LimsaInsiderService,
 	) { }
 

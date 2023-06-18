@@ -8,7 +8,6 @@ import { ImagesModule } from '../images/images.module';
 import { NoticeboardModule } from '../noticeboard/noticeboard.module';
 import { StoriesModule } from '../stories/stories.module';
 import { VenuesModule } from '../venues/venues.module';
-import { DailyMoogleService } from './daily-moogle.service';
 import { LimsaInsiderService } from './limsa-insider.service';
 import { MainPageController } from './main-page.controller';
 import { MainPageService } from './main-page.service';
@@ -27,6 +26,6 @@ import { NewsModule } from '../news/news.module';
     HttpModule,
   ],
   controllers: [MainPageController],
-  providers: [MainPageService, NewsService, DailyMoogleService, LimsaInsiderService],
+  providers: [MainPageService, NewsService, LimsaInsiderService],
 })
 export class MainPageModule {}
