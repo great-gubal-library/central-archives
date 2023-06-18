@@ -28,7 +28,7 @@ export class DailyMoogleService {
 		} catch (e) {
 			if ((e as AxiosError).isAxiosError) {
 				const ae = e as AxiosError;
-				this.log.error(`Error retrieving ${ae.config.url}`, ae.stack);
+				this.log.error(`Error retrieving ${ae.config?.url}`, ae.stack);
 				return [];
 			}
 			

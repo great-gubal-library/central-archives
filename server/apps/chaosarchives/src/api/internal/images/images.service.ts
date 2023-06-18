@@ -21,7 +21,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { escapeForLike } from 'apps/chaosarchives/src/common/db';
 import utils from 'apps/chaosarchives/src/common/utils';
-import { Connection, EntityManager, FindConditions, IsNull, Not, Repository } from 'typeorm';
+import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import {
   ImageSanitizeError,
@@ -241,7 +241,9 @@ export class ImagesService {
         const existingImage = await em.getRepository(Image).findOne({
           where: {
             hash,
-            owner: character,
+            owner: {
+              id: character.id,
+            },
           },
           select: ['id', 'filename'],
         });
@@ -371,7 +373,7 @@ export class ImagesService {
       // eslint-disable-next-line no-param-reassign
       image.event = null;
     } else if (!image.event || request.eventId !== image.event.id) {
-      const event = await em.getRepository(Event).findOne(request.eventId);
+      const event = await em.getRepository(Event).findOneBy({ id: request.eventId });
 
       if (!event) {
         throw new BadRequestException('Event not found');
@@ -401,18 +403,18 @@ export class ImagesService {
       if (!force) {
         // Check if the image is used as a banner, and if yes, refuse to delete
 
-        if (await em.getRepository(Character).count({
+        if (await em.getRepository(Character).countBy({
           banner: {
             id: image.id
-          } as FindConditions<Promise<Image>>,
+          },
         }) > 0) {
           throw new ConflictException('This image is in use as a character banner');
         }
 
-        if (await em.getRepository(Event).count({
+        if (await em.getRepository(Event).countBy({
           banner: {
             id: image.id
-          } as FindConditions<Promise<Image>>,
+          },
         }) > 0) {
           throw new ConflictException('This image is in use as an event banner');
         }
@@ -423,7 +425,7 @@ export class ImagesService {
           banner: {
             id: image.id,
           },
-        } as FindConditions<Character>, {
+        }, {
           banner: null
         } as unknown as QueryDeepPartialEntity<Character>);
 
@@ -431,7 +433,7 @@ export class ImagesService {
           banner: {
             id: image.id,
           },
-        } as FindConditions<Event>, {
+        }, {
           banner: null
         } as unknown as QueryDeepPartialEntity<Event>);
       }

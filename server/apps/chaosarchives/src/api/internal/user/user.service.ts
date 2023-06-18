@@ -74,7 +74,7 @@ export class UserService {
   async confirmEmail(verificationCode: string): Promise<number> {
     return this.connection.transaction(async (em) => {
       const userRepo = em.getRepository(User);
-      const user = await userRepo.findOne({
+      const user = await userRepo.findOneBy({
         verificationCode,
       });
 
@@ -91,7 +91,10 @@ export class UserService {
   }
 
   async resendConfirmationEmail(user: UserInfo): Promise<void> {
-    const userEntity = (await this.userRepo.findOne(user.id, {
+    const userEntity = (await this.userRepo.findOne({
+      where: {
+        id: user.id,
+      },
       select: [ 'id', 'email', 'verificationCode' ]
     }))!;
 
@@ -101,7 +104,9 @@ export class UserService {
 
     const characterData = await this.characterRepo.findOne({
       where: {
-        user: userEntity
+        user: {
+          id: userEntity.id,
+        }
       },
       select: [ 'id', 'name' ],
     });
@@ -123,7 +128,10 @@ export class UserService {
   }
 
   async getVerificationStatus(user: UserInfo, characterId: number): Promise<VerificationStatusDto> {
-    const userData = await this.userRepo.findOne(user.id, {
+    const userData = await this.userRepo.findOne({
+      where: {
+        id: user.id,
+      },
       select: [ 'email', 'verifiedAt' ],
     });
 
@@ -131,7 +139,10 @@ export class UserService {
       throw new BadRequestException(`User ${user.id} not found`);
     }
 
-    const characterData = await this.characterRepo.findOne(characterId, {
+    const characterData = await this.characterRepo.findOne({
+      where: {
+        id: characterId,
+      },
       select: [ 'verificationCode', 'verifiedAt' ],
     });
 
@@ -153,7 +164,7 @@ export class UserService {
   ): Promise<void> {
     await this.connection.transaction(async (em) => {
       const characterRepo = em.getRepository(Character);
-      const character = await characterRepo.findOne({
+      const character = await characterRepo.findOneBy({
         id: verifyData.id,
         user: {
           id: user.id,
@@ -186,7 +197,7 @@ export class UserService {
       await characterRepo.save(character);
 
       const userRepo = em.getRepository(User);
-      const userEntity = await userRepo.findOne(user.id);
+      const userEntity = await userRepo.findOneBy({ id: user.id });
 
       if (!userEntity) {
         throw new GoneException();
@@ -245,7 +256,7 @@ export class UserService {
   async forgotPassword(request: ForgotPasswordRequestDto): Promise<void> {
     const result = await this.connection.transaction(async (em) => {
       const repo = em.getRepository(User);
-      const user = await repo.findOne({
+      const user = await repo.findOneBy({
         email: request.email,
       });
 
@@ -287,7 +298,7 @@ export class UserService {
   async resetPassword(request: ResetPasswordRequestDto): Promise<void> {
     const verified = await this.connection.transaction(async (em) => {
       const repo = em.getRepository(User);
-      const user = await repo.findOne({
+      const user = await repo.findOneBy({
         email: request.email,
         verificationCode: request.verificationCode,
       });
@@ -316,7 +327,7 @@ export class UserService {
   async changePassword(request: ChangePasswordRequestDto, userInfo: UserInfo): Promise<void> {
     await this.connection.transaction(async (em) => {
       const userRepo = em.getRepository(User);
-      const user = (await userRepo.findOne(userInfo.id))!;
+      const user = (await userRepo.findOneBy({ id: userInfo.id }))!;
 
       if (!(await checkPassword(request.currentPassword, user.passwordHash))) {
         throw new BadRequestException('Invalid current password');
@@ -328,7 +339,10 @@ export class UserService {
   }
 
   async getEmail(@CurrentUser() user: UserInfo): Promise<UserEmailInfoDto> {
-    const userData = (await this.userRepo.findOne(user.id, {
+    const userData = (await this.userRepo.findOne({
+      where: {
+        id: user.id
+      },
       select: [ 'email' ],
     }))!;
 
@@ -340,13 +354,13 @@ export class UserService {
   async changeEmail(request: ChangeEmailRequestDto, @CurrentUser() userInfo: UserInfo): Promise<void> {
     const { userEntity, characterName } = await this.connection.transaction(async (em) => {
       const userRepo = em.getRepository(User);
-      const user = (await userRepo.findOne(userInfo.id))!;
+      const user = (await userRepo.findOneBy({ id: userInfo.id }))!;
 
       if (!(await checkPassword(request.currentPassword, user.passwordHash))) {
         throw new BadRequestException('Invalid current password');
       }
 
-      if ((await userRepo.count({ email: request.newEmail })) > 0) {
+      if ((await userRepo.countBy({ email: request.newEmail })) > 0) {
         throw new ConflictException('This email is already in use by another user');
       }
 
@@ -367,7 +381,7 @@ export class UserService {
   async confirmNewEmail(newEmailVerificationCode: string): Promise<number> {
     return this.connection.transaction(async (em) => {
       const userRepo = em.getRepository(User);
-      const user = await userRepo.findOne({
+      const user = await userRepo.findOneBy({
         newEmailVerificationCode,
       });
 

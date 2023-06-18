@@ -1,6 +1,7 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, Event, EventAnnouncement, EventLocation, Image, Server } from '@app/entity';
+import SharedConstants from '@app/shared/SharedConstants';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { BaseEventDto } from '@app/shared/dto/events/base-event.dto';
 import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.dto';
@@ -14,12 +15,12 @@ import { EventDto } from '@app/shared/dto/events/event.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import html from '@app/shared/html';
-import SharedConstants from '@app/shared/SharedConstants';
 import { isValidUrl } from '@app/shared/validation/validators';
-import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import Redis from 'ioredis';
 import { DateTime, Duration } from 'luxon';
 import { firstValueFrom } from 'rxjs';
 import { Connection, EntityManager, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
@@ -138,7 +139,9 @@ export class EventsService {
       const banner = await em.getRepository(Image).findOne({
         where: {
           id: eventDto.banner.id,
-          owner: event.owner,
+          owner: {
+            id: event.owner.id,
+          },
         },
         relations: ['owner'],
       });

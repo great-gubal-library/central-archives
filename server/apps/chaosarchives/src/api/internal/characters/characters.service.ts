@@ -157,7 +157,9 @@ export class CharactersService {
         const banner = await em.getRepository(Image).findOne({
           where: {
             id: characterDto.banner.id,
-            owner: character
+            owner: {
+              id: character.id,
+            }
           }
         });
 
@@ -240,11 +242,11 @@ export class CharactersService {
     // though unverified users cannot access this API via the website.
 		const characterEntity = await this.connection.transaction(async em => {
 			const repo = em.getRepository(Character);
-			const character = await repo.findOne({
-				id: characterId.id,
-				user: {
-					id: user.id,
-				},
+			const character = await repo.findOneBy({
+        id: characterId.id,
+        user: {
+          id: user.id,
+        },
 			});
 
 			if (!character) {
@@ -301,7 +303,10 @@ export class CharactersService {
   async addAccountCharacter(request: AddCharacterRequestDto, user: UserInfo): Promise<SessionCharacterDto> {
     try {
       const result = await this.connection.transaction(async em => {
-        const userEntity = await em.getRepository(User).findOne(user.id, {
+        const userEntity = await em.getRepository(User).findOne({
+          where: {
+            id: user.id,
+          },
           select: [ 'id' ]
         });
 
@@ -379,7 +384,7 @@ export class CharactersService {
     // or it is, but the character has a different name (indicating a name change).
     // We allow this: the user can make a new character profile for the new name.
 
-    const server = await em.getRepository(Server).findOne({
+    const server = await em.getRepository(Server).findOneBy({
       name: normalizeXivapiServerName(characterInfo.Character.Server),
     });
 
@@ -396,7 +401,9 @@ export class CharactersService {
     // Set all previously existing characters with this Lodestone ID as inactive
     await characterRepo.update({
       lodestoneId: characterInfo.Character.ID,
-      user,
+      user: {
+        id: user.id,
+      },
       active: true,
     }, {
       active: null

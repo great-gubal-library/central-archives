@@ -5,7 +5,7 @@ import { StatisticsDto } from '@app/shared/dto/statistics/statistics.dto';
 import { Race } from '@app/shared/enums/race.enum';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Server } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class StatisticsService {

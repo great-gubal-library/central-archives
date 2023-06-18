@@ -1,6 +1,6 @@
 import { AuthModule } from '@app/auth/auth.module';
 import { dbConfiguration, redisConfiguration } from '@app/configuration';
-import { RedisModule } from '@nestjs-modules/ioredis';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';

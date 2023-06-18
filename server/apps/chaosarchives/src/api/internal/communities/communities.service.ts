@@ -290,7 +290,9 @@ export class CommunitiesService {
       const banner = await em.getRepository(Image).findOne({
         where: {
           id: communityDto.banner.id,
-          owner: community.owner,
+          owner: {
+            id: community.owner.id,
+          },
         },
       });
 
@@ -407,8 +409,8 @@ export class CommunitiesService {
       }
 
       const [community, character] = await Promise.all([
-        em.getRepository(Community).findOne(communityId),
-        em.getRepository(Character).findOne(characterId),
+        em.getRepository(Community).findOneBy({ id: communityId }),
+        em.getRepository(Character).findOneBy({ id: characterId }),
       ]);
 
       if (!character) {

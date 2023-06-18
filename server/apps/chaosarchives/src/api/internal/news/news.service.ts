@@ -236,10 +236,15 @@ export class NewsService {
 			}
 	
 			const newsRepo = em.getRepository(News);
+			const category = await em.getRepository(NewsCategory).findOneBy({ id: 1 });
+
+			if (!category) {
+				throw new Error('No news category found');
+			}
 
 			const article = newsRepo.create({
 				owner: author,
-				category: await em.getRepository(NewsCategory).findOne(1), // temp
+				category, // temp
 				slug: crypto.randomUUID(),
 			});
 
@@ -320,7 +325,10 @@ export class NewsService {
 			if (!articleDto.imageId) {
 				article.image = null;
 			} else {
-				const image = await this.imageRepo.findOne(articleDto.imageId, {
+				const image = await this.imageRepo.findOne({
+					where: {
+						id: articleDto.imageId,
+					},
 					select: [ 'id' ]
 				});
 

@@ -242,7 +242,9 @@ export class FreeCompaniesService {
         const banner = await em.getRepository(Image).findOne({
           where: {
             id: fcDto.banner.id,
-            owner: fc.leader
+            owner: {
+							id: fc.leader.id,
+						},
           }
         });
 
