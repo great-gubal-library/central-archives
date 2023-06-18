@@ -5,6 +5,7 @@ import { UserInfo } from '@app/auth/model/user-info';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { BannerCheckResultDto } from '@app/shared/dto/image/banner-check-result.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
+import { ImageReplaceRequestDto } from '@app/shared/dto/image/image-replace-request.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
@@ -68,6 +69,36 @@ export class ImagesController {
   ): Promise<ImageSummaryDto> {
     try {
       return await this.imageService.uploadImage(
+        user,
+        request,
+        file.buffer,
+        file.originalname,
+        file.mimetype,
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+				this.logger.error(e.message, e.stack);
+			} else {
+				this.logger.error(e);
+			}
+
+      throw e;
+    }
+  }
+
+  @Put(':id/replace')
+  @RoleRequired(Role.USER)
+  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(PayloadTooLargeInterceptor) // Must be after FileInterceptor
+  async replaceImage(
+    @Param('id', ParseIntPipe) id: number,
+		@CurrentUser() user: UserInfo,
+    @Body() request: ImageReplaceRequestDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<ImageSummaryDto> {
+    try {
+      return await this.imageService.replaceImage(
+        id,
         user,
         request,
         file.buffer,
