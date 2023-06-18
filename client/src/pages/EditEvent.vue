@@ -303,7 +303,7 @@ export default class PageEditEvent extends Vue {
     } else {
       return DateTime.fromMillis(value, {
         zone: SharedConstants.FFXIV_SERVER_TIMEZONE
-      }).toISO().substring(0, 16);
+      }).toISO()!.substring(0, 16);
     }
   }
 

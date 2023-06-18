@@ -128,11 +128,11 @@ export default class PageEventCalendar extends Vue {
 			const startDate = DateTime.fromMillis(event.startDateTime).setZone(SharedConstants.FFXIV_SERVER_TIMEZONE);
 			const endDate = event.endDateTime == null ? null :
 				DateTime.fromMillis(event.endDateTime).setZone(SharedConstants.FFXIV_SERVER_TIMEZONE);
-			let eventsForDay = this.eventMap[startDate.toISODate()];
+			let eventsForDay = this.eventMap[startDate.toISODate()!];
 
 			if (!eventsForDay) {
 				eventsForDay = [];
-				this.eventMap[startDate.toISODate()] = eventsForDay;
+				this.eventMap[startDate.toISODate()!] = eventsForDay;
 			}
 
 			eventsForDay.push({
