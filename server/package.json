@@ -23,7 +23,7 @@
     "docker:deploy": "docker-compose up -d"
   },
   "dependencies": {
-    "@nestjs-modules/ioredis": "^1.0.1",
+    "@liaoliaots/nestjs-redis": "^9.0.5",
     "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.4.3",
@@ -51,7 +51,7 @@
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.2",
     "html-to-text": "^8.2.0",
-    "ioredis": "^4.27.8",
+    "ioredis": "^5.3.2",
     "jpegtran": "^2.0.0",
     "jsdom": "^17.0.0",
     "lodash": "^4.17.21",
@@ -86,7 +86,6 @@
     "@types/escape-html": "^1.0.1",
     "@types/express": "^4.17.11",
     "@types/html-to-text": "^8.1.0",
-    "@types/ioredis": "^4.26.7",
     "@types/jest": "26.0.20",
     "@types/jsdom": "^16.2.13",
     "@types/luxon": "^2.0.0",
