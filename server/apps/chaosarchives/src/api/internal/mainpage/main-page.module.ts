@@ -8,10 +8,8 @@ import { ImagesModule } from '../images/images.module';
 import { NoticeboardModule } from '../noticeboard/noticeboard.module';
 import { StoriesModule } from '../stories/stories.module';
 import { VenuesModule } from '../venues/venues.module';
-import { LimsaInsiderService } from './limsa-insider.service';
 import { MainPageController } from './main-page.controller';
 import { MainPageService } from './main-page.service';
-import { NewsService } from './news.service';
 import { NewsModule } from '../news/news.module';
 
 @Module({
@@ -26,6 +24,6 @@ import { NewsModule } from '../news/news.module';
     HttpModule,
   ],
   controllers: [MainPageController],
-  providers: [MainPageService, NewsService, LimsaInsiderService],
+  providers: [MainPageService],
 })
 export class MainPageModule {}
