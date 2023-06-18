@@ -3,6 +3,7 @@ import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
 import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
 import { UserInfo } from '@app/auth/model/user-info';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
+import { BannerCheckResultDto } from '@app/shared/dto/image/banner-check-result.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
@@ -49,6 +50,11 @@ export class ImagesController {
   @UseGuards(OptionalJwtAuthGuard)
   async getImage(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<ImageDto> {
     return this.imageService.getImage(id, user);
+  }
+
+  @Get(':id/isbanner')
+  async checkIsBanner(@Param('id', ParseIntPipe) id: number): Promise<BannerCheckResultDto> {
+    return this.imageService.checkIsBanner(id);
   }
 
   @Post()

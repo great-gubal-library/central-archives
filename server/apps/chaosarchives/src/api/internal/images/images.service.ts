@@ -3,6 +3,7 @@ import { serverConfiguration } from '@app/configuration';
 import { Character, Event, Image } from '@app/entity';
 import { hashFile } from '@app/security';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
+import { BannerCheckResultDto } from '@app/shared/dto/image/banner-check-result.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
 import { ImageReplaceRequestDto } from '@app/shared/dto/image/image-replace-request.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
@@ -182,6 +183,23 @@ export class ImagesService {
       .getMany();
 
     return images.map((image) => this.toImageDto(image, user));
+  }
+
+  async checkIsBanner(id: number): Promise<BannerCheckResultDto> {
+    return this.connection.transaction(async em => {
+      const image = await em.getRepository(Image).findOne({
+        where: { id },
+        select: [ 'id' ],
+      });
+
+      if (!image) {
+        throw new NotFoundException('Invalid image ID');
+      }
+
+      return {
+        isBanner: await this.isBanner(em, image),
+      };
+    });
   }
 
   async uploadImage(
