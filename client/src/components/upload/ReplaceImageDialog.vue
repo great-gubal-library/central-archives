@@ -2,28 +2,24 @@
   <q-dialog ref="dialog" no-backdrop-dismiss @hide="onDialogHide">
     <q-card
       ref="card"
-      class="upload-dialog q-dialog-plugin"
-      :class="{ 'upload-dialog_dragging': dragging }"
+      class="replace-image-dialog q-dialog-plugin"
+      :class="{ 'replace-image-dialog_dragging': dragging }"
       @dragenter.capture="onDragEnter"
       @dragover.capture="onDragOver"
       @drop.capture="onDrop"
     >
-			<q-stepper class="upload-dialog__stepper" v-model="step" color="primary" animated>
-				<q-step :name="Step.SELECT_IMAGE" title="Select image" icon="folder_open" active-icon="folder_open" :done="step !== Step.SELECT_IMAGE">
+      <h5>{{ banner ? 'Replace Banner' : 'Replace Image' }}</h5>
+			<q-stepper class="replace-image-dialog__stepper" v-model="step" color="primary" animated>
+				<q-step :name="Step.SELECT_IMAGE" title="Select new image" icon="folder_open" active-icon="folder_open" :done="step !== Step.SELECT_IMAGE">
 					<step-select-image
             :banner="banner"
 						v-model="fileModel"
 					/>
 				</q-step>
-				<q-step :name="Step.THUMBNAIL" title="Customize thumbnail" icon="image" active-icon="image" :done="step === Step.IMAGE_DETAILS">
+				<q-step :name="Step.THUMBNAIL" title="Customize thumbnail" icon="image" active-icon="image">
 					<step-thumbnail
 						:image="fileModel.image"
 						v-model="thumbModel"
-					/>
-				</q-step>
-				<q-step :name="Step.IMAGE_DETAILS" title="Fill in details" icon="edit" active-icon="edit">
-					<step-image-details
-						v-model="detailsModel"
 					/>
 				</q-step>
 			</q-stepper>
@@ -37,17 +33,17 @@
 					@click="goBack"
 				/>
 				<q-btn
-					v-if="step !== Step.IMAGE_DETAILS"
+					v-if="step !== Step.THUMBNAIL"
 					:disable="!canGoNext"
 					flat
 					color="primary"
 					label="Next >"
 					@click="goNext"
 				/>
-				<q-btn v-else :disable="!canUpload" color="primary" label="Upload" @click="onUploadClick" />
+				<q-btn v-else :disable="!canReplaceImage" color="primary" label="Replace image" @click="onReplaceImageClick" />
 			</q-card-actions>
       <div
-        class="upload-dialog__drag-overlay"
+        class="replace-image-dialog__drag-overlay"
         v-show="dragging"
         @dragenter="onDragEnter"
         @dragover="onDragOver"
@@ -63,22 +59,19 @@
 
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
-import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
-import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
-import { ImageDetailsModel } from './image-details-model';
 import { ImageSelectModel, defaultImageSelectModel } from './image-select-model';
 import { ImageThumbModel } from './image-thumb-model';
 import StepImageDetails from './StepImageDetails.vue';
 import StepSelectImage from './StepSelectImage.vue';
 import StepThumbnail from './StepThumbnail.vue';
+import { ImageReplaceRequestDto } from '@app/shared/dto/image/image-replace-request.dto';
 
 enum Step {
   SELECT_IMAGE = 'SELECT_IMAGE',
   THUMBNAIL = 'THUMBNAIL',
-  IMAGE_DETAILS = 'IMAGE_DETAILS',
 }
 
 interface DialogRef {
@@ -87,6 +80,10 @@ interface DialogRef {
 }
 
 class Props {
+  id = prop<number>({
+    required: true
+  })
+
 	banner = prop<boolean>({
 		default: false
 	});
@@ -102,7 +99,7 @@ const MIN_BANNER_ASPECT_RATIO = SharedConstants.MIN_BANNER_ASPECT_RATIO;
   },
   emits: ['ok', 'hide'],
 })
-export default class UploadDialog extends Vue.with(Props) {
+export default class ReplaceImageDialog extends Vue.with(Props) {
   readonly Step = Step;
 
   dragging = false;
@@ -114,13 +111,6 @@ export default class UploadDialog extends Vue.with(Props) {
     left: -1,
     top: -1,
     width: -1,
-  };
-  detailsModel: ImageDetailsModel = {
-		category: ImageCategory.UNLISTED,
-    title: '',
-		description: '',
-    credits: '',
-    event: null,
   };
 
   show() {
@@ -191,9 +181,6 @@ export default class UploadDialog extends Vue.with(Props) {
         };
         this.step = Step.SELECT_IMAGE;
         return;
-      case Step.IMAGE_DETAILS:
-        this.step = Step.THUMBNAIL;
-        return;
     }
   }
 
@@ -205,8 +192,6 @@ export default class UploadDialog extends Vue.with(Props) {
             && this.fileModel.convertedFile.size <= SharedConstants.MAX_UPLOAD_SIZE
             && (!this.banner || (this.fileModel.image.width / this.fileModel.image.height >= MIN_BANNER_ASPECT_RATIO));
       case Step.THUMBNAIL:
-        return this.thumbModel.left !== -1;
-      case Step.IMAGE_DETAILS:
         return false;
     }
 	}
@@ -217,30 +202,25 @@ export default class UploadDialog extends Vue.with(Props) {
         this.step = Step.THUMBNAIL;
         return;
       case Step.THUMBNAIL:
-        this.step = Step.IMAGE_DETAILS;
-        return;
-      case Step.IMAGE_DETAILS:
         return;
     }
   }
 
-	get canUpload() {
-		return this.step === Step.IMAGE_DETAILS
-      && (this.detailsModel.category === ImageCategory.UNLISTED || !!this.detailsModel.title)
-      && !!this.detailsModel.credits;
+	get canReplaceImage() {
+		return this.step === Step.THUMBNAIL && this.thumbModel.left !== -1;
 	}
 
   onDialogHide() {
     this.$emit('hide');
   }
 
-  async onUploadClick() {
+  async onReplaceImageClick() {
     try {
       this.uploading = true;
 
-      const imageDto = await this.upload();
+      const imageDto = await this.replaceImage();
 
-      notifySuccess('Image uploaded.');
+      notifySuccess('Image replaced.');
       this.$emit('ok', imageDto);
       this.hide();
     } catch (e) {
@@ -250,7 +230,7 @@ export default class UploadDialog extends Vue.with(Props) {
     }
   }
 
-  private async upload(): Promise<ImageSummaryDto> {
+  private async replaceImage(): Promise<ImageSummaryDto> {
     const characterId = this.$store.getters.characterId;
     const { convertedFile, filename } = this.fileModel;
 
@@ -259,22 +239,13 @@ export default class UploadDialog extends Vue.with(Props) {
     }
 
     // Converts if necessary, otherwise leaves the original file intact
-    const imageDto: ImageUploadRequestDto = {
-      characterId,
-      title: this.detailsModel.title,
-      description: this.detailsModel.description,
-      category: this.detailsModel.category,
-      credits: this.detailsModel.credits,
+    const imageDto: ImageReplaceRequestDto = {
       thumbLeft: this.thumbModel.left,
       thumbTop: this.thumbModel.top,
       thumbWidth: this.thumbModel.width,
     };
 
-    if (this.detailsModel.event) {
-      Object.assign(imageDto, { eventId: this.detailsModel.event.id });
-    }
-
-    return this.$api.images.uploadImage(imageDto, convertedFile, filename);
+    return this.$api.images.replaceImage(this.id, imageDto, convertedFile, filename);
   }
 
   onCancelClick() {
@@ -284,39 +255,43 @@ export default class UploadDialog extends Vue.with(Props) {
 </script>
 
 <style lang="scss">
-.upload-dialog {
+.replace-image-dialog {
   width: 800px;
 }
 
 @media (min-width: 1280px) {
-	.q-dialog__inner--minimized > .upload-dialog {
+	.q-dialog__inner--minimized > .replace-image-dialog {
 		max-width: 800px;
 	}
 }
 
-.upload-dialog .q-stepper--horizontal .q-stepper__step-inner {
+.replace-image-dialog h5 {
+  margin-left: 20px;
+}
+
+.replace-image-dialog .q-stepper--horizontal .q-stepper__step-inner {
 	padding: 16px 24px 0px 24px;
 }
 
-.upload-dialog__stepper .q-panel.scroll {
+.replace-image-dialog__stepper .q-panel.scroll {
 	overflow: hidden;
 }
 
-.upload-dialog img {
+.replace-image-dialog img {
   max-width: 100%;
   height: auto;
 }
 
-.upload-dialog h6 {
+.replace-image-dialog h6 {
   font-family: $form-header-font;
   font-size: 1.2em;
 }
 
-.upload-dialog_dragging > * {
+.replace-image-dialog_dragging > * {
   visibility: hidden;
 }
 
-.upload-dialog__drag-overlay {
+.replace-image-dialog__drag-overlay {
   visibility: visible;
   position: absolute;
   left: 0;
@@ -335,7 +310,7 @@ export default class UploadDialog extends Vue.with(Props) {
   outline-offset: -5px;
 }
 
-.upload-dialog .q-inner-loading {
+.replace-image-dialog .q-inner-loading {
   z-index: 2;
 }
 </style>

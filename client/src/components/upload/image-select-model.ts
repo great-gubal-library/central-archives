@@ -9,3 +9,15 @@ export interface ImageSelectModel {
 	format: ImageFormat|null;
 	hasTransparency: boolean;
 }
+
+export function defaultImageSelectModel() {
+	return {
+		file: null,
+		filename: null,
+		image: null,
+		originalFormat: null,
+		format: null,
+		convertedFile: null,
+		hasTransparency: false,
+	}
+}

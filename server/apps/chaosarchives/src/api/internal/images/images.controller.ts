@@ -47,15 +47,15 @@ export class ImagesController {
     return this.imageService.getImages(filter);
   }
 
+  @Get(':id/isbanner')
+  async checkIsBanner(@Param('id', ParseIntPipe) id: number): Promise<BannerCheckResultDto> {
+    return this.imageService.checkIsBanner(id);
+  }
+
   @Get(':id')
   @UseGuards(OptionalJwtAuthGuard)
   async getImage(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: UserInfo): Promise<ImageDto> {
     return this.imageService.getImage(id, user);
-  }
-
-  @Get(':id/isbanner')
-  async checkIsBanner(@Param('id', ParseIntPipe) id: number): Promise<BannerCheckResultDto> {
-    return this.imageService.checkIsBanner(id);
   }
 
   @Post()
