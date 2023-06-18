@@ -1,4 +1,5 @@
-version: '3.7'
+# Use Docker Compose v2
+version: '3.9'
 
 services:
   redis:
@@ -26,6 +27,18 @@ services:
       - MARIADB_PASSWORD=mariadb
       - MARIADB_DATABASE=chaosarchives
       - TZ=UTC
+
+  minio:
+    image: minio/minio
+    entrypoint: sh
+    command: -c 'mkdir -p /data/chaosarchives && minio server /data --console-address ":9001"'
+    volumes:
+      - ./volumes/minio:/data:rw,z
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    profiles:
+    - development
 
   steward:
     build: ./

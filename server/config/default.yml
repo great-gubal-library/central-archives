@@ -34,11 +34,12 @@ auth:
   scopedJwtExpiry: '365d'
 
 s3:
-  endpoint: 'https://servername.tld'
-  bucketName: 'mybucket'
-  publicRootUrl: 'https://publicservername.tld'
-  accessKeyId: 'MY_ACCESS_KEY'
-  secretAccessKey: 'MY_SECRET_ACCESS_KEY'
+  endpoint: 'http://localhost:9000'
+  region: ''
+  bucketName: 'chaosarchives'
+  publicRootUrl: 'http://localhost:9000/chaosarchives'
+  accessKeyId: 'minioadmin'
+  secretAccessKey: 'minioadmin'
 
 discord:
   botToken: 'INSERT_TOKEN_HERE'
