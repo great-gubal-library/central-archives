@@ -4,7 +4,10 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    'import',
+  ],
   extends: [
     'airbnb-typescript/base',
     'plugin:@typescript-eslint/eslint-recommended',
