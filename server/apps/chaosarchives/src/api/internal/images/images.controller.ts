@@ -14,6 +14,7 @@ import {
   BadRequestException,
   Body,
   Controller, Delete, Get,
+  Logger,
   Param, ParseIntPipe,
   Post, Put, Query, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
@@ -31,6 +32,8 @@ class DeleteImageParamsDto {
 
 @Controller('images')
 export class ImagesController {
+  private readonly logger = new Logger(ImagesController.name);
+
   constructor(private imageService: ImagesService) {}
 
   @Get()
@@ -57,13 +60,23 @@ export class ImagesController {
     @Body() request: ImageUploadRequestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<ImageSummaryDto> {
-		return this.imageService.uploadImage(
-			user,
-			request,
-      file.buffer,
-      file.originalname,
-      file.mimetype,
-    );
+    try {
+      return await this.imageService.uploadImage(
+        user,
+        request,
+        file.buffer,
+        file.originalname,
+        file.mimetype,
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+				this.logger.error(e.message, e.stack);
+			} else {
+				this.logger.error(e);
+			}
+
+      throw e;
+    }
   }
 
   @Put(':id')
