@@ -16,8 +16,20 @@ export default {
   htmlToText(html: string): string {
     return convert(html, {
       wordwrap: false,
-      ignoreHref: true,
-      ignoreImage: true,
+      selectors: [  
+        {
+          selector: 'a',
+          options: {
+            ignoreHref: true,
+          },
+        },
+        {
+          selector: 'img',
+          options: {
+            format: 'skip',
+          },
+        }
+      ]
     });
   },
 };

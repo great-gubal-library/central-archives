@@ -50,7 +50,7 @@ export class LimsaInsiderService {
 			}
 		}
 
-		const currentIssue = currentDoc.querySelector('.inner');
+		const currentIssue = currentDoc.querySelector('.inner')!;
 		result.push(this.parseIssue(currentIssue, 0));
 
 		const archiveIssueSections = archiveDoc.querySelectorAll('.inner section').reverse();
@@ -76,7 +76,7 @@ export class LimsaInsiderService {
 		
 		if (!titleElement) {
 				titleSelector = 'h2';
-				titleElement = issue.querySelector(titleSelector);
+				titleElement = issue.querySelector(titleSelector)!;
 		}
 
 		const title = titleElement.textContent;
@@ -89,11 +89,11 @@ export class LimsaInsiderService {
 			subtitleElement = issue.querySelector(subtitleSelector);
 		}
 
-		const content = issue.querySelector(subtitleSelector).textContent;
-		const author = issue.querySelector(`${subtitleSelector} + div.container`).querySelector('u').textContent.replace(/^By /, '');
+		const content = issue.querySelector(subtitleSelector)!.textContent;
+		const author = issue.querySelector(`${subtitleSelector} + div.container`)!.querySelector('u')!.textContent.replace(/^By /, '');
 		const anchor = issue.id.replace(/-section$/, '');
 		const link = index === 0 ? this.CURRENT_NEWS_SITE : `${this.ARCHIVE_NEWS_SITE}#${anchor}`;
-		const image = this.getImageUrl(issue.querySelector('img'),
+		const image = this.getImageUrl(issue.querySelector('img')!,
 				index === 0 ? this.CURRENT_NEWS_SITE : this.ARCHIVE_NEWS_SITE);
 		const [ month, day ] = issue.querySelectorAll('.container p');
 		const date = (this.eorzeanToGregorianDate(month.textContent, day.textContent) || DateTime.now()).toMillis();
