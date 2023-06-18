@@ -4,9 +4,6 @@ import { Event } from './event.entity';
 
 @Entity()
 export class EventAnnouncement extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
 	@ManyToOne(() => Event, {
 		nullable: false,
 	})

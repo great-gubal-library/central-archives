@@ -7,9 +7,6 @@ import { SearchFields } from './search-fields';
 @Entity()
 @Index(SearchFields.noticeboardItem, { fulltext: true })
 export class NoticeboardItem extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ManyToOne(() => Character, {
     nullable: false,
   })

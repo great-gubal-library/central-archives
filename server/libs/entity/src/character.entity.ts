@@ -14,9 +14,6 @@ import { User } from './user.entity';
 @Unique(['lodestoneId', 'active'])
 @Index(SearchFields.character, { fulltext: true })
 export class Character extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column({
     nullable: false,
   })

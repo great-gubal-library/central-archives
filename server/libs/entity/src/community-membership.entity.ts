@@ -7,9 +7,6 @@ import { Community } from "./community.entity";
 @Entity()
 @Unique(['character', 'community'])
 export class CommunityMembership extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ManyToOne(() => Character, {
     nullable: false,
   })

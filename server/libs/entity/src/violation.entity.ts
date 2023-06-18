@@ -6,9 +6,6 @@ import { User } from "./user.entity";
 @Entity()
 @Unique(['pageId', 'pageType', 'reportedBy', 'open'])
 export class Violation extends BasicEntity {
-	@PrimaryGeneratedColumn()
-  id: number;
-
 	@Column({
 		type: 'enum',
 		enum: PageType,

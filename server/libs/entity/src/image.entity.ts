@@ -10,9 +10,6 @@ import { SearchFields } from './search-fields';
 @Unique(['hash', 'owner'])
 @Index(SearchFields.image, { fulltext: true })
 export class Image extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ManyToOne(() => Character, {
     nullable: false,
   })

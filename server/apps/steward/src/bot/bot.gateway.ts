@@ -1,6 +1,6 @@
 import { discordConfiguration } from "@app/configuration/discord.config";
+import { DiscordClientProvider, Once } from "@discord-nestjs/core";
 import { Injectable, Logger } from "@nestjs/common";
-import { DiscordClientProvider, Once } from "discord-nestjs";
 
 @Injectable()
 export class BotGateway {
@@ -10,7 +10,7 @@ export class BotGateway {
 
   constructor(private readonly discordProvider: DiscordClientProvider) {}
 
-	@Once({ event: 'ready' })
+	@Once('ready')
   async onReady(): Promise<void> {
 		const client = this.discordProvider.getClient();
 		this.logger.log(
@@ -42,7 +42,7 @@ export class BotGateway {
 			throw new Error('Channel not found');
 		}
 
-		if (!channel.isText()) {
+		if (!channel.isTextBased()) {
 			throw new Error('Cannot send messages to a non-text channel');
 		}
 		

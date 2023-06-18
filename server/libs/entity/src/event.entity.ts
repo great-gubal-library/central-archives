@@ -10,9 +10,6 @@ import { SearchFields } from './search-fields';
 @Entity()
 @Index(SearchFields.event, { fulltext: true })
 export class Event extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column({
     nullable: false,
   })

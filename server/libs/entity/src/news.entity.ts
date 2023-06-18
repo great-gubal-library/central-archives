@@ -8,9 +8,6 @@ import { NewsIssue } from './news-issue.entity';
 
 @Entity()
 export class News extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ManyToOne(() => Character, {
     nullable: false,
   })

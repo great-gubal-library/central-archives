@@ -8,21 +8,21 @@ export class RppCharacterProfileDto extends BaseCharacterProfileDto {
   })
   @IsString()
   @IsOptional()
-  appearance: string;
+  declare appearance: string;
 
 	@ApiProperty({
 		example: 'Born in Ishgard in a downtrodden peasant family...',
   })
   @IsString()
   @IsOptional()
-  background: string;
+  declare background: string;
 
 	@ApiProperty({
 		example: 'Red mage',
   })
   @IsString()
   @IsOptional()
-  occupation: string;
+  declare occupation: string;
 
 	@ApiProperty({
     example: 'Elezen',
@@ -36,84 +36,84 @@ export class RppCharacterProfileDto extends BaseCharacterProfileDto {
   })
   @IsString()
   @IsOptional()
-  age: string;
+  declare age: string;
 
 	@ApiProperty({
 		example: 'Ishgard',
   })
   @IsString()
   @IsOptional()
-  birthplace: string;
+  declare birthplace: string;
 
 	@ApiProperty({
 		example: "Revenant's Toll",
   })
   @IsString()
   @IsOptional()
-  residence: string;
+  declare residence: string;
 
 	@ApiProperty({
 		example: 'Lady',
   })
   @IsString()
   @IsOptional()
-  title: string;
+  declare title: string;
 
 	@ApiProperty({
     example: 'Inkie',
   })
   @IsString()
   @IsOptional()
-  nickname: string;
+  declare nickname: string;
 
 	@ApiProperty({
     example: 'Tomorrow is another day.',
   })
   @IsString()
   @IsOptional()
-  motto: string;
+  declare motto: string;
 
 	@ApiProperty({
     example: 'Her paramour, Lambert',
   })
   @IsString()
   @IsOptional()
-  loves: string;
+  declare loves: string;
 
 	@ApiProperty({
     example: 'Hot chocolate',
   })
   @IsString()
   @IsOptional()
-  hates: string;
+  declare hates: string;
 
 	@ApiProperty({
     example: 'Margaux',
   })
   @IsString()
   @IsOptional()
-  friends: string;
+  declare friends: string;
 
 	@ApiProperty({
     example: 'Mother: Arluelle, father: Silgryn',
   })
   @IsString()
   @IsOptional()
-  relatives: string;
+  declare relatives: string;
 
 	@ApiProperty({
     example: 'Elisande',
   })
   @IsString()
   @IsOptional()
-  enemies: string;
+  declare enemies: string;
 
 	@ApiProperty({
     example: 'Helping the helpless',
   })
   @IsString()
   @IsOptional()
-  motivation: string;
+  declare motivation: string;
 
 	@ApiProperty({
     example: 'Tired, restless.',
@@ -134,7 +134,7 @@ export class RppCharacterProfileDto extends BaseCharacterProfileDto {
   })
   @IsString()
   @IsOptional()
-  pronouns: string;
+  declare pronouns: string;
 
 	constructor(properties?: Readonly<RppCharacterProfileDto>) {
     super();

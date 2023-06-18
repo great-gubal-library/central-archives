@@ -8,9 +8,6 @@ import { StoryTag } from './story-tag.entity';
 @Entity()
 @Index(SearchFields.story, { fulltext: true })
 export class Story extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ManyToOne(() => Character, {
     nullable: false,
   })

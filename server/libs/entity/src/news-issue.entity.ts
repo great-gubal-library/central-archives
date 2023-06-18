@@ -4,9 +4,6 @@ import { News } from "./news.entity";
 
 @Entity()
 export class NewsIssue extends BasicEntity {
-	@PrimaryGeneratedColumn()
-  id: number;
-
   @Column({
     nullable: true,
   })

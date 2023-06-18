@@ -5,9 +5,6 @@ import { Server } from "./server.entity";
 
 @Entity()
 export class EventLocation extends BasicEntity {
-	@PrimaryGeneratedColumn()
-  id: number;
-
   @Column({
     nullable: false,
   })

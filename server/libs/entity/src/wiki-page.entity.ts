@@ -7,9 +7,6 @@ import { SearchFields } from './search-fields';
 @Entity()
 @Index(SearchFields.wikiPage, { fulltext: true })
 export class WikiPage extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ManyToOne(() => Character, {
     nullable: false,
   })

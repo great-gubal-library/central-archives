@@ -9,9 +9,6 @@ import { Server } from './server.entity';
 @Unique(['name', 'server'])
 @Index(SearchFields.freeCompany, { fulltext: true })
 export class FreeCompany extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column({
     nullable: false,
     unique: true,

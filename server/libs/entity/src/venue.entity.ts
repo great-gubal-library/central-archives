@@ -12,9 +12,6 @@ import { VenueTag } from './venue-tag.entity';
 @Unique(['name', 'server'])
 @Index(SearchFields.venue, { fulltext: true })
 export class Venue extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column({
     nullable: false,
   })

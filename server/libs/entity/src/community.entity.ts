@@ -8,9 +8,6 @@ import { SearchFields } from './search-fields';
 @Entity()
 @Index(SearchFields.community, { fulltext: true })
 export class Community extends BasicEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column({
     nullable: false,
     unique: true,
