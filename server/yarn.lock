@@ -7699,7 +7699,7 @@ passerror@1.1.1:
   resolved "https://registry.yarnpkg.com/passerror/-/passerror-1.1.1.tgz#a25b88dbdd910a29603aec7dcb96e9a7a97687b4"
   integrity sha512-PwrEQJBkJMxnxG+tdraz95vTstYnCRqiURNbGtg/vZHLgcAODc9hbiD5ZumGUoh3bpw0F0qKLje7Vd2Fd5Lx3g==
 
-passport-jwt@^4.0.0:
+passport-jwt@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/passport-jwt/-/passport-jwt-4.0.1.tgz#c443795eff322c38d173faa0a3c481479646ec3d"
   integrity sha512-UCKMDYhNuGOBE9/9Ycuoyh7vP6jpeTp/+sfMJl7nLff/t6dps+iaeE0hhNkKN8/HZHcJ7lCdOyDxHdDoxoSvdQ==
@@ -7719,13 +7719,14 @@ passport-strategy@1.x.x, passport-strategy@^1.0.0:
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==
 
-passport@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/passport/-/passport-0.4.1.tgz#941446a21cb92fc688d97a0861c38ce9f738f270"
-  integrity sha512-IxXgZZs8d7uFSt3eqNjM9NQ3g3uQCW5avD8mRNoXV99Yig50vjuaez6dQK2qC0kVWPRTujxY0dWgGfT09adjYg==
+passport@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.6.0.tgz#e869579fab465b5c0b291e841e6cc95c005fac9d"
+  integrity sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==
   dependencies:
     passport-strategy "1.x.x"
     pause "0.0.1"
+    utils-merge "^1.0.1"
 
 path-exists@^2.0.0:
   version "2.1.0"
@@ -9880,7 +9881,7 @@ util@^0.12.4:
     is-typed-array "^1.1.3"
     which-typed-array "^1.1.2"
 
-utils-merge@1.0.1:
+utils-merge@1.0.1, utils-merge@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
