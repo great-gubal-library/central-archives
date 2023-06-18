@@ -1,12 +1,7 @@
 import { Type } from "class-transformer";
 import { IsNumber } from "class-validator";
-import { ImageDescriptionDto } from "./image-desciption.dto";
 
-export class ImageUploadRequestDto extends ImageDescriptionDto {
-	@Type(() => Number)
-	@IsNumber()
-	readonly characterId: number;
-
+export class ImageReplaceRequestDto {
 	@Type(() => Number)
 	@IsNumber()
 	readonly thumbLeft: number;
@@ -19,9 +14,7 @@ export class ImageUploadRequestDto extends ImageDescriptionDto {
 	@IsNumber()
 	readonly thumbWidth: number;
 
-	constructor(properties?: Readonly<ImageUploadRequestDto>) {
-		super();
-
+	constructor(properties?: Readonly<ImageReplaceRequestDto>) {
     if (properties) {
       Object.assign(this, properties);
     }

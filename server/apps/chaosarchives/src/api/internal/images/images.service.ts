@@ -4,6 +4,7 @@ import { Character, Event, Image } from '@app/entity';
 import { hashFile } from '@app/security';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
+import { ImageReplaceRequestDto } from '@app/shared/dto/image/image-replace-request.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageUploadRequestDto } from '@app/shared/dto/image/image-upload-request.dto';
 import { ImageDto } from '@app/shared/dto/image/image.dto';
@@ -11,24 +12,33 @@ import { ImagesFilterDto } from '@app/shared/dto/image/images-filter.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import html from '@app/shared/html';
+import SharedConstants from '@app/shared/SharedConstants';
 import {
   BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
-  ServiceUnavailableException
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { escapeForLike } from 'apps/chaosarchives/src/common/db';
 import utils from 'apps/chaosarchives/src/common/utils';
-import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
+import { Connection, EntityManager, FindOptionsWhere, IsNull, Not, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import {
-  ImageSanitizeError,
-  ImageSanitizeResult,
-  sanitizeImage
-} from '../../../common/image-lib';
+import { ImageSanitizeError, ImageSanitizeResult, sanitizeImage } from '../../../common/image-lib';
 import { StorageService } from './storage.service';
+
+interface UploadedImageInfo {
+  uploadedPaths: string[];
+  hash: string;
+  filename: string;
+  width: number;
+  height: number;
+  size: number;
+  format: string;
+  path: string;
+  thumbPath: string;
+}
 
 @Injectable()
 export class ImagesService {
@@ -39,11 +49,10 @@ export class ImagesService {
     @InjectRepository(Character) private characterRepo: Repository<Character>,
   ) {}
 
-
   private toImageDto(image: Image, user?: UserInfo): ImageDto {
     return {
       id: image.id,
-      mine: !!user && user.characters.some(character => character.id === image.owner.id),
+      mine: !!user && user.characters.some((character) => character.id === image.owner.id),
       url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
       thumbUrl: this.storageService.getUrl(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
       filename: image.filename,
@@ -62,12 +71,13 @@ export class ImagesService {
   }
 
   async getImage(id: number, user?: UserInfo): Promise<ImageDto> {
-    const image = await this.imageRepo.createQueryBuilder('image')
+    const image = await this.imageRepo
+      .createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
       .leftJoinAndSelect('image.event', 'event')
       .leftJoinAndSelect('character.server', 'server')
       .where('image.id = :id', { id })
-      .select(['image', 'character.id', 'character.name', 'server.name', 'event.id', 'event.title' ])
+      .select(['image', 'character.id', 'character.name', 'server.name', 'event.id', 'event.title'])
       .getOne();
 
     if (!image || image.category === ImageCategory.UNLISTED) {
@@ -79,14 +89,15 @@ export class ImagesService {
 
   async getImages(filter: ImagesFilterDto): Promise<PagingResultDto<ImageSummaryDto>> {
     const { searchQuery, characterId, eventId, offset, limit, category } = filter;
-    const query = this.imageRepo.createQueryBuilder('image')
+    const query = this.imageRepo
+      .createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
       .leftJoinAndSelect('character.server', 'server')
       .leftJoinAndSelect('image.event', 'event');
 
     if (searchQuery) {
       query.andWhere('(image.title LIKE :searchQuery OR character.name LIKE :searchQuery)', {
-        searchQuery: `%${escapeForLike(searchQuery)}%`
+        searchQuery: `%${escapeForLike(searchQuery)}%`,
       });
     }
 
@@ -111,16 +122,17 @@ export class ImagesService {
     if (limit) {
       query.limit(limit);
     }
-    
-    query.orderBy('image.createdAt', 'DESC')
+
+    query
+      .orderBy('image.createdAt', 'DESC')
       .limit(limit)
       .select(['image', 'character.id', 'character.name', 'server.name']);
-    
-    const [ total, images ] = await Promise.all([ query.getCount(), query.getMany() ]);
+
+    const [total, images] = await Promise.all([query.getCount(), query.getMany()]);
 
     return {
       total,
-      data: images.map(image => this.toImageSummaryDto(image))
+      data: images.map((image) => this.toImageSummaryDto(image)),
     };
   }
 
@@ -140,25 +152,27 @@ export class ImagesService {
     };
   }
 
-	private stripWikilinks(text: string): string {
-		return text.replace(/\[\[(.+?\|)?(.+?)\]\]/g, '$2');
-	}
+  private stripWikilinks(text: string): string {
+    return text.replace(/\[\[(.+?\|)?(.+?)\]\]/g, '$2');
+  }
 
   async getMyImages(characterId: number, user: UserInfo): Promise<ImageDto[]> {
-    const isMyCharacter = (await this.characterRepo.count({
-      where: {
-        id: characterId,
-        user: {
-          id: user.id
-        }
-      }
-    }) > 0);
+    const isMyCharacter =
+      (await this.characterRepo.count({
+        where: {
+          id: characterId,
+          user: {
+            id: user.id,
+          },
+        },
+      })) > 0;
 
     if (!isMyCharacter) {
       throw new NotFoundException('Character not found or is not your character');
     }
 
-    const images = await this.imageRepo.createQueryBuilder('image')
+    const images = await this.imageRepo
+      .createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
       .leftJoinAndSelect('image.event', 'event')
       .leftJoinAndSelect('character.server', 'server')
@@ -167,7 +181,7 @@ export class ImagesService {
       .select(['image', 'character.id', 'character.name', 'server.name', 'event.id', 'event.title'])
       .getMany();
 
-    return images.map(image => this.toImageDto(image, user));
+    return images.map((image) => this.toImageDto(image, user));
   }
 
   async uploadImage(
@@ -179,15 +193,10 @@ export class ImagesService {
   ): Promise<ImageSummaryDto> {
     // Validate category and title
     if (request.category !== ImageCategory.UNLISTED && !request.title.trim()) {
-      throw new BadRequestException(
-        'Title is required for artwork and screenshots',
-      );
+      throw new BadRequestException('Title is required for artwork and screenshots');
     }
 
-    // Validate MIME type before doing anything else
-    if (origMimetype !== 'image/jpeg' && origMimetype !== 'image/png') {
-      throw new BadRequestException('Only JPEG and PNG formats are allowed');
-    }
+    this.validateMimeType(origMimetype);
 
     // Remember uploaded paths in case upload succeeds but then the transaction fails
     const uploadedPaths: string[] = [];
@@ -204,87 +213,26 @@ export class ImagesService {
             },
           },
           select: ['id', 'name'],
-          relations: [ 'server' ],
+          relations: ['server'],
         });
 
         if (!character) {
           throw new BadRequestException('Invalid character ID');
         }
 
-        // Replace characters forbidden in Windows and Unix filenames and URLs
-        const filename = origFilename.replace(/[<>:"/\\|?*#]/g, '_');
+        const uploadResult = await this.doSanitizeAndUpload(em, user, character.id, request, origFilename, origBuffer);
+        uploadedPaths.push(...uploadResult.uploadedPaths);
 
-        // Prepare and upload image
-        let sanitizeResult: ImageSanitizeResult;
-
-        try {
-          sanitizeResult = await sanitizeImage(origBuffer, {
-            left: request.thumbLeft,
-            top: request.thumbTop,
-            width: request.thumbWidth,
-          });
-        } catch (e) {
-          if (e instanceof ImageSanitizeError) {
-            throw new BadRequestException(e.message);
-          }
-
-          throw e;
-        }
-
-        const { buffer, thumb, format, width, height } = sanitizeResult;
-        const size = buffer.length;
-        const hash = await hashFile(buffer);
-        const mimetype =
-          format === ImageFormat.PNG ? 'image/png' : 'image/jpeg';
-
-        // Check that this is not a duplicate upload
-        const existingImage = await em.getRepository(Image).findOne({
-          where: {
-            hash,
-            owner: {
-              id: character.id,
-            },
-          },
-          select: ['id', 'filename'],
-        });
-
-        if (existingImage && existingImage.id) {
-          throw new ConflictException(
-            `You already have an image with the same contents: ${existingImage.filename}`,
-          );
-        }
-
-        // Check the user still has upload space left
-        const maxUploadSpaceMiB = serverConfiguration.maxUploadSpacePerUserMiB;
-        const maxUploadSpaceBytes = maxUploadSpaceMiB * 1024 * 1024;
-        const currentUploadSpaceBytes = await em
-          .getRepository(Image)
-          .createQueryBuilder('image')
-          .innerJoinAndSelect('image.owner', 'character')
-          .innerJoinAndSelect('character.user', 'user')
-          .where('user.id = :userId', { userId: user.id })
-          .select('SUM(image.size)')
-          .getRawOne();
-
-        if (currentUploadSpaceBytes + size > maxUploadSpaceBytes) {
-          throw new BadRequestException(
-            `You have too much image content stored (maximum is ${maxUploadSpaceMiB})`,
-          );
-        }
-
-        const path = `${character.id}/${hash}/${filename}`;
-        const thumbPath = `${character.id}/${hash}/thumb_${filename}`;
-
-        try {
-          await this.storageService.uploadFile(path, buffer, mimetype);
-          uploadedPaths.push(path);
-          await this.storageService.uploadFile(thumbPath, thumb, mimetype);
-          uploadedPaths.push(thumbPath);
-        } catch (e) {
-          throw new ServiceUnavailableException(
-            'Cannot upload file to storage service',
-          );
-        }
+        const {
+          width,
+          height,
+          hash,
+          filename,
+          size,
+          format,
+          path,
+          thumbPath
+        } = uploadResult;
 
         // Save image in database
         const image = new Image();
@@ -295,13 +243,13 @@ export class ImagesService {
           size,
           hash,
           filename,
+          format,
           category: request.category,
           title: request.title,
           description: html.sanitize(request.description),
           credits: request.credits,
-          format,
         });
-        
+
         await this.assignImageEvent(em, image, request);
         await em.getRepository(Image).save(image);
 
@@ -320,32 +268,263 @@ export class ImagesService {
         };
       });
     } catch (e) {
-      if (uploadedPaths.length > 0) {
-        // We uploaded the file before the transaction failed. Delete it.
-        try {
-          await Promise.all(
-            uploadedPaths.map((path) => this.storageService.deleteFile(path)),
-          );
-        } catch (ex) {
-          // Well, what can we do?
-        }
-      }
-
+      // We uploaded the files before the transaction failed. Delete them.
+      await this.deleteUploadedFiles(uploadedPaths);
       throw e;
     }
   }
 
+  async replaceImage(
+    id: number,
+    user: UserInfo,
+    request: ImageReplaceRequestDto,
+    origBuffer: Buffer,
+    origFilename: string,
+    origMimetype: string,
+  ): Promise<ImageSummaryDto> {
+    this.validateMimeType(origMimetype);
+
+    // Remember uploaded paths in case upload succeeds but then the transaction fails
+    const uploadedPaths: string[] = [];
+    // Remember paths to delete after transaction succeeds
+    const originalPaths: string[] = [];
+
+    try {
+      const imageSummary = await this.connection.transaction(async (em) => {
+        const imageRepo = em.getRepository(Image);
+        const image = await imageRepo
+          .createQueryBuilder('image')
+          .innerJoinAndSelect('image.owner', 'character')
+          .innerJoinAndSelect('character.user', 'user')
+          .innerJoinAndSelect('character.server', 'server')
+          .where('image.id = :id', { id })
+          .andWhere('user.id = :userId', { userId: user.id })
+          .select(['image', 'character.id', 'character.name', 'server.name' ])
+          .getOne();
+
+        if (!image) {
+          throw new NotFoundException('Image not found');
+        }
+
+        const character = image.owner;
+        originalPaths.push(
+          `${character.id}/${image.hash}/${image.filename}`,
+          `${character.id}/${image.hash}/thumb_${image.filename}`,
+        );
+    
+        const uploadResult = await this.doSanitizeAndUpload(em, user, character.id, request, origFilename, origBuffer,
+          image);
+        uploadedPaths.push(...uploadResult.uploadedPaths);
+
+        const {
+          width,
+          height,
+          hash,
+          filename,
+          size,
+          format,
+          path,
+          thumbPath
+        } = uploadResult;
+
+        // Save changes to image in database
+        Object.assign(image, {
+          width,
+          height,
+          size,
+          hash,
+          filename,
+          format,
+        });
+
+        await imageRepo.save(image);
+
+        return {
+          id: image.id,
+          url: this.storageService.getUrl(path),
+          thumbUrl: this.storageService.getUrl(thumbPath),
+          filename,
+          description: utils.htmlToText(this.stripWikilinks(image.description)),
+          owner: character.name,
+          ownerServer: character.server.name,
+          width,
+          height,
+          title: image.title,
+          createdAt: image.createdAt!.getTime(),
+        };
+      });
+
+      // Transaction has succeeded - delete files
+      await this.deleteUploadedFiles(originalPaths);
+
+      return imageSummary;
+    } catch (e) {
+      // We uploaded the files before the transaction failed. Delete them.
+      await this.deleteUploadedFiles(uploadedPaths);
+      throw e;
+    }
+  }
+
+  private validateMimeType(mimetype: string) {
+    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png') {
+      throw new BadRequestException('Only JPEG and PNG formats are allowed');
+    }
+  }
+
+  private async doSanitizeAndUpload(
+    em: EntityManager,
+    user: UserInfo,
+    characterId: number,
+    request: ImageReplaceRequestDto,
+    origFilename: string,
+    origBuffer: Buffer,
+    existingImage?: Image,
+  ): Promise<UploadedImageInfo> {
+    const uploadedPaths = [];
+
+    // Replace characters forbidden in Windows and Unix filenames and URLs
+    const filename = origFilename.replace(/[<>:"/\\|?*#]/g, '_');
+
+    // Prepare and upload image
+    let sanitizeResult: ImageSanitizeResult;
+
+    try {
+      sanitizeResult = await sanitizeImage(origBuffer, {
+        left: request.thumbLeft,
+        top: request.thumbTop,
+        width: request.thumbWidth,
+      });
+    } catch (e) {
+      if (e instanceof ImageSanitizeError) {
+        throw new BadRequestException(e.message);
+      }
+
+      throw e;
+    }
+
+    const { buffer, thumb, format, width, height } = sanitizeResult;
+    const size = buffer.length;
+    const hash = await hashFile(buffer);
+    const mimetype = format === ImageFormat.PNG ? 'image/png' : 'image/jpeg';
+
+    if (existingImage) {
+      // Check that the upload result is different from the original
+      if (hash == existingImage.hash && filename == existingImage.filename) {
+        throw new ConflictException('You are trying to replace this image with the same contents and file name');
+      }
+
+      // Check that the image is not used as a banner; if it is, enforce proportions
+      if (await this.isBanner(em, existingImage) && width / height < SharedConstants.MIN_BANNER_ASPECT_RATIO) {
+        throw new BadRequestException(
+          'This image is used as a banner, but the new image is too tall for its width to be a banner');
+      }
+    }
+
+    // Check that this is not a duplicate upload
+    const duplicateImageSearchParams: FindOptionsWhere<Image> = {
+      hash,
+      owner: {
+        id: characterId,
+      },
+    }
+
+    if (existingImage) {
+      duplicateImageSearchParams.id = Not(existingImage.id);
+    }
+
+    const duplicateImage = await em.getRepository(Image).findOne({
+      where: duplicateImageSearchParams,
+      select: ['id', 'filename'],
+    });
+
+    if (duplicateImage && duplicateImage.id) {
+      throw new ConflictException(`You already have an image with the same contents: ${duplicateImage.filename}`);
+    }
+
+    // Check the user still has upload space left
+    const maxUploadSpaceMiB = serverConfiguration.maxUploadSpacePerUserMiB;
+    const maxUploadSpaceBytes = maxUploadSpaceMiB * 1024 * 1024;
+    const currentUploadSpaceBytesQuery = em.getRepository(Image)
+      .createQueryBuilder('image')
+      .innerJoinAndSelect('image.owner', 'character')
+      .innerJoinAndSelect('character.user', 'user')
+      .where('user.id = :userId', { userId: user.id });
+
+    if (existingImage) {
+      currentUploadSpaceBytesQuery.andWhere('image.id <> :imageId', { imageId: existingImage.id });
+    }
+
+    const currentUploadSpaceBytes = await currentUploadSpaceBytesQuery
+      .select('SUM(image.size)')
+      .getRawOne();
+
+    if (currentUploadSpaceBytes + size > maxUploadSpaceBytes) {
+      throw new BadRequestException(`You have too much image content stored (maximum is ${maxUploadSpaceMiB})`);
+    }
+
+    const path = `${characterId}/${hash}/${filename}`;
+    const thumbPath = `${characterId}/${hash}/thumb_${filename}`;
+
+    try {
+      await this.storageService.uploadFile(path, buffer, mimetype);
+      uploadedPaths.push(path);
+      await this.storageService.uploadFile(thumbPath, thumb, mimetype);
+      uploadedPaths.push(thumbPath);
+    } catch (e) {
+      throw new ServiceUnavailableException('Cannot upload file to storage service');
+    }
+    
+    return {
+      uploadedPaths,
+      hash,
+      filename,
+      width,
+      height,
+      size,
+      format,
+      path,
+      thumbPath,
+    }
+  }
+
+  private async deleteUploadedFiles(filePaths: string[]) {
+    if (filePaths.length > 0) {
+      try {
+        await Promise.all(filePaths.map((path) => this.storageService.deleteFile(path)));
+      } catch (ex) {
+        // Well, what can we do?
+      }
+    }
+  }
+
+  private async isBanner(em: EntityManager, image: Image) {
+    const bannerCounts = await Promise.all([
+      em.getRepository(Character).countBy({
+        banner: {
+          id: image.id,
+        },
+      }),
+      em.getRepository(Event).countBy({
+        banner: {
+          id: image.id,
+        },
+      }),
+    ])
+
+    return bannerCounts.some(count => count > 0);
+  }
+
   async editImage(id: number, request: ImageDescriptionDto, user: UserInfo): Promise<void> {
-    await this.connection.transaction(async em => {
+    await this.connection.transaction(async (em) => {
       const imageRepo = em.getRepository(Image);
-      const image = await em.getRepository(Image)
+      const image = await imageRepo
         .createQueryBuilder('image')
         .innerJoinAndSelect('image.owner', 'character')
         .leftJoinAndSelect('image.event', 'event')
         .innerJoinAndSelect('character.user', 'user')
-        .where('image.id = :id', { id } )
+        .where('image.id = :id', { id })
         .andWhere('user.id = :userId', { userId: user.id })
-        .select([ 'image', 'event' ])
+        .select(['image', 'event'])
         .getOne();
 
       if (!image) {
@@ -353,11 +532,9 @@ export class ImagesService {
       }
 
       if (request.category !== ImageCategory.UNLISTED && !request.title.trim()) {
-        throw new BadRequestException(
-          'Title is required for artwork and screenshots',
-        );
-      }  
-  
+        throw new BadRequestException('Title is required for artwork and screenshots');
+      }
+
       image.title = request.title;
       image.category = request.category;
       image.description = html.sanitize(request.description);
@@ -385,15 +562,15 @@ export class ImagesService {
   }
 
   async deleteImage(id: number, force: boolean, user: UserInfo): Promise<void> {
-		const imageEntity = await this.connection.transaction(async em => {
+    const imageEntity = await this.connection.transaction(async (em) => {
       const imageRepo = em.getRepository(Image);
       const image = await imageRepo
         .createQueryBuilder('image')
         .innerJoinAndSelect('image.owner', 'character')
         .innerJoinAndSelect('character.user', 'user')
-        .where('image.id = :id', { id } )
+        .where('image.id = :id', { id })
         .andWhere('user.id = :userId', { userId: user.id })
-        .select([ 'image.id', 'image.hash', 'image.filename', 'character.id' ])
+        .select(['image.id', 'image.hash', 'image.filename', 'character.id'])
         .getOne();
 
       if (!image) {
@@ -403,39 +580,49 @@ export class ImagesService {
       if (!force) {
         // Check if the image is used as a banner, and if yes, refuse to delete
 
-        if (await em.getRepository(Character).countBy({
-          banner: {
-            id: image.id
-          },
-        }) > 0) {
+        if (
+          (await em.getRepository(Character).countBy({
+            banner: {
+              id: image.id,
+            },
+          })) > 0
+        ) {
           throw new ConflictException('This image is in use as a character banner');
         }
 
-        if (await em.getRepository(Event).countBy({
-          banner: {
-            id: image.id
-          },
-        }) > 0) {
+        if (
+          (await em.getRepository(Event).countBy({
+            banner: {
+              id: image.id,
+            },
+          })) > 0
+        ) {
           throw new ConflictException('This image is in use as an event banner');
         }
       } else {
         // Unlink as a banner
 
-        await em.getRepository(Character).update({
-          banner: {
-            id: image.id,
+        await em.getRepository(Character).update(
+          {
+            banner: {
+              id: image.id,
+            },
           },
-        }, {
-          banner: null
-        } as unknown as QueryDeepPartialEntity<Character>);
+          {
+            banner: null,
+          } as unknown as QueryDeepPartialEntity<Character>,
+        );
 
-        await em.getRepository(Event).update({
-          banner: {
-            id: image.id,
+        await em.getRepository(Event).update(
+          {
+            banner: {
+              id: image.id,
+            },
           },
-        }, {
-          banner: null
-        } as unknown as QueryDeepPartialEntity<Event>);
+          {
+            banner: null,
+          } as unknown as QueryDeepPartialEntity<Event>,
+        );
       }
 
       // Delete from the database
