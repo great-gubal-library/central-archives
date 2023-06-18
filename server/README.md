@@ -9,7 +9,7 @@ yarn install
 
 ### Install server dependencies (MariaDB and Redis) in Docker
 ```bash
-docker-compose up -d mariadb redis
+docker compose up -d mariadb redis
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
