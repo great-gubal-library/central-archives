@@ -1,7 +1,7 @@
 {
   "name": "chaosarchives",
   "version": "0.1.0",
-  "description": "The prototype of the RP portal for the Chaos EU datacenter in FFXIV",
+  "description": "Roleplaying portal for the Chaos EU datacenter in FFXIV",
   "author": "Maia Everett <maia@everett.one>",
   "private": true,
   "license": "AGPL-3.0",
