@@ -20,7 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/chaosarchives/test/jest-e2e.json",
     "docker:build": "docker build -t chaosarchives .",
-    "docker:deploy": "docker-compose up -d"
+    "docker:deploy": "docker compose up -d"
   },
   "dependencies": {
     "@discord-nestjs/common": "^5.2.5",
