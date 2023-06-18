@@ -5,5 +5,6 @@
 		{ "directory": "server", "changeProcessCWD": true }
 	],
 	"editor.tabSize": 2,
-  "vetur.format.enable": false
+  "vetur.format.enable": false,
+	"typescript.tsdk": "./server/node_modules/typescript/lib"
 }
