@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
-    "@tinymce/tinymce-vue": "^4",
+    "@tinymce/tinymce-vue": "^5.1.0",
     "@toby.mosque/quasar-ui-qdatetimepicker": "^2.0.0-rc.3",
     "axios": "^1.4.0",
     "core-js": "^3.31.0",

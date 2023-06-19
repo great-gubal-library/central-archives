@@ -42,15 +42,16 @@ const FONTS = [
 const FONT_OPTION = FONTS.map(font => `${font}=${font},sans-serif`).join(';');
 
 const TINYMCE_PLUGINS = [
-  'code advlist autolink lists link image charmap hr nonbreaking',
-  'searchreplace visualblocks',
-  'table paste help wordcount'
+  'code', 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'nonbreaking',
+  'searchreplace', 'visualblocks',
+  'table', 'help', 'wordcount'
 ];
 
 const TINYMCE_OPTIONS = {
   inline: true,
+  skin: 'tinymce-5',
   toolbar:
-    'undo redo | formatselect | bold italic | \
+    'undo redo | blocks | bold italic | \
     alignleft aligncenter alignright | \
     image gallery upload link hr | bullist numlist | removeformat',
   toolbar_mode: 'wrap',
@@ -59,7 +60,7 @@ const TINYMCE_OPTIONS = {
     edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
     view: { title: 'View', items: 'code | visualaid visualchars visualblocks' },
     insert: { title: 'Insert', items: 'image gallery upload link | charmap nonbreaking hr | hidedetails' },
-    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat' },
+    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | removeformat' },
     list: { title: 'List', items: 'outdent indent' },
     table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' },
     help: { title: 'Help', items: 'help' }
@@ -70,7 +71,7 @@ const TINYMCE_OPTIONS = {
   image_advtab: true,
   link_title: false,
   block_formats: 'Paragraph=p; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6',
-  font_formats: FONT_OPTION,
+  font_family_formats: FONT_OPTION,
   style_formats: [
     { title: 'Headings', items: [
       { title: 'Heading 3', format: 'h3' },
@@ -100,7 +101,7 @@ const TINYMCE_OPTIONS = {
       { title: 'Justify', format: 'alignjustify' }
     ]}
   ],
-  fontsize_formats: '8pt 10.5pt 12pt 14pt 18pt 24pt 36pt',
+  font_size_formats: '8pt 10.5pt 12pt 14pt 18pt 24pt 36pt',
 };
 
 let uid = 0;
@@ -260,5 +261,11 @@ export default class HtmlEditor extends Vue.with(Props) {
 
 .html-editor__toolbar {
   width: calc(100% + 4px);
+}
+
+@media screen and (min-width: $breakpoint-md) {
+  .html-editor .tox .tox-dialog {
+    max-width: 800px;
+  }
 }
 </style>
