@@ -60,6 +60,9 @@ export default class ConfirmImageDeleteDialog extends Vue.with(Props) {
 				createdAt: image.createdAt,
 				width: image.width,
 				height: image.height,
+				owner: image.author,
+				ownerServer: image.authorServer,
+				description: image.description,
 			}));
 		}
 
