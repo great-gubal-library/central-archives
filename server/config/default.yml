@@ -5,6 +5,8 @@ server:
   maxUploadSpacePerUserMiB: 500
   stewardWebhookPort: 8112
   stewardWebhookUrl: 'http://steward:8112'
+  apis:
+    rpp: true
 
 db:
   type: 'mariadb'

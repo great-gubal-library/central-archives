@@ -10,20 +10,22 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(transformAndValidate);
 
-  // Add Swagger for RPP API
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Chaos Archives RPP API')
-    .setVersion('1.0')
-    .addBearerAuth({
-      type: 'apiKey',
-      description: 'Access token obtained by /login'
-    })
-    .build();
+  if (serverConfiguration.apis.rpp) {
+    // Add Swagger for RPP API
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('Chaos Archives RPP API')
+      .setVersion('1.0')
+      .addBearerAuth({
+        type: 'apiKey',
+        description: 'Access token obtained by /login'
+      })
+      .build();
 
-  const swaggerDoc = SwaggerModule.createDocument(app, swaggerConfig, {
-    include: [ RppModule ],
-  });
-  SwaggerModule.setup('api/rpp/swagger', app, swaggerDoc);
+    const swaggerDoc = SwaggerModule.createDocument(app, swaggerConfig, {
+      include: [ RppModule ],
+    });
+    SwaggerModule.setup('api/rpp/swagger', app, swaggerDoc);
+  }
 
   await app.listen(serverConfiguration.port);
 }

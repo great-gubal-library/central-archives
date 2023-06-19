@@ -6,4 +6,7 @@ export interface ServerConfigInterface {
 	maxUploadSpacePerUserMiB: number,
 	stewardWebhookPort: number,
 	stewardWebhookUrl: string,
+	apis: {
+		rpp: boolean;
+	}
 }
