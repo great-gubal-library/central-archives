@@ -54,8 +54,8 @@ export class ImagesService {
     return {
       id: image.id,
       mine: !!user && user.characters.some((character) => character.id === image.owner.id),
-      url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
-      thumbUrl: this.storageService.getUrl(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
+      url: this.storageService.getUrl(this.getStoragePath(image.owner.id, image.hash, image.filename)),
+      thumbUrl: this.storageService.getUrl(this.getThumbnailStoragePath(image.owner.id, image.hash, image.filename)),
       filename: image.filename,
       width: image.width,
       height: image.height,
@@ -140,8 +140,8 @@ export class ImagesService {
   toImageSummaryDto(image: Image): ImageSummaryDto {
     return {
       id: image.id,
-      url: this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`),
-      thumbUrl: this.storageService.getUrl(`${image.owner.id}/${image.hash}/thumb_${image.filename}`),
+      url: this.storageService.getUrl(this.getStoragePath(image.owner.id, image.hash, image.filename)),
+      thumbUrl: this.storageService.getUrl(this.getThumbnailStoragePath(image.owner.id, image.hash, image.filename)),
       filename: image.filename,
       owner: image.owner ? image.owner.name : null,
       ownerServer: image.owner?.server ? image.owner.server.name : null,
@@ -326,8 +326,8 @@ export class ImagesService {
 
         const character = image.owner;
         originalPaths.push(
-          `${character.id}/${image.hash}/${image.filename}`,
-          `${character.id}/${image.hash}/thumb_${image.filename}`,
+          this.getStoragePath(character.id, image.hash, image.filename),
+          this.getThumbnailStoragePath(character.id, image.hash, image.filename),
         );
     
         const uploadResult = await this.doSanitizeAndUpload(em, user, character.id, request, origFilename, origBuffer,
@@ -372,7 +372,7 @@ export class ImagesService {
         };
       });
 
-      // Transaction has succeeded - delete files
+      // Transaction has succeeded - delete replaced files
       await this.deleteUploadedFiles(originalPaths);
 
       return imageSummary;
@@ -427,7 +427,7 @@ export class ImagesService {
 
     if (existingImage) {
       // Check that the upload result is different from the original
-      if (hash == existingImage.hash && filename == existingImage.filename) {
+      if (hash === existingImage.hash && filename === existingImage.filename) {
         throw new ConflictException('You are trying to replace this image with the same contents and file name');
       }
 
@@ -480,8 +480,8 @@ export class ImagesService {
       throw new BadRequestException(`You have too much image content stored (maximum is ${maxUploadSpaceMiB})`);
     }
 
-    const path = `${characterId}/${hash}/${filename}`;
-    const thumbPath = `${characterId}/${hash}/thumb_${filename}`;
+    const path = this.getStoragePath(characterId, hash, filename);
+    const thumbPath = this.getThumbnailStoragePath(characterId, hash, filename);
 
     try {
       await this.storageService.uploadFile(path, buffer, mimetype);
@@ -650,12 +650,22 @@ export class ImagesService {
 
     // Delete from storage only if transaction succeeds
     await Promise.all([
-      this.storageService.deleteFile(`${imageEntity.owner.id}/${imageEntity.hash}/${imageEntity.filename}`),
-      this.storageService.deleteFile(`${imageEntity.owner.id}/${imageEntity.hash}/thumb_${imageEntity.filename}`),
+      this.storageService.deleteFile(
+        this.getStoragePath(imageEntity.owner.id, imageEntity.hash, imageEntity.filename)),
+      this.storageService.deleteFile(
+        this.getThumbnailStoragePath(imageEntity.owner.id, imageEntity.hash, imageEntity.filename)),
     ]);
   }
 
   getUrl(image: Image): string {
-    return this.storageService.getUrl(`${image.owner.id}/${image.hash}/${image.filename}`);
+    return this.storageService.getUrl(this.getStoragePath(image.owner.id, image.hash, image.filename));
+  }
+
+  private getStoragePath(characterId: number, hash: string, filename: string) {
+    return `${characterId}/${hash}/${filename}`;
+  }
+
+  private getThumbnailStoragePath(characterId: number, hash: string, filename: string) {
+    return `${characterId}/${hash}/thumb_${filename}`;
   }
 }
