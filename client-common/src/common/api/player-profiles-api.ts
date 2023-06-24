@@ -14,6 +14,10 @@ export default class PlayerProfilesAPI {
 		return this.transport.get(`${id}`);
 	}
 
+	async createOwnPlayerProfile(): Promise<PlayerProfileDto> {
+		return this.transport.authPost('', {});
+	}
+
 	async updateOwnPlayerProfile(playerProfileDto: PlayerProfileEditDto): Promise<void> {
 		await this.transport.authPut('', playerProfileDto);
 	}

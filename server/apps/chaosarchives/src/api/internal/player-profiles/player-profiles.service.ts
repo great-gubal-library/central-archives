@@ -57,6 +57,33 @@ export class PlayerProfilesService {
 		};
   }
 
+	async createOwnPlayerProfile(userInfo: UserInfo): Promise<PlayerProfileDto> {
+		await this.dataSource.transaction(async (em) => {
+			const userRepo = em.getRepository(User);
+			const user = await userRepo.findOne({
+				where: {
+					id: userInfo.id,
+					role: Not(Role.UNVERIFIED),
+				},
+				select: ['id', 'publicPlayerProfile', 'playerName', 'playerProfile', 'carrdProfile'],
+			});
+
+			if (!user) {
+				throw new NotFoundException("Cannot find you - this shouldn't be possible");
+			}
+
+			user.publicPlayerProfile = true;
+
+			if (!user.playerName) {
+				user.playerName = userInfo.characters[0].name;
+			}
+
+			await userRepo.save(user);
+    });
+
+		return this.getPlayerProfile(userInfo.id);
+	}
+
   async updateOwnPlayerProfile(playerProfileDto: PlayerProfileEditDto, userInfo: UserInfo): Promise<void> {
     checkCarrdProfile(playerProfileDto.carrdProfile, userInfo);
 

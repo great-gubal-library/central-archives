@@ -139,13 +139,7 @@ export default class PagePlayerProfile extends Vue {
 
   async onEnableClick() {
     try {
-      await this.$api.playerProfiles.updateOwnPlayerProfile({
-        name: this.playerProfile.name || this.$store.getters.character!.name,
-        content: this.playerProfile.content || '',
-        carrdProfile: this.playerProfile.carrdProfile || '',
-      });
-
-      this.playerProfile = await $api.playerProfiles.getPlayerProfile(this.userId);
+      this.playerProfile = await this.$api.playerProfiles.createOwnPlayerProfile();
       this.enabled = true;
       notifySuccess('Public character profile enabled.');
     } catch (e) {
