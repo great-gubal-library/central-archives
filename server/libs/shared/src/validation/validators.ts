@@ -6,3 +6,5 @@ const urlRegex = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127
 export function isValidUrl(str: string): boolean {
 	return urlRegex.test(str);
 }
+
+export const playerNameRegex = /^[A-Z][a-z']+(?: [A-Z][a-z']+)?$/;

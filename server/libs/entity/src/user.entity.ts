@@ -53,6 +53,13 @@ export class User extends BasicEntity {
   publicPlayerProfile: boolean;
 
   @Column({
+    type: 'varchar',
+    nullable: false,
+    default: ''
+  })
+  playerName: string;
+
+  @Column({
     type: 'mediumtext',
     nullable: false,
     default: ''

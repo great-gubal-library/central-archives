@@ -18,6 +18,7 @@ import { UserModule } from './user/user.module';
 import { VenuesModule } from './venues/venues.module';
 import { ViolationsModule } from './violations/violations.module';
 import { WikiModule } from "./wiki/wiki.module";
+import { PlayerProfilesModule } from "./player-profiles/player-profiles.module";
 
 const controllerModules = [
 	MainPageModule,
@@ -38,6 +39,7 @@ const controllerModules = [
 	ServersModule,
 	StatisticsModule,
 	WikiModule,
+	PlayerProfilesModule,
 ];
 
 @Module({
