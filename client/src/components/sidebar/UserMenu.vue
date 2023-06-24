@@ -243,6 +243,7 @@ export default class UserMenu extends Vue {
 }
 
 .user-menu .q-icon {
+  margin-right: 4px;
   color: #e0e0e0;
 }
 </style>
