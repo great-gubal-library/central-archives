@@ -24,7 +24,7 @@
         Or perhaps you're looking for your <router-link :to="myCharacterProfileLink">public character profile</router-link> instead?
       </p>
     </template>
-    <player-profile-view v-if="userId !== -1" :id="userId" :player-profile="playerProfile" :preview="false" />
+    <player-profile-view v-if="userId !== -1 && (!mine || enabled)" :id="userId" :player-profile="playerProfile" :preview="false" />
     <report-violation-section :pageType="PageType.PLAYER_PROFILE" :pageId="userId" />
   </q-page>
 </template>
