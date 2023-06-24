@@ -45,4 +45,24 @@ export class User extends BasicEntity {
     nullable: true
   })
   newEmailVerificationCode: string|null;
+
+  @Column({
+    nullable: false,
+    default: false,
+  })
+  publicPlayerProfile: boolean;
+
+  @Column({
+    type: 'mediumtext',
+    nullable: false,
+    default: ''
+  })
+  playerProfile: string;
+
+  @Column({
+    nullable: false,
+    width: 100,
+    default: '',
+  })
+  carrdProfile: string;
 }
