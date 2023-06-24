@@ -51,13 +51,14 @@ export class MainPageService {
 			.orderBy('character.verifiedAt', 'DESC')
 			.innerJoinAndSelect('character.server', 'server')
 			.limit(this.MAX_NEW_PROFILES)
-			.select([ 'character.name', 'character.race', 'character.avatar', 'server.name' ])
+			.select([ 'character.name', 'character.race', 'character.avatar', 'character.occupation', 'server.name' ])
 			.getMany();
 
 		return newCharacters.map(character => ({
 			name: character.name,
 			race: character.race,
 			avatar: character.avatar,
+			occupation: character.occupation,
 			server: character.server.name,
 		}));
 	}
