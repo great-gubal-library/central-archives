@@ -154,7 +154,24 @@ export default class PagePlayerProfile extends Vue {
   }
 
   onDisableClick() {
-    // Do nothing
+    this.$q.dialog({
+        title: 'Confirm Disable',
+        message: 'Do you want to disable your public player profile? Your player profile page will be hidden and your character profile pages will be unlinked from it.',
+				ok: {
+					label: 'Disable Public Player Profile',
+					color: 'negative',
+					flat: true
+				},
+        cancel: 'Cancel',
+      }).onOk(async () => {
+        try {
+          await this.$api.playerProfiles.deleteOwnPlayerProfile();
+          this.enabled = false;
+          notifySuccess('Public character profile disabled.');
+        } catch (e) {
+          notifyError(e);
+        }
+      });    
   }
 }
 </script>
