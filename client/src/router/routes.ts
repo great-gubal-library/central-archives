@@ -458,6 +458,15 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/PlayerProfile.vue') }],
   },
 
+  {
+    path: '/edit-player-profile',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/EditPlayerProfile.vue') }],
+    meta: {
+      title: 'Edit Player Profile'
+    },
+  },
+
   // Links
   
   {
