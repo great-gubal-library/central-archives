@@ -16,7 +16,7 @@
       </q-item-section>
       <q-item-section>
           <q-item-label>{{profile.name}}</q-item-label>
-          <q-item-label caption>{{$display.races[profile.race]}}</q-item-label>
+          <q-item-label caption>{{$display.races[profile.race]}}<template v-if="profile.occupation"> — {{ profile.occupation }}</template></q-item-label>
       </q-item-section>
     </q-item>
   </q-list>

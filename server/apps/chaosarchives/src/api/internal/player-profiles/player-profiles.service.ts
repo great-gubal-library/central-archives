@@ -36,6 +36,9 @@ export class PlayerProfilesService {
 					id: userId,
 				},
 			},
+			order: {
+				'name': 'ASC',
+			},
 			relations: [ 'server' ],
 			select: [ 'id', 'name', 'occupation', 'race', 'avatar', 'server' ]
 		});
