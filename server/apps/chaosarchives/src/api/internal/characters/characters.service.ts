@@ -53,7 +53,15 @@ export class CharactersService {
       .where('character.verifiedAt IS NOT NULL')
       .andWhere('character.name = :name', { name })
       .andWhere('server.name = :server', { server })
-      .select(['character', 'server.name', 'user.id', 'freeCompany', 'fcServer.name' ])
+      .select([
+        'character',
+        'server.name',
+        'user.id',
+        'user.playerName',
+        'user.publicPlayerProfile',
+        'freeCompany',
+        'fcServer.name',
+      ])
       .getOne();
 
     if (!character) {
@@ -107,6 +115,10 @@ export class CharactersService {
       freeCompany: !freeCompany ? null : {
         name: freeCompany.name,
         server: freeCompany.server.name
+      },
+      player: !character.user.publicPlayerProfile ? null : {
+        id: character.user.id,
+        name: character.user.playerName,
       },
     };
   }

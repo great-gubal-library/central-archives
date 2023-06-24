@@ -26,6 +26,7 @@
       <character-detail label="Birthplace" :value="character.birthplace" v-if="character.birthplace" />
       <character-detail label="Residence" :value="character.residence" v-if="character.residence" />
       <character-detail label="Free&nbsp;Company" :value="character.freeCompany.name" :router-link="fcLink" v-if="character.freeCompany" />
+      <character-detail label="Player" :value="character.player.name" :router-link="playerLink" v-if="character.player" />
     </character-details-box>
     <template v-if="character.appearance">
       <h3 v-if="!character.combinedDescription">Outward appearance</h3>
@@ -78,6 +79,7 @@ import HtmlViewer from '../common/HtmlViewer.vue';
 import ReportViolationSection from '../common/ReportViolationSection.vue';
 import CharacterDetail from './CharacterDetail.vue';
 import CharacterDetailsBox from './CharacterDetailsBox.vue';
+import { wikify } from '@common/common/wikilinks';
 
 class Props {
   character = prop<CharacterProfileDto>({
@@ -103,8 +105,13 @@ export default class CharacterProfile extends Vue.with(Props) {
 
   get fcLink() {
     const fc = this.character.freeCompany;
-		return fc == null ? null : `/fc/${fc.server}/${fc.name.replace(/ /g, '_')}`;
+		return fc == null ? null : `/fc/${fc.server}/${wikify(fc.name)}`;
   }
+
+get playerLink() {
+  const player = this.character.player;
+  return player == null ? null : `/player/${player.id}/${wikify(player.name)}`;
+}
 
   get hasPersonalityBox(): boolean {
     return !!(this.character.loves || this.character.hates || this.character.motto || this.character.motivation);

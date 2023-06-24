@@ -4,6 +4,7 @@ import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } fro
 import { BannerDto } from './banner.dto';
 import { BaseCharacterProfileDto } from './base-character-profile.dto';
 import { CharacterFreeCompanyDto } from './character-free-company.dto';
+import { CharacterPlayerDto } from './character-player.dto';
 
 export class CharacterProfileDto extends BaseCharacterProfileDto {
   @IsNumber()
@@ -49,6 +50,8 @@ export class CharacterProfileDto extends BaseCharacterProfileDto {
   combinedDescription: boolean;
 
   freeCompany: CharacterFreeCompanyDto|null;
+
+  player: CharacterPlayerDto|null;
 	
 	constructor(properties?: Readonly<CharacterProfileDto>) {
     super();
