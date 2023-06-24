@@ -1,5 +1,9 @@
 <template>
-	<q-input v-model="value" dark color="white" label="Search" clearable @keydown="onSearchKeyDown" />
+	<q-input v-model="value" dark color="white" label="Search" clearable @keydown="onSearchKeyDown">
+		<template v-slot:prepend>
+			<q-icon name="search" /> 
+		</template>
+	</q-input>
 </template>
 
 <script lang="ts">

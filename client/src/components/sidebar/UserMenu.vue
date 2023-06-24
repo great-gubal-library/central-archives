@@ -28,7 +28,7 @@
         @click="switchCharacter"
       >
         <q-item-section>
-          <q-item-label>Switch character</q-item-label>
+          <q-item-label><q-icon class="text-h6" name="swap_horiz" /> Switch character</q-item-label>
         </q-item-section>
       </q-item>
       <q-separator dark />
@@ -49,7 +49,7 @@
           :to="myProfileLink"
         >
           <q-item-section>
-            <q-item-label>View profile</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="face" /> View profile</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -58,7 +58,7 @@
           :to="`/edit-character/${$store.getters.characterId}`"
         >
           <q-item-section>
-            <q-item-label>Edit profile</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="edit" /> Edit profile</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -67,7 +67,7 @@
           to="/my-free-company"
         >
           <q-item-section>
-            <q-item-label>My Free Company</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="" /> My Free Company</q-item-label>
           </q-item-section>
         </q-item>
         <q-separator dark />
@@ -77,7 +77,7 @@
           to="/create-community"
         >
           <q-item-section>
-            <q-item-label>Create community</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="" /> Create community</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -86,7 +86,7 @@
           to="/my-communities"
         >
           <q-item-section>
-            <q-item-label>My communities</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="" /> My communities</q-item-label>
           </q-item-section>
         </q-item>
         <q-separator dark />
@@ -96,7 +96,7 @@
           to="/create-venue"
         >
           <q-item-section>
-            <q-item-label>Create venue</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="" /> Create venue</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -105,7 +105,7 @@
           to="/my-venues"
         >
           <q-item-section>
-            <q-item-label>My venues</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="" /> My venues</q-item-label>
           </q-item-section>
         </q-item>
         <q-separator dark />
@@ -115,7 +115,7 @@
           to="/create-story"
         >
           <q-item-section>
-            <q-item-label>New story</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="auto_stories" /> New story</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -124,7 +124,7 @@
           to="/create-event"
         >
           <q-item-section>
-            <q-item-label>New event</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="event" /> New event</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -133,7 +133,7 @@
           to="/create-noticeboard-item"
         >
           <q-item-section>
-            <q-item-label>New noticeboard item</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="sticky_note_2" /> New noticeboard item</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -143,7 +143,7 @@
           to="/create-wiki-page"
         >
           <q-item-section>
-            <q-item-label>New wiki page</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="history_edu" /> New wiki page</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -152,7 +152,7 @@
           @click="uploadImage"
         >
           <q-item-section>
-            <q-item-label>Upload image</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="upload" /> Upload image</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -161,19 +161,19 @@
           to="/my-content"
         >
           <q-item-section>
-            <q-item-label>My content</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="list" /> My content</q-item-label>
           </q-item-section>
         </q-item>
       </template>
       <q-separator dark />
       <q-item clickable v-ripple to="/my-account">
         <q-item-section>
-          <q-item-label>My account</q-item-label>
+          <q-item-label><q-icon class="text-h6" name="manage_accounts" /> My account</q-item-label>
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple @click="logOut">
         <q-item-section>
-          <q-item-label>Log out</q-item-label>
+          <q-item-label><q-icon class="text-h6" name="logout" /> Log out</q-item-label>
         </q-item-section>
       </q-item>
     </template>
@@ -240,5 +240,9 @@ export default class UserMenu extends Vue {
 
 .user-menu__log-in-button {
   background-color: #2e95b6;
+}
+
+.user-menu .q-icon {
+  color: #e0e0e0;
 }
 </style>
