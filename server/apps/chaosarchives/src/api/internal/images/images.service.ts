@@ -1,6 +1,6 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
-import { Character, Event, Image } from '@app/entity';
+import { Character, Community, Event, FreeCompany, Image, Venue } from '@app/entity';
 import { hashFile } from '@app/security';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { BannerCheckResultDto } from '@app/shared/dto/image/banner-check-result.dto';
@@ -28,6 +28,29 @@ import { Connection, EntityManager, FindOptionsWhere, IsNull, Not, Repository } 
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { ImageSanitizeError, ImageSanitizeResult, sanitizeImage } from '../../../common/image-lib';
 import { StorageService } from './storage.service';
+
+const bannerEntities = Object.freeze([
+  {
+    entity: Character,
+    errorMessage: 'This image is in use as a character banner',
+  },
+  {
+    entity: Event,
+    errorMessage: 'This image is in use as an event banner',
+  },
+  {
+    entity: FreeCompany,
+    errorMessage: 'This image is in use as a Free Company banner',
+  },
+  {
+    entity: Community,
+    errorMessage: 'This image is in use as a community banner',
+  },
+  {
+    entity: Venue,
+    errorMessage: 'This image is in use as an event banner',
+  },  
+]);
 
 interface UploadedImageInfo {
   uploadedPaths: string[];
@@ -516,18 +539,13 @@ export class ImagesService {
   }
 
   private async isBanner(em: EntityManager, image: Image) {
-    const bannerCounts = await Promise.all([
-      em.getRepository(Character).countBy({
+    const bannerCounts = await Promise.all(bannerEntities.map(
+      entityDescription => em.getRepository(entityDescription.entity).countBy({
         banner: {
           id: image.id,
         },
-      }),
-      em.getRepository(Event).countBy({
-        banner: {
-          id: image.id,
-        },
-      }),
-    ])
+      }))
+    );
 
     return bannerCounts.some(count => count > 0);
   }
@@ -598,29 +616,21 @@ export class ImagesService {
       if (!force) {
         // Check if the image is used as a banner, and if yes, refuse to delete
 
-        if (
-          (await em.getRepository(Character).countBy({
-            banner: {
-              id: image.id,
-            },
-          })) > 0
-        ) {
-          throw new ConflictException('This image is in use as a character banner');
-        }
-
-        if (
-          (await em.getRepository(Event).countBy({
-            banner: {
-              id: image.id,
-            },
-          })) > 0
-        ) {
-          throw new ConflictException('This image is in use as an event banner');
+        for (const entityDescription of bannerEntities) {
+          if (
+            (await em.getRepository(entityDescription.entity).countBy({
+              banner: {
+                id: image.id,
+              },
+            })) > 0
+          ) {
+            throw new ConflictException(entityDescription.errorMessage);
+          }
         }
       } else {
         // Unlink as a banner
 
-        await em.getRepository(Character).update(
+        await Promise.all(bannerEntities.map(entityDescription => em.getRepository(entityDescription.entity).update(
           {
             banner: {
               id: image.id,
@@ -628,19 +638,7 @@ export class ImagesService {
           },
           {
             banner: null,
-          } as unknown as QueryDeepPartialEntity<Character>,
-        );
-
-        await em.getRepository(Event).update(
-          {
-            banner: {
-              id: image.id,
-            },
-          },
-          {
-            banner: null,
-          } as unknown as QueryDeepPartialEntity<Event>,
-        );
+          } as unknown as QueryDeepPartialEntity<Character>)));
       }
 
       // Delete from the database
