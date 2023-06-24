@@ -8,4 +8,5 @@ export enum PageType {
 	NOTICEBOARD_ITEM = 'noticeboard_item',
 	WIKI_PAGE = 'wiki_page',
 	IMAGE = 'image',
+	PLAYER_PROFILE = 'player_profile',
 }

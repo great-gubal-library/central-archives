@@ -31,13 +31,13 @@
           <q-item-label><q-icon class="text-h6" name="swap_horiz" /> Switch character</q-item-label>
         </q-item-section>
       </q-item>
-      <q-separator dark />
       <q-item
         v-if="$store.getters.role === Role.UNVERIFIED"
         clickable
         v-ripple
         to="/verify"
       >
+        <q-separator dark />
         <q-item-section>
           <q-item-label>{{ $store.getters.realRole === Role.UNVERIFIED ? 'Account verification' : 'Character verification'}}</q-item-label>
         </q-item-section>
@@ -46,7 +46,17 @@
         <q-item
           clickable
           v-ripple
-          :to="myProfileLink"
+          :to="myPlayerProfileLink"
+        >
+          <q-item-section>
+            <q-item-label><q-icon class="text-h6" name="account_box" /> My player profile</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator dark />
+        <q-item
+          clickable
+          v-ripple
+          :to="myCharacterProfileLink"
         >
           <q-item-section>
             <q-item-label><q-icon class="text-h6" name="face" /> View character profile</q-item-label>
@@ -193,7 +203,11 @@ import { switchCharacter } from 'src/common/switch-character';
 export default class UserMenu extends Vue {
   readonly Role = Role;
 
-  get myProfileLink() {
+  get myPlayerProfileLink() {
+    return `/player/${this.$store.state.user!.id}`;
+  }
+
+  get myCharacterProfileLink() {
 		const server = this.$store.getters.character?.server || '';
 		const character = this.$store.getters.character?.name.replace(/ /g, '_') || '';
 		return `/${server}/${character}`;

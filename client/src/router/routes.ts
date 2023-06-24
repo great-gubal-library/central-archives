@@ -444,6 +444,20 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Player profiles
+
+  {
+    path: '/player/:id/:name',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/PlayerProfile.vue') }],
+  },
+
+  {
+    path: '/player/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/PlayerProfile.vue') }],
+  },
+
   // Links
   
   {

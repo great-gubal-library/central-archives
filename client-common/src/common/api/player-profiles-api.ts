@@ -15,7 +15,7 @@ export default class PlayerProfilesAPI {
 	}
 
 	async updateOwnPlayerProfile(playerProfileDto: PlayerProfileEditDto): Promise<void> {
-		await this.transport.authPost('', playerProfileDto);
+		await this.transport.authPut('', playerProfileDto);
 	}
 	
 	async deleteOwnPlayerProfile(): Promise<void> {

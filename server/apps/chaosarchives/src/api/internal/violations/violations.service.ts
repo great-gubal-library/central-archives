@@ -18,6 +18,7 @@ export class ViolationsService {
 		[PageType.NOTICEBOARD_ITEM]: NoticeboardItem,
 		[PageType.WIKI_PAGE]: WikiPage,
 		[PageType.IMAGE]: Image,
+		[PageType.PLAYER_PROFILE]: User,
 	};
 
 	constructor(private connection: Connection) {}
@@ -61,12 +62,23 @@ export class ViolationsService {
 	}
 	
 	private async checkPageExists(em: EntityManager, report: ViolationReportDto) {
-		const entityType = this.ENTITIES_BY_PAGE_TYPE[report.pageType];
-		const entityCount = await em.getRepository(entityType).count({
-			where: {
-				id: report.pageId
-			}
-		});
+		let entityCount: number;
+
+		if (report.pageType === PageType.PLAYER_PROFILE) {
+			entityCount = await em.getRepository(User).count({
+				where: {
+					id: report.pageId,
+					publicPlayerProfile: true,
+				}
+			});
+		} else {
+			const entityType = this.ENTITIES_BY_PAGE_TYPE[report.pageType];
+			entityCount = await em.getRepository(entityType).count({
+				where: {
+					id: report.pageId
+				}
+			});
+		}
 
 		if (entityCount === 0) {
 			throw new BadRequestException('Cannot find the page being reported');

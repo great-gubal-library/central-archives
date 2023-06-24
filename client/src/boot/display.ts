@@ -64,6 +64,7 @@ class Display {
 		[PageType.NOTICEBOARD_ITEM]: 'Noticeboard item',
 		[PageType.WIKI_PAGE]: 'Wiki page',
 		[PageType.IMAGE]: 'Image',
+		[PageType.PLAYER_PROFILE]: 'Player Profile',
 	};
 
 	readonly pageTypesPlural: { [k: string]: string } = {
@@ -76,6 +77,7 @@ class Display {
 		[PageType.NOTICEBOARD_ITEM]: 'Noticeboard items',
 		[PageType.WIKI_PAGE]: 'Wiki pages',
 		[PageType.IMAGE]: 'Images',
+		[PageType.PLAYER_PROFILE]: 'Player Profiles',
 	};
 
 	relativeTime(timestamp: number) {
