@@ -17,6 +17,7 @@ import UserAPI from './user-api';
 import VenuesAPI from './venues-api';
 import ViolationsAPI from './violations-api';
 import WikiAPI from './wiki-api';
+import PlayerProfilesAPI from './player-profiles-api';
 
 export default class API {
   private readonly transport = new APITransport();
@@ -34,6 +35,7 @@ export default class API {
   readonly links = new LinksAPI(this.transport);
   readonly news = new NewsAPI(this.transport);
   readonly noticeboard = new NoticeboardAPI(this.transport);
+  readonly playerProfiles = new PlayerProfilesAPI(this.transport);
   readonly search = new SearchAPI(this.transport);
   readonly servers = new ServersAPI(this.transport);
   readonly statistics = new StatisticsAPI(this.transport);
