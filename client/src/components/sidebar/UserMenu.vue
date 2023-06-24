@@ -49,7 +49,7 @@
           :to="myProfileLink"
         >
           <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="face" /> View profile</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="face" /> View character profile</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
@@ -58,7 +58,7 @@
           :to="`/edit-character/${$store.getters.characterId}`"
         >
           <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="edit" /> Edit profile</q-item-label>
+            <q-item-label><q-icon class="text-h6" name="edit" /> Edit character profile</q-item-label>
           </q-item-section>
         </q-item>
         <q-item
