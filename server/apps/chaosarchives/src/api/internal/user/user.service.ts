@@ -265,14 +265,14 @@ export class UserService {
         return null;
       }
 
-      // TODO: Assumes one character per user
+      // Find the user's first character for the email
       const character = await em.getRepository(Character).findOne({
         where: {
           user: {
             id: user.id
           },
         },
-        select: [ 'name' ]
+        select: [ 'id', 'name' ] // id is needed because of a regression in TypeORM query generation
       });
 
       // Note that we intentionally don't check verifiedAt. If the user is unverified,
