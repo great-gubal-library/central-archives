@@ -42,7 +42,7 @@ const FONTS = [
 const FONT_OPTION = FONTS.map(font => `${font}=${font},sans-serif`).join(';');
 
 const TINYMCE_PLUGINS = [
-  'code', 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'nonbreaking',
+  'code', 'advlist', 'anchor', 'autolink', 'lists', 'link', 'image', 'charmap', 'nonbreaking',
   'searchreplace', 'visualblocks',
   'table', 'help', 'wordcount'
 ];
@@ -59,7 +59,7 @@ const TINYMCE_OPTIONS = {
   menu: {
     edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
     view: { title: 'View', items: 'code | visualaid visualchars visualblocks' },
-    insert: { title: 'Insert', items: 'image gallery upload link | charmap nonbreaking hr | hidedetails' },
+    insert: { title: 'Insert', items: 'image gallery upload link anchor | charmap nonbreaking hr | hidedetails' },
     format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | removeformat' },
     list: { title: 'List', items: 'outdent indent' },
     table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' },
@@ -165,25 +165,25 @@ export default class HtmlEditor extends Vue.with(Props) {
           editor.ui.registry.addMenuItem('gallery', {
             text: 'Image from my gallery...',
             icon: 'gallery',
-            onAction: () => void this.onGalleryClick(editor)
+            onAction: () => this.onGalleryClick(editor)
           });
 
           editor.ui.registry.addButton('gallery', {
             tooltip: 'Insert image from my gallery',
             icon: 'gallery',
-            onAction: () => void this.onGalleryClick(editor)
+            onAction: () => this.onGalleryClick(editor)
           });
 
           editor.ui.registry.addMenuItem('upload', {
             text: 'Upload image...',
             icon: 'upload',
-            onAction: () => void this.onUploadClick(editor)
+            onAction: () => this.onUploadClick(editor)
           });
 
           editor.ui.registry.addButton('upload', {
             tooltip: 'Upload image',
             icon: 'upload',
-            onAction: () => void this.onUploadClick(editor)
+            onAction: () => this.onUploadClick(editor)
           });
         }
       }
