@@ -47,6 +47,23 @@
               Uses a single "Description" field with no header instead of separate "Outward appearance" and "Background"
               with headers.
             </div>
+            <q-field class="page-edit-character__checkbox" borderless>
+              <template v-slot:control>
+                <q-checkbox
+                  v-model="character.visibilityInPlayerProfile"
+                  :disable="character.visibilityInPlayerProfile === VisibilityInPlayerProfile.DISABLED"
+                  :true-value="VisibilityInPlayerProfile.SHOW"
+                  :false-value="VisibilityInPlayerProfile.HIDE"
+                  label="Show character in player profile"
+                />
+              </template>
+            </q-field>
+            <div class="text-caption" v-if="character.visibilityInPlayerProfile === VisibilityInPlayerProfile.DISABLED">
+              Your <router-link :to="playerProfileLink">player profile</router-link> is private and not displayed to other users.
+            </div>
+            <div class="text-caption" v-else>
+              Controls whether this character is displayed in the list of characters in your public <router-link :to="playerProfileLink">player profile</router-link>.
+            </div>
           </section>
           <banner-edit-section v-model="character.banner" />
           <section class="page-edit-character__form-controls">
@@ -125,6 +142,7 @@ import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 import HtmlEditor from '../components/common/HtmlEditor.vue';
+import { VisibilityInPlayerProfile } from '@app/shared/enums/visibility-in-player-profile.enum';
 
 const $api = useApi();
 
@@ -157,6 +175,8 @@ async function load(params: RouteParams): Promise<CharacterProfileDto> {
 export default class PageEditCharacter extends Vue {
   readonly SharedConstants = SharedConstants;
 
+  readonly VisibilityInPlayerProfile = VisibilityInPlayerProfile;
+
   readonly previewOptions = [
     { label: 'Edit', value: false },
     { label: 'Preview', value: true },
@@ -168,6 +188,10 @@ export default class PageEditCharacter extends Vue {
   saving = false;
 
   confirmRevert = false;
+
+  get playerProfileLink() {
+    return `/player-profile/${this.$store.state.user!.id}`;
+  }
 
   setContent(character: CharacterProfileDto) {
     this.characterBackup = character;

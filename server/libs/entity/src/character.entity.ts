@@ -232,4 +232,10 @@ export class Character extends BasicEntity {
     nullable: true,
   })
   newsPseudonym: string|null;
+
+  @Column({
+    nullable: false,
+    default: true,
+  })
+  showInPlayerProfile: boolean;
 }

@@ -35,6 +35,7 @@ export class PlayerProfilesService {
 				user: {
 					id: userId,
 				},
+				showInPlayerProfile: true,
 			},
 			order: {
 				'name': 'ASC',

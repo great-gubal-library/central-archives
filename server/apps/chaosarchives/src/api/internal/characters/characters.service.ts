@@ -27,6 +27,7 @@ import { checkCarrdProfile } from '../../../common/api-checks';
 import { andWhereExists, escapeForLike, isQueryFailedError } from '../../../common/db';
 import { getLodestoneCharacter } from '../../../common/lodestone';
 import { ImagesService } from '../images/images.service';
+import { VisibilityInPlayerProfile } from '@app/shared/enums/visibility-in-player-profile.enum';
 
 @Injectable()
 export class CharactersService {
@@ -35,6 +36,7 @@ export class CharactersService {
     private imagesService: ImagesService,
     private connection: Connection,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
+    @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(CommunityMembership) private communityMembershipRepo: Repository<CommunityMembership>,
     private eventEmitter: EventEmitter2,
   ) {}
@@ -66,6 +68,23 @@ export class CharactersService {
 
     if (!character) {
       throw new NotFoundException('Character not found');
+    }
+
+    const userEntity = (await this.userRepo.findOne({
+      where: {
+        id: user?.id,
+      },
+      select: [ 'id', 'publicPlayerProfile' ]
+    }))!; // Guaranteed to exist
+
+    let visibilityInPlayerProfile: VisibilityInPlayerProfile;
+
+    if (!userEntity.publicPlayerProfile) {
+      visibilityInPlayerProfile = VisibilityInPlayerProfile.DISABLED;
+    } else if (character.showInPlayerProfile) {
+      visibilityInPlayerProfile = VisibilityInPlayerProfile.SHOW;
+    } else {
+      visibilityInPlayerProfile = VisibilityInPlayerProfile.HIDE;
     }
 
 		// TODO: Refactor
@@ -120,6 +139,7 @@ export class CharactersService {
         id: character.user.id,
         name: character.user.playerName,
       },
+      visibilityInPlayerProfile,
     };
   }
 
@@ -140,6 +160,13 @@ export class CharactersService {
 			if (!character) {
 				throw new NotFoundException('Character not found');
 			}
+
+      const userEntity = (await em.getRepository(User).findOne({
+        where: {
+          id: user.id,
+        },
+        select: [ 'id', 'publicPlayerProfile' ],
+      }))!; // Guaranteed to exist
 
 			// TODO: Refactor
 			Object.assign(character, {
@@ -164,6 +191,15 @@ export class CharactersService {
         showInfoboxes: characterDto.showInfoboxes,
         combinedDescription: characterDto.combinedDescription,
 			});
+
+      if (characterDto.visibilityInPlayerProfile
+          && characterDto.visibilityInPlayerProfile !== VisibilityInPlayerProfile.DISABLED) {
+        if (!userEntity.publicPlayerProfile) {
+          throw new BadRequestException('Your public player profile is disabled. Cannot set character visibility.');
+        }
+
+        character.showInPlayerProfile = characterDto.visibilityInPlayerProfile === VisibilityInPlayerProfile.SHOW;
+      }
 
       if (characterDto.banner && characterDto.banner.id) {
         const banner = await em.getRepository(Image).findOne({

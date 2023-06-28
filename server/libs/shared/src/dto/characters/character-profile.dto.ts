@@ -5,6 +5,7 @@ import { BannerDto } from './banner.dto';
 import { BaseCharacterProfileDto } from './base-character-profile.dto';
 import { CharacterFreeCompanyDto } from './character-free-company.dto';
 import { CharacterPlayerDto } from './character-player.dto';
+import { VisibilityInPlayerProfile } from '@app/shared/enums/visibility-in-player-profile.enum';
 
 export class CharacterProfileDto extends BaseCharacterProfileDto {
   @IsNumber()
@@ -48,6 +49,10 @@ export class CharacterProfileDto extends BaseCharacterProfileDto {
 
   @IsBoolean()
   combinedDescription: boolean;
+
+  @IsEnum(VisibilityInPlayerProfile)
+  @IsOptional()
+  visibilityInPlayerProfile: VisibilityInPlayerProfile;
 
   freeCompany: CharacterFreeCompanyDto|null;
 
