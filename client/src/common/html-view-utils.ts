@@ -18,7 +18,7 @@ export function onHtmlViewClickCapture(event: Event, options: HtmlViewClickCaptu
       // Follow internal links without reloading the page
       const link = target as HTMLAnchorElement;
 
-      if (link.host === window.location.host && link.pathname) {
+      if (link.host === window.location.host && link.pathname && !link.getAttribute('href')?.startsWith('#')) {
         event.preventDefault();
         event.stopPropagation();
 
