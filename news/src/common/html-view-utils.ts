@@ -22,8 +22,8 @@ export function onHtmlViewClickCapture(event: Event, options: HtmlViewClickCaptu
         event.preventDefault();
         event.stopPropagation();
 
-        // link.pathname is guaranteed to start with /, so it's okay to pass to the router
-        void $router.push(link.pathname);
+          // link.pathname is guaranteed to start with /, so it's okay to pass to the router
+        void $router.push(link.pathname + link.hash);
       }
     }
   } else if (target.classList.contains('hide-details__title')) {
