@@ -17,6 +17,10 @@ async function bootstrap() {
       .setVersion('1.0')
       .addBearerAuth({
         type: 'apiKey',
+        in: 'header',
+        name: 'Authorization',
+        scheme: 'Bearer',
+        bearerFormat: 'JWT',
         description: 'Access token obtained by /login'
       })
       .build();

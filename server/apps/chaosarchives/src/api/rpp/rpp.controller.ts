@@ -8,14 +8,16 @@ import { RppCharacterProfileDto } from "@app/shared/dto/rpp/rpp-character-profil
 import { RppLogInDto } from "@app/shared/dto/rpp/rpp-log-in.dto";
 import { RppLoginResponseDto } from "@app/shared/dto/rpp/rpp-login-response.dto";
 import { Role } from "@app/shared/enums/role.enum";
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import {
+	ApiBearerAuth,
 	ApiBody,
 	ApiOperation,
 	ApiResponse,
 } from '@nestjs/swagger';
 import { RppService } from "./rpp.service";
+import { RppExtendLoginResponseDto } from "@app/shared/dto/rpp/rpp-extend-login-response.dto";
 
 @Controller('rpp')
 export class RppController {
@@ -44,6 +46,29 @@ export class RppController {
     return {
       accessToken: this.authService.createScopedAccessToken(user.id, AuthScope.RPP),
     };
+  }
+
+	@Post('extend-login')
+	@RoleRequired(Role.USER)
+	@Scope(AuthScope.RPP)
+	@HttpCode(HttpStatus.OK)
+	@ApiOperation({
+		summary: 'Extend the login session, possibly obtaining a new access token.',
+	})
+	@ApiResponse({
+		status: HttpStatus.OK,
+		type: RppLoginResponseDto,
+		description: 'Successfully returned the new access token (or null, indicating that the client should keep using the current one)',
+	})
+	@ApiResponse({
+		status: HttpStatus.UNAUTHORIZED,
+		description: 'Invalid email or password',
+	})
+	@ApiBearerAuth()
+  async extendLogin(@CurrentUser() user: UserInfo, @Req() request: any): Promise<RppExtendLoginResponseDto> {
+		return {
+			newAccessToken: this.authService.reissueScopedAccessTokenIfNeeded(user.id, AuthScope.RPP, request),
+		};
   }
 
 	@Get('profile/:server/:name')
@@ -90,6 +115,7 @@ export class RppController {
 		status: HttpStatus.BAD_REQUEST,
 		description: 'Invalid character data'
 	})
+	@ApiBearerAuth()
   async updateCharacterProfile(
     @Param('name') name: string,
     @Param('server') server: string,
