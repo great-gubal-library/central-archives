@@ -117,20 +117,7 @@ export class FeedService {
     });
 
     CATEGORIES.forEach((category) => feed.addCategory(category));
-
-    const authorsJson = new Set<string>();
-
-    items.forEach((item) => {
-      feed.addItem(item);
-
-      const author = item.author![0];
-      const authorJson = JSON.stringify(author);
-
-      if (!authorsJson.has(authorJson)) {
-        feed.addContributor(author);
-      }
-    });
-
+    items.forEach((item) => feed.addItem(item));
     return feed.rss2();
   }
 }
