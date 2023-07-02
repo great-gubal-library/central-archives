@@ -31,6 +31,7 @@ import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import SharedConstants from '@app/shared/SharedConstants';
 import { createMetaMixin } from 'quasar';
+import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
@@ -90,9 +91,17 @@ async function load(to: RouteLocationNormalized): Promise<PageData> {
     (this as PageGallery).setContent(data);
   },
   mixins: [
-    createMetaMixin(function (this: PageGallery) {
+    createMetaMixin(function (this: PageGallery): MetaOptions {
       return {
         title: `${this.title} — Chaos Archives`,
+        link: {
+          feed: {
+            rel: 'alternate',
+            type: 'application/rss+xml',
+            href: this.category === ImageCategory.ARTWORK ? '/api/feed/artwork.rss' : '/api/feed/screenshots.rss',
+            title: `${this.title} — Chaos Archives`,
+          }
+        },
       };
     }),
   ],

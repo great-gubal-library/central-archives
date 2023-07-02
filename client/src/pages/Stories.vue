@@ -74,6 +74,8 @@ import { StoryFilterDto } from '@app/shared/dto/stories/story-filter.dto';
 import { StorySummaryDto } from '@app/shared/dto/stories/story-summary.dto';
 import { StoryType } from '@app/shared/enums/story-type.enum';
 import SharedConstants from '@app/shared/SharedConstants';
+import { createMetaMixin } from 'quasar';
+import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 
@@ -109,6 +111,20 @@ const $api = useApi();
 			(vm as PageStories).setContent(stories, tags);
 		});
   },
+  mixins: [
+    createMetaMixin(function (this: PageStories): MetaOptions {
+      return {
+        link: {
+          feed: {
+            rel: 'alternate',
+            type: 'application/rss+xml',
+            href: '/api/feed/stories.rss',
+            title: 'Stories — Chaos Archives',
+          }
+        }
+      };
+    }),
+  ],
 })
 export default class PageStories extends Vue {
   stories: StorySummaryDto[] = [];
