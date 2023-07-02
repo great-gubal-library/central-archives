@@ -12,6 +12,7 @@ import { AppService } from './app.service';
 import { GlobalExceptionsFilter } from './global-exceptions.filter';
 import { MailModule } from './mail/mail.module';
 import { UpdatesModule } from './websocket/updates/updates.module';
+import { FeedModule } from './api/feed/feed.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UpdatesModule } from './websocket/updates/updates.module';
     AuthModule,
     InternalApiModule,
     RppModule,
+    FeedModule,
     UpdatesModule,
   ],
   controllers: [AppController],
