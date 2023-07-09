@@ -2,6 +2,8 @@
 
 The prototype of the RP portal for the Chaos EU datacenter in FFXIV.
 
+[![Server Docker Image CI](https://github.com/great-gubal-library/chaos-archives/actions/workflows/docker-image.yml/badge.svg)](https://github.com/great-gubal-library/chaos-archives/actions/workflows/docker-image.yml)
+
 ## Building
 
 ### Client
