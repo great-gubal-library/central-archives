@@ -40,3 +40,4 @@ docker-compose-local.yml
 
 # config
 /config/local.yml
+/config/production.yml

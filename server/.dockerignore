@@ -2,6 +2,7 @@
 dist
 node_modules
 config/local.yml
+config/production.yml
 Dockerfile
 docker-compose*
 ci_cd

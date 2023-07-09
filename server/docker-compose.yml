@@ -50,6 +50,11 @@ services:
     depends_on:
       - mariadb
     command: node dist/apps/steward/main.js
+    volumes:
+      - type: bind
+        source: './config/production.yml'
+        target: '/usr/src/app/config/production.yml'
+        read_only: true
     expose:
       - 8112
     environment:
@@ -68,6 +73,11 @@ services:
       - mariadb
       - redis
       - steward
+    volumes:
+      - type: bind
+        source: './config/production.yml'
+        target: '/usr/src/app/config/production.yml'
+        read_only: true
     environment:
       - NODE_ENV=${NODE_ENV:-production}
     ports:
