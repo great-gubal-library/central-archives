@@ -1,4 +1,4 @@
-import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, Venue } from '@app/entity';
+import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, Venue, WikiPage } from '@app/entity';
 import { SearchFields } from '@app/entity/search-fields';
 import { SearchResultDto } from '@app/shared/dto/search/search-result.dto';
 import { SearchResultsDto } from '@app/shared/dto/search/search-results.dto';
@@ -24,6 +24,7 @@ export class SearchService {
     @InjectRepository(Event) private eventRepo: Repository<Event>,
     @InjectRepository(Story) private storyRepo: Repository<Story>,
     @InjectRepository(NoticeboardItem) private noticeboardItemRepo: Repository<NoticeboardItem>,
+    @InjectRepository(WikiPage) private wikiPageRepo: Repository<WikiPage>,
     @InjectRepository(Image) private imageRepo: Repository<Image>,
     private imageService: ImagesService,
   ) {}
@@ -191,7 +192,7 @@ export class SearchService {
 
   private async searchWikiPages(keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.wikiPage;
-    const qb = this.noticeboardItemRepo.createQueryBuilder('wp');
+    const qb = this.wikiPageRepo.createQueryBuilder('wp');
 
     return (
       await andWhereMatches(qb, 'wp', properties, keywords)
