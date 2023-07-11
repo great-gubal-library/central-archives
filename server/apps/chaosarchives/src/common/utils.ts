@@ -25,9 +25,7 @@ export default {
         },
         {
           selector: 'img',
-          options: {
-            format: 'skip',
-          },
+          format: 'skip',
         }
       ]
     });
