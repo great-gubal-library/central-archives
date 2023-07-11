@@ -2,7 +2,7 @@
   <section class="page-issue">
     <template v-if="issue">
       <mounted-teleport to="#header-date">{{ $display.formatDateEorzean(issue.publishedAt) }}</mounted-teleport>
-      <article-view v-for="article in issue.articles" :article="article" :key="article.id" />
+      <article-view v-for="article in issue.articles" :article="article" :key="article.id" :class="{ 'single-article': issue.articles.length === 1 }" />
     </template>
     <template v-else>
       There are no news issues yet.
@@ -69,4 +69,9 @@ export default class PageIssue extends Vue {
   display: flex;
   margin-right: -20px;
 }
+
+.page-issue .single-article .article__content {
+  columns: 2;
+}
+
 </style>

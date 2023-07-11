@@ -165,25 +165,25 @@ export default class HtmlEditor extends Vue.with(Props) {
           editor.ui.registry.addMenuItem('gallery', {
             text: 'Image from my gallery...',
             icon: 'gallery',
-            onAction: () => this.onGalleryClick(editor)
+            onAction: () => void this.onGalleryClick(editor)
           });
 
           editor.ui.registry.addButton('gallery', {
             tooltip: 'Insert image from my gallery',
             icon: 'gallery',
-            onAction: () => this.onGalleryClick(editor)
+            onAction: () => void this.onGalleryClick(editor)
           });
 
           editor.ui.registry.addMenuItem('upload', {
             text: 'Upload image...',
             icon: 'upload',
-            onAction: () => this.onUploadClick(editor)
+            onAction: () => void this.onUploadClick(editor)
           });
 
           editor.ui.registry.addButton('upload', {
             tooltip: 'Upload image',
             icon: 'upload',
-            onAction: () => this.onUploadClick(editor)
+            onAction: () => void this.onUploadClick(editor)
           });
         }
       }
