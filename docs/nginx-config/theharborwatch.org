@@ -19,11 +19,13 @@ server {
 
     location /api/internal/images {
         proxy_pass http://localhost:8111;
+        proxy_set_header Host $host;
         client_max_body_size 20M;
     }
 
     location /api/internal/ {
         proxy_pass http://localhost:8111;
+        proxy_set_header Host $host;
     }
 
     location ~* ^(?!/api/).+\.(?:ico|css|js|gif|jpe?g|png|webp|woff2?)$ {
