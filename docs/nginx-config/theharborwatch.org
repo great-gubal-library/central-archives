@@ -1,0 +1,60 @@
+server {
+    server_name theharborwatch.org;
+
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    root /var/www/harborwatch;
+    index index.html;
+
+    gzip on;
+    gzip_min_length 256;
+    gzip_types text/html application/javascript text/css application/json;
+
+    location / {
+        expires 0;
+        add_header Cache-Control "no-store, no-cache, must-revalidate";
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/internal/images {
+        proxy_pass http://localhost:8111;
+        client_max_body_size 20M;
+    }
+
+    location /api/internal/ {
+        proxy_pass http://localhost:8111;
+    }
+
+    location ~* ^(?!/api/).+\.(?:ico|css|js|gif|jpe?g|png|webp|woff2?)$ {
+        expires 365d;
+        add_header Vary Accept-Encoding;
+        access_log off;
+    }
+
+    ssl_certificate /etc/letsencrypt/live/theharborwatch.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/theharborwatch.org/privkey.pem; # managed by Certbot
+}
+
+server {
+    server_name www.theharborwatch.org;
+
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    return 301 https://theharborwatch.org$request_uri;
+
+    ssl_certificate /etc/letsencrypt/live/theharborwatch.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/theharborwatch.org/privkey.pem; # managed by Certbot
+}
+
+server {
+    server_name theharborwatch.org www.theharborwatch.org;
+
+    listen 80;
+    listen [::]:80;
+
+    #if ($host = harborwatch.chaosarchives.org) {
+    return 301 https://theharborwatch.org$request_uri;
+    #} # managed by Certbot
+}
