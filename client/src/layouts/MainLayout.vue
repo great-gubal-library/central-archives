@@ -34,18 +34,18 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <q-btn class="gt-sm layout__char-name" flat dense title="Switch character" @click="switchCharacter">
-            <template v-if="$store.getters.character">
+          <template v-if="$store.getters.character">
+            <q-btn class="gt-sm layout__char-name" flat dense title="Switch character" @click="switchCharacter">
               <q-avatar round>
                 <img :src="$store.getters.character.avatar" />
               </q-avatar>
               <span>{{ $store.getters.characterShortName }}</span>
-            </template>
-            <template v-else>
-              <q-icon size="28px" name="account_circle" />
-              <span>A Stranger</span>
-            </template>
-          </q-btn>
+            </q-btn>
+          </template>
+          <div v-else class="gt-sm layout__char-name">
+            <q-icon size="28px" name="account_circle" />
+            <span>A Stranger</span>
+          </div>
         </div>
 
         <q-toolbar-title class="layout__toolbar-title text-center">
