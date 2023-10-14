@@ -3,7 +3,7 @@
 		<hr />
 		&ldquo;The Harborwatch&rdquo; is a project by the <a href="https://discord.gg/rCHdUdSVsr" target="_blank">Chaos EU roleplaying community</a>. All persons and events mentioned on this website are fictional.
 		<br />
-		Final Fantasy XIV is © 2010–2022 Square Enix Co., Ltd. All rights reserved.
+		Final Fantasy XIV is © 2010–2023 Square Enix Co., Ltd. All rights reserved.
 		<hr />
 	</footer>
 </template>
