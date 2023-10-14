@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-stories">
-    <h2>Stories</h2>
+    <rss-page-header title="Stories" feed-link="/api/feed/stories.rss" />
     <q-table
       class="page-stories__table striped-list paged-link-table"
       :columns="columns"
@@ -77,6 +77,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { createMetaMixin } from 'quasar';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
+import RssPageHeader from 'src/components/common/RssPageHeader.vue';
 import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();
@@ -84,7 +85,7 @@ const $api = useApi();
 @Options({
 	name: 'PageStories',
   components: {
-
+    RssPageHeader,
 	},
   async beforeRouteEnter(to, _, next) {
 		const tag = to.query.tag as string || '';

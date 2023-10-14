@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-gallery">
-    <h2>{{ title }}</h2>
+    <rss-page-header :title="title" :feed-link="feedLink" />
     <div class="page-gallery__pagination">
       <div class="page-gallery__pagination-side">
         <q-input
@@ -34,6 +34,7 @@ import { createMetaMixin } from 'quasar';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
+import RssPageHeader from 'src/components/common/RssPageHeader.vue';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
@@ -80,6 +81,7 @@ async function load(to: RouteLocationNormalized): Promise<PageData> {
 @Options({
   name: 'PageGallery',
   components: {
+    RssPageHeader,
     ThumbGallery,
   },
   async beforeRouteEnter(to, _, next) {
@@ -124,6 +126,11 @@ export default class PageGallery extends Vue {
 
   get title() {
     return this.$display.imageCategories[this.category] + ' Gallery';
+  }
+
+  get feedLink() {
+    const fileName = this.category == ImageCategory.ARTWORK ? 'artwork' : 'screenshots';
+    return `/api/feed/${fileName}.rss`;
   }
 
   get maxPage() {
