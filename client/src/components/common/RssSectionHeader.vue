@@ -1,8 +1,7 @@
 <template>
-  <header class="rss-page-header">
-    <div class="layout__filler"></div>
-    <h2><slot /></h2>
-    <div class="layout__filler rss-page-header__feed-container">
+  <header class="rss-section-header">
+    <h5><slot /></h5>
+    <div class="rss-section-header__feed-container">
       <rss-button :feed-link="feedLink" />
     </div>
   </header>
@@ -19,29 +18,30 @@ class Props {
 }
 
 @Options({
-  name: 'RssPageHeader',
+  name: 'RssSectionHeader',
   components: {
     RssButton,
   },
 })
-export default class RssPageHeader extends Vue.with(Props) {
-
+export default class RssSectionHeader extends Vue.with(Props) {
 }
 </script>
 
 <style lang="scss">
-.rss-page-header {
+.rss-section-header {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  justify-content: space-between;
+  margin-top: 14.4px;
+  margin-bottom: 9.6px;
 }
 
-.rss-page-header h2 {
+.rss-section-header h5 {
   margin: 0;
   line-height: auto;
 }
 
-.rss-page-header__feed-container {
+.rss-section-header__feed-container {
   display: flex;
   justify-content: end;
 }

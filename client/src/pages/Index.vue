@@ -2,11 +2,15 @@
   <q-page>
     <news-timeline :news="content.news" />
     <section>
-      <h5><router-link to="/stories">New stories</router-link></h5>
+      <rss-section-header feed-link="/api/feed/stories.rss">
+        <router-link to="/stories">New stories</router-link>
+      </rss-section-header>
       <story-list :stories="content.newStories" />
     </section>
     <section v-if="content.newArtwork.length > 0">
-      <h5><router-link to="/gallery/artwork">New artwork</router-link></h5>
+      <rss-section-header feed-link="/api/feed/artwork.rss">
+        <router-link to="/gallery/artwork">New artwork</router-link>
+      </rss-section-header>
       <thumb-gallery :images="content.newArtwork" />
     </section>
     <section>
@@ -34,7 +38,9 @@
       </section>
     </section>
     <section v-if="content.newScreenshots.length > 0">
-      <h5><router-link to="/gallery/screenshot">New screenshots</router-link></h5>
+      <rss-section-header feed-link="/api/feed/screenshots.rss">
+        <router-link to="/gallery/screenshot">New screenshots</router-link>
+      </rss-section-header>
       <thumb-gallery :images="content.newScreenshots" />
     </section>
   </q-page>
@@ -49,6 +55,7 @@ import StoryList from 'components/stories/StoryList.vue';
 import VenueList from 'components/venues/VenueList.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
+import RssSectionHeader from 'src/components/common/RssSectionHeader.vue';
 import CommunityList from 'src/components/communities/CommunityList.vue';
 import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
 import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
@@ -77,6 +84,7 @@ async function load(): Promise<MainPageContentDto> {
     VenueList,
     CommunityList,
     ThumbGallery,
+    RssSectionHeader,
   },
   async beforeRouteEnter(_, __, next) {
     const content = await load();

@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-stories">
-    <rss-page-header title="Stories" feed-link="/api/feed/stories.rss" />
+    <rss-page-header feed-link="/api/feed/stories.rss">Stories</rss-page-header>
     <q-table
       class="page-stories__table striped-list paged-link-table"
       :columns="columns"

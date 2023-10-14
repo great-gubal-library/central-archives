@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-gallery">
-    <rss-page-header :title="title" :feed-link="feedLink" />
+    <rss-page-header :feed-link="feedLink">{{ title }}</rss-page-header>
     <div class="page-gallery__pagination">
       <div class="page-gallery__pagination-side">
         <q-input
