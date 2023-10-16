@@ -83,6 +83,7 @@ export class FeedService {
           content: `<img src="${image.url}" />`,
           date: new Date(image.createdAt),
           link: `${serverConfiguration.frontendRoot}/image/${image.id}`,
+          image: image.url,
           author: [
             {
               name: `${image.owner} (${image.ownerServer})`,
