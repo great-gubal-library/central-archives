@@ -6,6 +6,9 @@
         Welcome to Chaos Archives. Please fill in the form below to create your
         account and register your first character.
       </p>
+      <p>
+        Signups are limited to the <strong>Europe</strong> region.
+      </p>
       <section class="page-signup__form-controls">
         <h6>Account information</h6>
         <q-input
