@@ -330,7 +330,13 @@ export class CharactersService {
 				server,
 			});
 
-			await repo.save(character);
+      try {
+			  await repo.save(character);
+      } catch (e) {
+        if (isQueryFailedError(e) && e.code === 'ER_DUP_ENTRY') {
+          throw new ConflictException(`Cannot update character name to ${character.name} (${server.name}), as that character is already registered. if the destination character has been renamed, update it first.`);
+        }
+      }
 
       // But that's not all! We need to invalidate the session cache, since character data is cached there.
       await this.publicAuthService.notifyUserChanged(user.id);
