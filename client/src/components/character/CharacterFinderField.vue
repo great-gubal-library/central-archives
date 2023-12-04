@@ -56,7 +56,6 @@
 
 <script lang="ts">
 import { CharacterRegistrationStatus } from '@app/shared/enums/character-registration-status.enum';
-import { normalizeXivapiServerName} from '@app/shared/xivapi-utils';
 import SharedConstants from '@app/shared/SharedConstants';
 import { Options, prop, Vue } from 'vue-class-component';
 import { CharacterSearchModel } from './character-search-model';
@@ -76,7 +75,7 @@ const allAllowedServers: string[] = [];
 let allowedServersLoaded = false;
 
 function isAllowedServer(characterInfo: string): boolean {
-	return allAllowedServers.indexOf(normalizeXivapiServerName(characterInfo)) !== -1;
+	return allAllowedServers.indexOf(characterInfo) !== -1;
 }
 
 @Options({

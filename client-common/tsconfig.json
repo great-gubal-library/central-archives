@@ -35,8 +35,7 @@
   },
   "include": [
     "src/**/*",
-    "../server/libs/shared/src/**/*",
-    "../server/types/xivapi.d.ts"
+    "../server/libs/shared/src/**/*"
   ],
   // Needed to avoid files copied into 'dist' folder (eg. a `.d.ts` file inside `src-ssr` folder)
   // to be evaluated by TS when their original files has been updated

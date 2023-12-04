@@ -17,7 +17,6 @@ import { CharacterRegistrationStatus } from '@app/shared/enums/character-registr
 import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
-import { normalizeXivapiServerName } from '@app/shared/xivapi-utils';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -314,7 +313,7 @@ export class CharactersService {
 
       const server = await em.getRepository(Server).findOne({
         where: {
-          name: normalizeXivapiServerName(lodestoneInfo.World),
+          name: lodestoneInfo.World,
         },
         select: [ 'id', 'name' ]
       });
@@ -417,9 +416,7 @@ export class CharactersService {
       throw new BadRequestException('Invalid character');
     }
 
-    // Try two possible ways XIVAPI can return the data
-    if (!SharedConstants.DATACENTERS.includes(characterInfo.DC)
-        && !SharedConstants.DATACENTERS.includes(characterInfo.World.replace(/^[^ ]+ \[(.+)\]$/, '$1'))) {
+    if (!SharedConstants.DATACENTERS.includes(characterInfo.DC)) {
       throw new BadRequestException('This character is from the wrong datacenter');
     }
 
@@ -434,7 +431,7 @@ export class CharactersService {
     // We allow this: the user can make a new character profile for the new name.
 
     const server = await em.getRepository(Server).findOneBy({
-      name: normalizeXivapiServerName(characterInfo.World),
+      name: characterInfo.World,
     });
 
     if (!server) {
