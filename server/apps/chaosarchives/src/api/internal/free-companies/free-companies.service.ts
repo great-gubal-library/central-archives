@@ -1,25 +1,23 @@
 import { UserInfo } from '@app/auth/model/user-info';
-import { Character, FreeCompany, Image, Server } from '@app/entity';
+import { Character, FreeCompany, Image } from '@app/entity';
 import { CharacterIdWrapper } from '@app/shared/dto/common/character-id-wrapper.dto';
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
 import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-summary.dto';
 import SharedConstants from '@app/shared/SharedConstants';
-import { normalizeXivapiServerName } from '@app/shared/xivapi-utils';
-import { BadRequestException, ConflictException, ForbiddenException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import XIVAPI from '@xivapi/js';
 import { DateTime } from 'luxon';
-import { Connection, IsNull, Not, Repository } from 'typeorm';
+import { DataSource, IsNull, Not, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../../../common/api-checks';
-import { getLodestoneCharacter } from '../../../common/lodestone';
+import { getLodestoneCharacter, getLodestoneFreeCompany } from '../../../common/lodestone';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
 export class FreeCompaniesService {
 	constructor(
     private imagesService: ImagesService,
-		private connection: Connection,
+		private connection: DataSource,
 		@InjectRepository(Character) private characterRepo: Repository<Character>,
 		@InjectRepository(FreeCompany) private freeCompanyRepo: Repository<FreeCompany>,
 	) {}
@@ -43,31 +41,31 @@ export class FreeCompaniesService {
 		const fc = await character.freeCompany;
 		return !fc ? null : this.toFCSummaryDto(fc, characterIdWrapper.characterId);
 	}
-	
+
 	async setFreeCompany(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<MyFreeCompanySummaryDto|null> {
 		const characterInfo = user.characters.find(ch => ch.id === characterIdWrapper.characterId);
-		
+
 		if (!characterInfo) {
 			throw new NotFoundException('Character not found');
 		}
 
-		const xivapi = new XIVAPI();
 		const lodestoneCharacterInfo = await getLodestoneCharacter(characterInfo.lodestoneId);
 
 		if (!lodestoneCharacterInfo) {
 			throw new GoneException('Character not found on Lodestone');
 		}
 
-		const fcLodestoneId = lodestoneCharacterInfo.Character.FreeCompanyId;
-		const fcLodestoneInfo = !fcLodestoneId ? null : await xivapi.freecompany.get(fcLodestoneId, { data: 'FCM' });
+		const fcLodestoneId = lodestoneCharacterInfo.FreeCompany?.ID;
+		const fcLodestoneInfo = !fcLodestoneId? null : await getLodestoneFreeCompany(fcLodestoneId);
 
 		return this.connection.transaction(async em => {
 			const characterRepo = em.getRepository(Character);
 			const character = await characterRepo.findOne({
 				where: {
 					id: characterInfo.id,
-					verifiedAt: Not(IsNull())
-				}
+					verifiedAt: Not(IsNull()),
+				},
+        relations: [ 'server' ]
 			});
 
 			if (!character) {
@@ -80,7 +78,7 @@ export class FreeCompaniesService {
 				return null;
 			}
 
-			const leaderLodestoneId = fcLodestoneInfo.FreeCompanyMembers[0].ID;
+			const leaderLodestoneId = fcLodestoneInfo.Members[0].ID;
 
 			let fc: FreeCompany;
 			const fcRepo = em.getRepository(FreeCompany);
@@ -93,14 +91,14 @@ export class FreeCompaniesService {
 
 			if (!existingFC) {
 				fc = new FreeCompany();
-				fc.foundedAt = DateTime.fromSeconds(fcLodestoneInfo.FreeCompany.Formed).toJSDate();
+				fc.foundedAt = DateTime.fromSeconds(fcLodestoneInfo.Timestamp).toJSDate();
 			} else {
 				fc = existingFC;
 			}
 
-			fc.name = fcLodestoneInfo.FreeCompany.Name;
+			fc.name = fcLodestoneInfo.Name;
 			fc.lodestoneId = fcLodestoneId;
-			fc.tag = fcLodestoneInfo.FreeCompany.Tag;
+			fc.tag = fcLodestoneInfo.Tag.replace(/[«»]/g, '');
 
 			if (!fc.leader && characterInfo.lodestoneId === leaderLodestoneId) {
 				if (!fc.claimedAt) {
@@ -110,18 +108,9 @@ export class FreeCompaniesService {
 				fc.leader = character;
 			}
 
-			const server = await em.getRepository(Server).findOne({
-				where: {
-					name: normalizeXivapiServerName(fcLodestoneInfo.FreeCompany.Server)
-				}
-			});
-
-			if (!server) {
-				throw new ConflictException(`Unknown server: ${fcLodestoneInfo.FreeCompany.Server}`);
-			}
-			
+			const server = character.server;
 			fc.server = server;
-			fc.crest = fcLodestoneInfo.FreeCompany.Crest.join(',');
+			fc.crest = Object.values(fcLodestoneInfo.CrestLayers).join(',');
 			await fcRepo.save(fc);
 
 			character.freeCompany = Promise.resolve(fc);
@@ -144,7 +133,7 @@ export class FreeCompaniesService {
 
 	async unsetFreeCompany(characterIdWrapper: CharacterIdWrapper, user: UserInfo): Promise<void> {
 		const characterInfo = user.characters.find(ch => ch.id === characterIdWrapper.characterId);
-		
+
 		if (!characterInfo) {
 			throw new NotFoundException('Character not found');
 		}
@@ -220,7 +209,7 @@ export class FreeCompaniesService {
 				},
 				relations: [ 'server', 'leader', 'banner', 'banner.owner' ]
 			});
-	
+
 			if (!fc) {
 				throw new NotFoundException('Free Company not found');
 			}
@@ -262,7 +251,7 @@ export class FreeCompaniesService {
       }
 
 			await fcRepo.save(fc);
-		});		
+		});
 	}
 
 	async toFreeCompanyDto(fc: FreeCompany, user?: UserInfo): Promise<FreeCompanyDto> {

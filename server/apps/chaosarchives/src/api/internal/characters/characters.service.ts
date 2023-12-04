@@ -15,7 +15,6 @@ import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { CharacterRegistrationStatus } from '@app/shared/enums/character-registration-status.enum';
 import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
-import { getRaceById } from '@app/shared/enums/race.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
 import { normalizeXivapiServerName } from '@app/shared/xivapi-utils';
@@ -28,6 +27,7 @@ import { andWhereExists, escapeForLike, isQueryFailedError } from '../../../comm
 import { getLodestoneCharacter } from '../../../common/lodestone';
 import { ImagesService } from '../images/images.service';
 import { VisibilityInPlayerProfile } from '@app/shared/enums/visibility-in-player-profile.enum';
+import { getRaceByName } from '@app/shared/enums/race.enum';
 
 @Injectable()
 export class CharactersService {
@@ -269,7 +269,7 @@ export class CharactersService {
     if (filter.limit) {
       query.limit(filter.limit);
     }
-    
+
     const characters = await query.getMany();
 
 		return {
@@ -313,20 +313,20 @@ export class CharactersService {
 
       const server = await em.getRepository(Server).findOne({
         where: {
-          name: normalizeXivapiServerName(lodestoneInfo.Character.Server),
+          name: normalizeXivapiServerName(lodestoneInfo.World),
         },
         select: [ 'id', 'name' ]
       });
 
       if (!server) {
-        throw new NotFoundException(`Unknown server: ${lodestoneInfo.Character.Server}`);
+        throw new NotFoundException(`Unknown server: ${lodestoneInfo.World}`);
       }
 
       // Info parsed from Lodestone - update it in database
 			Object.assign(character, {
-        name: lodestoneInfo.Character.Name,
-        race: getRaceById(lodestoneInfo.Character.Race),
-        avatar: lodestoneInfo.Character.Avatar,
+        name: lodestoneInfo.Name,
+        race: getRaceByName(lodestoneInfo.Race),
+        avatar: lodestoneInfo.Avatar,
 				server,
 			});
 
@@ -347,7 +347,7 @@ export class CharactersService {
       server: characterEntity.server.name
     };
 	}
-  
+
   async addAccountCharacter(request: AddCharacterRequestDto, user: UserInfo): Promise<SessionCharacterDto> {
     try {
       const result = await this.connection.transaction(async em => {
@@ -417,12 +417,12 @@ export class CharactersService {
     }
 
     // Try two possible ways XIVAPI can return the data
-    if (!SharedConstants.DATACENTERS.includes(characterInfo.Character.DC)
-        && !SharedConstants.DATACENTERS.includes(characterInfo.Character.Server.replace(/^[^ ]+ \[(.+)\]$/, '$1'))) {
+    if (!SharedConstants.DATACENTERS.includes(characterInfo.DC)
+        && !SharedConstants.DATACENTERS.includes(characterInfo.World.replace(/^[^ ]+ \[(.+)\]$/, '$1'))) {
       throw new BadRequestException('This character is from the wrong datacenter');
     }
 
-    if (otherCharacter && otherCharacter.name === characterInfo.Character.Name) {
+    if (otherCharacter && otherCharacter.name === characterInfo.Name) {
       throw new BadRequestException(
         'You have already registered this character. To update their Lodestone info, ' +
         'use the "Refresh from Lodestone" button in the character profile editor instead.');
@@ -433,14 +433,14 @@ export class CharactersService {
     // We allow this: the user can make a new character profile for the new name.
 
     const server = await em.getRepository(Server).findOneBy({
-      name: normalizeXivapiServerName(characterInfo.Character.Server),
+      name: normalizeXivapiServerName(characterInfo.World),
     });
 
     if (!server) {
       throw new BadRequestException('Invalid server');
     }
 
-    const race = getRaceById(characterInfo.Character.Race);
+    const race = getRaceByName(characterInfo.Race);
 
     if (!race) {
       throw new BadRequestException('Invalid race');
@@ -448,7 +448,7 @@ export class CharactersService {
 
     // Set all previously existing characters with this Lodestone ID as inactive
     await characterRepo.update({
-      lodestoneId: characterInfo.Character.ID,
+      lodestoneId: characterInfo.ID,
       user: {
         id: user.id,
       },
@@ -458,12 +458,12 @@ export class CharactersService {
     });
 
     return characterRepo.save({
-      lodestoneId: characterInfo.Character.ID,
-      name: characterInfo.Character.Name,
+      lodestoneId: characterInfo.ID,
+      name: characterInfo.Name,
       race,
       server,
       user,
-      avatar: characterInfo.Character.Avatar,
+      avatar: characterInfo.Avatar,
       verificationCode: generateVerificationCode(),
       active: true
     });

@@ -1,4 +1,4 @@
-import { CharacterInfo, CharacterSearchEntry, FreeCompanyInfo, PagedResult } from '@xivapi/js';
+import { CharacterSearchEntry, PagedResult } from '@app/shared/dto/lodestone';
 import axios from 'axios';
 
 const XIVAPI_ROOT = 'https://xivapi.com';
@@ -21,20 +21,7 @@ const minXIVAPI = {
 				params
 			})).data;
 		},
-
-		async get(id: number, options?: { extended: 0|1 }): Promise<CharacterInfo> {
-			return (await axios.get<CharacterInfo>(`${XIVAPI_ROOT}/character/${id}`, {
-				params: options
-			})).data;
-		}
   },
-	freecompany: {
-		async get(id: string, options?: { data: 'FCM' }): Promise<FreeCompanyInfo> {
-			return (await axios.get<FreeCompanyInfo>(`${XIVAPI_ROOT}/freecompany/${id}`, {
-				params: options
-			})).data;
-		}
-	}
 };
 
 export default minXIVAPI;

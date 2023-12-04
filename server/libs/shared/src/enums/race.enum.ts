@@ -35,3 +35,13 @@ const racesById = {
 export function getRaceById(id: number): Race|null {
   return racesById[id as keyof typeof racesById] || null;
 }
+
+export function getRaceByName(raceName: string): Race|null {
+  for (const race of Object.values(Race)) {
+    if (races[race] === raceName) {
+      return race;
+    }
+  }
+
+  return null;
+}

@@ -16,7 +16,7 @@ import { ImageDto } from '@app/shared/dto/image/image.dto';
 import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';
 import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ImagesService } from '../images/images.service';
 import { StoriesService } from '../stories/stories.service';
 import { CharactersService } from './characters.service';
@@ -63,6 +63,7 @@ export class CharactersController {
 
   @Post('refresh')
   @UseGuards(JwtAuthGuard)
+	@HttpCode(HttpStatus.OK)
   async refreshCharacter(
     @Body() characterId: IdWrapper,
     @CurrentUser() user: UserInfo,

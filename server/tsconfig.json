@@ -16,9 +16,6 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "paths": {
-      "@xivapi/js": [
-        "types/xivapi.d.ts"
-      ],
       "jpegtran": [
         "types/jpegtran.d.ts"
       ],

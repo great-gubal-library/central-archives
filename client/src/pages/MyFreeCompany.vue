@@ -80,8 +80,9 @@ export default class PageMyFreeCompany extends Vue {
   }
 
   async onSetFCFromLodestoneClick() {
+    /*
     const lodestoneId = this.$store.getters.character!.lodestoneId;
-    const characterInfo = await minXIVAPI.character.get(lodestoneId);
+    const characterInfo = await getLodestoneCharacter(lodestoneId);
     const fcName = characterInfo.Character.FreeCompanyName!;
 
     let title;
@@ -122,6 +123,7 @@ export default class PageMyFreeCompany extends Vue {
         },
       })
       .onOk(() => this.setFCFromLodestone());
+      */
   }
 
   async setFCFromLodestone() {
