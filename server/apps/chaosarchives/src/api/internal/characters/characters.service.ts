@@ -21,20 +21,21 @@ import { normalizeXivapiServerName } from '@app/shared/xivapi-utils';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, EntityManager, IsNull, Not, Repository } from 'typeorm';
+import { DataSource, EntityManager, IsNull, Not, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../../../common/api-checks';
 import { andWhereExists, escapeForLike, isQueryFailedError } from '../../../common/db';
-import { getLodestoneCharacter } from '../../../common/lodestone';
 import { ImagesService } from '../images/images.service';
 import { VisibilityInPlayerProfile } from '@app/shared/enums/visibility-in-player-profile.enum';
 import { getRaceByName } from '@app/shared/enums/race.enum';
+import { LodestoneService } from '../lodestone/lodestone.service';
 
 @Injectable()
 export class CharactersService {
   constructor(
     private publicAuthService: AuthService,
     private imagesService: ImagesService,
-    private connection: Connection,
+    private lodestoneService: LodestoneService,
+    private connection: DataSource,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(CommunityMembership) private communityMembershipRepo: Repository<CommunityMembership>,
@@ -305,7 +306,7 @@ export class CharactersService {
         throw new ConflictException('You cannot refresh inactive characters from Lodestone');
       }
 
-      const lodestoneInfo = await getLodestoneCharacter(character.lodestoneId);
+      const lodestoneInfo = await this.lodestoneService.getCharacter(character.lodestoneId);
 
       if (!lodestoneInfo) {
         throw new GoneException('Character not found on Lodestone');
@@ -410,7 +411,7 @@ export class CharactersService {
         throw new ConflictException('This character is already claimed by another user');
     }
 
-    const characterInfo = await getLodestoneCharacter(lodestoneId);
+    const characterInfo = await this.lodestoneService.getCharacter(lodestoneId);
 
     if (!characterInfo) {
       throw new BadRequestException('Invalid character');
@@ -448,7 +449,7 @@ export class CharactersService {
 
     // Set all previously existing characters with this Lodestone ID as inactive
     await characterRepo.update({
-      lodestoneId: characterInfo.ID,
+      lodestoneId,
       user: {
         id: user.id,
       },
@@ -458,7 +459,7 @@ export class CharactersService {
     });
 
     return characterRepo.save({
-      lodestoneId: characterInfo.ID,
+      lodestoneId,
       name: characterInfo.Name,
       race,
       server,

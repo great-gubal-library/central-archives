@@ -10,13 +10,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';
 import { DataSource, IsNull, Not, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../../../common/api-checks';
-import { getLodestoneCharacter, getLodestoneFreeCompany } from '../../../common/lodestone';
 import { ImagesService } from '../images/images.service';
+import { LodestoneService } from '../lodestone/lodestone.service';
 
 @Injectable()
 export class FreeCompaniesService {
 	constructor(
     private imagesService: ImagesService,
+    private lodestoneService: LodestoneService,
 		private connection: DataSource,
 		@InjectRepository(Character) private characterRepo: Repository<Character>,
 		@InjectRepository(FreeCompany) private freeCompanyRepo: Repository<FreeCompany>,
@@ -49,14 +50,14 @@ export class FreeCompaniesService {
 			throw new NotFoundException('Character not found');
 		}
 
-		const lodestoneCharacterInfo = await getLodestoneCharacter(characterInfo.lodestoneId);
+		const lodestoneCharacterInfo = await this.lodestoneService.getCharacter(characterInfo.lodestoneId);
 
 		if (!lodestoneCharacterInfo) {
 			throw new GoneException('Character not found on Lodestone');
 		}
 
 		const fcLodestoneId = lodestoneCharacterInfo.FreeCompany?.ID;
-		const fcLodestoneInfo = !fcLodestoneId? null : await getLodestoneFreeCompany(fcLodestoneId);
+		const fcLodestoneInfo = !fcLodestoneId? null : await this.lodestoneService.getFreeCompany(fcLodestoneId);
 
 		return this.connection.transaction(async em => {
 			const characterRepo = em.getRepository(Character);

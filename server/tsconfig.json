@@ -15,6 +15,7 @@
     "esModuleInterop": true,
     "strict": true,
     "strictPropertyInitialization": false,
+    "resolveJsonModule": true,
     "paths": {
       "jpegtran": [
         "types/jpegtran.d.ts"

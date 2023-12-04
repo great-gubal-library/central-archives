@@ -19,6 +19,7 @@ import { VenuesModule } from './venues/venues.module';
 import { ViolationsModule } from './violations/violations.module';
 import { WikiModule } from "./wiki/wiki.module";
 import { PlayerProfilesModule } from "./player-profiles/player-profiles.module";
+import { LodestoneModule } from "./lodestone/lodestone.module";
 
 const controllerModules = [
 	MainPageModule,
@@ -40,6 +41,7 @@ const controllerModules = [
 	StatisticsModule,
 	WikiModule,
 	PlayerProfilesModule,
+  LodestoneModule,
 ];
 
 @Module({

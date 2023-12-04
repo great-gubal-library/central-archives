@@ -39,7 +39,6 @@ import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-sum
 import FreeCompanyCrest from 'components/free-company/FreeCompanyCrest.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
-import minXIVAPI from 'src/common/xivapi-min';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 
@@ -80,19 +79,18 @@ export default class PageMyFreeCompany extends Vue {
   }
 
   async onSetFCFromLodestoneClick() {
-    /*
     const lodestoneId = this.$store.getters.character!.lodestoneId;
-    const characterInfo = await getLodestoneCharacter(lodestoneId);
-    const fcName = characterInfo.Character.FreeCompanyName!;
+    const characterInfo = await this.$api.lodestone.getCharacter(lodestoneId);
+    const fcName = characterInfo!.FreeCompany?.Name;
 
     let title;
     let message;
     let okTitle;
 
-    if (characterInfo.Character.FreeCompanyName) {
+    if (fcName) {
       if (
         this.freeCompany &&
-        characterInfo.Character.FreeCompanyName === this.freeCompany.name
+        fcName === this.freeCompany.name
       ) {
         title = 'Confirm Updating Free Company';
         message = `Update your Free Company "${fcName}" from Lodestone? This operation cannot be undone.`;
@@ -123,7 +121,6 @@ export default class PageMyFreeCompany extends Vue {
         },
       })
       .onOk(() => this.setFCFromLodestone());
-      */
   }
 
   async setFCFromLodestone() {

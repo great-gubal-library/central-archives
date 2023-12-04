@@ -7,6 +7,7 @@ import { StoriesModule } from '../stories/stories.module';
 import { CharactersController } from './characters.controller';
 import { CharactersService } from './characters.service';
 import { MyContentService } from './my-content.service';
+import { LodestoneModule } from '../lodestone/lodestone.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { MyContentService } from './my-content.service';
     StoriesModule,
     ImagesModule,
     AuthModule,
+    LodestoneModule,
   ],
   controllers: [CharactersController],
   providers: [CharactersService, MyContentService],
