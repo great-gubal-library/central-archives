@@ -13,26 +13,25 @@ import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import errors from '@app/shared/errors';
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, ConflictException, GoneException, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import parse from 'node-html-parser';
-import { firstValueFrom } from 'rxjs';
-import { Connection, EntityManager, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { isQueryFailedError } from '../../../common/db';
 import { MailService } from '../../../mail/mail.service';
 import { CharactersService } from '../characters/characters.service';
+import { LodestoneService } from '../lodestone/lodestone.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    private connection: Connection,
+    private connection: DataSource,
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     private charactersService: CharactersService,
     private mailService: MailService,
     private httpService: HttpService,
+    private lodestoneService: LodestoneService,
   ) {}
 
   async signUp(
@@ -179,9 +178,9 @@ export class UserService {
         throw new BadRequestException('Already verified');
       }
 
-      const characterData = await this.parseLodestoneProfile(
+      const characterData = (await this.lodestoneService.getCharacter(
         character.lodestoneId,
-      );
+      ))!.Bio;
 
       if (!characterData) {
         throw new GoneException('Character deleted');
@@ -205,28 +204,6 @@ export class UserService {
 
       await this.updatePostVerifyRole(em, userEntity);
     });
-  }
-
-  private async parseLodestoneProfile(lodestoneId: number): Promise<string> {
-    try {
-      // We're parsing Lodestone directly in this case because XIVAPI caches the result.
-      const url = `https://eu.finalfantasyxiv.com/lodestone/character/${lodestoneId}/`;
-      const page = (await firstValueFrom(this.httpService.get<string>(url))).data;
-      const doc = parse(page);
-      const profileField = doc.querySelector('.character__selfintroduction');
-
-      if (!profileField) {
-        throw new ServiceUnavailableException('Lodestone page structure seems to have changed');
-      }
-
-      return profileField.textContent;
-    } catch (e) {
-      if (errors.getStatusCode(e) === HttpStatus.NOT_FOUND) {
-        throw new GoneException('Character not found on Lodestone');
-      }
-
-      throw new ServiceUnavailableException('Unable to check character on Lodestone');
-    }
   }
 
   private async updatePostVerifyRole(em: EntityManager, user: User) {
@@ -279,7 +256,7 @@ export class UserService {
       // clicking the password reset link will silently double as email verification.
       user.verificationCode = generateVerificationCode();
       await repo.save(user);
-      
+
       return {
         email: user.email,
         name: character ? character.name : user.email,
@@ -350,7 +327,7 @@ export class UserService {
       email: userData.email
     };
   }
-  
+
   async changeEmail(request: ChangeEmailRequestDto, @CurrentUser() userInfo: UserInfo): Promise<void> {
     const { userEntity, characterName } = await this.connection.transaction(async (em) => {
       const userRepo = em.getRepository(User);
