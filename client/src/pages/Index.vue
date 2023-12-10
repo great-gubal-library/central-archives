@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <news-timeline :news="content.news" />
+    <h2>Latest Updates</h2>
     <section>
       <rss-section-header feed-link="/api/feed/stories.rss">
         <router-link to="/stories">New stories</router-link>
