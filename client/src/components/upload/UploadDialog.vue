@@ -27,24 +27,27 @@
 					/>
 				</q-step>
 			</q-stepper>
-			<q-card-actions align="right">
-				<q-btn flat color="secondary" label="Cancel" @click="onCancelClick" />
-				<q-btn
-					v-if="canGoBack"
-					flat
-					color="secondary"
-					label="< Back"
-					@click="goBack"
-				/>
-				<q-btn
-					v-if="step !== Step.IMAGE_DETAILS"
-					:disable="!canGoNext"
-					flat
-					color="primary"
-					label="Next >"
-					@click="goNext"
-				/>
-				<q-btn v-else :disable="!canUpload" color="primary" label="Upload" @click="onUploadClick" />
+			<q-card-actions class="upload-dialog__actions">
+        <div class="upload-dialog__ai_warning">Please do not upload AI generated images.</div>
+        <div class="upload-dialog__buttons">
+          <q-btn flat color="secondary" label="Cancel" @click="onCancelClick" />
+          <q-btn
+            v-if="canGoBack"
+            flat
+            color="secondary"
+            label="< Back"
+            @click="goBack"
+          />
+          <q-btn
+            v-if="step !== Step.IMAGE_DETAILS"
+            :disable="!canGoNext"
+            flat
+            color="primary"
+            label="Next >"
+            @click="goNext"
+          />
+          <q-btn v-else :disable="!canUpload" color="primary" label="Upload" @click="onUploadClick" />
+        </div>
 			</q-card-actions>
       <div
         class="upload-dialog__drag-overlay"
@@ -310,6 +313,15 @@ export default class UploadDialog extends Vue.with(Props) {
 .upload-dialog h6 {
   font-family: $form-header-font;
   font-size: 1.2em;
+}
+
+.upload-dialog__actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.upload-dialog__ai_warning {
+  padding-left: 8px;
 }
 
 .upload-dialog_dragging > * {
