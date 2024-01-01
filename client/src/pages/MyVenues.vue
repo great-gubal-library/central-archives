@@ -28,8 +28,8 @@ const $store = useStore();
   },
   async beforeRouteEnter(_, __, next) {
     try {
-      const venues = await $api.venues.getVenues({ characterId: $store.getters.characterId! });
-      next((vm) => (vm as PageMyVenues).setContent(venues));
+      const venues = await $api.venues.getVenues({ characterId: $store.getters.characterId!, limit: 500 });
+      next((vm) => (vm as PageMyVenues).setContent(venues.data));
     } catch (e) {
       console.log(e);
       notifyError(e);

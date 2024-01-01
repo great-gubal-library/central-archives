@@ -8,14 +8,15 @@ import { VenueDto } from '@app/shared/dto/venues/venue.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { VenuesService } from './venues.service';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 
 @Controller('venues')
 export class VenuesController {
 	constructor(private venuesService: VenuesService) {}
 
 	@Get()
-	async getVenues(@Query() filter: { characterId?: number }): Promise<VenueSummaryDto[]> {
-		return this.venuesService.getVenues(filter);
+	async getVenues(@Query() filter: { characterId?: number }): Promise<PagingResultDto<VenueSummaryDto>> {
+		return this.venuesService.getVenues(filter, false);
 	}
 
 	@Get(':server/:name')

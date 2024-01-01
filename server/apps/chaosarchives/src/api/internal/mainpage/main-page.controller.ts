@@ -36,7 +36,7 @@ export class MainPageController {
         this.newsService.getLatestSummaries(),
         this.storiesService.getStoryList({ limit: this.MAX_STORIES }),
         this.noticeboardService.getNoticeboardItemList({ limit: this.MAX_NOTICEBOARD_ITEMS }),
-        this.venuesService.getVenues({ limit: this.MAX_NEW_VENUES }),
+        this.venuesService.getVenues({ limit: this.MAX_NEW_VENUES }, true),
         this.communitiesService.getCommunities({ limit: this.MAX_NEW_COMMUNITIES }, true),
       ]);
 
@@ -44,7 +44,7 @@ export class MainPageController {
     mainPageContent.newsUpToDate = true;
     mainPageContent.newStories = storyList.data;
     mainPageContent.newNoticeboardItems = noticeboardItemList;
-    mainPageContent.newVenues = newVenuesList;
+    mainPageContent.newVenues = newVenuesList.data;
     mainPageContent.newCommunities = newCommunitiesList;
     return mainPageContent;
   }

@@ -11,27 +11,58 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
-import { Connection, EntityManager, Repository } from 'typeorm';
+import { DataSource, EntityManager, FindOptionsWhere, Repository } from 'typeorm';
 import { checkCarrdProfile } from '../../../common/api-checks';
 import { ImagesService } from '../images/images.service';
+import { VenueFilterDto } from '@app/shared/dto/venues/venue-filter.dto';
+import { escapeForLike } from 'apps/chaosarchives/src/common/db';
+import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 
 @Injectable()
 export class VenuesService {
   constructor(
     @InjectRepository(Venue) private venueRepo: Repository<Venue>,
-    private connection: Connection,
+    private connection: DataSource,
     private imagesService: ImagesService,
   ) {}
 
-	async getVenues(filter: { characterId?: number, limit?: number }): Promise<VenueSummaryDto[]> {
-		const myVenues = await this.venueRepo.find({
-			where: filter.characterId ? { owner: { id: filter.characterId } } : undefined,
-			order: { 'createdAt': 'DESC' },
-			relations: [ 'owner', 'server' ],
-			take: filter.limit || undefined,
-		});
+	async getVenues(filter: VenueFilterDto, orderByDate = false): Promise<PagingResultDto<VenueSummaryDto>> {
+    const query = this.venueRepo.createQueryBuilder('venue')
+			.innerJoinAndSelect('venue.owner', 'owner')
+			.innerJoinAndSelect('venue.server', 'server')
+			.select([ 'venue', 'owner', 'server' ]);
 
-		return myVenues.map(venue => this.toVenueSummaryDto(venue));
+    if (orderByDate) {
+      query.orderBy('venue.createdAt', 'DESC');
+    } else {
+      query.orderBy('venue.name', 'ASC');
+    }
+
+    if (filter.characterId) {
+      query.andWhere('owner.id = :ownerId', { ownerId: filter.characterId });
+    }
+
+    if (filter.searchQuery) {
+      query.andWhere('(venue.name LIKE :searchQuery OR venue.purpose LIKE :searchQuery)',
+        { searchQuery:  `%${escapeForLike(filter.searchQuery)}%` });
+    }
+
+    if (filter.housingArea) {
+      query.andWhere('venue.housingArea = :housingArea', { housingArea: filter.housingArea });
+    }
+
+    const total = await query.getCount();
+
+    if (filter.offset) {
+      query.offset(filter.offset);
+    }
+
+    if (filter.limit) {
+      query.limit(filter.limit);
+    }
+
+		const venues = await query.getMany();
+		return { total, data: venues.map(venue => this.toVenueSummaryDto(venue)) };
 	}
 
 	private toVenueSummaryDto(venue: Venue): VenueSummaryDto {
@@ -148,7 +179,7 @@ export class VenuesService {
 			venue.tags = [];
 			await this.saveInternal(em, venue, venueDto, user);
 			return { id: venue.id };
-		});		
+		});
 	}
 
 	async editVenue(venueDto: VenueDto, user: UserInfo): Promise<void> {
@@ -170,7 +201,7 @@ export class VenuesService {
 			}
 
 			await this.saveInternal(em, venue, venueDto, user);
-		});		
+		});
 	}
 
 	/* eslint-disable no-param-reassign */
@@ -275,7 +306,7 @@ export class VenuesService {
 		} else {
 			venue.banner = Promise.resolve(null);
 		}
-		
+
 		// Set tags
 
 		const existingTagNames = venue.tags.map((tag) => tag.name);
