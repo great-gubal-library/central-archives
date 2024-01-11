@@ -52,6 +52,7 @@
               dense
               color="accent"
               icon="image"
+              @click="hide"
             />
           </q-carousel-control>
         </template>
