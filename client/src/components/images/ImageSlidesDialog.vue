@@ -43,6 +43,18 @@
         </template>
 
         <template v-slot:control>
+          <q-carousel-control position="top-right" :offset="[18, 18]">
+            <q-btn
+              title="Close"
+              push
+              round
+              dense
+              color="accent"
+              icon="close"
+              @click="hide"
+            />
+          </q-carousel-control>
+
           <q-carousel-control position="bottom-right" :offset="[18, 18]">
             <q-btn
               :to="`/image/${images[index].id}`"
