@@ -46,7 +46,7 @@
                 :rules="[
                   $rules.required('This field is required.'),
                 ]"
-              />          
+              />
               <q-input
                 v-model="location.address"
                 label="Address"
@@ -102,7 +102,7 @@
             label="Contact"
           />
           <h6>Announcements</h6>
-          <p>You can let the Chaos Archives Discord bot announce the event on the <tt>#rp-event-announcements</tt> channel some time before the event starts. You can add as many announcements as you like.</p>
+          <p>You can let the Chaos Archives Discord bot announce the event on the <tt>#chaos-dc-events</tt> channel some time before the event starts. You can add as many announcements as you like.</p>
           <template v-for="(_, index) in event.announcements" :key="index">
             <event-announcement-editor v-model="event.announcements[index]" @remove="removeAnnouncement(index)" />
           </template>
