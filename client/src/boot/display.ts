@@ -21,6 +21,11 @@ declare module '@vue/runtime-core' {
 const DATE_FORMAT = 'd MMMM yyyy';
 const DATE_TIME_FORMAT = "d MMMM yyyy 'at' HH:mm";
 
+interface EventInfo {
+  startDateTime: number;
+  endDateTime?: number | null;
+}
+
 class Display {
 	readonly races = races;
 
@@ -103,6 +108,35 @@ class Display {
 	formatDateTimeLocal(timestamp: number) {
 		return DateTime.fromMillis(timestamp).toFormat(DATE_TIME_FORMAT, { locale: 'en-GB' }) + ' LT';
 	}
+
+  private isMultipleDays(event: EventInfo): boolean {
+    if (!event.endDateTime) {
+      return false;
+    }
+
+    const options = { zone: SharedConstants.FFXIV_SERVER_TIMEZONE };
+    const startDateTime = DateTime.fromMillis(event.startDateTime, options);
+    const endDateTime = DateTime.fromMillis(event.endDateTime, options);
+
+    return !startDateTime.startOf('day').equals(endDateTime.startOf('day'));
+  }
+
+  formatEventServerDate(event: EventInfo, htmlBreak = false): string {
+    if (this.isMultipleDays(event)) {
+      const separator = htmlBreak ? '<br />' : ' ';
+      return `${this.formatDateTimeServer(event.startDateTime)} –${separator}${this.formatDateTimeServer(event.endDateTime!)}`;
+    }
+
+    return this.formatDateTimeServer(event.startDateTime);
+  }
+
+  formatEventLocalDate(event: EventInfo): string {
+    if (this.isMultipleDays(event)) {
+      return `${this.formatDateTimeLocal(event.startDateTime)} – ${this.formatDateTimeLocal(event.endDateTime!)}`;
+    }
+
+    return this.formatDateTimeLocal(event.startDateTime);
+  }
 
 	formatFileSize(fileSize: number) {
 		if (fileSize < 1024) {

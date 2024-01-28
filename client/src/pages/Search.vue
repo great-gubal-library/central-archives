@@ -26,7 +26,7 @@
                     <router-link v-if="result.image" :to="getPageLink(resultSet.type, result)">
                       <img class="page-search__image gt-sm" :src="result.image.thumbUrl" :title="result.image.title" />
                     </router-link>
-                    <router-link :to="getPageLink(resultSet.type, result)">{{ result.name }}</router-link> — {{ $display.formatDate(result.updatedAt) }}
+                    <router-link :to="getPageLink(resultSet.type, result)">{{ result.name }}</router-link> — {{ formatDate(result) }}
                   </dt>
                   <dd v-html="formatResult(result.content)"></dd>
                 </template>
@@ -54,6 +54,7 @@ import ThumbGallery from 'src/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteLocationNormalized } from 'vue-router';
+import { SearchResultDto } from '@app/shared/dto/search/search-result.dto';
 
 const $api = useApi();
 const $router = useRouter();
@@ -156,6 +157,17 @@ export default class PageSearch extends Vue {
     }
 
     return result;
+  }
+
+  formatDate(searchResult: SearchResultDto): string {
+    if (searchResult.startDateTime) {
+      return this.$display.formatEventServerDate({
+        startDateTime: searchResult.startDateTime,
+        endDateTime: searchResult.endDateTime,
+      }, false);
+    }
+
+    return this.$display.formatDate(searchResult.updatedAt);
   }
 
   getPageLink = getPageLink;

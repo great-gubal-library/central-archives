@@ -142,8 +142,8 @@ export class SearchService {
 
     return (
       await andWhereMatches(qb, 'e', properties, keywords)
-        .select(['e.id', ...this.expandProperties('e', properties), 'e.updatedAt'])
-        .orderBy('e.updatedAt', 'DESC')
+        .select(['e.id', ...this.expandProperties('e', properties), 'e.updatedAt', 'e.startDateTime', 'e.endDateTime' ])
+        .orderBy('e.startDateTime', 'DESC')
         .limit(this.MAX_RESULTS)
         .getMany()
     ).map((event) => ({
@@ -151,6 +151,8 @@ export class SearchService {
       name: event.title,
       content: this.getContent(event, properties, keywords),
       updatedAt: event.updatedAt.getTime(),
+      startDateTime: event.startDateTime.getTime(),
+      endDateTime: event.endDateTime?.getTime(),
     }));
   }
 
