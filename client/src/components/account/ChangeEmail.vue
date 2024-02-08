@@ -81,12 +81,16 @@ export default class ChangeEmail extends Vue {
 		this.loading = true;
 
 		try {
+      const newEmail = this.newEmail;
+
 			await this.$api.user.changeEmail({
 				currentPassword: this.currentPassword,
-				newEmail: this.newEmail,
+				newEmail,
 			});
 
 			notifySuccess(this.successMessage);
+      this.currentEmail = newEmail;
+      this.newEmail = '';
 			this.success = true;
 		} catch (e) {
       notifyError(e);
