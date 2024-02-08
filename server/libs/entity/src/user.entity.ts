@@ -16,9 +16,10 @@ export class User extends BasicEntity {
   passwordHash: string;
 
   @Column({
+    type: 'datetime',
     nullable: true
   })
-  tokensValidAfter: Date;
+  tokensValidAfter: Date | null;
 
   @Column({
     type: 'enum',

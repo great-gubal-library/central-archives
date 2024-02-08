@@ -124,7 +124,11 @@ export class UserService {
   }
 
   toSession(userInfo: UserInfo): SessionDto {
-    return userInfo;
+    return {
+      id: userInfo.id,
+      role: userInfo.role,
+      characters: userInfo.characters,
+    };
   }
 
   async getVerificationStatus(user: UserInfo, characterId: number): Promise<VerificationStatusDto> {
