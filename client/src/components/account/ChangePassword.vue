@@ -1,5 +1,5 @@
 <template>
-	<q-form class="change-password" @submit="onSubmit">
+	<q-form ref="form" class="change-password" @submit="onSubmit">
 		<h3>Change Password</h3>
 		<q-input
 			ref="currentPasswordField"
@@ -28,11 +28,25 @@
 				<q-icon name="password" />
 			</template>
 		</q-input>
+		<q-input
+			v-model="confirmNewPassword"
+			label="Confirm new password"
+			type="password"
+			:rules="[
+				$rules.required('This field is required.'),
+        $rules.sameAs(newPassword, 'Passwords do not match.'),
+			]"
+		>
+			<template v-slot:prepend>
+				<q-icon name="password" />
+			</template>
+		</q-input>
 		<div class="change-password__button-bar">
 			<q-btn
 				label="Change password"
 				type="submit"
 				color="primary"
+        :disabled="!isValid"
 			/>
 		</div>
 		<q-inner-loading :showing="loading" />
@@ -40,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { QInput } from 'quasar';
+import { QForm, QInput } from 'quasar';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 
@@ -50,6 +64,7 @@ import { Options, Vue } from 'vue-class-component';
 export default class ChangePassword extends Vue {
 	currentPassword = ' '; // single space to prevent autofill
 	newPassword = '';
+  confirmNewPassword = '';
 
 	loading = false;
 
@@ -57,7 +72,18 @@ export default class ChangePassword extends Vue {
 		(this.$refs.currentPasswordField as QInput).select();
 	}
 
+  get isValid(): boolean {
+    return !!this.currentPassword.trim() && !!this.newPassword && this.confirmNewPassword === this.newPassword;
+  }
+
 	async onSubmit() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const form = this.$refs.form as QForm;
+
+    if (!(await form.validate())) {
+      return;
+    }
+
 		this.loading = true;
 
 		try {
