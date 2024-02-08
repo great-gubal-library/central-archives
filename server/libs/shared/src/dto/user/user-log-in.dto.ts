@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UserLogInDto {
   @IsString()
@@ -6,6 +6,10 @@ export class UserLogInDto {
 
   @IsString()
   readonly password: string;
+
+  @IsString()
+  @IsOptional()
+  readonly otp?: string | null;
 
   constructor(properties?: Readonly<UserLogInDto>) {
     if (properties) {

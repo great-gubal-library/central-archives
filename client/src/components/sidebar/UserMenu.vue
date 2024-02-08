@@ -178,7 +178,7 @@
       <q-separator dark />
       <q-item clickable v-ripple to="/my-account">
         <q-item-section>
-          <q-item-label><q-icon class="text-h6" name="manage_accounts" /> My account</q-item-label>
+          <q-item-label><q-icon class="text-h6" name="manage_accounts" /> Account and security</q-item-label>
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple @click="logOut">
@@ -198,7 +198,7 @@ import { notifySuccess } from 'src/common/notify';
 import { switchCharacter } from 'src/common/switch-character';
 
 @Options({
-  
+
 })
 export default class UserMenu extends Vue {
   readonly Role = Role;

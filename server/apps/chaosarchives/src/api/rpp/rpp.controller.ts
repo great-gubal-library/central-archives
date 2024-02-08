@@ -24,7 +24,6 @@ export class RppController {
 	constructor(private rppService: RppService, private authService: AuthService) {}
 
 	@Post('login')
-	@UseGuards(AuthGuard('local'))
 	@HttpCode(HttpStatus.OK)
 	@ApiOperation({
 		summary: 'Obtain an access token using a Chaos Archives account',
@@ -42,7 +41,9 @@ export class RppController {
 		status: HttpStatus.UNAUTHORIZED,
 		description: 'Invalid email or password',
 	})
-  async login(@CurrentUser() user: UserInfo): Promise<RppLoginResponseDto> {
+  async login(@Body() request: RppLogInDto): Promise<RppLoginResponseDto> {
+    const user = await this.authService.authenticateUser(request);
+
     return {
       accessToken: this.authService.createAccessToken(user.id, AuthScope.RPP),
     };

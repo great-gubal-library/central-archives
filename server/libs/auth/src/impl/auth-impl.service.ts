@@ -2,12 +2,14 @@ import { Character, User } from '@app/entity';
 import { checkPassword } from '@app/security';
 import { Role } from '@app/shared/enums/role.enum';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Redis from 'ioredis';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { UserCharacterInfo } from '../model/user-character-info';
 import { UserInfo } from '../model/user-info';
+import { LoginCredentials } from '../model/login-credentials';
+import { TwoFactorAuthService } from './two-factor-auth.service';
 
 @Injectable()
 export class AuthImplService {
@@ -17,18 +19,50 @@ export class AuthImplService {
     @InjectRepository(User) private readonly userRepo: Repository<User>,
     @InjectRepository(Character)
     private readonly characterRepo: Repository<Character>,
+    private readonly dataSource: DataSource,
     @InjectRedis()
     private readonly redisService: Redis,
+    private readonly twoFactorAuthService: TwoFactorAuthService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<UserInfo> {
-    const user = await this.userRepo.findOneBy({ email: username });
+  async validateUser(credentials: LoginCredentials): Promise<UserInfo> {
+    const user = await this.userRepo.findOneBy({ email: credentials.email });
+    let useUpBackupCode = false;
 
-    if (!user || !(await checkPassword(password, user.passwordHash))) {
+    if (!user || !(await checkPassword(credentials.password, user.passwordHash))) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    return this.getAndCacheUserInfo(user);
+    if (user.totpSecret) {
+      if (!credentials.otp) {
+        throw new BadRequestException('OTP_REQUIRED');
+      }
+
+      if (this.twoFactorAuthService.isBackupCode(credentials.otp)) {
+        const backupCode = credentials.otp.toUpperCase().replace(/- /g, '');
+
+        if (user.backupCode === backupCode) {
+          useUpBackupCode = true;
+        } else {
+          throw new UnauthorizedException('Invalid 2FA backup code');
+        }
+      } else {
+        // regular OTP code
+        if (!this.twoFactorAuthService.checkOtp(user.totpSecret, credentials.otp)) {
+          throw new UnauthorizedException('Invalid authentication code');
+        }
+      }
+    }
+
+    const userInfo = this.getAndCacheUserInfo(user);
+
+    if (useUpBackupCode) {
+      await this.dataSource.transaction(async em => {
+        await em.getRepository(User).update({ id: user.id }, { backupCode: null });
+      });
+    }
+
+    return userInfo;
   }
 
   async getUserInfo(userId: number): Promise<UserInfo> {

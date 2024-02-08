@@ -6,6 +6,7 @@ import { AuthScope } from './model/auth-scope.enum';
 import { UserInfo } from './model/user-info';
 import { DateTime } from 'luxon';
 import { ExtractJwt } from 'passport-jwt';
+import { LoginCredentials } from './model/login-credentials';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,10 @@ export class AuthService {
     private jwtService: JwtService,
 		private authService: AuthImplService,
   ) {}
+
+  async authenticateUser(credentials: LoginCredentials): Promise<UserInfo> {
+    return this.authService.validateUser(credentials);
+  }
 
 	createAccessToken(userId: number, scope?: AuthScope | null): string {
     if (!scope) {

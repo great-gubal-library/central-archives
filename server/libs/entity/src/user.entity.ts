@@ -78,4 +78,18 @@ export class User extends BasicEntity {
     default: '',
   })
   carrdProfile: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    width: 40,
+  })
+  totpSecret: string | null;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    width: 16,
+  })
+  backupCode: string | null;
 }

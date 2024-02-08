@@ -7,7 +7,6 @@ import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-r
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
 import { LoginResponseDto } from '@app/shared/dto/user/login-response.dto';
 import { ResetPasswordRequestDto } from '@app/shared/dto/user/reset-password-request.dto';
-import { SessionDto } from '@app/shared/dto/user/session.dto';
 import { UserConfirmEmailDto } from '@app/shared/dto/user/user-confirm-email.dto';
 import { UserEmailInfoDto } from '@app/shared/dto/user/user-email.info.dto';
 import { UserSignUpResponseDto } from '@app/shared/dto/user/user-sign-up-response.dto';
@@ -23,10 +22,10 @@ import {
   Req,
   UseGuards
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { SessionResponseDto } from '@app/shared/dto/user/session-response.dto';
 import { NewAccessTokenResponseDto } from '@app/shared/dto/user/new-access-token-response.dto';
+import { UserLogInDto } from '@app/shared/dto/user/user-log-in.dto';
 
 @Controller('user')
 export class UserController {
@@ -66,9 +65,10 @@ export class UserController {
     await this.userService.resendConfirmationEmail(user);
   }
 
-  @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@CurrentUser() user: UserInfo): Promise<LoginResponseDto> {
+  async login(@Body() request: UserLogInDto): Promise<LoginResponseDto> {
+    const user = await this.publicAuthService.authenticateUser(request);
+
     return {
       accessToken: this.publicAuthService.createAccessToken(user.id),
       session: this.userService.toSession(user),
