@@ -12,6 +12,7 @@ import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import APITransport from './api-transport';
+import { SessionResponseDto } from '@app/shared/dto/user/session-response.dto';
 
 // Client for the user management API.
 export default class UserAPI {
@@ -48,8 +49,8 @@ export default class UserAPI {
     await this.transport.post<void>('reset-password', resetPasswordData);
   }
 
-  async getSession(): Promise<SessionDto> {
-    return this.transport.authGet<SessionDto>('session');
+  async getSession(): Promise<SessionResponseDto> {
+    return this.transport.authGet<SessionResponseDto>('session');
   }
 
   async getVerificationStatus(characterId: number): Promise<VerificationStatusDto> {

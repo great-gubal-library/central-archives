@@ -21,6 +21,7 @@ import { isQueryFailedError } from '../../../common/db';
 import { MailService } from '../../../mail/mail.service';
 import { CharactersService } from '../characters/characters.service';
 import { LodestoneService } from '../lodestone/lodestone.service';
+import { SessionResponseDto } from '@app/shared/dto/user/session-response.dto';
 
 @Injectable()
 export class UserService {

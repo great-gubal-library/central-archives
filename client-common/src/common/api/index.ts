@@ -56,6 +56,12 @@ export default class API {
     this.transport.setAccessToken(accessToken);
   }
 
+  maybeUpdateAccessToken(accessToken: string | null) {
+    if (accessToken) {
+      this.transport.setAccessToken(accessToken);
+    }
+  }
+
   // Regular API calls
 
   async getMainPageContent(): Promise<MainPageContentDto> {

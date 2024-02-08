@@ -44,7 +44,7 @@ export class RppController {
 	})
   async login(@CurrentUser() user: UserInfo): Promise<RppLoginResponseDto> {
     return {
-      accessToken: this.authService.createScopedAccessToken(user.id, AuthScope.RPP),
+      accessToken: this.authService.createAccessToken(user.id, AuthScope.RPP),
     };
   }
 
@@ -67,7 +67,7 @@ export class RppController {
 	@ApiBearerAuth()
   async extendLogin(@CurrentUser() user: UserInfo, @Req() request: any): Promise<RppExtendLoginResponseDto> {
 		return {
-			newAccessToken: this.authService.reissueScopedAccessTokenIfNeeded(user.id, AuthScope.RPP, request),
+			newAccessToken: this.authService.reissueAccessTokenIfNeeded(user.id, request, AuthScope.RPP),
 		};
   }
 

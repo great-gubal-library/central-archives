@@ -23,8 +23,9 @@ export default boot(async ({ app, store }) => {
 
   if (api.hasAccessToken()) {
     try {
-      const session = await api.user.getSession();
-      store.commit('setUser', session);
+      const sessionResponse = await api.user.getSession();
+      api.maybeUpdateAccessToken(sessionResponse.newAccessToken);
+      store.commit('setUser', sessionResponse.session);
     } catch (e) {
       console.log(errors.getMessage(e));
     }

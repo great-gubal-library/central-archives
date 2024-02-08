@@ -157,8 +157,9 @@ export default class PageVerify extends Vue {
       this.refreshTimerId = setTimeout(() => void this.refresh(), REFRESH_INTERVAL);
     } else {
       // Update user role
-      const session = await this.$api.user.getSession();
-      this.$store.commit('setUser', session);
+      const sessionResponse = await this.$api.user.getSession();
+      this.$api.maybeUpdateAccessToken(sessionResponse.newAccessToken);
+      this.$store.commit('setUser', sessionResponse.session);
     }
   }
 

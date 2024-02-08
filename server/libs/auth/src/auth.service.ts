@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthImplService } from './impl/auth-impl.service';
 import { AuthScope } from './model/auth-scope.enum';
 import { UserInfo } from './model/user-info';
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 import { ExtractJwt } from 'passport-jwt';
 
 @Injectable()
@@ -14,13 +14,13 @@ export class AuthService {
 		private authService: AuthImplService,
   ) {}
 
-	createAccessToken(userId: number): string {
-		return this.jwtService.sign({
-			sub: userId
-		});
-	}
+	createAccessToken(userId: number, scope?: AuthScope | null): string {
+    if (!scope) {
+      return this.jwtService.sign({
+        sub: userId
+      });
+    }
 
-	createScopedAccessToken(userId: number, scope: AuthScope): string {
 		return this.jwtService.sign({
 			sub: userId,
 			scope,
@@ -29,7 +29,7 @@ export class AuthService {
 		});
 	}
 
-	reissueScopedAccessTokenIfNeeded(userId: number, scope: AuthScope, request: any): string|null {
+	reissueAccessTokenIfNeeded(userId: number, request: any, scope?: AuthScope | null): string|null {
 		const jwtString = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
 
 		if (!jwtString) {
@@ -54,10 +54,10 @@ export class AuthService {
 		const issuedAtDate = DateTime.fromSeconds(issuedAt, { zone: 'UTC' });
 		const expiresAtDate = DateTime.fromSeconds(expiresAt, { zone: 'UTC' });
 		const now = DateTime.utc();
-		
+
 		if (expiresAtDate.diff(now).toMillis() < expiresAtDate.diff(issuedAtDate).toMillis() / 2) {
 			// The JWT has outlived half its life
-			return this.createScopedAccessToken(userId, scope);
+      return this.createAccessToken(userId, scope);
 		}
 
 		return null;

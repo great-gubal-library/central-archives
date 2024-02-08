@@ -20,10 +20,12 @@ import {
   Get, ParseIntPipe,
   Post,
   Query,
+  Req,
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
+import { SessionResponseDto } from '@app/shared/dto/user/session-response.dto';
 
 @Controller('user')
 export class UserController {
@@ -74,8 +76,11 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('session')
-  async getSession(@CurrentUser() user: UserInfo): Promise<SessionDto> {
-    return this.userService.toSession(user);
+  async getSession(@CurrentUser() user: UserInfo, @Req() request: any): Promise<SessionResponseDto> {
+    return {
+      session: this.userService.toSession(user),
+      newAccessToken: this.publicAuthService.reissueAccessTokenIfNeeded(user.id, request),
+    };
   }
 
   @UseGuards(JwtAuthGuard)
