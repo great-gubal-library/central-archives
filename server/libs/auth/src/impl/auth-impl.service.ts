@@ -76,6 +76,7 @@ export class AuthImplService {
         newsPseudonym: character.newsPseudonym,
         verified: character.verifiedAt !== null
       })),
+      tokensValidAfter: user.tokensValidAfter,
     });
 
     void this.redisService.set(
