@@ -1,5 +1,5 @@
 import { Role } from '@app/shared/enums/role.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 
 @Entity()
