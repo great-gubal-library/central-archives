@@ -80,6 +80,12 @@ export class User extends BasicEntity {
   carrdProfile: string;
 
   @Column({
+    nullable: false,
+    default: false,
+  })
+  use2FA: boolean;
+
+  @Column({
     type: 'varchar',
     nullable: true,
     width: 40,
