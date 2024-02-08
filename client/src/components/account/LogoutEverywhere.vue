@@ -24,7 +24,7 @@ export default class LogoutEverywhere extends Vue {
   onSubmit() {
     this.$q
       .dialog({
-        title: 'Confirm Logging Out on All Devices',
+        title: 'Confirm Logging Out on Other Devices',
         message:
           '<p>You are about to be logged out on <strong>all</strong> devices except this browser window, including other browser sessions and any third-party programs logged in to your Chaos Archives account.</p><p><strong>This action cannot be undone.</strong></p><p>Proceed?</p>',
         html: true,
