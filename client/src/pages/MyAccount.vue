@@ -11,12 +11,18 @@
 				<change-email />
 			</q-card-section>
 		</q-card>
+		<q-card>
+			<q-card-section>
+				<logout-everywhere />
+			</q-card-section>
+		</q-card>
 	</q-page>
 </template>
 
 <script lang="ts">
 import ChangeEmail from 'src/components/account/ChangeEmail.vue';
 import ChangePassword from 'src/components/account/ChangePassword.vue';
+import LogoutEverywhere from 'src/components/account/LogoutEverywhere.vue';
 import { Options, Vue } from 'vue-class-component';
 
 @Options({
@@ -24,6 +30,7 @@ import { Options, Vue } from 'vue-class-component';
 	components: {
 		ChangePassword,
 		ChangeEmail,
+    LogoutEverywhere,
 	},
 })
 export default class PageMyAccount extends Vue {

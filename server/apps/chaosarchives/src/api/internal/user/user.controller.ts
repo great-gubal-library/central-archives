@@ -26,6 +26,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { SessionResponseDto } from '@app/shared/dto/user/session-response.dto';
+import { NewAccessTokenResponseDto } from '@app/shared/dto/user/new-access-token-response.dto';
 
 @Controller('user')
 export class UserController {
@@ -136,5 +137,16 @@ export class UserController {
   async confirmNewEmail(@Body() confirmEmailData: UserConfirmEmailDto): Promise<void> {
     const userId = await this.userService.confirmNewEmail(confirmEmailData.code);
     await this.publicAuthService.notifyUserChanged(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout-everywhere')
+  async logoutEverywhere(@CurrentUser() user: UserInfo): Promise<NewAccessTokenResponseDto> {
+    await this.userService.logoutEverywhere(user);
+    await this.publicAuthService.notifyUserChanged(user.id);
+
+    return {
+      newAccessToken: this.publicAuthService.createAccessToken(user.id),
+    };
   }
 }

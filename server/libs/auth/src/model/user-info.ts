@@ -8,7 +8,7 @@ export class UserInfo {
 
   readonly characters: UserCharacterInfo[];
 
-  readonly tokensValidAfter: Date | null;
+  readonly tokensValidAfter: number | null;
 
   constructor(properties: Readonly<UserInfo>) {
     if (properties) {

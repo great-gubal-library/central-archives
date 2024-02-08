@@ -22,6 +22,9 @@ import { MailService } from '../../../mail/mail.service';
 import { CharactersService } from '../characters/characters.service';
 import { LodestoneService } from '../lodestone/lodestone.service';
 import { SessionResponseDto } from '@app/shared/dto/user/session-response.dto';
+import { NewAccessTokenResponseDto } from '@app/shared/dto/user/new-access-token-response.dto';
+import { DateTime } from 'luxon';
+import utils from 'apps/chaosarchives/src/common/utils';
 
 @Injectable()
 export class UserService {
@@ -387,6 +390,21 @@ export class UserService {
       await userRepo.save(user);
       await this.updatePostVerifyRole(em, user);
       return user.id;
+    });
+  }
+
+  async logoutEverywhere(userInfo: UserInfo): Promise<void> {
+    // JWT iat has seconds granularity
+    const startOfNextSecond = DateTime.now().startOf('second').plus({ seconds: 1});
+    await utils.delayUntil(startOfNextSecond);
+
+    await this.connection.transaction(async (em) => {
+      const userRepo = em.getRepository(User);
+      const user = (await userRepo.findOneBy({ id: userInfo.id }))!;
+
+      user.tokensValidAfter = startOfNextSecond.toJSDate();
+
+      await userRepo.save(user);
     });
   }
 }

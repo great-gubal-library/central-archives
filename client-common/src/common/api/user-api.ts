@@ -13,6 +13,7 @@ import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import APITransport from './api-transport';
 import { SessionResponseDto } from '@app/shared/dto/user/session-response.dto';
+import { NewAccessTokenResponseDto } from '@app/shared/dto/user/new-access-token-response.dto';
 
 // Client for the user management API.
 export default class UserAPI {
@@ -84,5 +85,9 @@ export default class UserAPI {
       'confirm-new-email',
       confirmData
     );
+  }
+
+  async logoutEverywhere(): Promise<NewAccessTokenResponseDto> {
+    return this.transport.authPost('logout-everywhere', {});
   }
 }

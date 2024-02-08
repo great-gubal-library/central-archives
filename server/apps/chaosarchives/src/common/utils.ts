@@ -1,4 +1,5 @@
 import { convert } from "html-to-text";
+import { DateTime } from "luxon";
 
 export default {
   compareNumbers(a: number, b: number): -1 | 0 | 1 {
@@ -16,7 +17,7 @@ export default {
   htmlToText(html: string): string {
     return convert(html, {
       wordwrap: false,
-      selectors: [  
+      selectors: [
         {
           selector: 'a',
           options: {
@@ -29,5 +30,13 @@ export default {
         }
       ]
     });
+  },
+
+  async delay(milliseconds: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  },
+
+  async delayUntil(time: DateTime): Promise<void> {
+    return this.delay(time.diff(DateTime.now()).toMillis());
   },
 };
