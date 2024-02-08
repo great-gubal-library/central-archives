@@ -16,6 +16,11 @@ export class User extends BasicEntity {
   passwordHash: string;
 
   @Column({
+    nullable: true
+  })
+  tokensValidAfter: Date;
+
+  @Column({
     type: 'enum',
     enum: Role,
     default: Role.UNVERIFIED,
