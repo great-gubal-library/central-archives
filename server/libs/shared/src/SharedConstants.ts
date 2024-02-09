@@ -9,6 +9,7 @@ export default Object.freeze({
 	MIN_VIOLATION_REPORT_LENGTH: 10,
 	MAX_PRONOUNS_LENGTH: 20,
 
+  OTP_LENGTH: 6,
   OTP_REGEX: /^[0-9]{6}$/,
   CLIENT_BACKUP_CODE_REGEX: /^[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}$/,
 

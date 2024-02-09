@@ -8,6 +8,7 @@ import { MailModule } from '../../../mail/mail.module';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { LodestoneModule } from '../lodestone/lodestone.module';
+import { User2FAService } from './user-2fa.service';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { LodestoneModule } from '../lodestone/lodestone.module';
     LodestoneModule,
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, User2FAService],
 })
 export class UserModule {}

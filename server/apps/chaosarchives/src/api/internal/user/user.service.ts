@@ -13,7 +13,6 @@ import { UserSignUpDto } from '@app/shared/dto/user/user-sign-up.dto';
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { VerifyCharacterDto } from '@app/shared/dto/user/verify-character.dto';
 import { Role } from '@app/shared/enums/role.enum';
-import { HttpService } from '@nestjs/axios';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
@@ -21,8 +20,6 @@ import { isQueryFailedError } from '../../../common/db';
 import { MailService } from '../../../mail/mail.service';
 import { CharactersService } from '../characters/characters.service';
 import { LodestoneService } from '../lodestone/lodestone.service';
-import { SessionResponseDto } from '@app/shared/dto/user/session-response.dto';
-import { NewAccessTokenResponseDto } from '@app/shared/dto/user/new-access-token-response.dto';
 import { DateTime } from 'luxon';
 import utils from 'apps/chaosarchives/src/common/utils';
 
@@ -34,7 +31,6 @@ export class UserService {
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     private charactersService: CharactersService,
     private mailService: MailService,
-    private httpService: HttpService,
     private lodestoneService: LodestoneService,
   ) {}
 
