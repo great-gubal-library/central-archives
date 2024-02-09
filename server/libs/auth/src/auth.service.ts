@@ -85,4 +85,12 @@ export class AuthService {
   generate2FASecret(): string {
     return this.twoFactorAuthService.generateSecret();
   }
+
+  generate2FABackupCode(): string {
+    return this.twoFactorAuthService.generateBackupCode();
+  }
+
+  checkOtp(otp: string, secret: string): boolean {
+    return this.twoFactorAuthService.checkOtp(otp, secret);
+  }
 }

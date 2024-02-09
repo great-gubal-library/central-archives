@@ -1,6 +1,7 @@
 import { AuthService } from "@app/auth/auth.service";
 import { UserInfo } from "@app/auth/model/user-info";
 import { User } from "@app/entity";
+import { checkPassword } from "@app/security";
 import { User2FAConfirmRequestDto } from "@app/shared/dto/user/2fa/user-2fa-confirm-request.dto";
 import { User2FAConfirmResponseDto } from "@app/shared/dto/user/2fa/user-2fa-confirm-response.dto";
 import { User2FARemoveRequestDto } from "@app/shared/dto/user/2fa/user-2fa-remove-request.dto";
@@ -59,15 +60,83 @@ export class User2FAService {
     request: User2FAConfirmRequestDto,
     userInfo: UserInfo,
   ): Promise<User2FAConfirmResponseDto> {
-    throw new NotImplementedException();
+    return this.dataSource.transaction(async em => {
+      const userRepo = em.getRepository(User);
+      const user = await userRepo.findOneByOrFail({ id: userInfo.id });
+
+      if (user.use2FA) {
+        throw new BadRequestException('2FA is already enabled');
+      }
+
+      if (!user.totpSecret) {
+        throw new BadRequestException('2FA was not requested');
+      }
+
+      await this.checkPasswordOrFail(request.currentPassword, user.passwordHash);
+
+      if (!this.authService.checkOtp(request.otp, user.totpSecret)) {
+        throw new BadRequestException('Invalid one-time password');
+      }
+
+      user.use2FA = true;
+      user.backupCode = this.authService.generate2FABackupCode();
+      await userRepo.save(user);
+
+      return {
+        backupCode: this.backupCodeToDisplayForm(user.backupCode)
+      };
+    });
   }
 
-  async regenerate2FABackupCode(userInfo: UserInfo): Promise<User2FAConfirmResponseDto> {
-    throw new NotImplementedException();
+  async regenerate2FABackupCode(request: User2FARemoveRequestDto, userInfo: UserInfo): Promise<User2FAConfirmResponseDto> {
+    return this.dataSource.transaction(async em => {
+      const userRepo = em.getRepository(User);
+      const user = await userRepo.findOneByOrFail({ id: userInfo.id });
+
+      if (!user.use2FA) {
+        throw new BadRequestException('2FA is disabled');
+      }
+
+      await this.checkPasswordOrFail(request.currentPassword, user.passwordHash);
+
+      user.backupCode = this.authService.generate2FABackupCode();
+      await userRepo.save(user);
+
+      return {
+        backupCode: this.backupCodeToDisplayForm(user.backupCode)
+      };
+    });
   }
 
   async remove2FA(request: User2FARemoveRequestDto, userInfo: UserInfo): Promise<User2FAStatusDto> {
-    throw new NotImplementedException();
+    return this.dataSource.transaction(async em => {
+      const userRepo = em.getRepository(User);
+      const user = await userRepo.findOneByOrFail({ id: userInfo.id });
+
+      await this.checkPasswordOrFail(request.currentPassword, user.passwordHash);
+
+      if (!user.use2FA && !user.totpSecret) {
+        // No-op if 2FA is already disabled
+        return this.getEntity2FAStatus(user);
+      }
+
+      user.use2FA = false;
+      user.totpSecret = null;
+      user.backupCode = null;
+      await userRepo.save(user);
+
+      return this.getEntity2FAStatus(user);
+    });
+  }
+
+  private async checkPasswordOrFail(password: string, storedHash: string): Promise<void> {
+    if (!(await checkPassword(password, storedHash))) {
+      throw new BadRequestException('Invalid password');
+    }
+  }
+
+  private backupCodeToDisplayForm(backupCode: string): string {
+    return `${backupCode.substring(0, 4)}-${backupCode.substring(4, 8)}-${backupCode.substring(8, 12)}-${backupCode.substring(12, 16)}`;
   }
 
   private async getEntity2FAStatus(user: User): Promise<User2FAStatusDto> {

@@ -39,9 +39,9 @@ export class AuthImplService {
         throw new BadRequestException(SharedConstants.errorCodes.OTP_REQUIRED);
       }
 
-      if (this.twoFactorAuthService.isBackupCode(credentials.otp)) {
-        const backupCode = credentials.otp.toUpperCase().replace(/- /g, '');
+      const backupCode = credentials.otp.toUpperCase().replace(/[- ]/g, '');
 
+      if (this.twoFactorAuthService.isBackupCode(backupCode)) {
         if (user.backupCode === backupCode) {
           useUpBackupCode = true;
         } else {
@@ -49,8 +49,8 @@ export class AuthImplService {
         }
       } else {
         // regular OTP code
-        if (!this.twoFactorAuthService.checkOtp(user.totpSecret!, credentials.otp)) {
-          throw new UnauthorizedException('Invalid authentication code');
+        if (!this.twoFactorAuthService.checkOtp(credentials.otp, user.totpSecret!)) {
+          throw new UnauthorizedException('Invalid one-time password');
         }
       }
     }

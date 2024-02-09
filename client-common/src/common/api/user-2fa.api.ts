@@ -28,8 +28,8 @@ export default class User2FAAPI {
     return this.transport.authPost('confirm', request);
   }
 
-  async regenerateBackupCode(): Promise<User2FAConfirmResponseDto> {
-    return this.transport.authPost('backup-code', {});
+  async regenerateBackupCode(request: User2FARemoveRequestDto): Promise<User2FAConfirmResponseDto> {
+    return this.transport.authPost('backup-code', request);
   }
 
   async remove(request: User2FARemoveRequestDto): Promise<User2FAStatusDto> {

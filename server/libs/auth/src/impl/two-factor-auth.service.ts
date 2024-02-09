@@ -8,7 +8,7 @@ const ISSUER = 'Chaos Archives';
 @Injectable()
 export class TwoFactorAuthService {
   generateSecret(): string {
-    return new TOTP().generate();
+    return new TOTP().secret.base32;
   }
 
   generateBackupCode(): string {
@@ -23,12 +23,7 @@ export class TwoFactorAuthService {
     return BACKUP_CODE_REGEX.test(otp);
   }
 
-  checkOtp(secret: string, otp: string): boolean {
-    console.log('secret', secret, 'otp', otp);
-    const result = new TOTP({ issuer: ISSUER, secret }).validate({
-      token: otp,
-    });
-    console.log('result', result);
-    return result !== null;
+  checkOtp(otp: string, secret: string): boolean {
+    return new TOTP({ issuer: ISSUER, secret }).validate({ token: otp }) !== null;
   }
 }

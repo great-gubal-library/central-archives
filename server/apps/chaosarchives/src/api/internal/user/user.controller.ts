@@ -180,8 +180,8 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post('2fa/backup-code')
-  async regenerate2FABackupCode(@CurrentUser() user: UserInfo): Promise<User2FAConfirmResponseDto> {
-    return this.user2FAService.regenerate2FABackupCode(user);
+  async regenerate2FABackupCode(@Body() request: User2FARemoveRequestDto, @CurrentUser() user: UserInfo): Promise<User2FAConfirmResponseDto> {
+    return this.user2FAService.regenerate2FABackupCode(request, user);
   }
 
   @UseGuards(JwtAuthGuard)
