@@ -159,6 +159,11 @@ export default class TwoFactorAuth extends Vue {
         otp: this.otp,
       });
 
+      this.user2FAStatus = {
+        state: User2FAState.ENABLED,
+        qrDataUrl: null,
+      };
+
       const BackupCodeDialog = (await import('components/account/BackupCodeDialog.vue')).default;
 
       this.$q.dialog({
