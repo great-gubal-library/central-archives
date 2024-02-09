@@ -17,8 +17,8 @@ export class RppLogInDto {
   readonly password: string;
 
   @ApiProperty({
-    description: 'One-time password (if 2FA is set up)',
-    example: 'correct horse battery staple',
+    description: 'One-time password or backup code. Required if 2FA is set up, optional and ignored otherwise',
+    example: '"123456"',
     required: false,
   })
   @IsString()

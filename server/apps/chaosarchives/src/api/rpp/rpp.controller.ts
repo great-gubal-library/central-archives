@@ -41,6 +41,10 @@ export class RppController {
 		status: HttpStatus.UNAUTHORIZED,
 		description: 'Invalid email or password',
 	})
+	@ApiResponse({
+		status: HttpStatus.BAD_REQUEST,
+		description: 'One-time password required (when response `message` property has value `OTP_REQUIRED`)',
+	})
   async login(@Body() request: RppLogInDto): Promise<RppLoginResponseDto> {
     const user = await this.authService.authenticateUser(request);
 
