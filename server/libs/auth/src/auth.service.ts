@@ -7,12 +7,14 @@ import { UserInfo } from './model/user-info';
 import { DateTime } from 'luxon';
 import { ExtractJwt } from 'passport-jwt';
 import { LoginCredentials } from './model/login-credentials';
+import { TwoFactorAuthService } from './impl/two-factor-auth.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
 		private authService: AuthImplService,
+    private twoFactorAuthService: TwoFactorAuthService,
   ) {}
 
   async authenticateUser(credentials: LoginCredentials): Promise<UserInfo> {
@@ -75,4 +77,12 @@ export class AuthService {
 	async notifyUserChanged(userId: number): Promise<void> {
 		await this.authService.notifyUserChanged(userId);
 	}
+
+  async getQRCodeDataUrl(username: string, secret: string): Promise<string> {
+    return this.twoFactorAuthService.getQRCodeDataUrl(username, secret);
+  }
+
+  generate2FASecret(): string {
+    return this.twoFactorAuthService.generateSecret();
+  }
 }

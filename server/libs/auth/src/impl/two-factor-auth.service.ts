@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { totp, authenticator } from "otplib";
+import { TOTP } from "otpauth";
 import QRCode from 'qrcode';
 
 const BACKUP_CODE_REGEX = /^[0-9A-Z]{16}$/;
@@ -8,7 +8,7 @@ const ISSUER = 'Chaos Archives';
 @Injectable()
 export class TwoFactorAuthService {
   generateSecret(): string {
-    return authenticator.generateSecret();
+    return new TOTP().generate();
   }
 
   generateBackupCode(): string {
@@ -16,7 +16,7 @@ export class TwoFactorAuthService {
   }
 
   async getQRCodeDataUrl(username: string, secret: string): Promise<string> {
-    return QRCode.toDataURL(totp.keyuri(username, ISSUER, secret));
+    return QRCode.toDataURL(new TOTP({ issuer: ISSUER, label: username, secret }).toString());
   }
 
   isBackupCode(otp: string): boolean {
@@ -24,6 +24,11 @@ export class TwoFactorAuthService {
   }
 
   checkOtp(secret: string, otp: string): boolean {
-    return totp.check(otp, secret);
+    console.log('secret', secret, 'otp', otp);
+    const result = new TOTP({ issuer: ISSUER, secret }).validate({
+      token: otp,
+    });
+    console.log('result', result);
+    return result !== null;
   }
 }
