@@ -19,6 +19,7 @@ import ViolationsAPI from './violations-api';
 import WikiAPI from './wiki-api';
 import PlayerProfilesAPI from './player-profiles-api';
 import LodestoneAPI from './lodestone-api';
+import User2FAAPI from './user-2fa.api';
 
 export default class API {
   private readonly transport = new APITransport();
@@ -28,6 +29,7 @@ export default class API {
   // Sub-APIs
 
   readonly user = new UserAPI(this.transport);
+  readonly user2fa = new User2FAAPI(this.transport);
   readonly characters = new CharactersAPI(this.transport);
   readonly communities = new CommunitiesAPI(this.transport);
   readonly events = new EventsAPI(this.transport);
