@@ -10,6 +10,7 @@ import { UserCharacterInfo } from '../model/user-character-info';
 import { UserInfo } from '../model/user-info';
 import { LoginCredentials } from '../model/login-credentials';
 import { TwoFactorAuthService } from './two-factor-auth.service';
+import SharedConstants from '@app/shared/SharedConstants';
 
 @Injectable()
 export class AuthImplService {
@@ -33,9 +34,9 @@ export class AuthImplService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    if (user.totpSecret) {
+    if (user.use2FA) {
       if (!credentials.otp) {
-        throw new BadRequestException('OTP_REQUIRED');
+        throw new BadRequestException(SharedConstants.errorCodes.OTP_REQUIRED);
       }
 
       if (this.twoFactorAuthService.isBackupCode(credentials.otp)) {
@@ -48,7 +49,7 @@ export class AuthImplService {
         }
       } else {
         // regular OTP code
-        if (!this.twoFactorAuthService.checkOtp(user.totpSecret, credentials.otp)) {
+        if (!this.twoFactorAuthService.checkOtp(user.totpSecret!, credentials.otp)) {
           throw new UnauthorizedException('Invalid authentication code');
         }
       }

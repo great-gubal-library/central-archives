@@ -8,7 +8,10 @@ export default Object.freeze({
 	MAX_NEWS_ENTRIES: 3,
 	MIN_VIOLATION_REPORT_LENGTH: 10,
 	MAX_PRONOUNS_LENGTH: 20,
-	
+
+  OTP_REGEX: /^[0-9]{6}$/,
+  CLIENT_BACKUP_CODE_REGEX: /^[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}$/,
+
 	housing: Object.freeze({
 		MIN_WARD_NUMBER: 1,
 		MAX_WARD_NUMBER: 30,
@@ -27,4 +30,8 @@ export default Object.freeze({
 		'ju.mp',
 		'uwu.ai',
 	]),
+
+  errorCodes: Object.freeze({
+    OTP_REQUIRED: 'OTP_REQUIRED',
+  }),
 })
