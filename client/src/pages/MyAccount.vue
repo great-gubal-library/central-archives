@@ -1,6 +1,11 @@
 <template>
 	<q-page class="page-my-account">
 		<h2>Account and Security</h2>
+    <q-card>
+			<q-card-section>
+				<two-factor-auth />
+			</q-card-section>
+		</q-card>
 		<q-card>
 			<q-card-section>
 				<change-password />
@@ -23,6 +28,7 @@
 import ChangeEmail from 'src/components/account/ChangeEmail.vue';
 import ChangePassword from 'src/components/account/ChangePassword.vue';
 import LogoutEverywhere from 'src/components/account/LogoutEverywhere.vue';
+import TwoFactorAuth from 'src/components/account/TwoFactorAuth.vue';
 import { Options, Vue } from 'vue-class-component';
 
 @Options({
@@ -31,6 +37,7 @@ import { Options, Vue } from 'vue-class-component';
 		ChangePassword,
 		ChangeEmail,
     LogoutEverywhere,
+    TwoFactorAuth,
 	},
 })
 export default class PageMyAccount extends Vue {
