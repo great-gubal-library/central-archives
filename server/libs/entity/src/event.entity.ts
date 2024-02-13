@@ -1,11 +1,12 @@
 import { EventSource } from '@app/shared/enums/event-source.enum';
-import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { EventLocation } from './event-location.entity';
 import { EventAnnouncement } from './event-announcement.entity';
 import { Image } from './image.entity';
 import { SearchFields } from './search-fields';
+import { Region } from '@app/shared/enums/region.enum';
 
 @Entity()
 @Index(SearchFields.event, { fulltext: true })
@@ -14,6 +15,13 @@ export class Event extends BasicEntity {
     nullable: false,
   })
   title: string;
+
+  @Column({
+    nullable: false,
+    type: 'enum',
+    enum: Region,
+  })
+  region: Region;
 
   @Column({
     type: 'mediumtext',

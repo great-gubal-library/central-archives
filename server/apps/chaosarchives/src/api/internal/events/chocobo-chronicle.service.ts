@@ -10,6 +10,7 @@ import { firstValueFrom } from 'rxjs';
 import { ChocoboChronicleEventsDto } from './dto/chocobo-chronicle-events.dto';
 import { ExternalEvent } from './model/external-event';
 import { isRecurringEvent } from './util/event-utils';
+import { Region } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class ChocoboChronicleService {
@@ -33,6 +34,7 @@ export class ChocoboChronicleService {
 
 		return events.map(event => (<ExternalEvent>{
 			id: -1,
+      region: Region.EU,
 			title: this.processTitle(event.title),
 			details: event.description,
 			recurring: isRecurringEvent(event.title),
@@ -90,6 +92,6 @@ export class ChocoboChronicleService {
 			});
 		} catch (e) {
 			return [];
-		}		
+		}
 	}
 }

@@ -29,6 +29,7 @@ import utils from '../../../common/utils';
 import { ImagesService } from '../images/images.service';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { ExternalEvent } from './model/external-event';
+import { Region } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class EventsService {
@@ -83,6 +84,7 @@ export class EventsService {
       }
 
       const event = new Event();
+      event.region = Region.EU; // temp
       event.locations = [];
       event.announcements = Promise.resolve([]);
       event.owner = character;
@@ -206,11 +208,11 @@ export class EventsService {
       }
 
       const server = locationServers.find(s => s.name === dtoLocation.server);
-  
+
       if (!server) {
         throw new BadRequestException(`Server ${dtoLocation.server} not found`);
       }
-  
+
       location.server = server;
     }
 
@@ -401,6 +403,7 @@ export class EventsService {
           });
 
         event.title = eventDto.title;
+        event.region = eventDto.region;
         event.details = html.sanitize(eventDto.details);
         event.recurring = eventDto.recurring;
         event.startDateTime = new Date(eventDto.startDateTime);
