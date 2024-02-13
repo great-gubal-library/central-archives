@@ -4,5 +4,5 @@ export interface MailConfigInterface {
 	username: string,
 	password: string,
 	secure: boolean,
-	from: string,
+	from: { [k: string] : string },
 }

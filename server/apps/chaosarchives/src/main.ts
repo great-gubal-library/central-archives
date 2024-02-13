@@ -14,7 +14,7 @@ async function bootstrap() {
   if (serverConfiguration.apis.rpp) {
     // Add Swagger for RPP API
     const swaggerConfig = new DocumentBuilder()
-      .setTitle('Chaos Archives RPP API')
+      .setTitle('Roleplay Profiles API')
       .setVersion('1.0')
       .addBearerAuth({
         type: 'apiKey',

@@ -35,6 +35,8 @@ import { User2FAConfirmRequestDto } from '@app/shared/dto/user/2fa/user-2fa-conf
 import { User2FAConfirmResponseDto } from '@app/shared/dto/user/2fa/user-2fa-confirm-response.dto';
 import { User2FARemoveRequestDto } from '@app/shared/dto/user/2fa/user-2fa-remove-request.dto';
 import { User2FAService } from './user-2fa.service';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Controller('user')
 export class UserController {
@@ -153,14 +155,14 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('2fa')
-  async get2FAStatus(@CurrentUser() user: UserInfo): Promise<User2FAStatusDto> {
-    return this.user2FAService.get2FAStatus(user);
+  async get2FAStatus(@CurrentUser() user: UserInfo, @ClientRegion() region: SiteRegion): Promise<User2FAStatusDto> {
+    return this.user2FAService.get2FAStatus(user, region);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('2fa')
-  async request2FA(@CurrentUser() user: UserInfo): Promise<User2FAStatusDto> {
-    return this.user2FAService.request2FA(user);
+  async request2FA(@CurrentUser() user: UserInfo, @ClientRegion() region: SiteRegion): Promise<User2FAStatusDto> {
+    return this.user2FAService.request2FA(user, region);
   }
 
   @UseGuards(JwtAuthGuard)

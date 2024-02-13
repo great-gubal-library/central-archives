@@ -13,6 +13,6 @@ export enum SiteRegion {
   GLOBAL = 'global',
 }
 
-function asSiteRegion(region: Region): SiteRegion {
+export function asSiteRegion(region: Region): SiteRegion {
   return region as string as SiteRegion;
 }

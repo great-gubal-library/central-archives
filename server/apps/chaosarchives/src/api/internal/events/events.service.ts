@@ -29,7 +29,7 @@ import utils from '../../../common/utils';
 import { ImagesService } from '../images/images.service';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { ExternalEvent } from './model/external-event';
-import { Region } from '@app/shared/enums/region.enum';
+import { Region, asSiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class EventsService {
@@ -582,7 +582,3 @@ export class EventsService {
     });
   }
 }
-function asSiteRegion(region: Region): import("@app/shared/enums/region.enum").SiteRegion {
-  throw new Error('Function not implemented.');
-}
-

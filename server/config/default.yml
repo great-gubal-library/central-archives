@@ -28,7 +28,10 @@ mail:
   secure: true
   username: 'user'
   password: 'password'
-  from: 'Chaos Archives <chaosarchives@localhost>'
+  from:
+    eu: 'Chaos Archives <chaosarchives@localhost>'
+    na: 'Crystal Archives <crystalarchives@localhost>'
+    global: 'Roleplay Profiles <roleplayprofiles@localhost>'
 
 auth:
   jwtSecret: 'secret'

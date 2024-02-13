@@ -1,3 +1,5 @@
+import { mailConfiguration } from '@app/configuration/mail.config';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 
@@ -5,8 +7,9 @@ import { Injectable } from '@nestjs/common';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserVerificationMail(email: string, name: string, confirmLink: string): Promise<void> {
+  async sendUserVerificationMail(region: SiteRegion, email: string, name: string, confirmLink: string): Promise<void> {
 		return this.mailerService.sendMail({
+      from: mailConfiguration.from[region],
 			to: email,
 			subject: 'Confirm your email',
 			template: './confirm-email',
@@ -17,8 +20,9 @@ export class MailService {
 		});
 	}
 
-  async sendPasswordResetMail(email: string, name: string, resetLink: string): Promise<void> {
+  async sendPasswordResetMail(region: SiteRegion, email: string, name: string, resetLink: string): Promise<void> {
 		return this.mailerService.sendMail({
+      from: mailConfiguration.from[region],
 			to: email,
 			subject: 'Your password reset link',
 			template: './reset-password',
@@ -29,8 +33,9 @@ export class MailService {
 		});
 	}
 
-  async sendNewEmailVerificationMail(email: string, name: string, confirmLink: string): Promise<void> {
+  async sendNewEmailVerificationMail(region: SiteRegion, email: string, name: string, confirmLink: string): Promise<void> {
 		return this.mailerService.sendMail({
+      from: mailConfiguration.from[region],
 			to: email,
 			subject: 'Confirm your new email',
 			template: './confirm-new-email',

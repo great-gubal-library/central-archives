@@ -19,7 +19,7 @@ import { MailService } from './mail.service';
         },
       },
       defaults: {
-        from: mailConfiguration.from,
+
       },
       template: {
         dir: join(__dirname, 'templates'),

@@ -78,8 +78,8 @@ export class AuthService {
 		await this.authService.notifyUserChanged(userId);
 	}
 
-  async getQRCodeDataUrl(username: string, secret: string): Promise<string> {
-    return this.twoFactorAuthService.getQRCodeDataUrl(username, secret);
+  async getQRCodeDataUrl(username: string, secret: string, issuer: string): Promise<string> {
+    return this.twoFactorAuthService.getQRCodeDataUrl(username, secret, issuer);
   }
 
   generate2FASecret(): string {

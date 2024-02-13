@@ -22,6 +22,7 @@ import { CharactersService } from '../characters/characters.service';
 import { LodestoneService } from '../lodestone/lodestone.service';
 import { DateTime } from 'luxon';
 import utils from 'apps/chaosarchives/src/common/utils';
+import { SiteRegion, asSiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class UserService {
@@ -107,19 +108,19 @@ export class UserService {
           id: userEntity.id,
         }
       },
-      select: [ 'id', 'name' ],
+      select: [ 'id', 'name', 'server' ],
     });
 
     if (!characterData) {
       throw new ConflictException('User has no character? This should be impossible');
     }
 
-    await this.sendVerificationMail(userEntity, characterData.name);
+    await this.sendVerificationMail(userEntity, asSiteRegion(characterData.server.region), characterData.name);
   }
 
-  private async sendVerificationMail(user: User, name: string): Promise<void> {
+  private async sendVerificationMail(user: User, region: SiteRegion, name: string): Promise<void> {
     const link = `${serverConfiguration.frontendRoot}/confirm-email/${user.verificationCode}`;
-    await this.mailService.sendUserVerificationMail(user.email, name, link);
+    await this.mailService.sendUserVerificationMail(region, user.email, name, link);
   }
 
   toSession(userInfo: UserInfo): SessionDto {
@@ -253,7 +254,7 @@ export class UserService {
             id: user.id
           },
         },
-        select: [ 'id', 'name' ] // id is needed because of a regression in TypeORM query generation
+        select: [ 'id', 'name', 'server' ] // id is needed because of a regression in TypeORM query generation
       });
 
       // Note that we intentionally don't check verifiedAt. If the user is unverified,
@@ -264,6 +265,7 @@ export class UserService {
       return {
         email: user.email,
         name: character ? character.name : user.email,
+        region: character ? asSiteRegion(character.server.region) : SiteRegion.GLOBAL,
         verificationCode: user.verificationCode
       };
     });
@@ -273,7 +275,7 @@ export class UserService {
     }
 
     const link = `${serverConfiguration.frontendRoot}/reset-password/${result.verificationCode}`;
-    await this.mailService.sendPasswordResetMail(result.email, result.name, link);
+    await this.mailService.sendPasswordResetMail(result.region, result.email, result.name, link);
   }
 
   async resetPassword(request: ResetPasswordRequestDto): Promise<void> {
@@ -333,7 +335,7 @@ export class UserService {
   }
 
   async changeEmail(request: ChangeEmailRequestDto, @CurrentUser() userInfo: UserInfo): Promise<void> {
-    const { userEntity, characterName } = await this.connection.transaction(async (em) => {
+    const { userEntity, region, characterName } = await this.connection.transaction(async (em) => {
       const userRepo = em.getRepository(User);
       const user = (await userRepo.findOneBy({ id: userInfo.id }))!;
 
@@ -351,12 +353,13 @@ export class UserService {
 
       return {
         userEntity: user,
+        region: asSiteRegion(userInfo.characters[0].region),
         characterName: userInfo.characters[0].name
       };
     });
 
     const link = `${serverConfiguration.frontendRoot}/confirm-new-email/${userEntity.newEmailVerificationCode}`;
-    await this.mailService.sendNewEmailVerificationMail(request.newEmail, characterName, link);
+    await this.mailService.sendNewEmailVerificationMail(region, request.newEmail, characterName, link);
   }
 
   async confirmNewEmail(newEmailVerificationCode: string): Promise<number> {

@@ -2,12 +2,14 @@ import { AuthService } from "@app/auth/auth.service";
 import { UserInfo } from "@app/auth/model/user-info";
 import { User } from "@app/entity";
 import { checkPassword } from "@app/security";
+import SharedConstants from "@app/shared/SharedConstants";
 import { User2FAConfirmRequestDto } from "@app/shared/dto/user/2fa/user-2fa-confirm-request.dto";
 import { User2FAConfirmResponseDto } from "@app/shared/dto/user/2fa/user-2fa-confirm-response.dto";
 import { User2FARemoveRequestDto } from "@app/shared/dto/user/2fa/user-2fa-remove-request.dto";
 import { User2FAStatusDto } from "@app/shared/dto/user/2fa/user-2fa-status.dto";
+import { SiteRegion } from "@app/shared/enums/region.enum";
 import { User2FAState } from "@app/shared/enums/user-2fa-state.dto";
-import { BadRequestException, Injectable, NotImplementedException } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 
@@ -19,11 +21,11 @@ export class User2FAService {
     private authService: AuthService,
   ) {}
 
-  async get2FAStatus(userInfo: UserInfo): Promise<User2FAStatusDto> {
-    return this.getEntity2FAStatus(await this.userRepo.findOneByOrFail({ id: userInfo.id }));
+  async get2FAStatus(userInfo: UserInfo, region: SiteRegion): Promise<User2FAStatusDto> {
+    return this.getEntity2FAStatus(await this.userRepo.findOneByOrFail({ id: userInfo.id }), region);
   }
 
-  async request2FA(userInfo: UserInfo): Promise<User2FAStatusDto> {
+  async request2FA(userInfo: UserInfo, region: SiteRegion): Promise<User2FAStatusDto> {
     return this.dataSource.transaction(async em => {
       const userRepo = em.getRepository(User);
       const user = await userRepo.findOneByOrFail({ id: userInfo.id });
@@ -33,7 +35,7 @@ export class User2FAService {
         await userRepo.save(user);
       }
 
-      return this.getEntity2FAStatus(user);
+      return this.getEntity2FAStatus(user, region);
     });
   }
 
@@ -139,7 +141,7 @@ export class User2FAService {
     return `${backupCode.substring(0, 4)}-${backupCode.substring(4, 8)}-${backupCode.substring(8, 12)}-${backupCode.substring(12, 16)}`;
   }
 
-  private async getEntity2FAStatus(user: User): Promise<User2FAStatusDto> {
+  private async getEntity2FAStatus(user: User, region = SiteRegion.GLOBAL): Promise<User2FAStatusDto> {
     let state: User2FAState;
     let qrDataUrl: string | null = null;
 
@@ -147,7 +149,9 @@ export class User2FAService {
       state = User2FAState.ENABLED;
     } else if (user.totpSecret) {
       state = User2FAState.REQUESTED;
-      qrDataUrl = await this.authService.getQRCodeDataUrl(user.email, user.totpSecret);
+
+      const regionConfig = SharedConstants.regions[region];
+      qrDataUrl = await this.authService.getQRCodeDataUrl(region, user.email, user.totpSecret, regionConfig.name);
     } else {
       state = User2FAState.DISABLED;
     }

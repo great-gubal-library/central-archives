@@ -26,7 +26,7 @@ export class RppController {
 	@Post('login')
 	@HttpCode(HttpStatus.OK)
 	@ApiOperation({
-		summary: 'Obtain an access token using a Chaos Archives account',
+		summary: 'Obtain an access token using a Chaos Archives/Roleplay Profiles account',
 	})
 	@ApiBody({
 		description: 'Login credentials',
