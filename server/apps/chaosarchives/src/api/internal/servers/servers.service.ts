@@ -23,9 +23,10 @@ export class ServersService {
 			if (currentDC === null || server.datacenter !== currentDC.name) {
 				currentDC = {
 					name: server.datacenter,
+          region: server.region,
 					servers: [ server.name ]
 				};
-				
+
 				result.push(currentDC);
 			} else {
 				currentDC.servers.push(server.name);
