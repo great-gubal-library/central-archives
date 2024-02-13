@@ -56,7 +56,6 @@
 
 <script lang="ts">
 import { CharacterRegistrationStatus } from '@app/shared/enums/character-registration-status.enum';
-import SharedConstants from '@app/shared/SharedConstants';
 import { Options, prop, Vue } from 'vue-class-component';
 import { CharacterSearchModel } from './character-search-model';
 import { notifyError } from 'src/common/notify';
@@ -114,7 +113,8 @@ export default class CharacterFinderField extends Vue.with(Props) {
       this.characterOptionsSearchString = value;
 
 			// Search in all DCs
-			const resultsArray = await Promise.all(SharedConstants.DATACENTERS
+      const datacenters = this.$regionConfig.datacenters;
+			const resultsArray = await Promise.all(datacenters
 				.map(dcParam => this.$api.lodestone.searchCharacters(value, dcParam)));
 			const results = flat(resultsArray.map(result => result.List));
 

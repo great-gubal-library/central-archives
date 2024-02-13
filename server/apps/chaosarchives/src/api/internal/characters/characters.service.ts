@@ -27,6 +27,7 @@ import { ImagesService } from '../images/images.service';
 import { VisibilityInPlayerProfile } from '@app/shared/enums/visibility-in-player-profile.enum';
 import { getRaceByName } from '@app/shared/enums/race.enum';
 import { LodestoneService } from '../lodestone/lodestone.service';
+import { Region, SiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class CharactersService {
@@ -374,6 +375,7 @@ export class CharactersService {
           id: character.id,
           name: character.name,
           server: character.server.name,
+          region: character.server.region,
           avatar: character.avatar,
           lodestoneId: character.lodestoneId,
           race: character.race,
@@ -401,7 +403,7 @@ export class CharactersService {
 
 
   // Also used in UserService
-  async saveCharacterForUser(em: EntityManager, user: User, lodestoneId: number): Promise<Character> {
+  async saveCharacterForUser(em: EntityManager, user: User, lodestoneId: number, region: SiteRegion): Promise<Character> {
     const characterRepo = em.getRepository(Character);
     const otherCharacter = await characterRepo.findOne({
       where: {
@@ -422,7 +424,7 @@ export class CharactersService {
       throw new BadRequestException('Invalid character');
     }
 
-    if (!SharedConstants.DATACENTERS.includes(characterInfo.DC)) {
+    if (region !== SiteRegion.GLOBAL && !SharedConstants.regions[region].datacenters.includes(characterInfo.DC)) {
       throw new BadRequestException('This character is from the wrong datacenter');
     }
 

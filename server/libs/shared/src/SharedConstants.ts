@@ -1,6 +1,8 @@
+import { RegionConfig } from "../region-config";
+import { Region } from "./enums/region.enum";
+
 export default Object.freeze({
 	FFXIV_SERVER_TIMEZONE: 'UTC',
-	DATACENTERS: [ 'Chaos', 'Light' ],
 	PASSWORD_MIN_LENGTH: 8,
 	MAX_UPLOAD_SIZE: 4 * 1024 * 1024,
 	MIN_BANNER_ASPECT_RATIO: 4 / 1,
@@ -12,6 +14,19 @@ export default Object.freeze({
   OTP_LENGTH: 6,
   OTP_REGEX: /^[0-9]{6}$/,
   CLIENT_BACKUP_CODE_REGEX: /^[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}$/,
+
+  regions: Object.freeze(<{ [k: string]: RegionConfig }>{
+    [Region.EU]: Object.freeze({
+      name: 'Chaos Archives',
+      domain: 'chaosarchives.org',
+      datacenters: [ 'Chaos', 'Light' ],
+    }),
+    [Region.NA]: Object.freeze({
+      name: 'Crystal Archives',
+      domain: 'crystalarchives.org',
+      datacenters: [ 'Aether', 'Crystal', 'Dynamis', 'Primal' ],
+    }),
+  }),
 
 	housing: Object.freeze({
 		MIN_WARD_NUMBER: 1,

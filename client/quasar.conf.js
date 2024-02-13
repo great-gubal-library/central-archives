@@ -34,6 +34,7 @@ module.exports = configure(function (ctx) {
       'display',
       'iframe-resizer',
       'polyfills',
+      'region',
     ],
 
     // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -81,7 +82,7 @@ module.exports = configure(function (ctx) {
       chainWebpack (chain) {
         // Needed for client codebase to pick up @server dependencies
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
-        
+
         const markdown = chain.module.rule('markdown').test(/\.md$/);
         markdown.use('html-loader').loader('html-loader');
         markdown.use('markdown-loader').loader('markdown-loader');
