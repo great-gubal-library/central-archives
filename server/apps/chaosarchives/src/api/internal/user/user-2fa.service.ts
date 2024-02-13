@@ -151,7 +151,7 @@ export class User2FAService {
       state = User2FAState.REQUESTED;
 
       const regionConfig = SharedConstants.regions[region];
-      qrDataUrl = await this.authService.getQRCodeDataUrl(region, user.email, user.totpSecret, regionConfig.name);
+      qrDataUrl = await this.authService.getQRCodeDataUrl(user.email, user.totpSecret, regionConfig.name);
     } else {
       state = User2FAState.DISABLED;
     }
