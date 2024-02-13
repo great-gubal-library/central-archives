@@ -3,6 +3,7 @@ import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { noticeboardLocations } from '@app/shared/enums/noticeboard-location.enum';
 import { PageType } from '@app/shared/enums/page-type.enum';
 import { races } from '@app/shared/enums/race.enum';
+import { Region } from '@app/shared/enums/region.enum';
 import { StoryType } from '@app/shared/enums/story-type.enum';
 import { VenueLocation } from '@app/shared/enums/venue-location.enum';
 import SharedConstants from '@app/shared/SharedConstants';
@@ -83,6 +84,13 @@ class Display {
 		[PageType.WIKI_PAGE]: 'Wiki pages',
 		[PageType.IMAGE]: 'Images',
 		[PageType.PLAYER_PROFILE]: 'Player Profiles',
+	};
+
+  readonly regions: { [k: string]: string } = {
+		[Region.EU]: 'Europe',
+    [Region.NA]: 'North America',
+    [Region.JP]: 'Japan',
+    [Region.OC]: 'Oceania',
 	};
 
 	relativeTime(timestamp: number) {

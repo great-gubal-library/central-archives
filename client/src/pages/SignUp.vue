@@ -7,7 +7,7 @@
         account and register your first character.
       </p>
       <p v-if="$region !== 'global'">
-        Signups are limited to the <strong>Europe</strong> region.
+        Characters on this site are restricted to the <strong>{{$display.regions[$region]}}</strong> region.
       </p>
       <section class="page-signup__form-controls">
         <h6>Account information</h6>

@@ -36,6 +36,8 @@ import { Options, Vue } from 'vue-class-component';
 import CharacterNameList from '../mainpage/CharacterNameList.vue';
 import { CharacterSearchModel } from './character-search-model';
 import CharacterFinderField from './CharacterFinderField.vue';
+import { SiteRegion, asSiteRegion } from '@app/shared/enums/region.enum';
+import SharedConstants from '@app/shared/SharedConstants';
 
 interface DialogRef {
   show(): void;
@@ -91,6 +93,13 @@ export default class SwitchCharacterDialog extends Vue {
     this.$store.commit('setCurrentCharacterId', character.id);
     this.$emit('ok', character);
     this.hide();
+
+    if (this.$region !== SiteRegion.GLOBAL && asSiteRegion(character.region) !== this.$region) {
+      // Navigate to proper site
+      window.location.hostname = window.location.hostname.replace(
+        this.$regionConfig.domain, SharedConstants.regions[character.region].domain);
+      return;
+    }
 
     if (character.id !== oldCharacterId) {
       notifySuccess(`${character.name} is now your active character.`);

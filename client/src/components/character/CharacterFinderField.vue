@@ -11,7 +11,7 @@
 					use-input
 					input-debounce="200"
 					label="Character name"
-					:hint="modelValue.server ? '' : 'Start typing, and we will attempt to find your character. The character must be in the Europe region.'"
+					:hint="modelValue.server ? '' : `Start typing, and we will attempt to find your character. The character must be in the ${$display.regions[$region]} region.`"
 					@filter="onCharacterFilter"
 					@update:model-value="onCharacterSelected"
 					:rules="[
