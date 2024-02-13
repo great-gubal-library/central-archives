@@ -105,6 +105,7 @@ export class AuthImplService {
         lodestoneId: character.lodestoneId,
         name: character.name,
         server: character.server.name,
+        region: character.server.region,
         avatar: character.avatar,
         race: character.race,
         newsRole: character.newsRole,
