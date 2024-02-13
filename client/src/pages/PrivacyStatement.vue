@@ -1,8 +1,8 @@
 <template>
   <q-page>
 		<h2>Privacy Statement</h2>
-		<div v-html="privacyStatement"></div>
-	</q-page>	
+		<div v-html="privacyStatement.replace(/%SITENAME%/g, $siteName)"></div>
+	</q-page>
 </template>
 
 <script lang="ts">

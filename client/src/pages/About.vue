@@ -19,7 +19,7 @@
 		<p>
 			And thanks to everyone who has been testing and suggesting improvements to the Archives since their inception!
 		</p>
-		<section v-html="faq"></section>
+		<section v-html="faq.replace(/%SITENAME%/g, $siteName)"></section>
 		<h3>Useful Links</h3>
 		<dl>
 			<dt><a href="https://discord.gg/rCHdUdSVsr" target="_blank">FFXIV Chaos Roleplaying Community <q-icon name="discord" /></a></dt>

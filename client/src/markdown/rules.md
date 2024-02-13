@@ -1,4 +1,4 @@
-Welcome to Chaos Archives! By registering your account, you agree to the following terms:
+Welcome to %SITENAME%! By registering your account, you agree to the following terms:
 
 ##### General
 
@@ -10,7 +10,7 @@ Welcome to Chaos Archives! By registering your account, you agree to the followi
 
 ##### Out of Universe Content
 
-Chaos Archives is a website made to promote and support Final Fantasy XIV roleplay. We allow both in-character content, such as character diaries, and out-of-character content, such as Discord contacts or explanations of roll systems. However, it should be relevant to FFXIV roleplaying. Chaos Archives is not a place to discuss raiding, levelling, and other gameplay aspects of FFXIV.
+%SITENAME% is a website made to promote and support Final Fantasy XIV roleplay. We allow both in-character content, such as character diaries, and out-of-character content, such as Discord contacts or explanations of roll systems. However, it should be relevant to FFXIV roleplaying. %SITENAME% is not a place to discuss raiding, levelling, and other gameplay aspects of FFXIV.
 
 To preserve the fantasy atmosphere of the game, please refrain from posting real-life photographs. We do welcome artwork and screenshots. You can also upload all kinds of decorative picture elements for your profiles and stories, such as Free Company emblems, pictures of scrolls, and the like.
 
@@ -29,7 +29,7 @@ You may not edit or use someone else's work without their permission. Any form o
 
 If the artwork or screenshot is made by you, the uploader, do state such in the credits.
 
-Posting AI-generated art on Chaos Archives is not allowed. AI art generators are trained on an enormous number of works created and copyrighted by humans, without the consent of their creators. You can generate AI art for personal use, but distributing it, including publishing it here, is a copyright violation.
+Posting AI-generated art on %SITENAME% is not allowed. AI art generators are trained on an enormous number of works created and copyrighted by humans, without the consent of their creators. You can generate AI art for personal use, but distributing it, including publishing it here, is a copyright violation.
 
 
 ##### Sexual and Violent Content

@@ -56,7 +56,7 @@
       <h6>Terms of use</h6>
       <div
         class="page-signup__terms-of-use rounded-borders"
-        v-html="rules"
+        v-html="rules.replace(/%SITENAME%/g, $siteName)"
       ></div>
       <q-toggle v-model="accept" label="I accept the terms of use" />
       <div class="page-signup__button-bar">
