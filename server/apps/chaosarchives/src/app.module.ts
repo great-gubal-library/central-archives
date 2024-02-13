@@ -13,12 +13,14 @@ import { GlobalExceptionsFilter } from './global-exceptions.filter';
 import { MailModule } from './mail/mail.module';
 import { UpdatesModule } from './websocket/updates/updates.module';
 import { FeedModule } from './api/feed/feed.module';
+import { CronModule } from './cron/cron.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({ useFactory: () => dbConfiguration }),
     RedisModule.forRootAsync({ useFactory: () => ({ config: redisConfiguration }) }),
     EventEmitterModule.forRoot(),
+    CronModule,
     MailModule,
     AuthModule,
     InternalApiModule,

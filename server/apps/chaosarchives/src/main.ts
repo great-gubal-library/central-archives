@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { RppModule } from './api/rpp/rpp.module';
 import { AppModule } from './app.module';
 import { transformAndValidate } from './common/pipes/validate';
+import { ServerListUpdater } from './cron/server-list-updater';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,6 +31,9 @@ async function bootstrap() {
     });
     SwaggerModule.setup('api/rpp/swagger', app, swaggerDoc);
   }
+
+  // Update server list in background
+  void app.get(ServerListUpdater).updateServerList();
 
   await app.listen(serverConfiguration.port);
 }

@@ -1,7 +1,8 @@
 import { Region } from '@app/shared/enums/region.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity()
+@Unique('uq_server_name', [ 'name' ])
 export class Server {
   @PrimaryGeneratedColumn()
   id: number;
