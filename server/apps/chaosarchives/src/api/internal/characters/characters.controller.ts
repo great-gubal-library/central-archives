@@ -21,6 +21,7 @@ import { ImagesService } from '../images/images.service';
 import { StoriesService } from '../stories/stories.service';
 import { CharactersService } from './characters.service';
 import { MyContentService } from './my-content.service';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Controller('characters')
 export class CharactersController {
@@ -75,7 +76,7 @@ export class CharactersController {
   async getCharacterContent(@Param('id', ParseIntPipe) characterId: number): Promise<CharacterContentDto> {
     const [stories, images] = await Promise.all([
       this.storiesService.getStoryList({ characterId }),
-      this.imagesService.getImages({ characterId }),
+      this.imagesService.getImages(SiteRegion.GLOBAL, { characterId }),
     ]);
 
     return {

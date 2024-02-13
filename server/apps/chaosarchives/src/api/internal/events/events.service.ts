@@ -534,7 +534,7 @@ export class EventsService {
     if (edit) {
       announcements = await event.announcements;
     } else {
-      images = (await this.imagesService.getImages({ eventId: event.id })).data;
+      images = (await this.imagesService.getImages(asSiteRegion(event.region), { eventId: event.id })).data;
     }
 
     const properties = {
@@ -582,3 +582,7 @@ export class EventsService {
     });
   }
 }
+function asSiteRegion(region: Region): import("@app/shared/enums/region.enum").SiteRegion {
+  throw new Error('Function not implemented.');
+}
+

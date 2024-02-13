@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ImagesService } from '../images/images.service';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class MainPageService {
@@ -23,12 +24,12 @@ export class MainPageService {
 		@InjectRepository(FreeCompany) private freeCompanyRepo: Repository<FreeCompany>,
 	) { }
 
-	async getMainPageContent(): Promise<MainPageContentDto> {
+	async getMainPageContent(region: SiteRegion): Promise<MainPageContentDto> {
 		const [ newProfiles, newFreeCompanies, newArtwork, newScreenshots ] = await Promise.all([
 			this.getNewProfiles(),
 			this.getNewFreeCompanies(),
-			this.imagesService.getImages({ limit: this.MAX_NEW_IMAGES, category: ImageCategory.ARTWORK }),
-			this.imagesService.getImages({ limit: this.MAX_NEW_IMAGES, category: ImageCategory.SCREENSHOT }),
+			this.imagesService.getImages(region, { limit: this.MAX_NEW_IMAGES, category: ImageCategory.ARTWORK }),
+			this.imagesService.getImages(region, { limit: this.MAX_NEW_IMAGES, category: ImageCategory.SCREENSHOT }),
 		]);
 
 		return {

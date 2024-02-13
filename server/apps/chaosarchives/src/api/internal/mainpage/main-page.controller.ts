@@ -7,6 +7,8 @@ import { NoticeboardService } from '../noticeboard/noticeboard.service';
 import { StoriesService } from '../stories/stories.service';
 import { VenuesService } from '../venues/venues.service';
 import { MainPageService } from './main-page.service';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Controller('main-page')
 export class MainPageController {
@@ -29,10 +31,10 @@ export class MainPageController {
 
   // Gets the content of the main page. News may be out of date.
   @Get('/')
-  async getMainPageContent(): Promise<MainPageContentDto> {
+  async getMainPageContent(@ClientRegion() region: SiteRegion): Promise<MainPageContentDto> {
     const [mainPageContent, newsResult, storyList, noticeboardItemList, newVenuesList, newCommunitiesList] =
       await Promise.all([
-        this.mainPageService.getMainPageContent(),
+        this.mainPageService.getMainPageContent(region),
         this.newsService.getLatestSummaries(),
         this.storiesService.getStoryList({ limit: this.MAX_STORIES }),
         this.noticeboardService.getNoticeboardItemList({ limit: this.MAX_NOTICEBOARD_ITEMS }),

@@ -28,6 +28,7 @@ import { Connection, EntityManager, FindOptionsWhere, IsNull, Not, Repository } 
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { ImageSanitizeError, ImageSanitizeResult, sanitizeImage } from '../../../common/image-lib';
 import { StorageService } from './storage.service';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 const bannerEntities = Object.freeze([
   {
@@ -49,7 +50,7 @@ const bannerEntities = Object.freeze([
   {
     entity: Venue,
     errorMessage: 'This image is in use as an event banner',
-  },  
+  },
 ]);
 
 interface UploadedImageInfo {
@@ -111,13 +112,17 @@ export class ImagesService {
     return this.toImageDto(image, user);
   }
 
-  async getImages(filter: ImagesFilterDto): Promise<PagingResultDto<ImageSummaryDto>> {
+  async getImages(region: SiteRegion, filter: ImagesFilterDto): Promise<PagingResultDto<ImageSummaryDto>> {
     const { searchQuery, characterId, eventId, offset, limit, category } = filter;
     const query = this.imageRepo
       .createQueryBuilder('image')
       .leftJoinAndSelect('image.owner', 'character')
       .leftJoinAndSelect('character.server', 'server')
       .leftJoinAndSelect('image.event', 'event');
+
+    if (region !== SiteRegion.GLOBAL) {
+      query.andWhere('server.region = :region', { region });
+    }
 
     if (searchQuery) {
       query.andWhere('(image.title LIKE :searchQuery OR character.name LIKE :searchQuery)', {
@@ -352,7 +357,7 @@ export class ImagesService {
           this.getStoragePath(character.id, image.hash, image.filename),
           this.getThumbnailStoragePath(character.id, image.hash, image.filename),
         );
-    
+
         const uploadResult = await this.doSanitizeAndUpload(em, user, character.id, request, origFilename, origBuffer,
           image);
         uploadedPaths.push(...uploadResult.uploadedPaths);
@@ -514,7 +519,7 @@ export class ImagesService {
     } catch (e) {
       throw new ServiceUnavailableException('Cannot upload file to storage service');
     }
-    
+
     return {
       uploadedPaths,
       hash,

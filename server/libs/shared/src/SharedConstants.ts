@@ -1,5 +1,5 @@
 import { RegionConfig } from "../region-config";
-import { Region } from "./enums/region.enum";
+import { Region, SiteRegion } from "./enums/region.enum";
 
 export default Object.freeze({
 	FFXIV_SERVER_TIMEZONE: 'UTC',
@@ -16,15 +16,23 @@ export default Object.freeze({
   CLIENT_BACKUP_CODE_REGEX: /^[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}$/,
 
   regions: Object.freeze(<{ [k: string]: RegionConfig }>{
-    [Region.EU]: Object.freeze({
+    [SiteRegion.EU]: Object.freeze({
       name: 'Chaos Archives',
+      description: 'Chaos Archives, the FFXIV roleplay portal to Chaos EU',
       domain: 'chaosarchives.org',
       datacenters: [ 'Chaos', 'Light' ],
     }),
-    [Region.NA]: Object.freeze({
+    [SiteRegion.NA]: Object.freeze({
       name: 'Crystal Archives',
+      description: 'Crystal Archives, the FFXIV roleplay portal to Crystal NA',
       domain: 'crystalarchives.org',
       datacenters: [ 'Aether', 'Crystal', 'Dynamis', 'Primal' ],
+    }),
+    [SiteRegion.GLOBAL]: Object.freeze({
+      name: 'Roleplay Profiles',
+      description: 'Roleplay Profiles',
+      domain: 'roleplayprofiles.org',
+      datacenters: [  ],
     }),
   }),
 

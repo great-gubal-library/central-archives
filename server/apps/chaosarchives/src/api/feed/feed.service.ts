@@ -9,10 +9,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Story } from '@app/entity';
 import { Repository } from 'typeorm';
 import { ImagesService } from '../internal/images/images.service';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 const MAX_RESULTS = SharedConstants.DEFAULT_ROWS_PER_PAGE;
-const SITE_DESCRIPTION = 'Chaos Archives, the FFXIV roleplay portal to Chaos EU';
-const CATEGORIES = ['Games', 'Roleplaying', 'Chaos Archives'];
+const CATEGORIES = ['Games', 'Roleplaying'];
 
 export interface FeedContent {
   title: string;
@@ -26,15 +26,20 @@ export interface FeedContent {
 export class FeedService {
   constructor(@InjectRepository(Story) private storyRepo: Repository<Story>, private imagesService: ImagesService) {}
 
-  async getStoriesRss(options: FeedApiOptions): Promise<string> {
-    const stories = await this.storyRepo
+  async getStoriesRss(region: SiteRegion, options: FeedApiOptions): Promise<string> {
+    const query = this.storyRepo
       .createQueryBuilder('story')
       .innerJoinAndSelect('story.owner', 'character')
       .innerJoinAndSelect('character.server', 'server')
       .orderBy('story.createdAt', 'DESC')
       .select(['story', 'character.name', 'server.name'])
-      .limit(MAX_RESULTS)
-      .getMany();
+      .limit(MAX_RESULTS);
+
+    if (region !== SiteRegion.GLOBAL) {
+      query.andWhere('server.region = :region', { region });
+    }
+
+    const stories = await query.getMany();
     stories.reverse();
 
     const items = stories.map(
@@ -53,30 +58,34 @@ export class FeedService {
         },
     );
 
-    return this.createFeed({
-      title: 'Stories — Chaos Archives',
-      description: `Latest stories from ${SITE_DESCRIPTION}`,
+    const regionConfig = SharedConstants.regions[region];
+
+    return this.createFeed(region, {
+      title: `Stories — ${regionConfig.name}`,
+      description: `Latest stories from ${regionConfig.description}`,
       pagePath: '/stories',
       options,
       items,
     });
   }
 
-  async getArtworkRss(options: FeedApiOptions): Promise<string> {
-    return this.getImagesRss(ImageCategory.ARTWORK, options);
+  async getArtworkRss(region: SiteRegion, options: FeedApiOptions): Promise<string> {
+    return this.getImagesRss(region, ImageCategory.ARTWORK, options);
   }
 
-  async getScreenshotsRss(options: FeedApiOptions): Promise<string> {
-    return this.getImagesRss(ImageCategory.SCREENSHOT, options);
+  async getScreenshotsRss(region: SiteRegion, options: FeedApiOptions): Promise<string> {
+    return this.getImagesRss(region, ImageCategory.SCREENSHOT, options);
   }
 
-  private async getImagesRss(category: ImageCategory, options: FeedApiOptions): Promise<string> {
-    const images = (await this.imagesService.getImages({
-			category,
-			limit: MAX_RESULTS,
-		})).data;
+  private async getImagesRss(region: SiteRegion, category: ImageCategory, options: FeedApiOptions): Promise<string> {
+    const images = (
+      await this.imagesService.getImages(region, {
+        category,
+        limit: MAX_RESULTS,
+      })
+    ).data;
 
-		const items = images.map(
+    const items = images.map(
       (image) =>
         <Item>{
           title: image.title,
@@ -93,18 +102,21 @@ export class FeedService {
         },
     );
 
-    return this.createFeed({
-      title: `${category === ImageCategory.ARTWORK ? 'Artwork' : 'Screenshots'} — Chaos Archives`,
-      description: `Latest ${category === ImageCategory.ARTWORK ? 'artwork' : 'screenshots'} from ${SITE_DESCRIPTION}`,
+    const regionConfig = SharedConstants.regions[region];
+
+    return this.createFeed(region, {
+      title: `${category === ImageCategory.ARTWORK ? 'Artwork' : 'Screenshots'} — ${regionConfig.name}`,
+      description: `Latest ${category === ImageCategory.ARTWORK ? 'artwork' : 'screenshots'} from ${regionConfig.description}`,
       pagePath: `/gallery/${category}`,
       options,
       items,
     });
   }
 
-  private async createFeed({ title, description, options, pagePath, items }: FeedContent) {
+  private async createFeed(region: SiteRegion, { title, description, options, pagePath, items }: FeedContent) {
     const url = `${serverConfiguration.frontendRoot}${options.path}`;
     const currentYear = DateTime.utc().year;
+    const regionConfig = SharedConstants.regions[region];
 
     const feed = new Feed({
       title,
@@ -114,7 +126,7 @@ export class FeedService {
       language: 'en',
       copyright: `All text and images on this site are © 2021–${currentYear} by their respective owners.`,
       favicon: `${serverConfiguration.frontendRoot}/favicon.ico`,
-      generator: 'Chaos Archives',
+      generator: regionConfig.name,
     });
 
     CATEGORIES.forEach((category) => feed.addCategory(category));

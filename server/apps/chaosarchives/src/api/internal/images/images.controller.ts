@@ -25,6 +25,8 @@ import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { ImagesService } from './images.service';
 import { PayloadTooLargeInterceptor } from './payload-too-large.interceptor';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 class DeleteImageParamsDto {
   @IsOptional()
@@ -39,12 +41,12 @@ export class ImagesController {
   constructor(private imageService: ImagesService) {}
 
   @Get()
-  async getImages(@Query() filter: ImagesFilterDto): Promise<PagingResultDto<ImageSummaryDto>> {
+  async getImages(@ClientRegion() region: SiteRegion, @Query() filter: ImagesFilterDto): Promise<PagingResultDto<ImageSummaryDto>> {
     if (filter.category === ImageCategory.UNLISTED) {
       throw new BadRequestException('Invalid category');
     }
 
-    return this.imageService.getImages(filter);
+    return this.imageService.getImages(region, filter);
   }
 
   @Get(':id/isbanner')
