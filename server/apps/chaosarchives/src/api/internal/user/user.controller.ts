@@ -47,8 +47,8 @@ export class UserController {
   ) {}
 
   @Post('signup')
-  async signUp(@Body() signupData: UserSignUpDto): Promise<UserSignUpResponseDto> {
-    const { userId, characterVerificationCode } = await this.userService.signUp(signupData);
+  async signUp(@Body() signupData: UserSignUpDto, @ClientRegion() region: SiteRegion): Promise<UserSignUpResponseDto> {
+    const { userId, characterVerificationCode } = await this.userService.signUp(signupData, region);
     const accessToken = this.authService.createAccessToken(userId);
     const userInfo = await this.authService.getUserInfo(userId);
 

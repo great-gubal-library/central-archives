@@ -37,6 +37,7 @@ export class UserService {
 
   async signUp(
     signupData: UserSignUpDto,
+    region: SiteRegion,
   ): Promise<{ userId: number; characterVerificationCode: string }> {
     try {
       const { userEntity, characterEntity } = await this.connection.transaction(
@@ -48,13 +49,13 @@ export class UserService {
             verificationCode: generateVerificationCode(),
           });
 
-          const character = await this.charactersService.saveCharacterForUser(em, user, signupData.lodestoneId);
+          const character = await this.charactersService.saveCharacterForUser(em, user, signupData.lodestoneId, region);
 
           return { userEntity: user, characterEntity: character };
         },
       );
 
-      void this.sendVerificationMail(userEntity, characterEntity.name); // no await
+      void this.sendVerificationMail(userEntity, region, characterEntity.name); // no await
       return {
         userId: userEntity.id,
         characterVerificationCode: characterEntity.verificationCode!, // set by saveCharacterForUser
