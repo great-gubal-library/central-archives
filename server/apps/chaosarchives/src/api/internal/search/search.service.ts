@@ -11,6 +11,7 @@ import sanitizeHtml from 'sanitize-html';
 import { Repository } from 'typeorm';
 import { andWhereMatches } from '../../../common/db';
 import { ImagesService } from '../images/images.service';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class SearchService {
@@ -29,7 +30,7 @@ export class SearchService {
     private imageService: ImagesService,
   ) {}
 
-  async search(query: string): Promise<SearchResultsDto[]> {
+  async search(region: SiteRegion, query: string): Promise<SearchResultsDto[]> {
     const keywords = toSearchKeywords(query);
 
     if (keywords.length === 0) {
@@ -38,15 +39,15 @@ export class SearchService {
 
     const [profiles, freeCompanies, communities, venues, events, stories, noticeboardItems, wikiPages, images] =
       await Promise.all([
-        this.searchCharacters(keywords),
-        this.searchFreeCompanies(keywords),
-        this.searchCommunities(keywords),
-        this.searchVenues(keywords),
-        this.searchEvents(keywords),
-        this.searchStories(keywords),
-        this.searchNoticeboardItems(keywords),
-        this.searchWikiPages(keywords),
-        this.searchImages(keywords),
+        this.searchCharacters(region, keywords),
+        this.searchFreeCompanies(region, keywords),
+        this.searchCommunities(region, keywords),
+        this.searchVenues(region, keywords),
+        this.searchEvents(region, keywords),
+        this.searchStories(region, keywords),
+        this.searchNoticeboardItems(region, keywords),
+        this.searchWikiPages(region, keywords),
+        this.searchImages(region, keywords),
       ]);
 
     return [
@@ -62,13 +63,14 @@ export class SearchService {
     ];
   }
 
-  private async searchCharacters(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchCharacters(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.character;
     const qb = this.characterRepo.createQueryBuilder('c');
 
     return (
       await andWhereMatches(qb, 'c', properties, keywords)
         .innerJoinAndSelect('c.server', 'server')
+        .andWhere(region === SiteRegion.GLOBAL ? '1 = 1' : 'server.region = :region', { region })
         .select([...this.expandProperties('c', properties), 'server.name', 'c.updatedAt'])
         .orderBy('c.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
@@ -81,13 +83,14 @@ export class SearchService {
     }));
   }
 
-  private async searchFreeCompanies(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchFreeCompanies(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.freeCompany;
     const qb = this.freeCompanyRepo.createQueryBuilder('fc');
 
     return (
       await andWhereMatches(qb, 'fc', properties, keywords)
         .innerJoinAndSelect('fc.server', 'server')
+        .andWhere(region === SiteRegion.GLOBAL ? '1 = 1' : 'server.region = :region', { region })
         .select([...this.expandProperties('fc', properties), 'server.name', 'fc.updatedAt'])
         .orderBy('fc.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
@@ -100,12 +103,13 @@ export class SearchService {
     }));
   }
 
-  private async searchCommunities(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchCommunities(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.community;
     const qb = this.communityRepo.createQueryBuilder('c');
 
     return (
       await andWhereMatches(qb, 'c', properties, keywords)
+        .andWhere(region === SiteRegion.GLOBAL ? '1 = 1' : 'c.region = :region', { region })
         .select([...this.expandProperties('c', properties), 'c.updatedAt'])
         .orderBy('c.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
@@ -117,13 +121,14 @@ export class SearchService {
     }));
   }
 
-  private async searchVenues(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchVenues(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.venue;
     const qb = this.venueRepo.createQueryBuilder('v');
 
     return (
       await andWhereMatches(qb, 'v', properties, keywords)
         .innerJoinAndSelect('v.server', 'server')
+        .andWhere(region === SiteRegion.GLOBAL ? '1 = 1' : 'server.region = :region', { region })
         .select([...this.expandProperties('v', properties), 'server.name', 'v.updatedAt'])
         .orderBy('v.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
@@ -136,12 +141,13 @@ export class SearchService {
     }));
   }
 
-  private async searchEvents(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchEvents(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.event;
     const qb = this.eventRepo.createQueryBuilder('e');
 
     return (
       await andWhereMatches(qb, 'e', properties, keywords)
+        .andWhere(region === SiteRegion.GLOBAL ? '1 = 1' : 'e.region = :region', { region })
         .select(['e.id', ...this.expandProperties('e', properties), 'e.updatedAt', 'e.startDateTime', 'e.endDateTime' ])
         .orderBy('e.startDateTime', 'DESC')
         .limit(this.MAX_RESULTS)
@@ -156,12 +162,15 @@ export class SearchService {
     }));
   }
 
-  private async searchStories(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchStories(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.story;
     const qb = this.storyRepo.createQueryBuilder('s');
 
     return (
       await andWhereMatches(qb, 's', properties, keywords)
+        .innerJoinAndSelect('s.owner', 'character')
+        .innerJoinAndSelect('character.server', 'server')
+        .andWhere(region === SiteRegion.GLOBAL ? '1 = 1' : 'server.region = :region', { region })
         .select(['s.id', ...this.expandProperties('s', properties), 's.updatedAt'])
         .orderBy('s.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
@@ -174,12 +183,15 @@ export class SearchService {
     }));
   }
 
-  private async searchNoticeboardItems(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchNoticeboardItems(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.noticeboardItem;
     const qb = this.noticeboardItemRepo.createQueryBuilder('nb');
 
     return (
       await andWhereMatches(qb, 'nb', properties, keywords)
+        .innerJoinAndSelect('nb.owner', 'character')
+        .innerJoinAndSelect('character.server', 'server')
+        .andWhere(region === SiteRegion.GLOBAL ? '1 = 1' : 'server.region = :region', { region })
         .select(['nb.id', ...this.expandProperties('nb', properties), 'nb.updatedAt'])
         .orderBy('nb.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
@@ -192,7 +204,7 @@ export class SearchService {
     }));
   }
 
-  private async searchWikiPages(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchWikiPages(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.wikiPage;
     const qb = this.wikiPageRepo.createQueryBuilder('wp');
 
@@ -210,7 +222,7 @@ export class SearchService {
     }));
   }
 
-  private async searchImages(keywords: string[]): Promise<SearchResultDto[]> {
+  private async searchImages(region: SiteRegion, keywords: string[]): Promise<SearchResultDto[]> {
     const properties = SearchFields.image;
     const qb = this.imageRepo.createQueryBuilder('i');
 
@@ -219,6 +231,7 @@ export class SearchService {
         .andWhere('i.category IN (:...categories)', { categories: [ImageCategory.ARTWORK, ImageCategory.SCREENSHOT] })
         .innerJoinAndSelect('i.owner', 'owner')
         .innerJoinAndSelect('owner.server', 'server')
+        .andWhere(region === SiteRegion.GLOBAL ? '1 = 1' : 'server.region = :region', { region })
         .select(['i', 'owner.id', 'owner.name', 'server.name'])
         .orderBy('i.updatedAt', 'DESC')
         .limit(this.MAX_RESULTS)
