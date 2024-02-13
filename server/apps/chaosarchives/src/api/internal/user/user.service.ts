@@ -91,7 +91,7 @@ export class UserService {
     });
   }
 
-  async resendConfirmationEmail(user: UserInfo): Promise<void> {
+  async resendConfirmationEmail(user: UserInfo, region: SiteRegion): Promise<void> {
     const userEntity = (await this.userRepo.findOne({
       where: {
         id: user.id,
@@ -109,6 +109,7 @@ export class UserService {
           id: userEntity.id,
         }
       },
+      relations: [ 'server' ],
       select: [ 'id', 'name', 'server' ],
     });
 
@@ -116,11 +117,11 @@ export class UserService {
       throw new ConflictException('User has no character? This should be impossible');
     }
 
-    await this.sendVerificationMail(userEntity, asSiteRegion(characterData.server.region), characterData.name);
+    await this.sendVerificationMail(userEntity, region, characterData.name);
   }
 
   private async sendVerificationMail(user: User, region: SiteRegion, name: string): Promise<void> {
-    const link = `${serverConfiguration.frontendRoot}/confirm-email/${user.verificationCode}`;
+    const link = `${serverConfiguration.frontendRoot[region]}/confirm-email/${user.verificationCode}`;
     await this.mailService.sendUserVerificationMail(region, user.email, name, link);
   }
 
@@ -236,7 +237,7 @@ export class UserService {
     await em.getRepository(User).save(savedUser);
   }
 
-  async forgotPassword(request: ForgotPasswordRequestDto): Promise<void> {
+  async forgotPassword(request: ForgotPasswordRequestDto, region: SiteRegion): Promise<void> {
     const result = await this.connection.transaction(async (em) => {
       const repo = em.getRepository(User);
       const user = await repo.findOneBy({
@@ -255,7 +256,7 @@ export class UserService {
             id: user.id
           },
         },
-        select: [ 'id', 'name', 'server' ] // id is needed because of a regression in TypeORM query generation
+        select: [ 'id', 'name' ] // id is needed because of a regression in TypeORM query generation
       });
 
       // Note that we intentionally don't check verifiedAt. If the user is unverified,
@@ -266,7 +267,6 @@ export class UserService {
       return {
         email: user.email,
         name: character ? character.name : user.email,
-        region: character ? asSiteRegion(character.server.region) : SiteRegion.GLOBAL,
         verificationCode: user.verificationCode
       };
     });
@@ -275,8 +275,8 @@ export class UserService {
       return;
     }
 
-    const link = `${serverConfiguration.frontendRoot}/reset-password/${result.verificationCode}`;
-    await this.mailService.sendPasswordResetMail(result.region, result.email, result.name, link);
+    const link = `${serverConfiguration.frontendRoot[region]}/reset-password/${result.verificationCode}`;
+    await this.mailService.sendPasswordResetMail(region, result.email, result.name, link);
   }
 
   async resetPassword(request: ResetPasswordRequestDto): Promise<void> {
@@ -359,7 +359,7 @@ export class UserService {
       };
     });
 
-    const link = `${serverConfiguration.frontendRoot}/confirm-new-email/${userEntity.newEmailVerificationCode}`;
+    const link = `${serverConfiguration.frontendRoot[region]}/confirm-new-email/${userEntity.newEmailVerificationCode}`;
     await this.mailService.sendNewEmailVerificationMail(region, request.newEmail, characterName, link);
   }
 

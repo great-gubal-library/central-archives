@@ -67,8 +67,8 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post('resend-confirmation-email')
-  async resendConfirmationEmail(@CurrentUser() user: UserInfo): Promise<void> {
-    await this.userService.resendConfirmationEmail(user);
+  async resendConfirmationEmail(@CurrentUser() user: UserInfo, @ClientRegion() region: SiteRegion): Promise<void> {
+    await this.userService.resendConfirmationEmail(user, region);
   }
 
   @Post('login')
@@ -107,8 +107,8 @@ export class UserController {
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body() request: ForgotPasswordRequestDto): Promise<void> {
-    await this.userService.forgotPassword(request);
+  async forgotPassword(@Body() request: ForgotPasswordRequestDto, @ClientRegion() region: SiteRegion): Promise<void> {
+    await this.userService.forgotPassword(request, region);
   }
 
   @Post('reset-password')

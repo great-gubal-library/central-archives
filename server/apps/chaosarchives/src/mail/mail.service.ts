@@ -1,4 +1,5 @@
 import { mailConfiguration } from '@app/configuration/mail.config';
+import SharedConstants from '@app/shared/SharedConstants';
 import { SiteRegion } from '@app/shared/enums/region.enum';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
@@ -14,8 +15,9 @@ export class MailService {
 			subject: 'Confirm your email',
 			template: './confirm-email',
 			context: {
+        sitename: SharedConstants.regions[region].name,
 				name,
-				confirmLink
+				confirmLink,
 			}
 		});
 	}
@@ -27,8 +29,9 @@ export class MailService {
 			subject: 'Your password reset link',
 			template: './reset-password',
 			context: {
+        sitename: SharedConstants.regions[region].name,
 				name,
-				resetLink
+				resetLink,
 			}
 		});
 	}
@@ -40,9 +43,10 @@ export class MailService {
 			subject: 'Confirm your new email',
 			template: './confirm-new-email',
 			context: {
+        sitename: SharedConstants.regions[region].name,
 				name,
 				confirmLink,
-				newEmail: email
+				newEmail: email,
 			}
 		});
 	}

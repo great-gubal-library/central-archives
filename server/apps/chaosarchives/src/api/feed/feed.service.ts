@@ -48,11 +48,11 @@ export class FeedService {
           title: story.title,
           content: story.content,
           date: story.createdAt,
-          link: `${serverConfiguration.frontendRoot}/story/${story.id}`,
+          link: `${serverConfiguration.frontendRoot[region]}/story/${story.id}`,
           author: [
             {
               name: `${story.owner.name} (${story.owner.server})`,
-              link: `${serverConfiguration.frontendRoot}/${story.owner.server}/${story.owner.name.replace(' ', '_')}`,
+              link: `${serverConfiguration.frontendRoot[region]}/${story.owner.server}/${story.owner.name.replace(' ', '_')}`,
             },
           ],
         },
@@ -91,12 +91,12 @@ export class FeedService {
           title: image.title,
           content: `<img src="${image.url}" />`,
           date: new Date(image.createdAt),
-          link: `${serverConfiguration.frontendRoot}/image/${image.id}`,
+          link: `${serverConfiguration.frontendRoot[region]}/image/${image.id}`,
           image: image.url,
           author: [
             {
               name: `${image.owner} (${image.ownerServer})`,
-              link: `${serverConfiguration.frontendRoot}/${image.ownerServer}/${image.owner!.replace(' ', '_')}`,
+              link: `${serverConfiguration.frontendRoot[region]}/${image.ownerServer}/${image.owner!.replace(' ', '_')}`,
             },
           ],
         },
@@ -114,7 +114,7 @@ export class FeedService {
   }
 
   private async createFeed(region: SiteRegion, { title, description, options, pagePath, items }: FeedContent) {
-    const url = `${serverConfiguration.frontendRoot}${options.path}`;
+    const url = `${serverConfiguration.frontendRoot[region]}${options.path}`;
     const currentYear = DateTime.utc().year;
     const regionConfig = SharedConstants.regions[region];
 
@@ -122,10 +122,10 @@ export class FeedService {
       title,
       description,
       id: url,
-      link: `${serverConfiguration.frontendRoot}${pagePath}`,
+      link: `${serverConfiguration.frontendRoot[region]}${pagePath}`,
       language: 'en',
       copyright: `All text and images on this site are © 2021–${currentYear} by their respective owners.`,
-      favicon: `${serverConfiguration.frontendRoot}/favicon.ico`,
+      favicon: `${serverConfiguration.frontendRoot[region]}/favicon.ico`,
       generator: regionConfig.name,
     });
 

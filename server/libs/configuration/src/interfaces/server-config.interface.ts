@@ -1,6 +1,6 @@
 export interface ServerConfigInterface {
 	port: number,
-	frontendRoot: string,
+	frontendRoot: { [ k: string]: string },
 	newsRoot: string,
 	maxUploadSizeKiB: number,
 	maxUploadSpacePerUserMiB: number,

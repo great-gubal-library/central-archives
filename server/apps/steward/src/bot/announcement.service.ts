@@ -9,11 +9,15 @@ import schedule, { Job } from 'node-schedule';
 import sanitizeHtml from 'sanitize-html';
 import { Repository } from 'typeorm';
 import { BotGateway } from './bot.gateway';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 interface EventDatacenterResult {
 	eventId: number;
 	datacenter: string;
 }
+
+// TODO: Temp
+const REGION = SiteRegion.EU;
 
 @Injectable()
 export class AnnouncementService {
@@ -43,7 +47,7 @@ export class AnnouncementService {
 		}
 
 		const subtitle = `${noticeboardLocations[noticeboardItem.location]} — by ${noticeboardItem.owner.name}`
-		const link = `${serverConfiguration.frontendRoot}/noticeboard/${noticeboardItem.id}`;
+		const link = `${serverConfiguration.frontendRoot[REGION]}/noticeboard/${noticeboardItem.id}`;
 		const content = `<strong>${escape(noticeboardItem.title)}</strong><br><em>${escape(subtitle)}</em><br><br>${noticeboardItem.content}`;
 		const contentHtml = sanitizeHtml(content, {
 			allowedTags: [ 'b', 'i', 'strong', 'em', 'code', 'tt', 'blockquote', 'p', 'br' ]
@@ -108,9 +112,9 @@ export class AnnouncementService {
 		for (const announcement of announcements) {
 			const remainingMS = announcement.postAt.getTime() - now;
 			const announcementEventId = announcement.event.id;
-			const eventUrl = `${serverConfiguration.frontendRoot}/event/${announcementEventId}`;
+			const eventUrl = `${serverConfiguration.frontendRoot[REGION]}/event/${announcementEventId}`;
 			const content = `${announcement.content}\n\n${eventUrl}`;
-			
+
 			const eventDatacenters = datacentersByEventId.get(announcementEventId) || new Set<string>();
 
 			// Schedule once announcement per each datacenter used in event locations
@@ -138,7 +142,7 @@ export class AnnouncementService {
 			.addSelect('server.datacenter', 'datacenter')
 			.distinct()
 			.getRawMany<EventDatacenterResult>();
-		
+
 		eventDatacenterResults.forEach(result => {
 			let datacenters = datacentersByEventId.get(result.eventId);
 
