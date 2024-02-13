@@ -22,6 +22,7 @@ import { StoriesService } from '../stories/stories.service';
 import { CharactersService } from './characters.service';
 import { MyContentService } from './my-content.service';
 import { SiteRegion } from '@app/shared/enums/region.enum';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
 
 @Controller('characters')
 export class CharactersController {
@@ -58,8 +59,9 @@ export class CharactersController {
   async addAccountCharacter(
     @Body() request: AddCharacterRequestDto,
     @CurrentUser() user: UserInfo,
+    @ClientRegion() region: SiteRegion,
   ): Promise<SessionCharacterDto> {
-    return this.charactersService.addAccountCharacter(request, user);
+    return this.charactersService.addAccountCharacter(request, user, region);
   }
 
   @Post('refresh')

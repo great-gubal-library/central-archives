@@ -355,7 +355,7 @@ export class CharactersService {
     };
 	}
 
-  async addAccountCharacter(request: AddCharacterRequestDto, user: UserInfo): Promise<SessionCharacterDto> {
+  async addAccountCharacter(request: AddCharacterRequestDto, user: UserInfo, region: SiteRegion): Promise<SessionCharacterDto> {
     try {
       const result = await this.connection.transaction(async em => {
         const userEntity = await em.getRepository(User).findOne({
@@ -369,7 +369,7 @@ export class CharactersService {
           throw new ConflictException();
         }
 
-        const character = await this.saveCharacterForUser(em, userEntity, request.lodestoneId);
+        const character = await this.saveCharacterForUser(em, userEntity, request.lodestoneId, region);
 
         return {
           id: character.id,
