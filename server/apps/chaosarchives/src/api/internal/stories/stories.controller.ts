@@ -10,6 +10,8 @@ import { StoryDto } from '@app/shared/dto/stories/story.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { StoriesService } from './stories.service';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Controller('stories')
 export class StoriesController {
@@ -50,7 +52,7 @@ export class StoriesController {
 	}
 
 	@Get()
-	async getStoryList(@Query() filter: StoryFilterDto): Promise<PagingResultDto<StorySummaryDto>> {
-		return this.storiesService.getStoryList(filter);
+	async getStoryList(@ClientRegion() region: SiteRegion, @Query() filter: StoryFilterDto): Promise<PagingResultDto<StorySummaryDto>> {
+		return this.storiesService.getStoryList(region, filter);
 	}
 }

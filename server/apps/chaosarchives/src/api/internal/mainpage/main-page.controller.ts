@@ -35,11 +35,11 @@ export class MainPageController {
     const [mainPageContent, newsResult, storyList, noticeboardItemList, newVenuesList, newCommunitiesList] =
       await Promise.all([
         this.mainPageService.getMainPageContent(region),
-        this.newsService.getLatestSummaries(),
-        this.storiesService.getStoryList({ limit: this.MAX_STORIES }),
-        this.noticeboardService.getNoticeboardItemList({ limit: this.MAX_NOTICEBOARD_ITEMS }),
-        this.venuesService.getVenues({ limit: this.MAX_NEW_VENUES }, true),
-        this.communitiesService.getCommunities({ limit: this.MAX_NEW_COMMUNITIES }, true),
+        this.newsService.getLatestSummaries(region),
+        this.storiesService.getStoryList(region, { limit: this.MAX_STORIES }),
+        this.noticeboardService.getNoticeboardItemList(region, { limit: this.MAX_NOTICEBOARD_ITEMS }),
+        this.venuesService.getVenues(region, { limit: this.MAX_NEW_VENUES }, true),
+        this.communitiesService.getCommunities(region, { limit: this.MAX_NEW_COMMUNITIES }, true),
       ]);
 
     mainPageContent.news = newsResult;
@@ -53,7 +53,7 @@ export class MainPageController {
 
   // Gets relatively up to date news.
   @Get('/news')
-  async getUpdatedNews(): Promise<NewsDto[]> {
-    return this.newsService.getLatestSummaries();
+  async getUpdatedNews(@ClientRegion() region: SiteRegion): Promise<NewsDto[]> {
+    return this.newsService.getLatestSummaries(region);
   }
 }

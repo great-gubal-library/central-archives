@@ -14,6 +14,8 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, U
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional } from 'class-validator';
 import { CommunitiesService } from './communities.service';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 class OptionalCharacterId {
   @IsInt()
@@ -86,19 +88,20 @@ export class CommunitiesController {
   }
 
   @Get()
-  async getCommunities(): Promise<CommunitySummaryDto[]> {
-    return this.communitiesService.getCommunities({}, false);
+  async getCommunities(@ClientRegion() region: SiteRegion): Promise<CommunitySummaryDto[]> {
+    return this.communitiesService.getCommunities(region, {}, false);
   }
 
   @Get('by-name/:name')
   @UseGuards(OptionalJwtAuthGuard)
   async getCommunityByName(
+    @ClientRegion() region: SiteRegion,
     @Param('name') name: string,
     @Query() characterId: OptionalCharacterId,
     @CurrentUser() user?: UserInfo,
   ): Promise<CommunityDto> {
     console.log('characterId', characterId);
-    return this.communitiesService.getCommunityByName(name, characterId.characterId, user);
+    return this.communitiesService.getCommunityByName(region, name, characterId.characterId, user);
   }
 
   @Get(':id')

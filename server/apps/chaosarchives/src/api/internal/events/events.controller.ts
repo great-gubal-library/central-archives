@@ -25,6 +25,8 @@ import {
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { EventsService } from './events.service';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 class GetEventParamDto {
   @IsOptional()
@@ -37,8 +39,8 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get('/')
-  async getEvents(@Query('refresh', ParseBoolPipe) refresh = false): Promise<EventSummariesDto> {
-    return this.eventsService.getEvents(refresh);
+  async getEvents(@ClientRegion() region: SiteRegion, @Query('refresh', ParseBoolPipe) refresh = false): Promise<EventSummariesDto> {
+    return this.eventsService.getEvents(region, refresh);
   }
 
   @Get('/search')

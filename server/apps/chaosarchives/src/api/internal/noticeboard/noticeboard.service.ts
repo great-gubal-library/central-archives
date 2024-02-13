@@ -10,6 +10,7 @@ import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 import { firstValueFrom } from 'rxjs';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class NoticeboardService {
@@ -137,13 +138,18 @@ export class NoticeboardService {
     });
   }
 
-  async getNoticeboardItemList(params: { characterId?: number; limit?: number }): Promise<NoticeboardItemSummaryDto[]> {
+  async getNoticeboardItemList(region: SiteRegion, params: { characterId?: number; limit?: number }): Promise<NoticeboardItemSummaryDto[]> {
     const query = this.noticeboardItemRepo
       .createQueryBuilder('noticeboardItem')
       .innerJoinAndSelect('noticeboardItem.owner', 'character')
+      .innerJoinAndSelect('character.server', 'server')
       .orderBy('noticeboardItem.createdAt', 'DESC')
       .select(['noticeboardItem.id', 'character.name', 'noticeboardItem.title', 'noticeboardItem.createdAt', 'noticeboardItem.location'])
       .limit(params.limit);
+
+    if (region !== SiteRegion.GLOBAL) {
+      query.andWhere('server.region = :region', { region });
+    }
 
     if (params.characterId) {
       query.where('character.id = :characterId', {

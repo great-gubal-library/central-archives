@@ -231,12 +231,16 @@ export class CharactersService {
     void this.eventEmitter.emitAsync('character.updated', characterEntity);
   }
 
-  async getCharacterList(filter: CharacterProfileFilterDto): Promise<PagingResultDto<CharacterSummaryDto>> {
+  async getCharacterList(region: SiteRegion, filter: CharacterProfileFilterDto): Promise<PagingResultDto<CharacterSummaryDto>> {
 		const query = this.characterRepo.createQueryBuilder('character')
 			.where('character.verifiedAt IS NOT NULL')
 			.orderBy('character.name', 'ASC')
 			.innerJoinAndSelect('character.server', 'server')
 			.select([ 'character.name', 'character.occupation', 'character.race', 'character.avatar', 'server.name' ]);
+
+    if (region !== SiteRegion.GLOBAL) {
+      query.andWhere('server.region = :region', { region });
+    }
 
     if (filter.searchQuery) {
       query.andWhere(`(character.name LIKE :searchQuery OR character.occupation LIKE :searchQuery)`,

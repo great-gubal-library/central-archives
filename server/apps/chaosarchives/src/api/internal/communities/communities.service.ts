@@ -17,6 +17,7 @@ import { DateTime } from 'luxon';
 import { DataSource, EntityManager, FindOneOptions, Repository } from 'typeorm';
 import { assertUserCharacterId, checkCarrdProfile } from '../../../common/api-checks';
 import { ImagesService } from '../images/images.service';
+import { Region, SiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class CommunitiesService {
@@ -105,11 +106,15 @@ export class CommunitiesService {
     }));
   }
 
-  async getCommunities(filter: { limit?: number }, orderByDate: boolean): Promise<CommunitySummaryDto[]> {
+  async getCommunities(region: SiteRegion, filter: { limit?: number }, orderByDate: boolean): Promise<CommunitySummaryDto[]> {
     const query = this.communityRepo
       .createQueryBuilder('community')
       .orderBy(orderByDate ? { 'community.createdAt': 'DESC' } : { 'community.name': 'ASC' })
       .select(['community.id', 'community.name', 'community.goal']);
+
+      if (region !== SiteRegion.GLOBAL) {
+        query.andWhere('community.region = :region', { region });
+      }
 
     if (filter.limit) {
       query.limit(filter.limit);
@@ -142,10 +147,11 @@ export class CommunitiesService {
     return this.toCommunityDto(community, characterId, user);
   }
 
-  async getCommunityByName(name: string, characterId?: number, user?: UserInfo): Promise<CommunityDto> {
+  async getCommunityByName(region: SiteRegion, name: string, characterId?: number, user?: UserInfo): Promise<CommunityDto> {
     const community = await this.communityRepo.findOne({
       where: {
         name,
+        region: region as string as Region,
       },
       relations: ['owner', 'owner.server', 'tags', 'banner', 'banner.owner'],
     });

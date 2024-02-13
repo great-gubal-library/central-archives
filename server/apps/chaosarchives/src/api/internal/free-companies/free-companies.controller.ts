@@ -9,6 +9,8 @@ import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-sum
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { FreeCompaniesService } from './free-companies.service';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Controller('free-companies')
 export class FreeCompaniesController {
@@ -37,8 +39,8 @@ export class FreeCompaniesController {
 	}
 
 	@Get()
-	async getFreeCompanies(): Promise<FreeCompanySummaryDto[]> {
-		return this.freeCompaniesService.getFreeCompanies();
+	async getFreeCompanies(@ClientRegion() region: SiteRegion): Promise<FreeCompanySummaryDto[]> {
+		return this.freeCompaniesService.getFreeCompanies(region);
 	}
 
 	@Get('profile/:server/:name')

@@ -10,6 +10,8 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { NoticeboardService } from './noticeboard.service';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 class CreateNoticeboardItemParamDto {
   @IsOptional()
@@ -51,7 +53,7 @@ export class NoticeboardController {
 	}
 
 	@Get()
-	async getNoticeboardItemList(@Query('characterId') characterId?: string): Promise<NoticeboardItemSummaryDto[]> {
-		return this.noticeboardService.getNoticeboardItemList(characterId ? { characterId : parseInt(characterId, 10) } : {});
+	async getNoticeboardItemList(@ClientRegion() region: SiteRegion, @Query('characterId') characterId?: string): Promise<NoticeboardItemSummaryDto[]> {
+		return this.noticeboardService.getNoticeboardItemList(region, characterId ? { characterId : parseInt(characterId, 10) } : {});
 	}
 }

@@ -10,6 +10,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, In, IsNull, Not, Repository } from 'typeorm';
 import { escapeForLike } from '../../../common/db';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class StoriesService {
@@ -179,21 +180,26 @@ export class StoriesService {
     });
   }
 
-  async getStoryList(filter: StoryFilterDto): Promise<PagingResultDto<StorySummaryDto>> {
+  async getStoryList(region: SiteRegion, filter: StoryFilterDto): Promise<PagingResultDto<StorySummaryDto>> {
     const query = this.storyRepo
       .createQueryBuilder('story')
       .innerJoinAndSelect('story.owner', 'character')
+      .innerJoinAndSelect('character.server', 'server')
       .orderBy('story.createdAt', 'DESC')
       .select(['story.id', 'character.name', 'story.title', 'story.createdAt'])
       .offset(filter.offset)
       .limit(filter.limit);
+
+      if (region !== SiteRegion.GLOBAL) {
+        query.andWhere('server.region = :region', { region });
+      }
 
       if (filter.searchQuery) {
         query.andWhere('(story.title LIKE :searchQuery OR character.name LIKE :searchQuery)', {
           searchQuery: `%${escapeForLike(filter.searchQuery)}%`
         });
       }
-  
+
       if (filter.characterId) {
       query.andWhere('character.id = :characterId', {
         characterId: filter.characterId,

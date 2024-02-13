@@ -17,6 +17,7 @@ import { ImagesService } from '../images/images.service';
 import { VenueFilterDto } from '@app/shared/dto/venues/venue-filter.dto';
 import { escapeForLike } from 'apps/chaosarchives/src/common/db';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class VenuesService {
@@ -26,11 +27,15 @@ export class VenuesService {
     private imagesService: ImagesService,
   ) {}
 
-	async getVenues(filter: VenueFilterDto, orderByDate = false): Promise<PagingResultDto<VenueSummaryDto>> {
+	async getVenues(region: SiteRegion, filter: VenueFilterDto, orderByDate = false): Promise<PagingResultDto<VenueSummaryDto>> {
     const query = this.venueRepo.createQueryBuilder('venue')
 			.innerJoinAndSelect('venue.owner', 'owner')
 			.innerJoinAndSelect('venue.server', 'server')
 			.select([ 'venue', 'owner', 'server' ]);
+
+    if (region !== SiteRegion.GLOBAL) {
+      query.andWhere('server.region = :region', { region });
+    }
 
     if (orderByDate) {
       query.orderBy('venue.createdAt', 'DESC');

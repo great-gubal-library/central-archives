@@ -23,13 +23,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Redis from 'ioredis';
 import { DateTime, Duration } from 'luxon';
 import { firstValueFrom } from 'rxjs';
-import { Connection, EntityManager, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
+import { Connection, EntityManager, FindOptionsWhere, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { Contains } from '../../../common/db';
 import utils from '../../../common/utils';
 import { ImagesService } from '../images/images.service';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { ExternalEvent } from './model/external-event';
-import { Region, asSiteRegion } from '@app/shared/enums/region.enum';
+import { Region, SiteRegion, asSiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class EventsService {
@@ -295,8 +295,8 @@ export class EventsService {
     }
   }
 
-  async getEvents(refreshExternal = false): Promise<EventSummariesDto> {
-    const eventsTimestamp = await this.redisService.get('eventsTimestamp');
+  async getEvents(region: SiteRegion, refreshExternal = false): Promise<EventSummariesDto> {
+    const eventsTimestamp = await this.redisService.get('eventsTimestamp_' + region);
     let eventsUpToDate = false;
 
     if (eventsTimestamp) {
@@ -309,7 +309,7 @@ export class EventsService {
 
     if (!refreshExternal || eventsUpToDate) {
       return {
-        events: await this.getEventsFromDatabase(),
+        events: await this.getEventsFromDatabase(region),
         eventsUpToDate,
       };
     }
@@ -321,26 +321,35 @@ export class EventsService {
       utils.compareNumbers(e1.startDateTime, e2.startDateTime),
     );
     await this.saveEvents(events);
-    await this.redisService.set('eventsTimestamp', Date.now().toString());
+    await this.redisService.set('eventsTimestamp_' + region, Date.now().toString());
     return {
-      events: await this.getEventsFromDatabase(),
+      events: await this.getEventsFromDatabase(region),
       eventsUpToDate: true,
     };
   }
 
-  private async getEventsFromDatabase(): Promise<EventSummaryDto[]> {
+  private async getEventsFromDatabase(region: SiteRegion): Promise<EventSummaryDto[]> {
     const startOfDay = DateTime.now().setZone(SharedConstants.FFXIV_SERVER_TIMEZONE).startOf('day');
+
+    const conditions: FindOptionsWhere<Event>[] = [
+      {
+        startDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
+        hidden: false,
+      },
+      {
+        endDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
+        hidden: false,
+      },
+    ];
+
+    if (region !== SiteRegion.GLOBAL) {
+      conditions.push({
+        region: region as string as Region,
+      });
+    }
+
     const events = await this.eventRepo.find({
-      where: [
-        {
-          startDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
-          hidden: false,
-        },
-        {
-          endDateTime: MoreThanOrEqual(startOfDay.toJSDate()),
-          hidden: false,
-        },
-      ],
+      where: conditions,
       order: {
         startDateTime: 'ASC',
         createdAt: 'ASC',

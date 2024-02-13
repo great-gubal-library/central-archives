@@ -50,8 +50,8 @@ export class CharactersController {
   }
 
   @Get()
-  async getCharacterList(@Query() filter: CharacterProfileFilterDto): Promise<PagingResultDto<CharacterSummaryDto>> {
-    return this.charactersService.getCharacterList(filter);
+  async getCharacterList(@ClientRegion() region: SiteRegion, @Query() filter: CharacterProfileFilterDto): Promise<PagingResultDto<CharacterSummaryDto>> {
+    return this.charactersService.getCharacterList(region, filter);
   }
 
   @Post()
@@ -77,7 +77,7 @@ export class CharactersController {
   @Get(':id/content')
   async getCharacterContent(@Param('id', ParseIntPipe) characterId: number): Promise<CharacterContentDto> {
     const [stories, images] = await Promise.all([
-      this.storiesService.getStoryList({ characterId }),
+      this.storiesService.getStoryList(SiteRegion.GLOBAL, { characterId }),
       this.imagesService.getImages(SiteRegion.GLOBAL, { characterId }),
     ]);
 

@@ -9,14 +9,16 @@ import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { VenuesService } from './venues.service';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Controller('venues')
 export class VenuesController {
 	constructor(private venuesService: VenuesService) {}
 
 	@Get()
-	async getVenues(@Query() filter: { characterId?: number }): Promise<PagingResultDto<VenueSummaryDto>> {
-		return this.venuesService.getVenues(filter, false);
+	async getVenues(@ClientRegion() region: SiteRegion, @Query() filter: { characterId?: number }): Promise<PagingResultDto<VenueSummaryDto>> {
+		return this.venuesService.getVenues(region, filter, false);
 	}
 
 	@Get(':server/:name')
