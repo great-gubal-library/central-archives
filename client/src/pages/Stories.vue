@@ -120,7 +120,7 @@ const $api = useApi();
             rel: 'alternate',
             type: 'application/rss+xml',
             href: '/api/feed/stories.rss',
-            title: 'Stories — Chaos Archives',
+            title: `Stories — ${this.$siteName}`,
           }
         }
       };

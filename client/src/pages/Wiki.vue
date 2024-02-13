@@ -18,6 +18,7 @@ import { PageType } from '@app/shared/enums/page-type.enum';
 import errors from '@app/shared/errors';
 import { unwikify } from '@common/common/wikilinks';
 import { useApi } from 'src/boot/axios';
+import { useSiteName } from 'src/boot/region';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 import WikiPageView from 'src/components/wiki/WikiPageView.vue';
@@ -40,7 +41,7 @@ async function load(params: RouteParams): Promise<WikiPageDto> {
 
   try {
     const wikiPage = await $api.wiki.getWikiPageByTitle(title);
-    document.title = `${wikiPage.title} — Chaos Archives`;
+    document.title = `${wikiPage.title} — ${useSiteName()}`;
     return wikiPage;
   } catch (e) {
     if (errors.getStatusCode(e) === 404) {

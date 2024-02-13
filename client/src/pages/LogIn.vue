@@ -2,7 +2,7 @@
   <q-page>
     <h2>Log In</h2>
     <q-form class="page-login__form" @submit="onSubmit">
-      <p>Please fill in the form below to log in to Chaos Archives.</p>
+      <p>Please fill in the form below to log in to {{$siteName}}.</p>
       <section>
         <q-input
           v-model="email"

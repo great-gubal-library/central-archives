@@ -109,7 +109,7 @@ interface EventItem {
 	mixins: [
 		createMetaMixin(function(this: PageEventCalendar) {
 			return {
-				title: `${this.yearMonth} events — Chaos Archives`
+				title: `${this.yearMonth} events — ${this.$siteName}`
 			}
 		}),
 	],

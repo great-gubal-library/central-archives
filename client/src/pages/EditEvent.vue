@@ -101,14 +101,16 @@
             v-model="event.contact"
             label="Contact"
           />
-          <h6>Announcements</h6>
-          <p>You can let the Chaos Archives Discord bot announce the event on the <tt>#chaos-dc-events</tt> channel some time before the event starts. You can add as many announcements as you like.</p>
-          <template v-for="(_, index) in event.announcements" :key="index">
-            <event-announcement-editor v-model="event.announcements[index]" @remove="removeAnnouncement(index)" />
-          </template>
-          <div class="page-edit-event__button-bar" style="justify-content: end">
-            <q-btn flat color="secondary" icon="add" label="Add announcement" @click="addAnnouncement" />
-          </div>
+          <section v-if="$region === 'eu'">
+            <h6>Announcements</h6>
+            <p>You can let the {{$siteName}} Discord bot announce the event on the <tt>#chaos-dc-events</tt> channel some time before the event starts. You can add as many announcements as you like.</p>
+            <template v-for="(_, index) in event.announcements" :key="index">
+              <event-announcement-editor v-model="event.announcements[index]" @remove="removeAnnouncement(index)" />
+            </template>
+            <div class="page-edit-event__button-bar" style="justify-content: end">
+              <q-btn flat color="secondary" icon="add" label="Add announcement" @click="addAnnouncement" />
+            </div>
+          </section>
         </template>
         <section v-else class="page-edit-event__preview">
           <event-view :event="event" :preview="true" />
@@ -165,6 +167,7 @@ import HtmlEditor from 'components/common/HtmlEditor.vue';
 import EventAnnouncementEditor from 'components/event/EventAnnouncementEditor.vue';
 import { DateTime } from 'luxon';
 import { useApi } from 'src/boot/axios';
+import { useSiteName } from 'src/boot/region';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import BannerEditSection from 'src/components/common/BannerEditSection.vue';
 import WorldSelect from 'src/components/common/WorldSelect.vue';
@@ -191,7 +194,7 @@ async function load(params: RouteParams): Promise<{event: EventEditDto, eventId:
 
 	try {
 		const event = await $api.events.getEventForEdit(id);
-		document.title = `${event.title} — Chaos Archives`;
+		document.title = `${event.title} — ${useSiteName()}`;
 		return { event, eventId: id };
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {

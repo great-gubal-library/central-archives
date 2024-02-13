@@ -24,7 +24,7 @@
       <character-detail label="Recruiting officers" :value="freeCompany.recruitingOfficers" v-if="freeCompany.recruitingOfficers" />
     </character-details-box>
     <template v-if="!freeCompany.claimed">
-      This Free Company's leader has not yet claimed it on Chaos Archives.
+      This Free Company's leader has not yet claimed it on {{$siteName}}.
     </template>
     <template v-if="freeCompany.description">
       <html-viewer class="free-company-profile__appearance-background" :content="freeCompany.description" />

@@ -17,7 +17,7 @@
     <thumb-gallery :images="images" />
     <div class="page-gallery__pagination">
       <div class="page-gallery__pagination-side">
-        
+
       </div>
       <q-pagination :model-value="page" :max="maxPage" input @update:model-value="setPage" />
       <div class="page-gallery__pagination-side page-gallery__stats">{{ first }}–{{ last }} of {{ total }}</div>
@@ -33,6 +33,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { createMetaMixin } from 'quasar';
 import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
+import { useSiteName } from 'src/boot/region';
 import { notifyError } from 'src/common/notify';
 import RssPageHeader from 'src/components/common/RssPageHeader.vue';
 import ThumbGallery from 'src/components/images/ThumbGallery.vue';
@@ -95,13 +96,13 @@ async function load(to: RouteLocationNormalized): Promise<PageData> {
   mixins: [
     createMetaMixin(function (this: PageGallery): MetaOptions {
       return {
-        title: `${this.title} — Chaos Archives`,
+        title: `${this.title} — ${this.$siteName}`,
         link: {
           feed: {
             rel: 'alternate',
             type: 'application/rss+xml',
             href: this.category === ImageCategory.ARTWORK ? '/api/feed/artwork.rss' : '/api/feed/screenshots.rss',
-            title: `${this.title} — Chaos Archives`,
+            title: `${this.title} — ${this.$siteName}`,
           }
         },
       };
@@ -121,7 +122,7 @@ export default class PageGallery extends Vue {
     this.searchQuery = searchQuery;
     this.total = images.total;
     this.images = images.data;
-    document.title = `${this.title} — Chaos Archives`;
+    document.title = `${this.title} — ${useSiteName()}`;
   }
 
   get title() {

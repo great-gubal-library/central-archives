@@ -1,9 +1,9 @@
 <template>
   <q-page class="page-character">
-		<character-profile v-if="character && character.id" :character="character" />		
+		<character-profile v-if="character && character.id" :character="character" />
 		<template v-else-if="notFound">
 			<h2>Character not found</h2>
-			<p>The character {{name}} ({{server}}) is not registered on Chaos Archives.</p>
+			<p>The character {{name}} ({{server}}) is not registered on {{$siteName}}.</p>
 		</template>
 		<template v-if="content.stories.length > 0">
 			<h3>{{name}}'s Stories</h3>
@@ -14,7 +14,7 @@
 			<thumb-gallery :images="content.images" />
 		</template>
     <report-violation-section v-if="character && character.id" :pageType="PageType.PROFILE" :pageId="character.id" />
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">

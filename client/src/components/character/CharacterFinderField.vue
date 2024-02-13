@@ -44,7 +44,7 @@
 			</q-banner>
 			<q-banner v-else-if="registrationStatus === CharacterRegistrationStatus.RENAMED" class="bg-dark text-white">
 				<p>
-					You have renamed this character in-game, and you have a Chaos Archives character profile under the old name. You still <strong>can</strong> register a separate character profile for the new name; however, you will no longer be able to rename the old character on Chaos Archives to match the new name.
+					You have renamed this character in-game, and you have a {{$siteName}} character profile under the old name. You still <strong>can</strong> register a separate character profile for the new name; however, you will no longer be able to rename the old character on {{$siteName}} to match the new name.
 				</p>
 				<p>
 					If you would rather update your existing character profile to the new name, open your existing character profile and click “Refresh from Lodestone”.

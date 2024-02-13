@@ -15,7 +15,7 @@
       </q-item>
     </q-list>
     <p v-else>
-      There are no venues on Chaos Archives. Yet!
+      There are no venues on {{$siteName}}. Yet!
     </p>
   </div>
 </template>

@@ -135,7 +135,7 @@
     <q-footer elevated>
       <q-toolbar>
         <div class="layout__footer text-body justify-center text-center">
-          Final Fantasy XIV is © 2010&ndash;2024 Square Enix Co., Ltd. All rights reserved. Chaos Archives is a fansite
+          Final Fantasy XIV is © 2010&ndash;2024 Square Enix Co., Ltd. All rights reserved. {{$siteName}} is a fansite
           and is not affiliated with Square Enix.<br />
           All text and images on this site are © 2021–2024 by their respective owners.
           <router-link to="/privacy-statement">(Privacy statement)</router-link>

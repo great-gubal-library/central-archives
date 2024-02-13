@@ -8,7 +8,7 @@
 			<venue-profile :venue="venue" />
     	<report-violation-section :pageType="PageType.VENUE" :pageId="venue.id" />
 		</template>
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -43,7 +43,7 @@ async function load(params: RouteParams): Promise<VenueDto> {
 			} else {
 				return await $api.venues.getVenueByName(name.replace(/_/g, ' '), server);
 			}
-		} catch (e) {			
+		} catch (e) {
 			notifyError(e);
 			throw e;
 			void $router.replace('/');
@@ -66,7 +66,7 @@ async function load(params: RouteParams): Promise<VenueDto> {
 	mixins: [
 		createMetaMixin(function(this: PageVenue) {
 			const result: MetaOptions = {
-				title: `${this.venue.name} — Chaos Archives`,
+				title: `${this.venue.name} — ${this.$siteName}`,
 				meta: {}
 			};
 
@@ -89,7 +89,7 @@ async function load(params: RouteParams): Promise<VenueDto> {
 })
 export default class PageVenue extends Vue {
 	readonly PageType = PageType;
-	
+
 	venue: VenueDto = new VenueDto();
 
 	setContent(venue: VenueDto) {

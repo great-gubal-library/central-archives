@@ -119,7 +119,7 @@ async function load(
   mixins: [
     createMetaMixin(function (this: PageCommunity) {
       const result: MetaOptions = {
-        title: `${this.community.name} — Chaos Archives`,
+        title: `${this.community.name} — ${this.$siteName}`,
         meta: {},
       };
 

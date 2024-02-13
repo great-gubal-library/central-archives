@@ -10,7 +10,7 @@
 			<thumb-gallery :images="event.images" />
 		</template>
 		<report-violation-section :pageType="PageType.EVENT" :pageId="eventId" />
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -72,7 +72,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 	mixins: [
 		createMetaMixin(function(this: PageEvent) {
 			const result: MetaOptions = {
-				title: `${this.event.title} — Chaos Archives`,
+				title: `${this.event.title} — ${this.$siteName}`,
 				meta: {}
 			};
 
@@ -95,7 +95,7 @@ async function load(params: RouteParams): Promise<{event: EventDto, eventId: num
 })
 export default class PageEvent extends Vue {
 	readonly PageType = PageType;
-	
+
 	eventId = -1;
 	event = {} as EventDto;
 

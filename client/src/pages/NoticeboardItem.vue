@@ -8,7 +8,7 @@
 			<noticeboard-item-view :noticeboard-item="noticeboardItem" />
     	<report-violation-section :pageType="PageType.NOTICEBOARD_ITEM" :pageId="noticeboardItem.id" />
 		</template>
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -22,6 +22,7 @@ import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
+import { useSiteName } from 'src/boot/region';
 
 const $api = useApi();
 const $router = useRouter();
@@ -36,7 +37,7 @@ async function load(params: RouteParams): Promise<NoticeboardItemDto> {
 
 	try {
 		const noticeboardItem = await $api.noticeboard.getNoticeboardItem(id);
-		document.title = `${noticeboardItem.title} — Chaos Archives`;
+		document.title = `${noticeboardItem.title} — ${useSiteName()}`;
 		return noticeboardItem;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
@@ -67,9 +68,9 @@ async function load(params: RouteParams): Promise<NoticeboardItemDto> {
 })
 export default class PageNoticeboardItem extends Vue {
 	readonly PageType = PageType;
-	
+
 	noticeboardItem: NoticeboardItemDto = new NoticeboardItemDto();
-	
+
 	setContent(noticeboardItem: NoticeboardItemDto) {
 		this.noticeboardItem = noticeboardItem;
 	}

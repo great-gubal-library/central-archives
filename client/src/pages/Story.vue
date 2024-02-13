@@ -8,7 +8,7 @@
 			<story-view :story="story" />
     	<report-violation-section :pageType="PageType.STORY" :pageId="story.id" />
 		</template>
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -22,6 +22,7 @@ import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
+import { useSiteName } from 'src/boot/region';
 
 const $api = useApi();
 const $router = useRouter();
@@ -36,7 +37,7 @@ async function load(params: RouteParams): Promise<StoryDto> {
 
 	try {
 		const story = await $api.stories.getStory(id);
-		document.title = `${story.title} — Chaos Archives`;
+		document.title = `${story.title} — ${useSiteName()}`;
 		return story;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
@@ -67,9 +68,9 @@ async function load(params: RouteParams): Promise<StoryDto> {
 })
 export default class PageStory extends Vue {
 	readonly PageType = PageType;
-	
+
 	story: StoryDto = new StoryDto();
-	
+
 	setContent(story: StoryDto) {
 		this.story = story;
 	}

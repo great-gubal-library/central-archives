@@ -25,7 +25,7 @@
 			</section>
     	<report-violation-section :pageType="PageType.IMAGE" :pageId="image.id" />
 		</template>
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -41,6 +41,7 @@ import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
 import ReportViolationSection from 'src/components/common/ReportViolationSection.vue';
 import LinkField from 'src/components/common/LinkField.vue';
+import { useSiteName } from 'src/boot/region';
 
 const $api = useApi();
 const $router = useRouter();
@@ -55,7 +56,7 @@ async function load(params: RouteParams): Promise<ImageDto> {
 
 	try {
 		const image = await $api.images.getImage(id);
-		document.title = `${image.title} — Chaos Archives`;
+		document.title = `${image.title} — ${useSiteName()}`;
 		return image;
 	} catch (e) {
 		if (errors.getStatusCode(e) === 404) {
@@ -103,7 +104,7 @@ async function load(params: RouteParams): Promise<ImageDto> {
 })
 export default class PageImage extends Vue {
 	readonly PageType = PageType;
-	
+
 	image = {} as ImageDto;
 
 	setContent(image: ImageDto) {

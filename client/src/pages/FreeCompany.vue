@@ -8,9 +8,9 @@
 		</template>
 		<template v-else-if="notFound">
 			<h2>Free Company not found</h2>
-			<p>The Free Company {{name}} ({{server}}) is not registered on Chaos Archives.</p>
+			<p>The Free Company {{name}} ({{server}}) is not registered on {{$siteName}}.</p>
 		</template>
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -117,7 +117,7 @@ async function load(params: RouteParams): Promise<Content> {
 })
 export default class PageFreeCompany extends Vue {
 	readonly PageType = PageType;
-	
+
 	name = '';
 	server = '';
 	fc: FreeCompanyDto = new FreeCompanyDto();

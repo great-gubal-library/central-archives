@@ -18,7 +18,7 @@
       </q-item>
     </q-list>
     <p v-else>
-      There are no noticeboard items on Chaos Archives. Yet!
+      There are no noticeboard items on {{$siteName}}. Yet!
     </p>
   </div>
 </template>

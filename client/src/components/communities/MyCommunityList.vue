@@ -22,7 +22,7 @@
       </q-item>
     </q-list>
     <p v-else>
-      You are not a member of any community on Chaos Archives. Yet!
+      You are not a member of any community on {{$siteName}}. Yet!
     </p>
   </div>
 </template>
@@ -45,7 +45,7 @@ class Props {
 })
 export default class MyCommunityList extends Vue.with(Props) {
   readonly MembershipStatus = MembershipStatus;
-  
+
   getLink(community: MyCommunitySummaryDto) {
     return `/community/${community.name.replace(/ /g, '_')}`;
   }

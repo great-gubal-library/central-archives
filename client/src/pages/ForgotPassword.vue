@@ -29,7 +29,7 @@
     <section v-else class="page-forgot-password__form">
       <p>
         Your password reset link has been sent. Check your inbox at
-        <strong>{{ email }}</strong>. If you are registered on Chaos Archives, you will receive an email
+        <strong>{{ email }}</strong>. If you are registered on {{$siteName}}, you will receive an email
         with further instructions.
       </p>
       <p>You can now close this page.</p>

@@ -8,6 +8,7 @@ declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $region: SiteRegion;
     $regionConfig: RegionConfig;
+    $siteName: string;
   }
 }
 
@@ -21,8 +22,26 @@ function determineRegion(): SiteRegion {
   return region;
 }
 
+let region = SiteRegion.GLOBAL;
+let regionConfig = SharedConstants.regions[region];
+
+export function useRegion() {
+  return region;
+}
+
+export function useRegionConfig() {
+  return regionConfig;
+}
+
+export function useSiteName() {
+  return regionConfig.name;
+}
+
 export default boot(({ app }) => {
-  const region = determineRegion();
+  region = determineRegion();
+  regionConfig = SharedConstants.regions[region];
   app.config.globalProperties.$region = region;
-  app.config.globalProperties.$regionConfig = SharedConstants.regions[region];
+  app.config.globalProperties.$regionConfig = regionConfig;
+  app.config.globalProperties.$siteName = regionConfig.name;
+  document.title = regionConfig.name;
 });

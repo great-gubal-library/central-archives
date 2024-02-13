@@ -3,10 +3,10 @@
     <h2>Sign Up</h2>
     <q-form v-if="!signedUp" @submit="onSubmit">
       <p>
-        Welcome to Chaos Archives. Please fill in the form below to create your
+        Welcome to ${this.$siteName}. Please fill in the form below to create your
         account and register your first character.
       </p>
-      <p>
+      <p v-if="$region !== 'global'">
         Signups are limited to the <strong>Europe</strong> region.
       </p>
       <section class="page-signup__form-controls">

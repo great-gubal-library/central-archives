@@ -109,7 +109,7 @@ async function load(params: RouteParams): Promise<LoadResult> {
   mixins: [
     createMetaMixin(function (this: PagePlayerProfile) {
       return {
-        title: this.mine && !this.enabled ? 'My Player Profile — Chaos Archives' : `${this.playerProfile.name} — Chaos Archives`,
+        title: this.mine && !this.enabled ? `My Player Profile — ${this.$siteName}` : `${this.playerProfile.name} — ${this.$siteName}`,
       };
     }),
   ],
@@ -165,7 +165,7 @@ export default class PagePlayerProfile extends Vue {
         } catch (e) {
           notifyError(e);
         }
-      });    
+      });
   }
 }
 </script>

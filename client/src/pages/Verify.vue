@@ -4,14 +4,14 @@
       <template v-if="verifyingAccount">
         <h2>Account Verification</h2>
         <p>
-          Before you can post your own content on Chaos Archives, you will need to verify your email address and
+          Before you can post your own content on {{$siteName}}, you will need to verify your email address and
           ownership of your character.
         </p>
       </template>
       <template v-else>
         <h2>Character Verification</h2>
         <p>
-          Before you can post content on Chaos Archives under this character's name, you will need to verify your
+          Before you can post content on {{$siteName}} under this character's name, you will need to verify your
           ownership.
         </p>
       </template>
@@ -20,7 +20,7 @@
       <h2>Verification Complete</h2>
       <p>
         Congratulations! Your email address and character have been successfully verified. You may now fill in your
-        character profile and post content on Chaos Archives.
+        character profile and post content on {{$siteName}}.
       </p>
     </template>
     <q-card class="page-verify__card" v-if="verifyingAccount">
