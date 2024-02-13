@@ -1,18 +1,26 @@
-import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { Character } from './character.entity';
 import { CommunityTag } from './community-tag.entity';
 import { Image } from './image.entity';
 import { SearchFields } from './search-fields';
+import { Region } from '@app/shared/enums/region.enum';
 
 @Entity()
+@Unique('uq_community_name_region', ['name', 'region'])
 @Index(SearchFields.community, { fulltext: true })
 export class Community extends BasicEntity {
   @Column({
     nullable: false,
-    unique: true,
   })
   name: string;
+
+  @Column({
+    nullable: false,
+    type: 'enum',
+    enum: Region,
+  })
+  region: Region;
 
   @ManyToOne(() => Character, {
     nullable: false,

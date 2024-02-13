@@ -14,14 +14,14 @@ import { BadRequestException, ConflictException, ForbiddenException, Injectable,
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
-import { Connection, EntityManager, FindOneOptions, Repository } from 'typeorm';
+import { DataSource, EntityManager, FindOneOptions, Repository } from 'typeorm';
 import { assertUserCharacterId, checkCarrdProfile } from '../../../common/api-checks';
 import { ImagesService } from '../images/images.service';
 
 @Injectable()
 export class CommunitiesService {
   constructor(
-    private connection: Connection,
+    private connection: DataSource,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
     @InjectRepository(Community) private communityRepo: Repository<Community>,
     @InjectRepository(CommunityMembership) private communityMembershipRepo: Repository<CommunityMembership>,
@@ -217,6 +217,7 @@ export class CommunitiesService {
 
       const community = new Community();
       community.owner = character;
+      community.region = character.server.region;
       community.tags = [];
       await this.saveInternal(em, community, communityDto, user);
 
