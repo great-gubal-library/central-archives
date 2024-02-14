@@ -76,7 +76,7 @@ export class EventsService {
           },
           verifiedAt: Not(IsNull()),
         },
-        relations: ['user'],
+        relations: ['user', 'server'],
       });
 
       if (!character) {
@@ -84,7 +84,7 @@ export class EventsService {
       }
 
       const event = new Event();
-      event.region = Region.EU; // temp
+      event.region = character.server.region;
       event.locations = [];
       event.announcements = Promise.resolve([]);
       event.owner = character;
