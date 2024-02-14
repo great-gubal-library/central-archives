@@ -1,5 +1,5 @@
 <template>
-  <q-layout :class="`region-${$region}`" view="hHh Lpr fff">
+  <q-layout view="hHh Lpr fff">
     <q-header elevated>
       <q-toolbar>
         <div class="layout__filler">
@@ -282,10 +282,18 @@ $max-layout-width: 1280px;
   background: #10579e;
 }
 
+.region-na .q-header .q-toolbar {
+  background: #107777;
+}
+
 .layout__nav-links {
   background: linear-gradient(to bottom, #10579e, #1f70c1);
   border-top: 1px solid rgba(255, 255, 255, 0.18);
   text-align: center;
+}
+
+.region-na .layout__nav-links {
+  background: linear-gradient(to bottom, #107777, #1f9090);
 }
 
 .layout__nav-links a {
@@ -303,12 +311,16 @@ $max-layout-width: 1280px;
   color: rgb(192, 192, 192);
 }
 
-.q-drawer {
+.region-eu .q-drawer {
   background: #08589766;
 }
 
+.region-na .q-drawer {
+  background: #118282;
+}
+
 @media screen and (max-width: 1023px) {
-  .q-drawer {
+  .region-eu .q-drawer {
     background: #1162ad;
   }
 }
@@ -339,6 +351,10 @@ $max-layout-width: 1280px;
   background: #016097;
 }
 
+.region-na .layout__create-content-list {
+  background: #018790;
+}
+
 .layout__page-container {
   max-width: 800px;
   margin: auto;
@@ -363,6 +379,10 @@ $max-layout-width: 1280px;
 
 .q-footer {
   background: rgb(31, 89, 147);
+}
+
+.region-na .q-footer {
+  background: rgb(31, 108, 108);
 }
 
 .layout__footer {
