@@ -2,11 +2,12 @@ import { UserInfo } from '@app/auth/model/user-info';
 import { Character, User } from '@app/entity';
 import { PlayerProfileEditDto } from '@app/shared/dto/player-profiles/player-profile-edit.dto';
 import { PlayerProfileDto } from '@app/shared/dto/player-profiles/player-profile.dto';
+import { Region, SiteRegion } from '@app/shared/enums/region.enum';
 import { Role } from '@app/shared/enums/role.enum';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { checkCarrdProfile } from 'apps/chaosarchives/src/common/api-checks';
-import { DataSource, Not, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class PlayerProfilesService {
@@ -16,7 +17,7 @@ export class PlayerProfilesService {
     private dataSource: DataSource,
   ) {}
 
-  async getPlayerProfile(userId: number): Promise<PlayerProfileDto> {
+  async getPlayerProfile(userId: number, region: SiteRegion): Promise<PlayerProfileDto> {
     const user = await this.userRepo.findOne({
       where: {
         id: userId,
@@ -30,13 +31,21 @@ export class PlayerProfilesService {
       throw new NotFoundException('Player profile not found.');
     }
 
+    const charactersWhere: FindOptionsWhere<Character> = {
+      user: {
+        id: userId,
+      },
+      showInPlayerProfile: true,
+    };
+
+    if (region !== SiteRegion.GLOBAL) {
+      charactersWhere.server = {
+        region: region as string as Region,
+      };
+    }
+
 		const characters = await this.characterRepo.find({
-			where: {
-				user: {
-					id: userId,
-				},
-				showInPlayerProfile: true,
-			},
+			where: charactersWhere,
 			order: {
 				'name': 'ASC',
 			},
@@ -58,7 +67,7 @@ export class PlayerProfilesService {
 		};
   }
 
-	async createOwnPlayerProfile(userInfo: UserInfo): Promise<PlayerProfileDto> {
+	async createOwnPlayerProfile(userInfo: UserInfo, region: SiteRegion): Promise<PlayerProfileDto> {
 		await this.dataSource.transaction(async (em) => {
 			const userRepo = em.getRepository(User);
 			const user = await userRepo.findOne({
@@ -82,7 +91,7 @@ export class PlayerProfilesService {
 			await userRepo.save(user);
     });
 
-		return this.getPlayerProfile(userInfo.id);
+		return this.getPlayerProfile(userInfo.id, region);
 	}
 
   async updateOwnPlayerProfile(playerProfileDto: PlayerProfileEditDto, userInfo: UserInfo): Promise<void> {

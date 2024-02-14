@@ -6,20 +6,22 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@
 import { PlayerProfilesService } from './player-profiles.service';
 import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
 import { Role } from '@app/shared/enums/role.enum';
+import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Controller('player-profiles')
 export class PlayerProfilesController {
 	constructor(private service: PlayerProfilesService) {}
 
   @Get(':id')
-  async getPlayerProfile(@Param('id', ParseIntPipe) userId: number): Promise<PlayerProfileDto> {
-    return this.service.getPlayerProfile(userId);
+  async getPlayerProfile(@Param('id', ParseIntPipe) userId: number, @ClientRegion() region: SiteRegion): Promise<PlayerProfileDto> {
+    return this.service.getPlayerProfile(userId, region);
   }
 
   @Post()
   @RoleRequired(Role.USER)
-  async createOwnPlayerProfile(@CurrentUser() user: UserInfo): Promise<PlayerProfileDto> {
-    return this.service.createOwnPlayerProfile(user);
+  async createOwnPlayerProfile(@CurrentUser() user: UserInfo, @ClientRegion() region: SiteRegion): Promise<PlayerProfileDto> {
+    return this.service.createOwnPlayerProfile(user, region);
   }
 
   @Put()
