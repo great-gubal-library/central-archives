@@ -178,7 +178,7 @@ export default class MainLayout extends Vue {
   readonly navbarLinks = [
     { label: 'About', to: '/about' },
     { label: 'Rules', to: '/rules' },
-    { label: 'Wiki', to: '/wiki/Chaos_Archives_Wiki' },
+    { label: 'Wiki', to: '/wiki/Archives_Wiki' },
     { label: 'Contact', to: '/contact' },
   ];
 
