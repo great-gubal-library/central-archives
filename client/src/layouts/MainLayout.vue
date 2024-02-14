@@ -273,6 +273,7 @@ $max-layout-width: 1280px;
   filter: brightness(1.05);
   width: 540px;
   max-width: 100%;
+  max-height: 74px;
   transition: all 0.3s ease;
 }
 
