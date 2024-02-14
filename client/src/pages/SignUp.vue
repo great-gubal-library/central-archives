@@ -3,7 +3,7 @@
     <h2>Sign Up</h2>
     <q-form v-if="!signedUp" @submit="onSubmit">
       <p>
-        Welcome to ${this.$siteName}. Please fill in the form below to create your
+        Welcome to {{$siteName}}. Please fill in the form below to create your
         account and register your first character.
       </p>
       <p v-if="$region !== 'global'">

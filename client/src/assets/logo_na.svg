@@ -227,14 +227,25 @@
          id="path1331" />
     </g>
   </g>
-  <text
-     xml:space="preserve"
-     style="font-weight:bold;font-size:1.4956px;line-height:1.25;font-family:'Roboto Condensed';-inkscape-font-specification:'Roboto Condensed,  Bold';letter-spacing:0.0412847px;fill:#ffeeaa;fill-opacity:1;stroke-width:0.0934745"
-     x="41.970642"
-     y="7.0283461"
-     id="text92731-3"><tspan
-       id="tspan92729"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Oswald;-inkscape-font-specification:Oswald;fill:#ffeeaa;fill-opacity:1;stroke-width:0.0934745"
-       x="41.970642"
-       y="7.0283461">BETA</tspan></text>
+  <g
+     aria-label="BETA"
+     id="text92731-3"
+     style="font-weight:bold;font-size:1.4956px;line-height:1.25;font-family:'Roboto Condensed';-inkscape-font-specification:'Roboto Condensed,  Bold';letter-spacing:0.0412847px;fill:#ffeeaa;stroke-width:0.0934745">
+    <path
+       d="m 42.064865,7.0283461 v -1.211436 h 0.278181 q 0.08226,0 0.142082,0.017947 0.06132,0.017947 0.101701,0.055337 0.04038,0.03739 0.05982,0.095718 0.01944,0.056833 0.01944,0.134604 0,0.07478 -0.01944,0.1301172 -0.01795,0.053842 -0.05683,0.085249 -0.03739,0.031408 -0.09721,0.040381 0.07328,0.016452 0.118153,0.056833 0.04487,0.038886 0.06581,0.1017008 0.02243,0.06132 0.02243,0.1480644 0,0.077771 -0.01795,0.142082 -0.01795,0.064311 -0.05683,0.1091788 -0.03739,0.044868 -0.09721,0.070293 -0.05833,0.02393 -0.139091,0.02393 z m 0.169003,-0.1211436 h 0.113665 q 0.113666,0 0.151056,-0.052346 0.03889,-0.053842 0.03889,-0.171994 0,-0.076276 -0.02094,-0.127126 -0.01944,-0.052346 -0.06431,-0.077771 -0.04337,-0.026921 -0.118152,-0.026921 h -0.100205 z m 0,-0.5847796 h 0.100205 q 0.07179,0 0.11217,-0.019443 0.04038,-0.020938 0.05683,-0.065806 0.01645,-0.044868 0.01645,-0.1166568 0,-0.083754 -0.02542,-0.1211436 -0.02542,-0.03739 -0.07927,-0.046364 -0.05384,-0.010469 -0.140586,-0.010469 h -0.04038 z"
+       style="font-weight:normal;font-family:Oswald;-inkscape-font-specification:Oswald"
+       id="path342" />
+    <path
+       d="m 42.889844,7.0283461 v -1.211436 h 0.469619 v 0.1256304 h -0.300616 v 0.4008208 h 0.243783 v 0.119648 h -0.243783 v 0.4441932 h 0.303607 v 0.1211436 z"
+       style="font-weight:normal;font-family:Oswald;-inkscape-font-specification:Oswald"
+       id="path344" />
+    <path
+       d="M 43.672946,7.0283461 V 5.9425405 H 43.468049 V 5.8169101 h 0.572814 v 0.1256304 h -0.198914 v 1.0858056 z"
+       style="font-weight:normal;font-family:Oswald;-inkscape-font-specification:Oswald"
+       id="path346" />
+    <path
+       d="m 44.130006,7.0283461 0.257244,-1.211436 h 0.16302 l 0.258739,1.211436 H 44.64898 l -0.05534,-0.3051024 h -0.246774 l -0.05833,0.3051024 z m 0.239296,-0.426246 h 0.201906 l -0.1017,-0.545894 z"
+       style="font-weight:normal;font-family:Oswald;-inkscape-font-specification:Oswald"
+       id="path348" />
+  </g>
 </svg>
