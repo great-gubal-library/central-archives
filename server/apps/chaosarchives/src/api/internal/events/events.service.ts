@@ -185,7 +185,7 @@ export class EventsService {
 
     const locationServers = await em.getRepository(Server).find({
       where: {
-        name: In(eventDto.locations.map(location => location.server)),
+        name: In(eventDto.locations.map((location) => location.server)),
       },
     });
 
@@ -207,7 +207,7 @@ export class EventsService {
         throw new BadRequestException(`Invalid location link: ${location.link}`);
       }
 
-      const server = locationServers.find(s => s.name === dtoLocation.server);
+      const server = locationServers.find((s) => s.name === dtoLocation.server);
 
       if (!server) {
         throw new BadRequestException(`Server ${dtoLocation.server} not found`);
@@ -285,7 +285,9 @@ export class EventsService {
   private async notifySteward(event: Event): Promise<void> {
     try {
       this.logger.debug(`Notifying Steward about event ${event.id} change`);
-      await firstValueFrom(this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/event`, { eventId: event.id }));
+      await firstValueFrom(
+        this.httpService.post(`${serverConfiguration.stewardWebhookUrl}/event`, { eventId: event.id }),
+      );
     } catch (e) {
       if (e instanceof Error) {
         this.logger.error(e.message, e.stack);
@@ -317,9 +319,7 @@ export class EventsService {
     // Not cached - fetch and cache
     const [ccEvents] = await Promise.all([this.ccService.fetchEvents()]);
 
-    const events = [...ccEvents].sort((e1, e2) =>
-      utils.compareNumbers(e1.startDateTime, e2.startDateTime),
-    );
+    const events = [...ccEvents].sort((e1, e2) => utils.compareNumbers(e1.startDateTime, e2.startDateTime));
     await this.saveEvents(events);
     await this.redisService.set('eventsTimestamp_' + region, Date.now().toString());
     return {
@@ -343,9 +343,7 @@ export class EventsService {
     ];
 
     if (region !== SiteRegion.GLOBAL) {
-      conditions.push({
-        region: region as string as Region,
-      });
+      conditions.forEach((condition) => (condition.region = region as string as Region));
     }
 
     const events = await this.eventRepo.find({
@@ -485,7 +483,7 @@ export class EventsService {
     }));
   }
 
-  async getByMonth(year: number, month: number): Promise<EventSummaryDto[]> {
+  async getByMonth(region: SiteRegion, year: number, month: number): Promise<EventSummaryDto[]> {
     const startOfMonth = DateTime.fromObject(
       {
         year,
@@ -499,7 +497,7 @@ export class EventsService {
 
     const endOfMonth = startOfMonth.plus({ months: 1 });
 
-    const events = await this.eventRepo
+    const query = this.eventRepo
       .createQueryBuilder('event')
       .leftJoinAndSelect('event.locations', 'location')
       .leftJoinAndSelect('location.server', 'server')
@@ -509,9 +507,13 @@ export class EventsService {
       .orderBy({
         'event.startDateTime': 'ASC',
         'event.createdAt': 'ASC',
-      })
-      .getMany();
+      });
 
+    if (region !== SiteRegion.GLOBAL) {
+      query.andWhere('event.region = :region', { region });
+    }
+
+    const events = await query.getMany();
     return events.map((event) => this.toEventSummaryDto(event));
   }
 
@@ -564,14 +566,17 @@ export class EventsService {
             width: banner.width,
             height: banner.height,
           }),
-      locations: event.locations.map(location => new EventLocationDto({
-        id: location.id,
-        name: location.name,
-        address: location.address,
-        server: location.server.name,
-        tags: location.tags,
-        link: location.link,
-      })),
+      locations: event.locations.map(
+        (location) =>
+          new EventLocationDto({
+            id: location.id,
+            name: location.name,
+            address: location.address,
+            server: location.server.name,
+            tags: location.tags,
+            link: location.link,
+          }),
+      ),
     };
 
     if (!edit) {

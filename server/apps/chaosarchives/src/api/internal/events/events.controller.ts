@@ -51,10 +51,11 @@ export class EventsController {
 
   @Get('/month/:year/:month')
   async getByMonth(
+    @ClientRegion() region: SiteRegion,
     @Param('year', ParseIntPipe) year: number,
     @Param('month', ParseIntPipe) month: number,
   ): Promise<EventSummaryDto[]> {
-    return this.eventsService.getByMonth(year, month);
+    return this.eventsService.getByMonth(region, year, month);
   }
 
   @Get('/:id')
