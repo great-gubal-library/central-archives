@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts">
+import { SiteRegion } from '@app/shared/enums/region.enum';
 import { notifyError } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 
@@ -60,14 +61,18 @@ export default class WorldSelect extends Vue.with(Props) {
   async created() {
     if (!serverOptionsLoaded) {
       try {
-        const datacenters = await this.$api.servers.getDatacenters();
+        let datacenters = await this.$api.servers.getDatacenters();
+
+        if (this.$region !== SiteRegion.GLOBAL) {
+          datacenters = datacenters.filter(dc => dc.region as string === this.$region);
+        }
 
         datacenters.forEach(dc => {
           serverOptions.push({
             group: dc.name,
             disable: true,
           });
-			
+
           dc.servers.forEach(server => {
             serverOptions.push({
               label: server,
