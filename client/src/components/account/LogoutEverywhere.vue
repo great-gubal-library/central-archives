@@ -3,8 +3,7 @@
     <h3>Log Out on Other Devices</h3>
     <p>
       To protect your privacy, {{$siteName}} does not store information about your login history. This button will log
-      you out on all devices except this browser window, including any third-party programs logged into your Chaos
-      Archives account.
+      you out on all devices except this browser window, including any third-party programs logged into your {{$siteName}} account.
     </p>
     <q-btn color="negative" label="Log Out on Other Devices" @click="onSubmit" />
     <q-inner-loading :showing="loading" />
