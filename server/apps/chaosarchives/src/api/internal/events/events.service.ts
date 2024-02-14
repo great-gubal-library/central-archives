@@ -217,6 +217,7 @@ export class EventsService {
     }
 
     event.locations = locations;
+    event.region = locations[0].server.region;
 
     // Update announcements; O(n^2) filters used for code clarity, since number of notifications is small
     const dtoAnnouncementIds = eventDto.announcements.map((notification) => notification.id).filter((id) => !!id);
