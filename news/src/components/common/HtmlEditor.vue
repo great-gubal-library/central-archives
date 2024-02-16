@@ -70,6 +70,7 @@ const TINYMCE_OPTIONS = {
   image_description: false,
   image_advtab: true,
   link_title: false,
+  relative_urls: false,
   block_formats: 'Paragraph=p; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6',
   font_family_formats: FONT_OPTION,
   style_formats: [
