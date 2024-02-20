@@ -22,9 +22,15 @@
 		<section v-html="faq.replace(/%SITENAME%/g, $siteName)"></section>
 		<h3>Useful Links</h3>
 		<dl>
-			<dt><a href="https://discord.gg/rCHdUdSVsr" target="_blank">FFXIV Chaos Roleplaying Community <q-icon name="discord" /></a></dt>
-			<dd>Our Discord server.</dd>
-			<dt><a href="https://ffxiv-roleplayers.com/topic/1674-the-role-play-handbook/" target="_blank">The Role-Play Handbook <q-icon class="external-link-icon" name="launch" /></a></dt>
+      <template v-if="$region === 'eu'">
+        <dt><a href="https://discord.gg/rCHdUdSVsr" target="_blank">FFXIV Chaos Roleplaying Community <q-icon name="discord" /></a></dt>
+        <dd>Our Discord server.</dd>
+      </template>
+      <template v-if="$region === 'na'">
+        <dt><a href="https://discord.com/invite/ynCTGcE" target="_blank">FFXIV Roleplaying <q-icon name="discord" /></a></dt>
+        <dd>Our Discord server.</dd>
+      </template>
+			<dt><router-link to="/wiki/The_Role-Play_Handbook">The Role-Play Handbook</router-link></dt>
 			<dd>Introduction to RP in MMO games, and in FFXIV in particular.</dd>
 			<dt><router-link to="/wiki/Getting_Started_with_FFXIV_RP_for_WoW_RPers">Getting Started with FFXIV RP for WoW RPers</router-link></dt>
 			<dd>Read this if you're already familiar with RP in World of Warcraft.</dd>

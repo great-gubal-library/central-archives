@@ -44,5 +44,6 @@ export default boot(({ app }) => {
   app.config.globalProperties.$regionConfig = regionConfig;
   app.config.globalProperties.$siteName = regionConfig.name;
   document.title = regionConfig.name;
+  document.querySelectorAll('meta[name=description]').forEach(meta => meta.setAttribute('content', regionConfig.shortDescription));
   document.body.classList.add(`region-${region}`);
 });

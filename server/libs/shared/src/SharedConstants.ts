@@ -19,18 +19,21 @@ export default Object.freeze({
     [SiteRegion.EU]: Object.freeze({
       name: 'Chaos Archives',
       description: 'Chaos Archives, the FFXIV roleplay portal to Chaos EU',
+      shortDescription: 'FFXIV roleplay portal to Chaos EU',
       domain: 'chaosarchives.org',
       datacenters: [ 'Chaos', 'Light' ],
     }),
     [SiteRegion.NA]: Object.freeze({
       name: 'Crystal Archives',
       description: 'Crystal Archives, the FFXIV roleplay portal to Crystal NA',
+      shortDescription: 'FFXIV roleplay portal to Crystal NA',
       domain: 'crystalarchives.org',
       datacenters: [ 'Aether', 'Crystal', 'Dynamis', 'Primal' ],
     }),
     [SiteRegion.GLOBAL]: Object.freeze({
       name: 'Roleplay Profiles',
       description: 'Roleplay Profiles',
+      shortDescription: 'Roleplay Profiles',
       domain: 'roleplayprofiles.org',
       datacenters: [  ],
     }),

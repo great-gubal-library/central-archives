@@ -16,7 +16,7 @@ To preserve the fantasy atmosphere of the game, please refrain from posting real
 
 ##### Politics, Religion, and Bigotry
 
-The Chaos roleplay scene is diverse. Please stay civil and keep real-world political and religious disagreements out of Eorzea. Real-life racism, sexism, homophobia, and other material that is culturally offensive in the real world is forbidden.
+The FFXIV roleplay scene is diverse. Please stay civil and keep real-world political and religious disagreements out of Eorzea. Real-life racism, sexism, homophobia, and other material that is culturally offensive in the real world is forbidden.
 
 (Note that this doesn’t include in-character racism and politics. Your character can well distrust a particular Eorzean race or be an avid proponent of an in-universe political ideology, for plenty of reasons! Nonetheless, if it’s part of the character description, there needs to be an extremely clear <a href="/rules#ic-ooc">IC/OOC</a> line.)
 
