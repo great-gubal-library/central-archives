@@ -1,9 +1,9 @@
 server:
   port: 8111
   frontendRoot:
-    eu: 'http://dev.chaosarchives.org:8080'
-    na: 'http://dev.crystalarchives.org:8080'
-    global: 'http://dev.roleplayprofiles.org:8080'
+    eu: 'http://local.chaosarchives.org:8080'
+    na: 'http://local.crystalarchives.org:8080'
+    global: 'http://local.roleplayprofiles.org:8080'
   newsRoot: 'http://localhost:8081'
   maxUploadSpacePerUserMiB: 500
   stewardWebhookPort: 8112
