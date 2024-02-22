@@ -84,3 +84,7 @@ services:
       - '${CHAOSARCHIVES_EXTERNAL_PORT:-8111}:8111'
     healthcheck:
       test: [ 'CMD-SHELL', 'curl -f http://localhost:8111/api | grep -F "Hear. Feel. Think."' ]
+      interval: 5m
+      timeout: 30s
+      retries: 3
+      start_period: 40s
