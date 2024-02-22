@@ -6,16 +6,24 @@ The prototype of the RP portal for the Chaos EU datacenter in FFXIV.
 
 ## Building
 
+### Prerequisites
+
+You need to install the Corepack wrapper for the Yarn package manager.
+
+```bash
+sudo corepack enable
+```
+
 ### Client
 
-```
+```bash
 cd client
-quasar build
+yarn build
 ```
 
 ### Server
 
-```
+```bash
 cd server
 yarn docker:build
 ```
@@ -30,7 +38,7 @@ Just copy `dist/spa` to your web root or set up your web server to serve it dire
 
 ### Server
 
-```
+```bash
 cd server
 yarn docker:deploy
 ```

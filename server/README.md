@@ -2,6 +2,14 @@
 
 The RP portal to Chaos EU
 
+### Prerequisites
+
+You need to install the Corepack wrapper for the Yarn package manager.
+
+```
+sudo corepack enable
+```
+
 ## Install the dependencies
 ```bash
 yarn install
@@ -11,6 +19,12 @@ yarn install
 ```bash
 docker compose up -d mariadb redis
 ```
+
+### Install minio (S3 compatible object storage server) for development mode
+```bash
+docker compose up -d minio
+```
+
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 ```bash
