@@ -96,6 +96,11 @@ module.exports = configure(function (ctx) {
       port: 8080,
       open: true, // opens browser window automatically
 
+      headers: {
+        // unsafe-eval is only used in dev mode; disable it in production
+        'Content-Security-Policy': "script-src 'self' 'unsafe-eval' 'cdn.tiny.cloud'; frame-ancestors 'none';",
+      },
+
       proxy: {
         '/api': {
           target: 'http://localhost:8111'
