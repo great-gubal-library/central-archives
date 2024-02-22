@@ -38,6 +38,15 @@ lerna-debug.log*
 /volumes
 docker-compose-local.yml
 
+# Yarn Modern
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # config
 /config/local.yml
 /config/production.yml

@@ -143,5 +143,6 @@
       "@app/security/(.*)": "<rootDir>/libs/security/src/$1",
       "@app/security": "<rootDir>/libs/security/src"
     }
-  }
+  },
+  "packageManager": "yarn@4.1.0"
 }

@@ -8,3 +8,5 @@ docker-compose*
 ci_cd
 build*
 volumes
+.yarn/cache
+.yarn/install-state.gz
