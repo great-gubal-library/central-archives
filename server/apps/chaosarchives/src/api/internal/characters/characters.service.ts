@@ -27,7 +27,7 @@ import { ImagesService } from '../images/images.service';
 import { VisibilityInPlayerProfile } from '@app/shared/enums/visibility-in-player-profile.enum';
 import { getRaceByName } from '@app/shared/enums/race.enum';
 import { LodestoneService } from '../lodestone/lodestone.service';
-import { Region, SiteRegion } from '@app/shared/enums/region.enum';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class CharactersService {
