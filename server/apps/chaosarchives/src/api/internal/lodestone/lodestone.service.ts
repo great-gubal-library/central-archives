@@ -15,7 +15,7 @@ export class LodestoneService {
   private readonly logger = new Logger('LodestoneService');
 
   constructor() {
-    // Monkey patch; filed upstream at https://github.com/xivapi/nodestone/issues/9\
+    // Monkey patch; filed upstream at https://github.com/xivapi/nodestone/issues/10
     const serverRegex = '(?P<World>\\w*)\\s+\\[(?P<DC>\\w*)\\]';
     characterSearch.ENTRY.SERVER.regex = serverRegex;
     characterProfile.SERVER.regex = serverRegex;
