@@ -428,10 +428,6 @@ export class CharactersService {
       throw new BadRequestException('Invalid character');
     }
 
-    if (region !== SiteRegion.GLOBAL && !SharedConstants.regions[region].datacenters.includes(characterInfo.DC)) {
-      throw new BadRequestException('This character is from the wrong datacenter');
-    }
-
     if (otherCharacter && otherCharacter.name === characterInfo.Name) {
       throw new BadRequestException(
         'You have already registered this character. To update their Lodestone info, ' +
@@ -447,7 +443,11 @@ export class CharactersService {
     });
 
     if (!server) {
-      throw new BadRequestException('Invalid server');
+      throw new BadRequestException('Unknown world server');
+    }
+
+    if (region !== SiteRegion.GLOBAL && server.region !== region as string) {
+      throw new BadRequestException(`This character is from the wrong region (expected: ${region}, got: ${server.region})`);
     }
 
     const race = getRaceByName(characterInfo.Race);

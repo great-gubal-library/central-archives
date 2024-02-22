@@ -18,7 +18,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotImplementedException,
   ParseIntPipe,
   Post,
   Put,
