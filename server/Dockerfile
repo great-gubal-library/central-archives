@@ -3,7 +3,7 @@
 FROM node:20-slim
 WORKDIR /usr/src/app
 
-RUN npm install -g @nestjs/cli && rm -rf /root/npm/_cacache
+RUN apt update && apt install -y curl && npm install -g @nestjs/cli && rm -rf /root/npm/_cacache
 
 # Switch to unprivileged user
 RUN groupmod -g 1000 node && usermod -u 1000 -g 1000 node && chown -R node.node /usr/src/app

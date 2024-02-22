@@ -82,3 +82,5 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
     ports:
       - '${CHAOSARCHIVES_EXTERNAL_PORT:-8111}:8111'
+    healthcheck:
+      test: [ 'CMD-SHELL', 'curl -f http://localhost:8111/api | grep -F "Hear. Feel. Think."' ]
