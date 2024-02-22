@@ -1,7 +1,7 @@
 import { UserInfo } from '@app/auth/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, Community, Event, FreeCompany, Image, Venue } from '@app/entity';
-import { hashFile } from '@app/security';
+import { hashBuffer } from '@app/security';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { BannerCheckResultDto } from '@app/shared/dto/image/banner-check-result.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';
@@ -450,7 +450,7 @@ export class ImagesService {
 
     const { buffer, thumb, format, width, height } = sanitizeResult;
     const size = buffer.length;
-    const hash = await hashFile(buffer);
+    const hash = hashBuffer(buffer);
     const mimetype = format === ImageFormat.PNG ? 'image/png' : 'image/jpeg';
 
     if (existingImage) {
