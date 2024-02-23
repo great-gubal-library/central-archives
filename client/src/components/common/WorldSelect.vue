@@ -64,7 +64,7 @@ export default class WorldSelect extends Vue.with(Props) {
         let datacenters = await this.$api.servers.getDatacenters();
 
         if (this.$region !== SiteRegion.GLOBAL) {
-          datacenters = datacenters.filter(dc => dc.region as string === this.$region);
+          datacenters = datacenters.filter(dc => dc.region as string === this.$region as string);
         }
 
         datacenters.forEach(dc => {

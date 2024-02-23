@@ -456,7 +456,7 @@ html.webp .layout__bg-right {
   background-image: url(assets/bg_right_1x.webp);
 }
 
-@media screen and(-webkit-device-pixel-ratio: 2) {
+@media screen and (-webkit-device-pixel-ratio: 2) {
   .layout__bg-left {
     background-image: url(assets/bg_left_2x.jpg);
   }

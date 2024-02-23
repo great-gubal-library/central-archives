@@ -99,7 +99,7 @@ async function load(params: RouteParams): Promise<Content> {
 			};
 
 			if (this.fc.banner) {
-				Object.assign(result.meta, {
+				Object.assign(result.meta!, {
 					ogImage: {
 						property: 'og:image',
 						content: this.fc.banner.url,

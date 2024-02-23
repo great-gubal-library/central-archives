@@ -124,7 +124,7 @@ async function load(
       };
 
       if (this.community.banner) {
-        Object.assign(result.meta, {
+        Object.assign(result.meta!, {
           ogImage: {
             property: 'og:image',
             content: this.community.banner.url,

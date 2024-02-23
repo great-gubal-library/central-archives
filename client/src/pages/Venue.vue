@@ -71,7 +71,7 @@ async function load(params: RouteParams): Promise<VenueDto> {
 			};
 
 			if (this.venue.banner) {
-				Object.assign(result.meta, {
+				Object.assign(result.meta!, {
 					ogImage: {
 						property: 'og:image',
 						content: this.venue.banner.url,

@@ -105,7 +105,7 @@ export default class PageCharacters extends Vue {
   profiles: CharacterSummaryDto[] = [];
   pagination = {
     page: 1,
-    rowsPerPage: SharedConstants.DEFAULT_ROWS_PER_PAGE,
+    rowsPerPage: SharedConstants.DEFAULT_ROWS_PER_PAGE as number,
     rowsNumber: 0,
   };
 
