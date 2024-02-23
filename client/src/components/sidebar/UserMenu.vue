@@ -39,7 +39,7 @@
       >
         <q-separator dark />
         <q-item-section>
-          <q-item-label>{{ $store.getters.realRole === Role.UNVERIFIED ? 'Account verification' : 'Character verification'}}</q-item-label>
+          <q-item-label><q-icon class="text-h6" name="verified" /> {{ $store.getters.realRole === Role.UNVERIFIED ? 'Account verification' : 'Character verification'}}</q-item-label>
         </q-item-section>
       </q-item>
       <template v-else>
