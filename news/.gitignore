@@ -32,5 +32,14 @@ yarn-error.log*
 *.njsproj
 *.sln
 
+# Yarn Modern
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 server.txt
 

@@ -112,7 +112,7 @@ export default store(function (/* { ssrContext } */) {
         }
 
         const { name, server, avatar } = characterData;
-        Object.assign(state.user.characters.get(state.user.currentCharacterId), { name, server, avatar });
+        Object.assign(state.user.characters.get(state.user.currentCharacterId)!, { name, server, avatar });
       },
 
       setEvents(state, events: EventDto[]) {

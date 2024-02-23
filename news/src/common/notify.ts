@@ -9,7 +9,7 @@ export function notifySuccess(message: string, action?: { label: string, color: 
 	});
 }
 
-export function notifyError(e: unknown|string) {
+export function notifyError(e: unknown) {
 	Notify.create({
 		type: 'negative',
 		message: typeof e === 'string' ? e : errors.getMessage(e),
