@@ -49,7 +49,6 @@ export class LodestoneService {
   async getCharacter(lodestoneId: number): Promise<CharacterInfo | null> {
     try {
       const parser = new Character();
-      console.log('css selectors', (parser as any).getCSSSelectors().SERVER);
       return (await parser.parse({ params: { characterId: lodestoneId.toString() } } as any)) as CharacterInfo;
     } catch (e) {
       // eslint-disable-next-line prefer-destructuring
