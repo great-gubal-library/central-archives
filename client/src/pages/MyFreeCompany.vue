@@ -39,11 +39,13 @@ import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-sum
 import FreeCompanyCrest from 'components/free-company/FreeCompanyCrest.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import { useRouter } from 'src/router';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 
 const $api = useApi();
 const $store = useStore();
+const $router = useRouter();
 
 @Options({
   name: 'PageMyFreeCompany',
@@ -55,6 +57,7 @@ const $store = useStore();
       const myFC = await $api.freeCompanies.getMyFreeCompany($store.getters.characterId!);
       next((vm) => (vm as PageMyFreeCompany).setContent(myFC));
     } catch (e) {
+			void $router.replace('/');
       console.log(e);
       notifyError(e);
     }

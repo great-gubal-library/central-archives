@@ -104,12 +104,27 @@
 import { VerificationStatusDto } from '@app/shared/dto/user/verification-status.dto';
 import { copyToClipboard } from 'quasar';
 import errors from '@app/shared/errors';
-import { Vue } from 'vue-class-component';
+import { Options, Vue } from 'vue-class-component';
 import { Role } from '@app/shared/enums/role.enum';
 import { notifyError, notifySuccess } from 'src/common/notify';
+import { useStore } from 'src/store';
+import { useRouter } from 'src/router';
+
+const $store = useStore();
+const $router = useRouter();
 
 const REFRESH_INTERVAL = 5000;
 
+@Options({
+	name: 'PageVerify',
+	beforeRouteEnter() {
+    if (!$store.state.user) {
+			void $router.replace('/');
+      notifyError('You must log in to view this page');
+      throw new Error();
+    }
+  },
+})
 export default class PageVerify extends Vue {
   readonly Role = Role;
 

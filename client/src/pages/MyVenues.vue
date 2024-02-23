@@ -17,9 +17,11 @@ import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
+import { useRouter } from 'src/router';
 
 const $api = useApi();
 const $store = useStore();
+const $router = useRouter();
 
 @Options({
   name: 'PageMyVenues',
@@ -28,7 +30,14 @@ const $store = useStore();
   },
   async beforeRouteEnter(_, __, next) {
     try {
-      const venues = await $api.venues.getVenues({ characterId: $store.getters.characterId!, limit: 500 });
+      const characterId = $store.getters.characterId;
+
+      if (!characterId) {
+			  void $router.replace('/');
+        throw new Error('You must log in to view this page');
+      }
+
+      const venues = await $api.venues.getVenues({ characterId, limit: 500 });
       next((vm) => (vm as PageMyVenues).setContent(venues.data));
     } catch (e) {
       console.log(e);

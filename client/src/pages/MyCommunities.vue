@@ -18,9 +18,11 @@ import { notifyError } from 'src/common/notify';
 import { useStore } from 'src/store';
 import MyCommunityList from 'components/communities/MyCommunityList.vue';
 import { Options, Vue } from 'vue-class-component';
+import { useRouter } from 'src/router';
 
 const $api = useApi();
 const $store = useStore();
+const $router = useRouter();
 
 @Options({
   name: 'PageMyCommunities',
@@ -33,6 +35,7 @@ const $store = useStore();
       const communities = await $api.communities.getMyCommunities(characterId);
       next(vm => (vm as PageMyCommunities).setContent(communities));
     } catch (e) {
+      void $router.replace('/');
       console.log(e);
       notifyError(e);
     }

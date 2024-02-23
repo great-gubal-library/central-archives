@@ -58,17 +58,19 @@ import MyImages from 'components/images/MyImages.vue';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import MyContentList from 'src/components/common/MyContentList.vue';
+import { useRouter } from 'src/router';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
 
 async function load(): Promise<MyContentDto> {
   const $api = useApi();
   const $store = useStore();
+  const $router = useRouter();
   const characterId = $store.getters.characterId;
 
   if (!characterId) {
-    notifyError('Unauthorized');
-    throw new Error();
+    void $router.replace('/');
+    throw new Error('You must log in to view this page');
   }
 
   try {

@@ -25,11 +25,17 @@
 </template>
 
 <script lang="ts">
+import { notifyError } from 'src/common/notify';
 import ChangeEmail from 'src/components/account/ChangeEmail.vue';
 import ChangePassword from 'src/components/account/ChangePassword.vue';
 import LogoutEverywhere from 'src/components/account/LogoutEverywhere.vue';
 import TwoFactorAuth from 'src/components/account/TwoFactorAuth.vue';
+import { useRouter } from 'src/router';
+import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
+
+const $store = useStore();
+const $router = useRouter();
 
 @Options({
 	name: 'PageMyAccount',
@@ -39,6 +45,13 @@ import { Options, Vue } from 'vue-class-component';
     LogoutEverywhere,
     TwoFactorAuth,
 	},
+  beforeRouteEnter() {
+    if (!$store.state.user) {
+			void $router.replace('/');
+      notifyError('You must log in to view this page');
+      throw new Error();
+    }
+  },
 })
 export default class PageMyAccount extends Vue {
 

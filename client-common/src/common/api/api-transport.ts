@@ -68,7 +68,7 @@ export default class APITransport {
 		const accessToken = this.getAccessToken();
 
 		if (requireToken && !accessToken) {
-			throw new Error();
+			throw new Error('This operation requires logging in');
 		}
 
 		return {
