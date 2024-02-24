@@ -90,16 +90,18 @@ export default class SwitchCharacterDialog extends Vue {
 
   onCharacterSelect(character: SessionCharacterDto) {
     const oldCharacterId = this.$store.getters.characterId;
-    this.$store.commit('setCurrentCharacterId', character.id);
-    this.$emit('ok', character);
-    this.hide();
 
     if (this.$region !== SiteRegion.GLOBAL && asSiteRegion(character.region) !== this.$region) {
-      // Navigate to proper site
+      // Cross-region; navigate to proper site
       window.location.hostname = window.location.hostname.replace(
         this.$regionConfig.domain, SharedConstants.regions[character.region].domain);
       return;
     }
+
+    // Same region
+    this.$store.commit('setCurrentCharacterId', character.id);
+    this.$emit('ok', character);
+    this.hide();
 
     if (character.id !== oldCharacterId) {
       notifySuccess(`${character.name} is now your active character.`);
