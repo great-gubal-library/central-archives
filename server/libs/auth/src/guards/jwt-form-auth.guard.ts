@@ -4,7 +4,7 @@ import { JwtAuthGuardImpl } from './jwt-auth-guard.impl';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtFormAuthGuard extends AuthGuard('jwt-form') {
   private readonly impl: JwtAuthGuardImpl;
 
 	constructor(private reflector: Reflector) {

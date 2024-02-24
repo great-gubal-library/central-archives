@@ -22,7 +22,7 @@ export default class APITransport {
     return this.accessToken !== null;
   }
 
-	protected getAccessToken() {
+	getAccessToken() {
 		return this.accessToken;
 	}
 
@@ -114,7 +114,7 @@ class APISubTransport extends APITransport {
 		return this.parent.hasAccessToken();
 	}
 
-	protected getAccessToken(): string | null {
+	getAccessToken(): string | null {
 		// Hack. TypeScript refuses to call protected methods of the superclass. This does the right thing.
 		return (this.parent as APISubTransport).getAccessToken();
 	}

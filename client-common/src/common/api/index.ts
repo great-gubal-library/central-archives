@@ -54,6 +54,10 @@ export default class API {
     return this.transport.hasAccessToken();
   }
 
+  getAccessToken() {
+    return this.transport.getAccessToken();
+  }
+
   setAccessToken(accessToken: string | null) {
     this.transport.setAccessToken(accessToken);
   }

@@ -98,7 +98,7 @@ module.exports = configure(function (ctx) {
 
       headers: {
         // unsafe-eval is only used in dev mode; disable it in production
-        'Content-Security-Policy': "script-src 'self' 'unsafe-eval' 'cdn.tiny.cloud'; frame-ancestors 'none';",
+        'Content-Security-Policy': "script-src 'self' 'unsafe-eval' 'unsafe-inline' 'cdn.tiny.cloud'; frame-ancestors 'none';",
       },
 
       proxy: {
