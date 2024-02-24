@@ -212,6 +212,7 @@ export default class PageEditCommunity extends Vue {
         name: '',
         owner: this.$store.getters.character!.name,
         ownerServer: this.$store.getters.character!.server,
+        region: this.$store.getters.character!.region,
         description: '',
         website: '',
         discord: '',

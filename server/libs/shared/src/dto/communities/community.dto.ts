@@ -2,6 +2,7 @@ import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import { Type } from 'class-transformer';
 import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { BannerDto } from '../characters/banner.dto';
+import { Region } from '@app/shared/enums/region.enum';
 
 export class CommunityDto {
   @IsNumber()
@@ -30,13 +31,17 @@ export class CommunityDto {
 	@IsString()
 	ownerServer: string;
 
+  @IsEnum(Region)
+  @IsOptional()
+  region: Region;
+
   @IsString()
   @IsOptional()
   foundedAt: string|null;
 
   @IsString()
   name: string;
-	
+
   @IsString()
   description: string;
 
@@ -66,7 +71,7 @@ export class CommunityDto {
   @IsArray()
   @IsString({ each: true })
   tags: string[];
-	
+
 	constructor(properties?: Readonly<CommunityDto>) {
     if (properties) {
       Object.assign(this, properties);

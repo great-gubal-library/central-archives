@@ -10,7 +10,13 @@ import { MyCommunitySummaryDto } from '@app/shared/dto/communities/my-community-
 import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import html from '@app/shared/html';
 import SharedConstants from '@app/shared/SharedConstants';
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
@@ -106,15 +112,19 @@ export class CommunitiesService {
     }));
   }
 
-  async getCommunities(region: SiteRegion, filter: { limit?: number }, orderByDate: boolean): Promise<CommunitySummaryDto[]> {
+  async getCommunities(
+    region: SiteRegion,
+    filter: { limit?: number },
+    orderByDate: boolean,
+  ): Promise<CommunitySummaryDto[]> {
     const query = this.communityRepo
       .createQueryBuilder('community')
       .orderBy(orderByDate ? { 'community.createdAt': 'DESC' } : { 'community.name': 'ASC' })
       .select(['community.id', 'community.name', 'community.goal']);
 
-      if (region !== SiteRegion.GLOBAL) {
-        query.andWhere('community.region = :region', { region });
-      }
+    if (region !== SiteRegion.GLOBAL) {
+      query.andWhere('community.region = :region', { region });
+    }
 
     if (filter.limit) {
       query.limit(filter.limit);
@@ -147,7 +157,12 @@ export class CommunitiesService {
     return this.toCommunityDto(community, characterId, user);
   }
 
-  async getCommunityByName(region: SiteRegion, name: string, characterId?: number, user?: UserInfo): Promise<CommunityDto> {
+  async getCommunityByName(
+    region: SiteRegion,
+    name: string,
+    characterId?: number,
+    user?: UserInfo,
+  ): Promise<CommunityDto> {
     const community = await this.communityRepo.findOne({
       where: {
         name,
@@ -183,6 +198,7 @@ export class CommunitiesService {
       name: community.name,
       owner: community.owner.name,
       ownerServer: community.owner.server.name,
+      region: community.region,
       description: community.description,
       goal: community.goal,
       website: community.website,
@@ -417,7 +433,7 @@ export class CommunitiesService {
 
       const [community, character] = await Promise.all([
         em.getRepository(Community).findOneBy({ id: communityId }),
-        em.getRepository(Character).findOneBy({ id: characterId }),
+        em.getRepository(Character).findOne({ where: { id: characterId }, relations: ['server'] }),
       ]);
 
       if (!character) {
@@ -426,6 +442,12 @@ export class CommunitiesService {
 
       if (!community) {
         throw new NotFoundException('Invalid community');
+      }
+
+      if (character.server.region !== community.region) {
+        throw new ForbiddenException(
+          `Character region (${character.server.region}) doesn't match community region (${community.region})`,
+        );
       }
 
       const newMembership = membershipRepo.create({
@@ -470,19 +492,19 @@ export class CommunitiesService {
         return;
       }
 
-			if (status === MembershipStatus.REJECTED && characterId === membership.community.owner.id) {
-				throw new ConflictException('Community owner cannot be rejected');
-			}
+      if (status === MembershipStatus.REJECTED && characterId === membership.community.owner.id) {
+        throw new ConflictException('Community owner cannot be rejected');
+      }
 
       membership.status = status;
       await membershipRepo.save(membership);
     });
   }
 
-	async setMemberFlags(communityId: number, characterId: number, flags: MemberFlagsDto, user: UserInfo): Promise<void> {
-		await this.assertManageMembersRights(communityId, user);
+  async setMemberFlags(communityId: number, characterId: number, flags: MemberFlagsDto, user: UserInfo): Promise<void> {
+    await this.assertManageMembersRights(communityId, user);
 
-		const canEdit = await this.checkEditRights(communityId, user);
+    const canEdit = await this.checkEditRights(communityId, user);
 
     await this.connection.transaction(async (em) => {
       const membershipRepo = em.getRepository(CommunityMembership);
@@ -492,20 +514,20 @@ export class CommunitiesService {
         throw new NotFoundException('Community member not found');
       }
 
-			if (!canEdit && !membership.canEdit && flags.canEdit) {
-				throw new ForbiddenException('You do not have edit permission and cannot set it for others');
-			}
+      if (!canEdit && !membership.canEdit && flags.canEdit) {
+        throw new ForbiddenException('You do not have edit permission and cannot set it for others');
+      }
 
       if (membership.status !== MembershipStatus.CONFIRMED) {
         throw new ConflictException("Non-confirmed member's flags cannot be edited");
       }
 
-			if (characterId === membership.community.owner.id) {
-				throw new ConflictException('Community owner flags cannot be edited');
-			}
+      if (characterId === membership.community.owner.id) {
+        throw new ConflictException('Community owner flags cannot be edited');
+      }
 
       membership.canEdit = flags.canEdit;
-			membership.canManageMembers = flags.canManageMembers;
+      membership.canManageMembers = flags.canManageMembers;
       await membershipRepo.save(membership);
     });
   }
@@ -514,25 +536,23 @@ export class CommunitiesService {
     repo: Repository<CommunityMembership>,
     communityId: number,
     characterId: number,
-		extended?: boolean
+    extended?: boolean,
   ): Promise<CommunityMembership | null> {
-		const options: FindOneOptions<CommunityMembership> = {
-			where: {
-				community: {
-					id: communityId,
-				},
-				character: {
-					id: characterId,
-				},
-			},
-		};
+    const options: FindOneOptions<CommunityMembership> = {
+      where: {
+        community: {
+          id: communityId,
+        },
+        character: {
+          id: characterId,
+        },
+      },
+    };
 
-		if (extended) {
-			options.relations = [ 'community', 'community.owner' ];
-		}
+    if (extended) {
+      options.relations = ['community', 'community.owner'];
+    }
 
-    return (
-      (await repo.findOne(options)) || null
-    );
+    return (await repo.findOne(options)) || null;
   }
 }

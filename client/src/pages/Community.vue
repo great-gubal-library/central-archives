@@ -2,8 +2,15 @@
   <q-page class="page-community">
     <template v-if="community.id">
       <section v-if="!$store.getters.characterId"><!-- Not logged in --></section>
-      <section v-else-if="!community.membershipStatus" class="page-community__join-button-bar">
-        <q-btn outline color="primary" label="Join community" @click="onJoinClick" />
+      <section v-else-if="!community.membershipStatus && isSameRegion" class="page-community__join-button-bar">
+        <q-btn v-if="isSameRegion" outline color="primary" label="Join community" @click="onJoinClick" />
+      </section>
+      <section
+        v-else-if="!community.membershipStatus && !isSameRegion"
+        class="page-community__edit-bar page-community__membership-status"
+      >
+        You cannot join this community because it's in the {{ $display.regions[community.region] }} region,
+        while your character {{ $store.getters.character?.name }} is in {{ $display.regions[$store.getters.character?.region] }}.
       </section>
       <section
         v-else-if="community.membershipStatus === MembershipStatus.APPLIED"
@@ -33,22 +40,18 @@
         <character-name-list :profiles="members" />
       </template>
       <template v-else>
-				<template v-if="applicants.length > 0">
-					<h3>Applicants</h3>
-					<community-applicant-editor
-						:community-id="community.id"
-						:members="applicants"
-						@updated="refreshEditableMembers"
-					/>
-				</template>
-				<h3>Members</h3>
-        <community-member-editor
-          :community="community"
-          :members="confirmedMembers"
-          @updated="refreshEditableMembers"
-        />
+        <template v-if="applicants.length > 0">
+          <h3>Applicants</h3>
+          <community-applicant-editor
+            :community-id="community.id"
+            :members="applicants"
+            @updated="refreshEditableMembers"
+          />
+        </template>
+        <h3>Members</h3>
+        <community-member-editor :community="community" :members="confirmedMembers" @updated="refreshEditableMembers" />
       </template>
-    	<report-violation-section :pageType="PageType.COMMUNITY" :pageId="community.id" />
+      <report-violation-section :pageType="PageType.COMMUNITY" :pageId="community.id" />
     </template>
   </q-page>
 </template>
@@ -105,8 +108,8 @@ async function load(
     CommunityProfile,
     CharacterNameList,
     CommunityApplicantEditor,
-		CommunityMemberEditor,
-		ReportViolationSection,
+    CommunityMemberEditor,
+    ReportViolationSection,
   },
   async beforeRouteEnter(to, _, next) {
     const { community, members } = await load(to.params);
@@ -141,7 +144,7 @@ async function load(
   ],
 })
 export default class PageCommunity extends Vue {
-	readonly PageType = PageType;
+  readonly PageType = PageType;
   readonly MembershipStatus = MembershipStatus;
 
   community: CommunityDto = new CommunityDto();
@@ -156,6 +159,10 @@ export default class PageCommunity extends Vue {
     if (community.canManageMembers) {
       void this.refreshEditableMembers();
     }
+  }
+
+  get isSameRegion() {
+    return this.$store.getters.character!.region === this.community.region;
   }
 
   async refreshEditableMembers() {
@@ -228,6 +235,10 @@ export default class PageCommunity extends Vue {
 
 .page-community__join-button-bar {
   text-align: center;
+  margin-bottom: 8px;
+}
+
+.page-community__membership-status {
   margin-bottom: 8px;
 }
 </style>
