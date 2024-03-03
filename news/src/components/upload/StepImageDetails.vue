@@ -127,7 +127,7 @@ export default class StepImageDetails extends Vue.with(Props) {
         return;
       }
 
-      this.eventOptions = results;      
+      this.eventOptions = results;
       update();
     } catch (e) {
       abort();

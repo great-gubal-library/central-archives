@@ -133,7 +133,7 @@
           </section>
           <banner-edit-section v-model="venue.banner" />
           <h6>Description</h6>
-          <html-editor v-model="venue.description" />
+          <html-editor :editor-id="`venue-description-${venue.id}`" v-model="venue.description" />
           <carrd-edit-section
             class="page-edit-venue__form-controls"
             entity-type="venue"

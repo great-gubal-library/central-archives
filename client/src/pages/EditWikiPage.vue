@@ -12,7 +12,7 @@
             ]"
           />
           <h6>Content *</h6>
-          <html-editor v-model="wikiPage.content" />
+          <html-editor :editor-id="`wiki-page-content-${wikiPage.id}`" v-model="wikiPage.content" />
           <section class="page-edit-wiki-page__license text-caption">
             By submitting this material, you agree to license it under the <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike (CC-BY-SA 4.0) <q-icon class="external-link-icon" name="launch" /></a> license. This means that everyone is free to share your material and create derivative works, as long as they properly credit you and release their modifications under the same license.
           </section>

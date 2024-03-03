@@ -71,7 +71,7 @@
           </section>
           <banner-edit-section v-model="community.banner" />
           <h6>Description</h6>
-          <html-editor v-model="community.description" />
+          <html-editor :editor-id="`community-description-${community.id}`" v-model="community.description" />
           <carrd-edit-section
             class="page-edit-community__form-controls"
             entity-type="community"

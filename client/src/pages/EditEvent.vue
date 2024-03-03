@@ -87,9 +87,9 @@
           </section>
           <banner-edit-section v-model="event.banner" />
           <h6>Details</h6>
-          <html-editor v-model="event.details" />
+          <html-editor :editor-id="`event-details-${eventId}`" v-model="event.details" />
           <h6>OOC Details</h6>
-          <html-editor v-model="event.oocDetails" />
+          <html-editor :editor-id="`event-ooc-details-${eventId}`" v-model="event.oocDetails" />
           <q-input
             v-model="event.link"
             label="Link"

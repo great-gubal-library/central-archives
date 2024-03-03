@@ -17,7 +17,7 @@
             :options="locationOptions"
           />
           <h6>Content *</h6>
-          <html-editor v-model="noticeboardItem.content" />
+          <html-editor :editor-id="`noticeboard-item-content-${noticeboardItem.id}`" v-model="noticeboardItem.content" />
           <template v-if="!noticeboardItem.id && $region === 'eu'">
             <q-checkbox v-model="postOnDiscord" label="Post on Discord (on #ic-billboard-and-rumours)" />
             <div class="text-caption">Only limited formatting — bold, italic, and blockquotes — will carry over to Discord. You will be unable to edit the Discord post after creating the noticeboard item.</div>

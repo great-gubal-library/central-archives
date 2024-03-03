@@ -18,7 +18,7 @@
           </p>
         </section>
         <h6>Content</h6>
-        <html-editor v-model="playerProfile.content" />
+        <html-editor editor-id="player-profile-content" v-model="playerProfile.content" />
         <carrd-edit-section
           class="page-edit-player-profile__form-controls"
           entity-type="character"

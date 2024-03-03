@@ -32,7 +32,7 @@
             :rules="[$rules.required('This field is required.')]"
           />
           <h6>Content *</h6>
-          <html-editor v-model="article.content" />
+          <html-editor :editor-id="`article-content-${article.id}`" v-model="article.content" />
         </section>
         <section v-else class="page-edit-article__preview">
           <article-view :article="article" :preview="true" />

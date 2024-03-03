@@ -23,7 +23,7 @@
             label="Tags (comma-separated)"
           />
           <h6>Content *</h6>
-          <html-editor v-model="story.content" />
+          <html-editor :editor-id="`story-content-${story.id}`" v-model="story.content" />
         </template>
         <section v-else class="page-edit-story__preview">
           <story-view :story="story" :preview="true" />

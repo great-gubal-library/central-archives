@@ -88,10 +88,10 @@
             <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name|my friend]], in all personality fields.</div>
           </section>
           <h6>{{ character.combinedDescription ? 'Description' : 'Outward appearance' }}</h6>
-          <html-editor v-model="character.appearance" />
+          <html-editor :editor-id="`character-appearance-${character.id}`" v-model="character.appearance" />
           <template v-if="!character.combinedDescription">
             <h6>Background</h6>
-            <html-editor v-model="character.background" />
+            <html-editor :editor-id="`character-background-${character.id}`" v-model="character.background" />
           </template>
           <carrd-edit-section
             class="page-edit-character__form-controls"

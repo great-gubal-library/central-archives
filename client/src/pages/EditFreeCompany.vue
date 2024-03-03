@@ -20,7 +20,7 @@
             <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in all fields except website.</div>
           </section>
           <h6>Description</h6>
-          <html-editor v-model="fc.description" />
+          <html-editor :editor-id="`fc-description-${fc.id}`" v-model="fc.description" />
           <carrd-edit-section
             class="page-edit-free-company__form-controls"
             entity-type="Free Company"
@@ -74,7 +74,7 @@ const $api = useApi();
 async function load(params: RouteParams): Promise<FreeCompanyDto> {
   const name = params.fc as string;
   const server = params.server as string;
-  
+
   try {
     return await $api.freeCompanies.getFreeCompany(name.replace(/_/g, ' '), server);
   } catch (e) {
