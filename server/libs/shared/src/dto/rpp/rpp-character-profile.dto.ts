@@ -31,6 +31,13 @@ export class RppCharacterProfileDto extends BaseCharacterProfileDto {
   @IsOptional()
   race: string;
 
+  @ApiProperty({
+		example: 'Nationality',
+  })
+  @IsString()
+  @IsOptional()
+  declare nationality?: string;
+
 	@ApiProperty({
     example: 'Middle-aged',
   })

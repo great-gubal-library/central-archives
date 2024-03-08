@@ -5,14 +5,14 @@ import { races } from '@app/shared/enums/race.enum';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import utils from '../../common/utils';
 
 @Injectable()
 export class RppService {
   constructor(
     @InjectRepository(Character) private characterRepo: Repository<Character>,
-    private connection: Connection,
+    private connection: DataSource,
     private eventEmitter: EventEmitter2,
   ) {}
 
@@ -104,6 +104,11 @@ export class RppService {
 				oocInfo: profile.oocInfo,
 				pronouns: profile.pronouns,
 			});
+
+      if (typeof profile.nationality === 'string') {
+        // Only change if explicitly passed
+        character.nationality = profile.nationality;
+      }
 
 			return characterRepo.save(character);
 		});
