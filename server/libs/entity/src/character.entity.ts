@@ -209,6 +209,13 @@ export class Character extends BasicEntity {
   })
   pronouns: string;
 
+  @Column({
+    nullable: false,
+    length: 255,
+    default: '',
+  })
+  nationality: string;
+
   @ManyToOne(() => Image, {
     lazy: true,
   })

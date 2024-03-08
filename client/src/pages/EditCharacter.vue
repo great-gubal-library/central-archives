@@ -74,6 +74,7 @@
             <q-input v-model="character.occupation" label="Occupation" />
             <q-input v-model="character.age" class="page-edit-character__age" label="Age" />
             <q-input v-model="character.pronouns" class="page-edit-character__pronouns" label="Pronouns" :maxlength="SharedConstants.MAX_PRONOUNS_LENGTH" />
+            <q-input v-model="character.nationality" label="Nationality" />
             <q-input v-model="character.birthplace" label="Birthplace" />
             <q-input v-model="character.residence" label="Residence" />
             <div class="text-caption">You can use [[wikilinks]], e.g. [[Character Name]], in all biography fields.</div>

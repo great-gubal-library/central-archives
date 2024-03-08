@@ -26,6 +26,9 @@ export class CharacterProfileDto extends BaseCharacterProfileDto {
   @IsString()
   avatar: string;
 
+  @IsString()
+  nationality: string;
+
   @IsNumber()
   lodestoneId: number;
 
@@ -57,7 +60,7 @@ export class CharacterProfileDto extends BaseCharacterProfileDto {
   freeCompany: CharacterFreeCompanyDto|null;
 
   player: CharacterPlayerDto|null;
-	
+
 	constructor(properties?: Readonly<CharacterProfileDto>) {
     super();
 
