@@ -115,8 +115,7 @@ class APISubTransport extends APITransport {
 	}
 
 	getAccessToken(): string | null {
-		// Hack. TypeScript refuses to call protected methods of the superclass. This does the right thing.
-		return (this.parent as APISubTransport).getAccessToken();
+		return this.parent.getAccessToken();
 	}
 
 	setAccessToken(accessToken: string | null) {
