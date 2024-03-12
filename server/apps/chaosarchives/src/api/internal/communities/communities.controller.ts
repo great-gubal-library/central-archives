@@ -100,7 +100,6 @@ export class CommunitiesController {
     @Query() characterId: OptionalCharacterId,
     @CurrentUser() user?: UserInfo,
   ): Promise<CommunityDto> {
-    console.log('characterId', characterId);
     return this.communitiesService.getCommunityByName(region, name, characterId.characterId, user);
   }
 
