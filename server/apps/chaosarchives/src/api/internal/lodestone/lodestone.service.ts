@@ -9,6 +9,7 @@ import {
 import { Character, CharacterSearch, FCMembers, FreeCompany } from '@xivapi/nodestone';
 import characterSearch from '@xivapi/nodestone/lib/lib/lodestone-css-selectors/search/character.json';
 import characterProfile from '@xivapi/nodestone/lib/lib/lodestone-css-selectors/profile/character.json';
+import freeCompany from '@xivapi/nodestone/lib/lib/lodestone-css-selectors/freecompany/freecompany.json';
 
 @Injectable()
 export class LodestoneService {
@@ -24,6 +25,9 @@ export class LodestoneService {
     (characterProfile.FREE_COMPANY as any).NAME = {
       selector: characterProfile.FREE_COMPANY.NAME.selector,
     };
+    // Monkey patch for FC founding date, fixed upstream at
+    // https://github.com/xivapi/lodestone-css-selectors/blob/main/freecompany/freecompany.json
+    freeCompany.FORMED.selector = 'p.freecompany__text:nth-of-type(5) > script';
   }
 
   async searchCharacters(name: string, datacenter: string): Promise<PagedResult<CharacterSearchEntry>> {
