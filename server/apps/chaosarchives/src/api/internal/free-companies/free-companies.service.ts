@@ -97,14 +97,11 @@ export class FreeCompaniesService {
         relations: ['leader', 'server'],
       });
 
-      console.log('fcLodestoneInfo', fcLodestoneInfo);
-
       if (!existingFC) {
         fc = new FreeCompany();
         fc.foundedAt = DateTime.fromSeconds(fcLodestoneInfo.Timestamp).toJSDate();
       } else {
         fc = existingFC;
-        fc.foundedAt = DateTime.fromSeconds(fcLodestoneInfo.Timestamp).toJSDate();
       }
 
       fc.name = fcLodestoneInfo.Name;
