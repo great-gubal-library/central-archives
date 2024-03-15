@@ -3,7 +3,7 @@ server:
   frontendRoot:
     eu: 'http://local.chaosarchives.org:8080'
     na: 'http://local.crystalarchives.org:8080'
-    global: 'http://local.roleplayprofiles.org:8080'
+    global: 'http://local.centralarchives.org:8080'
   newsRoot: 'http://localhost:8081'
   maxUploadSpacePerUserMiB: 500
   stewardWebhookPort: 8112
@@ -34,7 +34,7 @@ mail:
   from:
     eu: 'Chaos Archives <chaosarchives@localhost>'
     na: 'Crystal Archives <crystalarchives@localhost>'
-    global: 'Roleplay Profiles <roleplayprofiles@localhost>'
+    global: 'Central Archives <centralarchives@localhost>'
 
 auth:
   jwtSecret: 'secret'

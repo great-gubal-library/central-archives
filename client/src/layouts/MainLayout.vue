@@ -115,7 +115,7 @@
       <nav class="layout__nav-links gt-sm">
         <router-link v-for="link in siteLinks" :key="link.label" :to="link.to">{{ link.label }}</router-link>
         <template v-if="$region === 'global'">
-          <a v-for="region in regions" :key="region.label" :href="region.to">
+          <a v-for="region in regions" :key="region.label" :href="region.to" @click="onRegionSiteNav($event, region)">
             {{ region.label }}
           </a>
         </template>
@@ -169,7 +169,13 @@ import SiteSearchField from 'src/components/search/SiteSearchField.vue';
 import { switchCharacter } from 'src/common/switch-character';
 import { SiteRegion } from '../../../server/libs/shared/src/enums/region.enum';
 import SharedConstants from '../../../server/libs/shared/src/SharedConstants';
-import { getRegionOrigin } from '../common/hssp';
+import { getRegionOrigin, hsspRedirect } from '../common/hssp';
+
+interface RegionSite {
+  label: string;
+  to: string;
+  region: SiteRegion;
+}
 
 const NAVBAR_LINKS = [
   { label: 'About', to: '/about' },
@@ -194,6 +200,7 @@ const REGION_LINKS = Object.keys(SharedConstants.regions)
     .map((region) => {
       const regionConfig = SharedConstants.regions[region];
       return {
+        region,
         label: `${regionConfig.name} (${region.toUpperCase()})`,
         to: getRegionOrigin(region as SiteRegion),
       };
@@ -231,6 +238,14 @@ export default class MainLayout extends Vue {
 
   async switchCharacter() {
     await switchCharacter();
+  }
+
+  onRegionSiteNav(event: Event, regionSite: RegionSite) {
+    if (this.$store.getters.role) {
+      // We're logged in
+      event.preventDefault();
+      hsspRedirect(regionSite.region, '/');
+    }
   }
 }
 </script>
