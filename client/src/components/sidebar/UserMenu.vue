@@ -115,7 +115,7 @@
         </q-item>
       </template>
       <q-separator dark />
-      <q-item clickable v-ripple to="/my-account">
+      <q-item clickable v-ripple to="/my-account" @click="onMyAccountClicked">
         <q-item-section>
           <q-item-label><q-icon class="text-h6" name="manage_accounts" /> Account and security</q-item-label>
         </q-item-section>
@@ -136,6 +136,7 @@ import { Role } from '@app/shared/enums/role.enum';
 import { notifySuccess } from 'src/common/notify';
 import { switchCharacter } from 'src/common/switch-character';
 import { SiteRegion } from '@app/shared/enums/region.enum';
+import { hsspRedirect } from '../../common/hssp';
 
 @Options({})
 export default class UserMenu extends Vue {
@@ -176,6 +177,13 @@ export default class UserMenu extends Vue {
           },
         });
       });
+  }
+
+  onMyAccountClicked(event: Event) {
+    if (this.$region !== SiteRegion.GLOBAL) {
+      event.preventDefault();
+      hsspRedirect(SiteRegion.GLOBAL, '/my-account');
+    }
   }
 
   logOut() {
