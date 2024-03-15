@@ -71,7 +71,7 @@ interface SsoParams {
   needLoginForm: boolean;
 }
 
-const HOST_REGEX = /^([a-z.]+[a-z]+)(?::[0-9]+)$/;
+const HOST_REGEX = /^([a-z.]+[a-z]+)(?::[0-9]+)?$/;
 const $router = useRouter();
 
 function parseQuery(to: RouteLocationNormalized): SsoParams {

@@ -22,6 +22,7 @@ import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto'
 import { notifySuccess } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';
 import CharacterNameList from '../common/CharacterNameList.vue';
+import { Region } from '../../../../server/libs/shared/src/enums/region.enum';
 
 interface DialogRef {
   show(): void;
@@ -39,7 +40,11 @@ export default class SwitchCharacterDialog extends Vue {
   characters: SessionCharacterDto[] = [];
 
   created() {
-    this.$store.state.user!.characters.forEach((character) => this.characters.push(character));
+    this.$store.state.user!.characters.forEach((character) => {
+      if (character.region === Region.EU) {
+        this.characters.push(character);
+      }
+    });
   }
 
   show() {

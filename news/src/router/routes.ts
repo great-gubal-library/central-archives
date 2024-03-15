@@ -1,3 +1,4 @@
+import { CENTRAL_ARCHIVES_ROOT } from 'src/common/interop';
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
@@ -12,6 +13,10 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/login',
+    beforeEnter(_, from) {
+      window.location.assign(`${CENTRAL_ARCHIVES_ROOT}/login?host=${encodeURIComponent(window.location.host)}&redirect=${encodeURIComponent(from.fullPath)}`);
+      return false;
+    },
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/LogIn.vue') }],
     meta: {
@@ -19,7 +24,7 @@ const routes: RouteRecordRaw[] = [
     }
   },
 
-  { 
+  {
     path: '/create-article',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditArticle.vue') }],
@@ -28,7 +33,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/edit-article/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditArticle.vue') }],
@@ -37,7 +42,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/my-articles',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/MyArticles.vue') }],
@@ -46,7 +51,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/submitted',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Submitted.vue') }],
