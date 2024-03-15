@@ -10,14 +10,11 @@ export default class LodestoneAPI {
 
   async searchCharacters(
     name: string,
-    datacenter: string
+    datacenter?: string
   ): Promise<PagedResult<CharacterSearchEntry>> {
     return this.transport.get<PagedResult<CharacterSearchEntry>>(
       `search/characters`,
-      {
-        name,
-        datacenter,
-      }
+      datacenter ? { name, datacenter } : { name }
     );
   }
 

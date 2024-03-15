@@ -11,7 +11,7 @@
 					use-input
 					input-debounce="200"
 					label="Character name"
-					:hint="modelValue.server ? '' : `Start typing, and we will attempt to find your character. The character must be in the ${$display.regions[$region]} region.`"
+					:hint="hint"
 					@filter="onCharacterFilter"
 					@update:model-value="onCharacterSelected"
 					:rules="[
@@ -59,6 +59,8 @@ import { CharacterRegistrationStatus } from '@app/shared/enums/character-registr
 import { Options, prop, Vue } from 'vue-class-component';
 import { CharacterSearchModel } from './character-search-model';
 import { notifyError } from 'src/common/notify';
+import { SiteRegion } from '../../../../server/libs/shared/src/enums/region.enum';
+import { CharacterSearchEntry } from '../../../../server/libs/shared/src/dto/lodestone';
 
 function flat<T>(array: T[][]): T[] {
 	return array.reduce((acc, val) => acc.concat(val), []);
@@ -73,10 +75,6 @@ class Props {
 const allAllowedServers: string[] = [];
 let allowedServersLoaded = false;
 
-function isAllowedServer(characterInfo: string): boolean {
-	return allAllowedServers.indexOf(characterInfo) !== -1;
-}
-
 @Options({
 	emits: [ 'update:model-value' ]
 })
@@ -86,6 +84,20 @@ export default class CharacterFinderField extends Vue.with(Props) {
 	characterOptions: CharacterSearchModel[] = [];
   characterOptionsSearchString = '';
 	registrationStatus: CharacterRegistrationStatus | null = null;
+
+  get hint() {
+    if (this.modelValue.server) {
+      return '';
+    }
+
+    let hint = 'Start typing, and we will attempt to find your character.'
+
+    if (this.$region !== SiteRegion.GLOBAL) {
+      hint = `${hint} The character must be in the ${this.$display.regions[this.$region]} region.`
+    }
+
+    return hint;
+  }
 
 	async created() {
 		if (!allowedServersLoaded) {
@@ -113,17 +125,23 @@ export default class CharacterFinderField extends Vue.with(Props) {
       this.characterOptionsSearchString = value;
 
 			// Search in all DCs
-      const datacenters = this.$regionConfig.datacenters;
-			const resultsArray = await Promise.all(datacenters
-				.map(dcParam => this.$api.lodestone.searchCharacters(value, dcParam)));
-			const results = flat(resultsArray.map(result => result.List));
+      let results: CharacterSearchEntry[];
+
+      if (this.$region === SiteRegion.GLOBAL) {
+        results = (await this.$api.lodestone.searchCharacters(value)).List;
+      } else {
+        const datacenters = this.$regionConfig.datacenters;
+        const resultsArray = await Promise.all(datacenters
+          .map(dcParam => this.$api.lodestone.searchCharacters(value, dcParam)));
+        results = flat(resultsArray.map(result => result.List));
+      }
 
       if (this.characterOptionsSearchString !== value) {
         // Too late
         return;
       }
 
-      this.characterOptions = results.filter(result => isAllowedServer(result.World)).map(result => ({
+      this.characterOptions = results.filter(result => this.isAllowedServer(result.World)).map(result => ({
         name: result.Name,
         server: result.World,
         avatar: result.Avatar,
@@ -158,6 +176,10 @@ export default class CharacterFinderField extends Vue.with(Props) {
 
 		this.registrationStatus = null;
 		this.$emit('update:model-value', character);
+  }
+
+  private isAllowedServer(characterInfo: string): boolean {
+    return this.$region === SiteRegion.GLOBAL || allAllowedServers.indexOf(characterInfo) !== -1;
   }
 }
 </script>

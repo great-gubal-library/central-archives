@@ -3,15 +3,7 @@
     <q-header elevated>
       <q-toolbar>
         <div class="layout__filler">
-          <q-btn
-            class="lt-md"
-            flat
-            dense
-            no-caps
-            tooltip="User"
-            aria-label="User"
-            @click="toggleLeftDrawer"
-          >
+          <q-btn class="lt-md" flat dense no-caps tooltip="User" aria-label="User" @click="toggleLeftDrawer">
             <q-avatar v-if="$store.getters.character" round size="28px">
               <img :src="$store.getters.character.avatar" />
             </q-avatar>
@@ -32,6 +24,13 @@
                   <q-item-label>{{ link.label }}</q-item-label>
                 </q-item-section>
               </q-item>
+              <template v-if="$region === 'global'">
+                <q-item v-for="region in regions" clickable v-close-popup :key="region.domain" :to="`https://${region.domain}`">
+                  <q-item-section>
+                    <q-item-label>{{ region.name }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
             </q-list>
           </q-btn-dropdown>
           <template v-if="$store.getters.character">
@@ -114,11 +113,12 @@
         </div>
       </q-toolbar>
       <nav class="layout__nav-links gt-sm">
-        <router-link
-          v-for="link in siteLinks"
-          :key="link.label"
-          :to="link.to"
-        >{{link.label}}</router-link>
+        <router-link v-for="link in siteLinks" :key="link.label" :to="link.to">{{ link.label }}</router-link>
+        <template v-if="$region === 'global'">
+          <a v-for="region in regions" :key="region.domain" :href="`https://${region.domain}`">
+            {{ region.name }}
+          </a>
+        </template>
       </nav>
     </q-header>
 
@@ -147,7 +147,7 @@
     <q-footer elevated>
       <q-toolbar>
         <div class="layout__footer text-body justify-center text-center">
-          Final Fantasy XIV is © 2010&ndash;2024 Square Enix Co., Ltd. All rights reserved. {{$siteName}} is a fansite
+          Final Fantasy XIV is © 2010&ndash;2024 Square Enix Co., Ltd. All rights reserved. {{ $siteName }} is a fansite
           and is not affiliated with Square Enix.<br />
           All text and images on this site are © 2021–2024 by their respective owners.
           <router-link to="/privacy-statement">(Privacy statement)</router-link>
@@ -168,13 +168,14 @@ import InlineSvg from 'vue-inline-svg';
 import SiteSearchField from 'src/components/search/SiteSearchField.vue';
 import { switchCharacter } from 'src/common/switch-character';
 import { SiteRegion } from '../../../server/libs/shared/src/enums/region.enum';
+import SharedConstants from '../../../server/libs/shared/src/SharedConstants';
 
 const NAVBAR_LINKS = [
-    { label: 'About', to: '/about' },
-    { label: 'Rules', to: '/rules' },
-    { label: 'Wiki', to: '/wiki/Archives_Wiki' },
-    { label: 'Contact', to: '/contact' },
-  ];
+  { label: 'About', to: '/about' },
+  { label: 'Rules', to: '/rules' },
+  { label: 'Wiki', to: '/wiki/Archives_Wiki' },
+  { label: 'Contact', to: '/contact' },
+];
 
 const SITE_LINKS = [
   { label: 'Profiles', to: '/profiles', global: true },
@@ -198,6 +199,9 @@ const SITE_LINKS = [
 export default class MainLayout extends Vue {
   readonly DRAWER_BG = 'layout__drawer';
   readonly DRAWER_WIDTH = 250;
+  readonly regions = Object.keys(SharedConstants.regions)
+    .filter((r) => r !== SiteRegion.GLOBAL as string)
+    .map((r) => SharedConstants.regions[r]);
 
   readonly navbarLinks = NAVBAR_LINKS;
 
@@ -205,7 +209,7 @@ export default class MainLayout extends Vue {
   rightDrawerOpen = false;
 
   get siteLinks() {
-    return SITE_LINKS.filter(link => link.global || this.$region !== SiteRegion.GLOBAL);
+    return SITE_LINKS.filter((link) => link.global || this.$region !== SiteRegion.GLOBAL);
   }
 
   toggleLeftDrawer() {
