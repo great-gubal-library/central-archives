@@ -23,6 +23,10 @@ body.region-na {
   background-color: #007d8e;
 }
 
+body.region-global {
+  background-color: #8D6E63;
+}
+
 html.webp body.region-eu {
 	background-image: url(assets/bg.webp);
 }
@@ -173,6 +177,10 @@ ol li {
 
 .striped-list .q-item:nth-child(even), .striped-list thead tr, .striped-list tr:nth-child(even) {
 	background: $striped-list-bg-even;
+}
+
+.region-global .striped-list .q-item:nth-child(even), .region-global .striped-list thead tr, .region-global .striped-list tr:nth-child(even) {
+	background: #fdf5f2;
 }
 
 .paged-link-table thead tr {

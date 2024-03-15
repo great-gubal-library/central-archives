@@ -54,6 +54,11 @@
               <img class="layout__logo" src="~/assets/logo_na.svg" />
             </router-link>
           </template>
+          <template v-else-if="$region == 'global'">
+            <router-link to="/">
+              <img class="layout__logo" src="~/assets/logo_global.svg" />
+            </router-link>
+          </template>
           <template v-else>
             <router-link to="/" class="gt-xs">
               <picture>
@@ -294,6 +299,10 @@ $max-layout-width: 1280px;
   background: #106777;
 }
 
+.region-global .q-header .q-toolbar {
+  background: #795548;
+}
+
 .layout__nav-links {
   background: linear-gradient(to bottom, #10579e, #1f70c1);
   border-top: 1px solid rgba(255, 255, 255, 0.18);
@@ -302,6 +311,10 @@ $max-layout-width: 1280px;
 
 .region-na .layout__nav-links {
   background: linear-gradient(to bottom, #106777, #1f8090);
+}
+
+.region-global .layout__nav-links {
+  background: linear-gradient(to bottom, #795548, #816256);
 }
 
 .layout__nav-links a {
@@ -325,6 +338,10 @@ $max-layout-width: 1280px;
 
 .region-na .q-drawer {
   background: #157686;
+}
+
+.region-global .q-drawer {
+  background: #8D6E63;
 }
 
 @media screen and (max-width: 1023px) {
@@ -369,6 +386,10 @@ $max-layout-width: 1280px;
   background: #fdfdffee;
 }
 
+.region-global .layout__page-container {
+  background: #fffdfdee;
+}
+
 .q-page {
   padding: 24px 24px 48px 24px;
 }
@@ -391,6 +412,10 @@ $max-layout-width: 1280px;
 
 .region-na .q-footer {
   background: #1f5c6c;
+}
+
+.region-global .q-footer {
+  background: #795548;
 }
 
 .layout__footer {
@@ -434,6 +459,11 @@ $max-layout-width: 1280px;
 .region-na .layout__bg-left,
 .region-na .layout__bg-right {
   filter: hue-rotate(-20deg);
+}
+
+.region-global .layout__bg-left,
+.region-global .layout__bg-right {
+  filter: hue-rotate(-180deg) saturate(0.4);
 }
 
 .layout__bg-left {

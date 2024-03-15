@@ -19,7 +19,7 @@ class Props {
 	images = prop<ImageSummaryDto[]>({
 		required: true
 	});
-	
+
 	links = prop<boolean>({
 		default: true
 	});
@@ -67,6 +67,10 @@ export default class ThumbGallery extends Vue.with(Props) {
 	background: #80a0c0;
 	width: 174px;
 	height: 174px;
+}
+
+.region-global .thumb-gallery img {
+	background: #b0a0a0;
 }
 
 .thumb-gallery img:hover {
