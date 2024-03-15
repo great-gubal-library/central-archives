@@ -3,10 +3,13 @@ import { SiteRegion } from '@app/shared/enums/region.enum';
 import { useApi } from 'src/boot/axios';
 import { useRegionConfig } from 'src/boot/region';
 
+export function getRegionOrigin(region: SiteRegion) {
+  return window.location.origin.replace(useRegionConfig().domain, SharedConstants.regions[region].domain);
+}
+
 export function hsspRedirect(region: SiteRegion, redirectPath: string, currentCharacterId?: number) {
   const $api = useApi();
-  const $regionConfig = useRegionConfig();
-  const origin = window.location.origin.replace($regionConfig.domain, SharedConstants.regions[region].domain);
+  const origin = getRegionOrigin(region);
   const apiUrl = `${origin}${$api.prefix}hssp`;
 
   const form = document.createElement('form');

@@ -25,9 +25,9 @@
                 </q-item-section>
               </q-item>
               <template v-if="$region === 'global'">
-                <q-item v-for="region in regions" clickable v-close-popup :key="region.domain" :to="`https://${region.domain}`">
+                <q-item v-for="region in regions" clickable v-close-popup :key="region.label" :to="region.to">
                   <q-item-section>
-                    <q-item-label>{{ region.name }}</q-item-label>
+                    <q-item-label>{{ region.label }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </template>
@@ -115,8 +115,8 @@
       <nav class="layout__nav-links gt-sm">
         <router-link v-for="link in siteLinks" :key="link.label" :to="link.to">{{ link.label }}</router-link>
         <template v-if="$region === 'global'">
-          <a v-for="region in regions" :key="region.domain" :href="`https://${region.domain}`">
-            {{ region.name }}
+          <a v-for="region in regions" :key="region.label" :href="region.to">
+            {{ region.label }}
           </a>
         </template>
       </nav>
@@ -169,6 +169,7 @@ import SiteSearchField from 'src/components/search/SiteSearchField.vue';
 import { switchCharacter } from 'src/common/switch-character';
 import { SiteRegion } from '../../../server/libs/shared/src/enums/region.enum';
 import SharedConstants from '../../../server/libs/shared/src/SharedConstants';
+import { getRegionOrigin } from '../common/hssp';
 
 const NAVBAR_LINKS = [
   { label: 'About', to: '/about' },
@@ -188,6 +189,16 @@ const SITE_LINKS = [
   { label: 'Venues', to: '/venues' },
 ];
 
+const REGION_LINKS = Object.keys(SharedConstants.regions)
+    .filter((region) => region !== SiteRegion.GLOBAL as string)
+    .map((region) => {
+      const regionConfig = SharedConstants.regions[region];
+      return {
+        label: `${regionConfig.name} (${region.toUpperCase()})`,
+        to: getRegionOrigin(region as SiteRegion),
+      };
+    });
+
 @Options({
   components: {
     EventList,
@@ -199,10 +210,8 @@ const SITE_LINKS = [
 export default class MainLayout extends Vue {
   readonly DRAWER_BG = 'layout__drawer';
   readonly DRAWER_WIDTH = 250;
-  readonly regions = Object.keys(SharedConstants.regions)
-    .filter((r) => r !== SiteRegion.GLOBAL as string)
-    .map((r) => SharedConstants.regions[r]);
 
+  readonly regions = REGION_LINKS;
   readonly navbarLinks = NAVBAR_LINKS;
 
   leftDrawerOpen = false;
