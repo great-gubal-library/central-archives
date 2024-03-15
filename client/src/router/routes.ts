@@ -135,7 +135,6 @@ const routes: RouteRecordRaw[] = [
   // User actions
   {
     path: '/edit-character/:id',
-    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditCharacter.vue') }],
     meta: {

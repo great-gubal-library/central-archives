@@ -3,5 +3,7 @@ export interface RegionConfig {
   description: string;
   shortDescription: string;
   domain: string;
+  newsDomain?: string;
+  newsName?: string;
   datacenters: string[];
 }

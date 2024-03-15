@@ -21,6 +21,8 @@ export default Object.freeze({
       description: 'Chaos Archives, the FFXIV roleplay portal to Chaos EU',
       shortDescription: 'FFXIV roleplay portal to Chaos EU',
       domain: 'chaosarchives.org',
+      newsDomain: 'theharborwatch.org',
+      newsName: 'The Harborwatch',
       datacenters: [ 'Chaos', 'Light' ],
     }),
     [SiteRegion.NA]: Object.freeze({
