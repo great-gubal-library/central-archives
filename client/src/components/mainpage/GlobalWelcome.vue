@@ -12,6 +12,11 @@
       :activeServer="activeServer"
       @select="onCharacterSelect"
     />
+    <template v-else>
+      <p>
+        To get started, <strong><router-link to="/signup">create your account</router-link></strong> or <strong><router-link to="/signup">log in</router-link></strong>.
+      </p>
+    </template>
   </section>
 </template>
 
