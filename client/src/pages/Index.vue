@@ -1,67 +1,22 @@
 <template>
   <q-page>
-    <h2>Latest Updates</h2>
-    <section>
-      <rss-section-header feed-link="/api/feed/stories.rss">
-        <router-link to="/stories">New stories</router-link>
-      </rss-section-header>
-      <story-list :stories="content.newStories" />
-    </section>
-    <section v-if="content.newArtwork.length > 0">
-      <rss-section-header feed-link="/api/feed/artwork.rss">
-        <router-link to="/gallery/artwork">New artwork</router-link>
-      </rss-section-header>
-      <thumb-gallery :images="content.newArtwork" />
-    </section>
-    <section>
-      <h5><router-link to="/noticeboard">Noticeboard</router-link></h5>
-      <noticeboard-item-list :noticeboardItems="content.newNoticeboardItems" />
-    </section>
-    <section class="page-index__profiles-and-fcs">
-      <section>
-        <h5><router-link to="/profiles">New profiles</router-link></h5>
-        <character-name-list :profiles="content.newProfiles" />
-      </section>
-      <section v-if="content.newFreeCompanies.length > 0">
-        <h5><router-link to="/free-companies">New Free Companies</router-link></h5>
-        <free-company-name-list :free-companies="content.newFreeCompanies" />
-      </section>
-    </section>
-    <section class="page-index__profiles-and-fcs">
-      <section>
-        <h5><router-link to="/venues">New Venues</router-link></h5>
-        <venue-list :venues="content.newVenues" />
-      </section>
-      <section>
-        <h5><router-link to="/communities">New Communities</router-link></h5>
-        <community-list :communities="content.newCommunities" />
-      </section>
-    </section>
-    <section v-if="content.newScreenshots.length > 0">
-      <rss-section-header feed-link="/api/feed/screenshots.rss">
-        <router-link to="/gallery/screenshot">New screenshots</router-link>
-      </rss-section-header>
-      <thumb-gallery :images="content.newScreenshots" />
-    </section>
+    <latest-updates v-if="$region !== 'global'" :content="content" />
+    <global-welcome v-else />
   </q-page>
 </template>
 
 <script lang="ts">
-import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
-import ThumbGallery from 'components/images/ThumbGallery.vue';
-import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
-import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
-import StoryList from 'components/stories/StoryList.vue';
-import VenueList from 'components/venues/VenueList.vue';
-import { useApi } from 'src/boot/axios';
-import { notifyError } from 'src/common/notify';
-import RssSectionHeader from 'src/components/common/RssSectionHeader.vue';
-import CommunityList from 'src/components/communities/CommunityList.vue';
-import FreeCompanyNameList from 'src/components/free-company/FreeCompanyNameList.vue';
-import CharacterNameList from 'src/components/mainpage/CharacterNameList.vue';
+import GlobalWelcome from 'src/components/mainpage/GlobalWelcome.vue';
+import LatestUpdates from 'src/components/mainpage/LatestUpdates.vue';
 import { Options, Vue } from 'vue-class-component';
+import { MainPageContentDto } from '../../../server/libs/shared/src/dto/main-page/main-page-content.dto';
+import { notifyError } from '../common/notify';
+import { useApi } from '../boot/axios';
+import { useRegion } from '../boot/region';
+import { SiteRegion } from '../../../server/libs/shared/src/enums/region.enum';
 
 const $api = useApi();
+const $region = useRegion();
 
 async function load(): Promise<MainPageContentDto> {
   try {
@@ -76,19 +31,16 @@ async function load(): Promise<MainPageContentDto> {
 @Options({
   name: 'PageIndex',
   components: {
-    NewsTimeline,
-    CharacterNameList,
-    FreeCompanyNameList,
-    StoryList,
-    NoticeboardItemList,
-    VenueList,
-    CommunityList,
-    ThumbGallery,
-    RssSectionHeader,
+    LatestUpdates,
+    GlobalWelcome,
   },
   async beforeRouteEnter(_, __, next) {
-    const content = await load();
-    next(vm => (vm as PageIndex).setContent(content));
+    if ($region !== SiteRegion.GLOBAL) {
+      const content = await load();
+      next(vm => (vm as PageIndex).setContent(content));
+    } else {
+      next();
+    }
   }
 })
 export default class PageIndex extends Vue {
@@ -123,16 +75,4 @@ export default class PageIndex extends Vue {
 </script>
 
 <style lang="scss">
-.page-index__profiles-and-fcs {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -12px;
-}
-
-.page-index__profiles-and-fcs > section {
-  flex-basis: 0;
-  flex-grow: 1;
-  min-width: 300px;
-  padding-right: 12px;
-}
 </style>
