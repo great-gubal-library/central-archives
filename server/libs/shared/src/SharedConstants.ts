@@ -1,5 +1,5 @@
 import { RegionConfig } from "../region-config";
-import { Region, SiteRegion } from "./enums/region.enum";
+import { SiteRegion } from "./enums/region.enum";
 
 export default Object.freeze({
 	FFXIV_SERVER_TIMEZONE: 'UTC',

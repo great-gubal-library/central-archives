@@ -30,6 +30,7 @@ import { ImagesService } from '../images/images.service';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { ExternalEvent } from './model/external-event';
 import { Region, SiteRegion, asSiteRegion } from '@app/shared/enums/region.enum';
+import { regionLock } from 'apps/chaosarchives/src/common/api-checks';
 
 @Injectable()
 export class EventsService {
@@ -82,6 +83,8 @@ export class EventsService {
       if (!character) {
         throw new BadRequestException('Invalid character ID');
       }
+
+      regionLock(character.server.region);
 
       const event = new Event();
       event.region = character.server.region;

@@ -21,7 +21,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
 import { DataSource, EntityManager, FindOneOptions, Repository } from 'typeorm';
-import { assertUserCharacterId, checkCarrdProfile } from '../../../common/api-checks';
+import { assertUserCharacterId, checkCarrdProfile, regionLock } from '../../../common/api-checks';
 import { ImagesService } from '../images/images.service';
 import { Region, SiteRegion } from '@app/shared/enums/region.enum';
 
@@ -236,6 +236,8 @@ export class CommunitiesService {
       if (!character) {
         throw new BadRequestException('Invalid owner character');
       }
+
+      regionLock(character.server.region);
 
       const community = new Community();
       community.owner = character;

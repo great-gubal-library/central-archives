@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, In, IsNull, Not, Repository } from 'typeorm';
 import { escapeForLike } from '../../../common/db';
 import { SiteRegion } from '@app/shared/enums/region.enum';
+import { regionLock } from 'apps/chaosarchives/src/common/api-checks';
 
 @Injectable()
 export class StoriesService {
@@ -75,6 +76,8 @@ export class StoriesService {
       if (!character) {
         throw new BadRequestException(`Author character "${storyDto.author}" not found`);
       }
+
+      regionLock(character.server.region);
 
       const storyRepo = em.getRepository(Story);
 

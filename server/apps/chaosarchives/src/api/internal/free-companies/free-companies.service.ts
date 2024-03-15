@@ -9,7 +9,7 @@ import { BadRequestException, ForbiddenException, GoneException, Injectable, Not
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';
 import { DataSource, IsNull, Not, Repository } from 'typeorm';
-import { checkCarrdProfile } from '../../../common/api-checks';
+import { checkCarrdProfile, regionLock } from '../../../common/api-checks';
 import { ImagesService } from '../images/images.service';
 import { LodestoneService } from '../lodestone/lodestone.service';
 import { SiteRegion } from '@app/shared/enums/region.enum';
@@ -79,6 +79,8 @@ export class FreeCompaniesService {
       if (!character) {
         throw new NotFoundException('Character not found');
       }
+
+      regionLock(character.server.region);
 
       if (!fcLodestoneId || !fcLodestoneInfo) {
         character.freeCompany = Promise.resolve(null);

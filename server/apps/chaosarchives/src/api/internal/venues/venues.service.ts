@@ -11,8 +11,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { DateTime } from 'luxon';
-import { DataSource, EntityManager, FindOptionsWhere, Repository } from 'typeorm';
-import { checkCarrdProfile } from '../../../common/api-checks';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { checkCarrdProfile, regionLock } from '../../../common/api-checks';
 import { ImagesService } from '../images/images.service';
 import { VenueFilterDto } from '@app/shared/dto/venues/venue-filter.dto';
 import { escapeForLike } from 'apps/chaosarchives/src/common/db';
@@ -178,6 +178,8 @@ export class VenuesService {
 			if (!character) {
 				throw new BadRequestException('Invalid owner character');
 			}
+
+      regionLock(character.server.region);
 
 			const venue = new Venue();
 			venue.owner = character;

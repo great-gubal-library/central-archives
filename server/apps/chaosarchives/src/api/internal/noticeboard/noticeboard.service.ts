@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 import { firstValueFrom } from 'rxjs';
 import { SiteRegion } from '@app/shared/enums/region.enum';
+import { regionLock } from 'apps/chaosarchives/src/common/api-checks';
 
 @Injectable()
 export class NoticeboardService {
@@ -68,6 +69,8 @@ export class NoticeboardService {
       if (!character) {
         throw new BadRequestException(`Author character "${noticeboardItemDto.author}" not found`);
       }
+
+      regionLock(character.server.region);
 
       const noticeboardItemRepo = em.getRepository(NoticeboardItem);
 

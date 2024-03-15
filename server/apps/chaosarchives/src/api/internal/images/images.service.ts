@@ -24,7 +24,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { escapeForLike } from 'apps/chaosarchives/src/common/db';
 import utils from 'apps/chaosarchives/src/common/utils';
-import { Connection, EntityManager, FindOptionsWhere, IsNull, Not, Repository } from 'typeorm';
+import { DataSource, EntityManager, FindOptionsWhere, IsNull, Not, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { ImageSanitizeError, ImageSanitizeResult, sanitizeImage } from '../../../common/image-lib';
 import { StorageService } from './storage.service';
@@ -69,7 +69,7 @@ interface UploadedImageInfo {
 export class ImagesService {
   constructor(
     private storageService: StorageService,
-    private connection: Connection,
+    private connection: DataSource,
     @InjectRepository(Image) private imageRepo: Repository<Image>,
     @InjectRepository(Character) private characterRepo: Repository<Character>,
   ) {}
