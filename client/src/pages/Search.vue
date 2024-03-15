@@ -55,6 +55,10 @@ import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteLocationNormalized } from 'vue-router';
 import { SearchResultDto } from '@app/shared/dto/search/search-result.dto';
+import { useRegion } from '../boot/region';
+import { SiteRegion } from '../../../server/libs/shared/src/enums/region.enum';
+
+const CROSS_REGION_PAGE_TYPES = [ PageType.PROFILE, PageType.EVENT, PageType.IMAGE, PageType.WIKI_PAGE ];
 
 const $api = useApi();
 const $router = useRouter();
@@ -67,7 +71,12 @@ async function load(to: RouteLocationNormalized): Promise<{ query: string; resul
     throw new Error();
   }
 
-  const results = (await $api.search.search(searchQuery)).filter(resultSet => resultSet.results.length > 0);
+  let results = (await $api.search.search(searchQuery)).filter(resultSet => resultSet.results.length > 0);
+
+  if (useRegion() === SiteRegion.GLOBAL) {
+    results = results.filter(r => CROSS_REGION_PAGE_TYPES.includes(r.type));
+  }
+
   return { query: searchQuery, results };
 }
 

@@ -167,6 +167,25 @@ import UserMenu from '../components/sidebar/UserMenu.vue';
 import InlineSvg from 'vue-inline-svg';
 import SiteSearchField from 'src/components/search/SiteSearchField.vue';
 import { switchCharacter } from 'src/common/switch-character';
+import { SiteRegion } from '../../../server/libs/shared/src/enums/region.enum';
+
+const NAVBAR_LINKS = [
+    { label: 'About', to: '/about' },
+    { label: 'Rules', to: '/rules' },
+    { label: 'Wiki', to: '/wiki/Archives_Wiki' },
+    { label: 'Contact', to: '/contact' },
+  ];
+
+const SITE_LINKS = [
+  { label: 'Profiles', to: '/profiles', global: true },
+  { label: 'Stories', to: '/stories' },
+  { label: 'Artwork', to: '/gallery/artwork' },
+  { label: 'Screenshots', to: '/gallery/screenshot' },
+  { label: 'Noticeboard', to: '/noticeboard' },
+  { label: 'Free Companies', to: '/free-companies' },
+  { label: 'Communities', to: '/communities' },
+  { label: 'Venues', to: '/venues' },
+];
 
 @Options({
   components: {
@@ -180,26 +199,14 @@ export default class MainLayout extends Vue {
   readonly DRAWER_BG = 'layout__drawer';
   readonly DRAWER_WIDTH = 250;
 
-  readonly navbarLinks = [
-    { label: 'About', to: '/about' },
-    { label: 'Rules', to: '/rules' },
-    { label: 'Wiki', to: '/wiki/Archives_Wiki' },
-    { label: 'Contact', to: '/contact' },
-  ];
-
-  readonly siteLinks = [
-    { label: 'Profiles', to: '/profiles' },
-    { label: 'Stories', to: '/stories' },
-    { label: 'Artwork', to: '/gallery/artwork' },
-    { label: 'Screenshots', to: '/gallery/screenshot' },
-    { label: 'Noticeboard', to: '/noticeboard' },
-    { label: 'Free Companies', to: '/free-companies' },
-    { label: 'Communities', to: '/communities' },
-    { label: 'Venues', to: '/venues' },
-  ];
+  readonly navbarLinks = NAVBAR_LINKS;
 
   leftDrawerOpen = false;
   rightDrawerOpen = false;
+
+  get siteLinks() {
+    return SITE_LINKS.filter(link => link.global || this.$region !== SiteRegion.GLOBAL);
+  }
 
   toggleLeftDrawer() {
     this.leftDrawerOpen = !this.leftDrawerOpen;
@@ -300,7 +307,7 @@ $max-layout-width: 1280px;
 }
 
 .region-global .q-header .q-toolbar {
-  background: #795548;
+  background: #424041;
 }
 
 .layout__nav-links {
@@ -314,7 +321,7 @@ $max-layout-width: 1280px;
 }
 
 .region-global .layout__nav-links {
-  background: linear-gradient(to bottom, #795548, #816256);
+  background: linear-gradient(to bottom, #424041, #4f4d4e);
 }
 
 .layout__nav-links a {
@@ -341,7 +348,7 @@ $max-layout-width: 1280px;
 }
 
 .region-global .q-drawer {
-  background: #8D6E63;
+  background: #606060;
 }
 
 @media screen and (max-width: 1023px) {
@@ -415,7 +422,7 @@ $max-layout-width: 1280px;
 }
 
 .region-global .q-footer {
-  background: #795548;
+  background: #424041;
 }
 
 .layout__footer {
@@ -463,7 +470,7 @@ $max-layout-width: 1280px;
 
 .region-global .layout__bg-left,
 .region-global .layout__bg-right {
-  filter: hue-rotate(-180deg) saturate(0.4);
+  filter: hue-rotate(-190deg) saturate(0.1);
 }
 
 .layout__bg-left {

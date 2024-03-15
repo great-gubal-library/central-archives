@@ -40,6 +40,7 @@ export interface GettersInterface {
   role: Role|null;
   realRole: Role|null;
   isTrusted: boolean;
+  hasRegion: boolean;
 }
 
 type CAStore = Omit<VuexStore<StateInterface>, 'getters'> & { getters: GettersInterface };

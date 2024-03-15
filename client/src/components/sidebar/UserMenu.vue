@@ -12,9 +12,7 @@
       </q-item>
       <q-item clickable v-ripple to="/forgot-password">
         <q-item-section>
-          <q-item-label>
-            Forgot your password?
-          </q-item-label>
+          <q-item-label> Forgot your password? </q-item-label>
         </q-item-section>
       </q-item>
     </template>
@@ -22,154 +20,95 @@
       <q-item-label header>
         {{ $store.getters.character?.name }}
       </q-item-label>
-      <q-item
-        clickable
-        v-ripple
-        @click="switchCharacter"
-      >
+      <q-item clickable v-ripple @click="switchCharacter">
         <q-item-section>
           <q-item-label><q-icon class="text-h6" name="swap_horiz" /> Switch character</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item
-        v-if="$store.getters.role === Role.UNVERIFIED"
-        clickable
-        v-ripple
-        to="/verify"
-      >
+      <q-item v-if="$store.getters.role === Role.UNVERIFIED" clickable v-ripple to="/verify">
         <q-separator dark />
         <q-item-section>
-          <q-item-label><q-icon class="text-h6" name="verified" /> {{ $store.getters.realRole === Role.UNVERIFIED ? 'Account verification' : 'Character verification'}}</q-item-label>
+          <q-item-label
+            ><q-icon class="text-h6" name="verified" />
+            {{
+              $store.getters.realRole === Role.UNVERIFIED ? 'Account verification' : 'Character verification'
+            }}</q-item-label
+          >
         </q-item-section>
       </q-item>
       <template v-else>
-        <q-item
-          clickable
-          v-ripple
-          :to="myPlayerProfileLink"
-        >
+        <q-item clickable v-ripple :to="myPlayerProfileLink">
           <q-item-section>
             <q-item-label><q-icon class="text-h6" name="account_box" /> My player profile</q-item-label>
           </q-item-section>
         </q-item>
         <q-separator dark />
-        <q-item
-          clickable
-          v-ripple
-          :to="myCharacterProfileLink"
-        >
+        <q-item clickable v-ripple :to="myCharacterProfileLink">
           <q-item-section>
             <q-item-label><q-icon class="text-h6" name="face" /> View character profile</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item
-          clickable
-          v-ripple
-          :to="`/edit-character/${$store.getters.characterId}`"
-        >
+        <q-item clickable v-ripple :to="`/edit-character/${$store.getters.characterId}`">
           <q-item-section>
             <q-item-label><q-icon class="text-h6" name="edit" /> Edit character profile</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item
-          clickable
-          v-ripple
-          to="/my-free-company"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="" /> My Free Company</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-separator dark />
-        <q-item
-          clickable
-          v-ripple
-          to="/create-community"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="" /> Create community</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item
-          clickable
-          v-ripple
-          to="/my-communities"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="" /> My communities</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-separator dark />
-        <q-item
-          clickable
-          v-ripple
-          to="/create-venue"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="" /> Create venue</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item
-          clickable
-          v-ripple
-          to="/my-venues"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="" /> My venues</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-separator dark />
-        <q-item
-          clickable
-          v-ripple
-          to="/create-story"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="auto_stories" /> New story</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item
-          clickable
-          v-ripple
-          to="/create-event"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="event" /> New event</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item
-          clickable
-          v-ripple
-          to="/create-noticeboard-item"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="sticky_note_2" /> New noticeboard item</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item
-          v-if="$store.getters.isTrusted"
-          clickable
-          v-ripple
-          to="/create-wiki-page"
-        >
-          <q-item-section>
-            <q-item-label><q-icon class="text-h6" name="history_edu" /> New wiki page</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item
-          clickable
-          v-ripple
-          @click="uploadImage"
-        >
+        <template v-if="hasRegion">
+          <q-item clickable v-ripple to="/my-free-company">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="" /> My Free Company</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator dark />
+          <q-item clickable v-ripple to="/create-community">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="" /> Create community</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-ripple to="/my-communities">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="" /> My communities</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator dark />
+          <q-item clickable v-ripple to="/create-venue">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="" /> Create venue</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-ripple to="/my-venues">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="" /> My venues</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator dark />
+          <q-item clickable v-ripple to="/create-story">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="auto_stories" /> New story</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-ripple to="/create-event">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="event" /> New event</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-ripple to="/create-noticeboard-item">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="sticky_note_2" /> New noticeboard item</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item v-if="$store.getters.isTrusted" clickable v-ripple to="/create-wiki-page">
+            <q-item-section>
+              <q-item-label><q-icon class="text-h6" name="history_edu" /> New wiki page</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
+        <q-item clickable v-ripple @click="uploadImage">
           <q-item-section>
             <q-item-label><q-icon class="text-h6" name="upload" /> Upload image</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item
-          clickable
-          v-ripple
-          to="/my-content"
-        >
+        <q-item v-if="hasRegion" clickable v-ripple to="/my-content">
           <q-item-section>
             <q-item-label><q-icon class="text-h6" name="list" /> My content</q-item-label>
           </q-item-section>
@@ -196,22 +135,25 @@ import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { notifySuccess } from 'src/common/notify';
 import { switchCharacter } from 'src/common/switch-character';
+import { SiteRegion } from '../../../../server/libs/shared/src/enums/region.enum';
 
-@Options({
-
-})
+@Options({})
 export default class UserMenu extends Vue {
   readonly Role = Role;
 
-  get myPlayerProfileLink() {
+  get hasRegion(): boolean {
+    return this.$region !== SiteRegion.GLOBAL;
+  }
+
+  get myPlayerProfileLink(): string {
     return `/player/${this.$store.state.user!.id}`;
   }
 
-  get myCharacterProfileLink() {
-		const server = this.$store.getters.character?.server || '';
-		const character = this.$store.getters.character?.name.replace(/ /g, '_') || '';
-		return `/${server}/${character}`;
-	}
+  get myCharacterProfileLink(): string {
+    const server = this.$store.getters.character?.server || '';
+    const character = this.$store.getters.character?.name.replace(/ /g, '_') || '';
+    return `/${server}/${character}`;
+  }
 
   async switchCharacter() {
     await switchCharacter();
@@ -220,18 +162,20 @@ export default class UserMenu extends Vue {
   async uploadImage() {
     const UploadDialog = (await import('components/upload/UploadDialog.vue')).default;
 
-    this.$q.dialog({
-      component: UploadDialog
-    }).onOk(async (image: ImageSummaryDto) => {
-      const PostUploadDialog = (await import('components/upload/PostUploadDialog.vue')).default;
+    this.$q
+      .dialog({
+        component: UploadDialog,
+      })
+      .onOk(async (image: ImageSummaryDto) => {
+        const PostUploadDialog = (await import('components/upload/PostUploadDialog.vue')).default;
 
-      this.$q.dialog({
-        component: PostUploadDialog,
-        componentProps: {
-          image
-        }
+        this.$q.dialog({
+          component: PostUploadDialog,
+          componentProps: {
+            image,
+          },
+        });
       });
-    });
   }
 
   logOut() {
