@@ -6,7 +6,8 @@
       class="page-forgot-password__form"
       @submit="onSubmit"
     >
-      <p>If you have forgotten your password, fill in the email address you used to sign up, and we will send you a link to reset your password.</p>
+      <p>If you have forgotten the password for your Central Archives account, fill in the email address you used to sign up, and we will send you a link to reset your password.</p>
+      <p>(Accounts registered on Chaos Archives and Crystal Archives are also Central Archives accounts.)</p>
       <section>
         <q-input
           v-model="email"

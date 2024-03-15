@@ -2,7 +2,8 @@
   <q-page>
     <h2>Log In</h2>
     <q-form class="page-login__form" @submit="onSubmit">
-      <p>Please fill in the form below to log in to {{$siteName}}.</p>
+      <p>Please fill in the form below to log in to {{ ssoParams.name }}<template v-if="ssoParams.host"> using your {{$siteName}} account</template>.</p>
+      <p>If you previously registered on Chaos Archives or Crystal Archives, use that account to log in.</p>
       <section>
         <q-input
           v-model="email"
@@ -53,12 +54,108 @@
 </template>
 
 <script lang="ts">
-import { Vue } from 'vue-class-component';
+import { Options, Vue } from 'vue-class-component';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import SharedConstants from '@app/shared/SharedConstants';
 import errors from '@app/shared/errors';
+import { hsspRedirectToOrigin } from '../common/hssp';
+import { useRouter } from '../router';
+import { RouteLocationNormalized } from 'vue-router';
+import { useStore } from '../store';
+import { useRegionConfig } from '../boot/region';
 
+interface SsoParams {
+  host: string | null;
+  name: string;
+  redirectPath: string;
+  needLoginForm: boolean;
+}
+
+const HOST_REGEX = /^([a-z.]+[a-z]+)(?::[0-9]+)$/;
+const $router = useRouter();
+
+function parseQuery(to: RouteLocationNormalized): SsoParams {
+  const redirectPath = to.query.redirect as string || '/';
+
+  if (!redirectPath.startsWith('/')) {
+    throw new Error('Invalid redirect path');
+  }
+
+  const needLoginForm = !useStore().getters.role;
+  const host = to.query.host as string;
+
+  if (!host) {
+    // Same-site login
+    return {
+      host: null,
+      redirectPath,
+      needLoginForm,
+      name: useRegionConfig().name,
+    };
+  }
+
+  // Cross-site login
+  const match = host.match(HOST_REGEX);
+
+  if (!match) {
+    throw new Error('Invalid host');
+  }
+
+  const hostname = match[1];
+
+  for (let regionConfig of Object.values(SharedConstants.regions)) {
+    if (hostname.endsWith(regionConfig.domain)) {
+      return {
+        host,
+        redirectPath,
+        needLoginForm,
+        name: regionConfig.name,
+      };
+    }
+
+    if (regionConfig.newsDomain && hostname.endsWith(regionConfig.newsDomain)) {
+      return {
+        host,
+        redirectPath,
+        needLoginForm,
+        name: regionConfig.newsName!,
+      };
+    }
+  }
+
+  throw new Error('Unknown host');
+}
+
+function ssoRedirect(params: SsoParams) {
+  hsspRedirectToOrigin(`${window.location.protocol}//${params.host}`, params.redirectPath);
+}
+
+@Options({
+  name: 'PageIndex',
+  beforeRouteEnter(to, _, next) {
+    const ssoParams = parseQuery(to);
+
+    if (!ssoParams.needLoginForm) {
+      if (ssoParams.host) {
+        ssoRedirect(ssoParams);
+      } else {
+        notifySuccess('You are already logged in.');
+        void $router.replace(ssoParams.redirectPath);
+      }
+
+      return false;
+    }
+
+    next((vm) => (vm as PageLogIn).ssoParams = ssoParams);
+  }
+})
 export default class PageLogIn extends Vue {
+  ssoParams: SsoParams = {
+    host: null,
+    name: '',
+    redirectPath: '/',
+    needLoginForm: true,
+  };
   email = '';
   password = '';
   otp = '';
@@ -88,10 +185,17 @@ export default class PageLogIn extends Vue {
         otp: this.otp || null,
       });
 
-      notifySuccess('You have successfully logged in.');
       this.$api.setAccessToken(result.accessToken);
       this.$store.commit('setUser', result.session);
-      void this.$router.replace('/');
+
+      if (this.ssoParams.host) {
+        // Cross-site login - redirect back
+        ssoRedirect(this.ssoParams);
+        return;
+      }
+
+      notifySuccess('You have successfully logged in.');
+      void this.$router.replace(this.ssoParams.redirectPath);
     } catch (e) {
       if (errors.getStatusCode(e) === 400 && errors.getMessage(e) === SharedConstants.errorCodes.OTP_REQUIRED) {
         this.showOtp = true;

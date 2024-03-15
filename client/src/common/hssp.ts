@@ -8,8 +8,11 @@ export function getRegionOrigin(region: SiteRegion) {
 }
 
 export function hsspRedirect(region: SiteRegion, redirectPath: string, currentCharacterId?: number) {
+  hsspRedirectToOrigin(getRegionOrigin(region), redirectPath, currentCharacterId);
+}
+
+export function hsspRedirectToOrigin(origin: string, redirectPath: string, currentCharacterId?: number) {
   const $api = useApi();
-  const origin = getRegionOrigin(region);
   const apiUrl = `${origin}${$api.prefix}hssp`;
 
   const form = document.createElement('form');

@@ -1,5 +1,6 @@
 import { SiteRegion } from '@app/shared/enums/region.enum';
 import { useRegion } from 'src/boot/region';
+import { getRegionOrigin } from 'src/common/hssp';
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 
 function regionGuard() {
@@ -89,6 +90,14 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/login',
+    beforeEnter(_, from) {
+      if (useRegion() === SiteRegion.GLOBAL) {
+        return true;
+      }
+
+      window.location.assign(`${getRegionOrigin(SiteRegion.GLOBAL)}/login?host=${encodeURIComponent(window.location.host)}&redirect=${encodeURIComponent(from.fullPath)}`);
+      return false;
+    },
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/LogIn.vue') }],
     meta: {
