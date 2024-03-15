@@ -4,9 +4,9 @@
     <div class="page-my-content__subtitle">for {{ $store.getters.character?.name }}</div>
 
     <q-tabs v-model="tab" dense align="justify" narrow-indicator>
-      <q-tab :name="PageType.EVENT" label="Events" />
-      <q-tab :name="PageType.STORY" label="Stories" />
-      <q-tab :name="PageType.NOTICEBOARD_ITEM" label="Noticeboard" />
+      <q-tab v-if="hasRegion" :name="PageType.EVENT" label="Events" />
+      <q-tab v-if="hasRegion" :name="PageType.STORY" label="Stories" />
+      <q-tab v-if="hasRegion" :name="PageType.NOTICEBOARD_ITEM" label="Noticeboard" />
       <q-tab v-if="$store.getters.isTrusted" :name="PageType.WIKI_PAGE" label="Wiki" />
       <q-tab :name="PageType.IMAGE" label="Images" />
     </q-tabs>
@@ -61,6 +61,7 @@ import MyContentList from 'src/components/common/MyContentList.vue';
 import { useRouter } from 'src/router';
 import { useStore } from 'src/store';
 import { Options, Vue } from 'vue-class-component';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 async function load(): Promise<MyContentDto> {
   const $api = useApi();
@@ -119,6 +120,10 @@ export default class PageMyContent extends Vue {
   };
 
   tab: PageType | null = null;
+
+  get hasRegion(): boolean {
+    return this.$region !== SiteRegion.GLOBAL;
+  }
 
   setContent(content: MyContentDto, tab: PageType | null) {
     this.content = content;

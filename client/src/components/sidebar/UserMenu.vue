@@ -108,7 +108,7 @@
             <q-item-label><q-icon class="text-h6" name="upload" /> Upload image</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item v-if="hasRegion" clickable v-ripple to="/my-content">
+        <q-item clickable v-ripple to="/my-content">
           <q-item-section>
             <q-item-label><q-icon class="text-h6" name="list" /> My content</q-item-label>
           </q-item-section>
@@ -135,7 +135,7 @@ import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { notifySuccess } from 'src/common/notify';
 import { switchCharacter } from 'src/common/switch-character';
-import { SiteRegion } from '../../../../server/libs/shared/src/enums/region.enum';
+import { SiteRegion } from '@app/shared/enums/region.enum';
 
 @Options({})
 export default class UserMenu extends Vue {

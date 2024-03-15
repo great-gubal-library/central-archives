@@ -1,4 +1,12 @@
+import { SiteRegion } from '@app/shared/enums/region.enum';
+import { useRegion } from 'src/boot/region';
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
+
+function regionGuard() {
+  if (useRegion() === SiteRegion.GLOBAL) {
+    return '/';
+  }
+}
 
 const routes: RouteRecordRaw[] = [
   {
@@ -127,6 +135,7 @@ const routes: RouteRecordRaw[] = [
   // User actions
   {
     path: '/edit-character/:id',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditCharacter.vue') }],
     meta: {
@@ -144,8 +153,9 @@ const routes: RouteRecordRaw[] = [
   },
 
   // Stories
-  { 
+  {
     path: '/stories',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Stories.vue') }],
     meta: {
@@ -153,14 +163,16 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/story/:id',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Story.vue') }],
   },
 
-  { 
+  {
     path: '/create-story',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditStory.vue') }],
     meta: {
@@ -168,8 +180,9 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/edit-story/:id',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditStory.vue') }],
     meta: {
@@ -178,8 +191,9 @@ const routes: RouteRecordRaw[] = [
   },
 
   // Noticeboard
-  { 
+  {
     path: '/noticeboard',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Noticeboard.vue') }],
     meta: {
@@ -187,14 +201,16 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/noticeboard/:id',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/NoticeboardItem.vue') }],
   },
 
-  { 
+  {
     path: '/create-noticeboard-item',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditNoticeboardItem.vue') }],
     meta: {
@@ -202,8 +218,9 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/edit-noticeboard-item/:id',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditNoticeboardItem.vue') }],
     meta: {
@@ -211,7 +228,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  
+
   // Events
   {
     path: '/event/:id',
@@ -221,6 +238,7 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/create-event',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditEvent.vue') }],
     meta: {
@@ -230,6 +248,7 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/edit-event/:id',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditEvent.vue') }],
     meta: {
@@ -254,19 +273,19 @@ const routes: RouteRecordRaw[] = [
 
   // Images
 
-  { 
+  {
     path: '/image/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Image.vue') }],
   },
 
-  { 
+  {
     path: '/gallery/:category',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Gallery.vue') }],
   },
 
-  { 
+  {
     path: '/my-content',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/MyContent.vue') }],
@@ -275,7 +294,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/edit-image/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditImage.vue') }],
@@ -286,8 +305,9 @@ const routes: RouteRecordRaw[] = [
 
   // Venues
 
-  { 
+  {
     path: '/venues',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Venues.vue') }],
     meta: {
@@ -295,8 +315,9 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/my-venues',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/MyVenues.vue') }],
     meta: {
@@ -306,18 +327,21 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/venue/:server/:name',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Venue.vue') }],
   },
 
-  { 
+  {
     path: '/venue/:id([0-9]+)',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Venue.vue') }],
   },
 
-  { 
+  {
     path: '/create-venue',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditVenue.vue') }],
     meta: {
@@ -325,8 +349,9 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/edit-venue/:id',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditVenue.vue') }],
     meta: {
@@ -336,8 +361,9 @@ const routes: RouteRecordRaw[] = [
 
   // Communities
 
-  { 
+  {
     path: '/communities',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Communities.vue') }],
     meta: {
@@ -345,8 +371,9 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/my-communities',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/MyCommunities.vue') }],
     meta: {
@@ -356,12 +383,14 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/community/:name',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Community.vue') }],
   },
 
-  { 
+  {
     path: '/create-community',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditCommunity.vue') }],
     meta: {
@@ -369,8 +398,9 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/edit-community/:id',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditCommunity.vue') }],
     meta: {
@@ -380,8 +410,9 @@ const routes: RouteRecordRaw[] = [
 
   // Free Companies
 
-  { 
+  {
     path: '/my-free-company',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/MyFreeCompany.vue') }],
     meta: {
@@ -389,8 +420,9 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/free-companies',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/FreeCompanies.vue') }],
     meta: {
@@ -400,6 +432,7 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/fc/:server([A-Z][a-z]+)/:fc([^/]+)',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/FreeCompany.vue') }],
     meta: {
@@ -409,8 +442,9 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/edit-free-company/:server([A-Z][a-z]+)/:fc([^/]+)',
+    beforeEnter: regionGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditFreeCompany.vue') }],
     meta: {
@@ -426,7 +460,7 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Wiki.vue') }],
   },
 
-  { 
+  {
     path: '/create-wiki-page',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditWikiPage.vue') }],
@@ -435,7 +469,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  { 
+  {
     path: '/edit-wiki-page/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/EditWikiPage.vue') }],
@@ -468,7 +502,7 @@ const routes: RouteRecordRaw[] = [
   },
 
   // Links
-  
+
   {
     path: '/link/:name',
     component: () => import('layouts/MainLayout.vue'),

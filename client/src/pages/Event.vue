@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-event">
-		<section v-if="event.mine" class="edit-bar">
+		<section v-if="event.mine && $region !== 'global'" class="edit-bar">
 			<router-link :to="`/edit-event/${eventId}`">Edit event</router-link>
 			<q-btn flat color="negative" label="Delete event" @click="onDeleteClick" />
 		</section>
