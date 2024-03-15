@@ -23,13 +23,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Redis from 'ioredis';
 import { DateTime, Duration } from 'luxon';
 import { firstValueFrom } from 'rxjs';
-import { Connection, EntityManager, FindOptionsWhere, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
+import { DataSource, EntityManager, FindOptionsWhere, In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { Contains } from '../../../common/db';
 import utils from '../../../common/utils';
 import { ImagesService } from '../images/images.service';
 import { ChocoboChronicleService } from './chocobo-chronicle.service';
 import { ExternalEvent } from './model/external-event';
-import { Region, SiteRegion, asSiteRegion } from '@app/shared/enums/region.enum';
+import { SiteRegion, asRegionOrThrow, asSiteRegion } from '@app/shared/enums/region.enum';
 import { regionLock } from 'apps/chaosarchives/src/common/api-checks';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class EventsService {
   constructor(
     private readonly ccService: ChocoboChronicleService,
     private readonly imagesService: ImagesService,
-    private readonly connection: Connection,
+    private readonly connection: DataSource,
     @InjectRepository(Event)
     private readonly eventRepo: Repository<Event>,
     @InjectRedis()
@@ -347,7 +347,7 @@ export class EventsService {
     ];
 
     if (region !== SiteRegion.GLOBAL) {
-      conditions.forEach((condition) => (condition.region = region as string as Region));
+      conditions.forEach((condition) => (condition.region = asRegionOrThrow(region)));
     }
 
     const events = await this.eventRepo.find({

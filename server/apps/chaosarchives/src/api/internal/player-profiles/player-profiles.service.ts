@@ -2,7 +2,7 @@ import { UserInfo } from '@app/auth/model/user-info';
 import { Character, User } from '@app/entity';
 import { PlayerProfileEditDto } from '@app/shared/dto/player-profiles/player-profile-edit.dto';
 import { PlayerProfileDto } from '@app/shared/dto/player-profiles/player-profile.dto';
-import { Region, SiteRegion } from '@app/shared/enums/region.enum';
+import { SiteRegion, asRegionOrThrow } from '@app/shared/enums/region.enum';
 import { Role } from '@app/shared/enums/role.enum';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -40,7 +40,7 @@ export class PlayerProfilesService {
 
     if (region !== SiteRegion.GLOBAL) {
       charactersWhere.server = {
-        region: region as string as Region,
+        region: asRegionOrThrow(region),
       };
     }
 

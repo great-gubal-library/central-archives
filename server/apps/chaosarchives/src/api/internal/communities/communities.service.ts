@@ -23,7 +23,7 @@ import { DateTime } from 'luxon';
 import { DataSource, EntityManager, FindOneOptions, Repository } from 'typeorm';
 import { assertUserCharacterId, checkCarrdProfile, regionLock } from '../../../common/api-checks';
 import { ImagesService } from '../images/images.service';
-import { Region, SiteRegion } from '@app/shared/enums/region.enum';
+import { SiteRegion, asRegionOrThrow } from '@app/shared/enums/region.enum';
 
 @Injectable()
 export class CommunitiesService {
@@ -166,7 +166,7 @@ export class CommunitiesService {
     const community = await this.communityRepo.findOne({
       where: {
         name,
-        region: region as string as Region,
+        region: asRegionOrThrow(region),
       },
       relations: ['owner', 'owner.server', 'tags', 'banner', 'banner.owner'],
     });
