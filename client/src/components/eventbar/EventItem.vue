@@ -7,6 +7,7 @@
       </q-item-label>
       <q-item-label caption>
         <template v-if="!expanded">
+          <span v-if="$region === 'global'">{{ event.region.toUpperCase() }}, </span>
           <span v-html="serverDateHtml"></span>
           <q-tooltip>{{ localDate }}</q-tooltip>
         </template>

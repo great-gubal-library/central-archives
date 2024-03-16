@@ -530,6 +530,7 @@ export class EventsService {
       link: event.externalSourceLink || '',
       source: event.source,
       recurring: event.recurring,
+      region: event.region,
       locations: event.locations.map((location) => ({
         id: location.id,
         name: location.name,
