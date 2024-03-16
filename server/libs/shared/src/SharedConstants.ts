@@ -32,8 +32,8 @@ export default Object.freeze({
     }),
     [SiteRegion.GLOBAL]: Object.freeze({
       name: 'Central Archives',
-      description: 'Central Archives',
-      shortDescription: 'Central Archives',
+      description: 'Central Archives, FFXIV character registrations and roleplay profiles',
+      shortDescription: 'FFXIV character registrations and roleplay profiles',
       domain: 'centralarchives.org',
     }),
   }),
