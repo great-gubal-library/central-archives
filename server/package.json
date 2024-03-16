@@ -1,7 +1,7 @@
 {
   "name": "chaosarchives",
   "version": "1.0.0",
-  "description": "Roleplaying portal for the Chaos EU datacenter in FFXIV",
+  "description": "Roleplaying portal for FFXIV",
   "author": "Maia Everett <maia@everett.one>",
   "private": true,
   "license": "AGPL-3.0",
@@ -20,7 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/chaosarchives/test/jest-e2e.json",
     "docker:build": "docker build -t chaosarchives .",
-    "docker:deploy": "docker compose up -d"
+    "docker:deploy": "docker compose up -d --wait"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.515.0",

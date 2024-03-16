@@ -59,6 +59,13 @@ services:
       - 8112
     environment:
       - NODE_ENV=${NODE_ENV:-production}
+    healthcheck:
+      test: [ 'CMD-SHELL', 'curl -f http://localhost:8112/ | grep -F "Cope. Seethe. Mald."' ]
+      interval: 5m
+      timeout: 30s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
 
   chaosarchives:
     build: ./
@@ -89,4 +96,3 @@ services:
       retries: 3
       start_period: 40s
       start_interval: 5s
-
