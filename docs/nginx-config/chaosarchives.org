@@ -1,5 +1,5 @@
 server {
-    server_name chaosarchives.org;
+    server_name chaosarchives.org crystalarchives.org centralarchives.org;
 
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
@@ -13,33 +13,39 @@ server {
     gzip_min_length 256;
     gzip_types text/html application/javascript text/css application/json;
 
+
     location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto https;
+
         if ($http_user_agent ~* "Discordbot") {
             proxy_pass http://localhost:8110;
         }
 
         expires 0;
         add_header Cache-Control "no-store, no-cache, must-revalidate";
+        add_header Strict-Transport-Security "max-age=31536000" always;
+        add_header Content-Security-Policy "script-src 'self' cdn.tiny.cloud; frame-ancestors 'none';";
         try_files $uri $uri/ /index.html;
     }
 
     location /api/internal/images {
         proxy_pass http://localhost:8111;
-        proxy_set_header Host $host;
+	proxy_set_header Host $host;
         client_max_body_size 20M;
     }
 
     location /api/ {
         proxy_pass http://localhost:8111;
-        proxy_set_header Host $host;
+	proxy_set_header Host $host;
     }
 
     location /socket.io {
         proxy_pass http://localhost:8111;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'Upgrade';
-        proxy_set_header Host $host;
+	proxy_http_version 1.1;
+	proxy_set_header Upgrade $http_upgrade;
+	proxy_set_header Connection 'Upgrade';
+	proxy_set_header Host $host;
     }
 
     location ~* ^(?!/api/).+\.(?:ico|css|js|gif|jpe?g|png|webp|woff2?)$ {
@@ -47,6 +53,10 @@ server {
         add_header Vary Accept-Encoding;
         access_log off;
     }
+
+
+
+
 }
 
 server {
@@ -61,6 +71,28 @@ server {
 }
 
 server {
+    server_name www.crystalarchives.org;
+
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    ssl_certificate /etc/letsencrypt/live/chaosarchives.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/chaosarchives.org/privkey.pem; # managed by Certbot
+
+    return 301 https://crystalarchives.org$request_uri;
+}
+
+server {
+    server_name www.centralarchives.org;
+
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    ssl_certificate /etc/letsencrypt/live/chaosarchives.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/chaosarchives.org/privkey.pem; # managed by Certbot
+
+    return 301 https://centralarchives.org$request_uri;
+}
+
+server {
     server_name chaosarchives.org www.chaosarchives.org;
 
     listen 80;
@@ -72,6 +104,38 @@ server {
 
 
     if ($host = chaosarchives.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+}
+
+server {
+    server_name crystalarchives.org www.crystalarchives.org;
+
+    listen 80;
+    listen [::]:80;
+
+    if ($host = www.crystalarchives.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = crystalarchives.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+}
+
+server {
+    server_name centralarchives.org www.centralarchives.org;
+
+    listen 80;
+    listen [::]:80;
+
+    if ($host = www.centralarchives.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = centralarchives.org) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 }
