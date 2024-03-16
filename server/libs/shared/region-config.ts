@@ -5,5 +5,4 @@ export interface RegionConfig {
   domain: string;
   newsDomain?: string;
   newsName?: string;
-  datacenters: string[];
 }

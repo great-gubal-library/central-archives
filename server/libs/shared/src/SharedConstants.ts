@@ -23,21 +23,18 @@ export default Object.freeze({
       domain: 'chaosarchives.org',
       newsDomain: 'theharborwatch.org',
       newsName: 'The Harborwatch',
-      datacenters: [ 'Chaos', 'Light' ],
     }),
     [SiteRegion.NA]: Object.freeze({
       name: 'Crystal Archives',
       description: 'Crystal Archives, the FFXIV roleplay portal to Crystal NA',
       shortDescription: 'FFXIV roleplay portal to Crystal NA',
       domain: 'crystalarchives.org',
-      datacenters: [ 'Aether', 'Crystal', 'Dynamis', 'Primal' ],
     }),
     [SiteRegion.GLOBAL]: Object.freeze({
       name: 'Central Archives',
       description: 'Central Archives',
       shortDescription: 'Central Archives',
       domain: 'centralarchives.org',
-      datacenters: [  ],
     }),
   }),
 
