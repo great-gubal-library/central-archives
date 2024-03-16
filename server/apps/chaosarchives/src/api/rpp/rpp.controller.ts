@@ -8,8 +8,7 @@ import { RppCharacterProfileDto } from "@app/shared/dto/rpp/rpp-character-profil
 import { RppLogInDto } from "@app/shared/dto/rpp/rpp-log-in.dto";
 import { RppLoginResponseDto } from "@app/shared/dto/rpp/rpp-login-response.dto";
 import { Role } from "@app/shared/enums/role.enum";
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UseGuards } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req } from "@nestjs/common";
 import {
 	ApiBearerAuth,
 	ApiBody,
@@ -26,7 +25,7 @@ export class RppController {
 	@Post('login')
 	@HttpCode(HttpStatus.OK)
 	@ApiOperation({
-		summary: 'Obtain an access token using a Chaos Archives/Roleplay Profiles account',
+		summary: 'Obtain an access token using a Central Archives account',
 	})
 	@ApiBody({
 		description: 'Login credentials',
