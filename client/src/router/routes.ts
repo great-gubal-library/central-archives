@@ -1,6 +1,6 @@
 import { SiteRegion } from '@app/shared/enums/region.enum';
 import { useRegion } from 'src/boot/region';
-import { getRegionOrigin } from 'src/common/hssp';
+import { getRegionOrigin, hsspRedirect } from 'src/common/hssp';
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 
 function regionGuard() {
@@ -153,6 +153,12 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/my-account',
+    beforeEnter() {
+      if (useRegion() !== SiteRegion.GLOBAL) {
+        hsspRedirect(SiteRegion.GLOBAL, '/my-account');
+        return false;
+      }
+    },
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/MyAccount.vue') }],
     meta: {
