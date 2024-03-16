@@ -7,28 +7,10 @@ import {
   PagedResult,
 } from '@app/shared/dto/lodestone';
 import { Character, CharacterSearch, FCMembers, FreeCompany } from '@xivapi/nodestone';
-import characterSearch from '@xivapi/nodestone/lib/lib/lodestone-css-selectors/search/character.json';
-import characterProfile from '@xivapi/nodestone/lib/lib/lodestone-css-selectors/profile/character.json';
-import freeCompany from '@xivapi/nodestone/lib/lib/lodestone-css-selectors/freecompany/freecompany.json';
 
 @Injectable()
 export class LodestoneService {
   private readonly logger = new Logger('LodestoneService');
-
-  constructor() {
-    // Monkey patch; filed upstream at https://github.com/xivapi/nodestone/issues/10
-    const serverRegex = '(?P<World>\\w*)\\s+\\[(?P<DC>\\w*)\\]';
-    characterSearch.ENTRY.SERVER.regex = serverRegex;
-    characterProfile.SERVER.regex = serverRegex;
-    // Monkey patch for FC name
-    (characterProfile.FREE_COMPANY as any).ID = characterProfile.FREE_COMPANY.NAME;
-    (characterProfile.FREE_COMPANY as any).NAME = {
-      selector: characterProfile.FREE_COMPANY.NAME.selector,
-    };
-    // Monkey patch for FC founding date, fixed upstream at
-    // https://github.com/xivapi/lodestone-css-selectors/blob/main/freecompany/freecompany.json
-    freeCompany.FORMED.selector = 'p.freecompany__text:nth-of-type(5) > script';
-  }
 
   async searchCharacters(name: string, datacenter: string): Promise<PagedResult<CharacterSearchEntry>> {
     try {

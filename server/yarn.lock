@@ -3739,9 +3739,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@xivapi/nodestone@npm:^0.2.6":
-  version: 0.2.6
-  resolution: "@xivapi/nodestone@npm:0.2.6"
+"@xivapi/nodestone@npm:^0.2.7":
+  version: 0.2.7
+  resolution: "@xivapi/nodestone@npm:0.2.7"
   dependencies:
     "@types/express": "npm:^4.17.13"
     axios: "npm:^0.21.0"
@@ -3750,7 +3750,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     regex-translator: "npm:^0.2.7"
     typescript: "npm:^4.4.4"
-  checksum: 10c0/239eb4a3264244097a7ae8fcbfed4e89f8fc0fe8b9ab3ac284acb84bdb12a81f830db8e7b8d3d74a2de66bc4e4c6ad3c329bbad5b1d97264137877bb2b3d8396
+  checksum: 10c0/3266efc1124457563f8d376db338d88c1f9d7f39fa2fcb02fd2a73516b09b4b321241d432f87229230425ba56ac65a48fc4bc8bebf7c44bcdfb1e4f3c2bca924
   languageName: node
   linkType: hard
 
@@ -4996,7 +4996,7 @@ __metadata:
     "@types/supertest": "npm:^6.0.2"
     "@typescript-eslint/eslint-plugin": "npm:^7.0.2"
     "@typescript-eslint/parser": "npm:^7.0.2"
-    "@xivapi/nodestone": "npm:^0.2.6"
+    "@xivapi/nodestone": "npm:^0.2.7"
     axios: "npm:^1.6.7"
     bcrypt: "npm:^5.1.1"
     bl: "npm:^6.0.11"
