@@ -19,7 +19,7 @@
             aria-label="Menu"
           >
             <q-list>
-              <q-item v-for="link in siteLinks" clickable v-close-popup :key="link.label" :to="link.to">
+              <q-item v-for="link in siteLinks" clickable v-close-popup :key="link.label" :href="link.to">
                 <q-item-section>
                   <q-item-label>{{ link.label }}</q-item-label>
                 </q-item-section>
