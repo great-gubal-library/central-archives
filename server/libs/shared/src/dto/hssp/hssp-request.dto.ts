@@ -12,7 +12,7 @@ export class HsspRequestDto {
 	readonly currentCharacterId?: number;
 
   @IsString()
-  @Matches(/^\/[A-Za-z0-9'?=/-]*$/)
+  @Matches(/^\/[A-Za-z0-9'/_-]*(?:\?.*)?$/)
   redirectPath: string;
 
   constructor(properties?: Readonly<HsspRequestDto>) {
