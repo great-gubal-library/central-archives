@@ -19,6 +19,11 @@ None of your personal data is algorithmically analyzed or shared with any third 
 Other users cannot see your email address, only your character name. Furthermore, if you have multiple FFXIV characters registered on the same %SITENAME% user account, other users have no means of knowing that; they can only see characters and their associated content, not these characters' relation to user accounts.
 
 
+### Image uploads
+
+As a privacy measure, images uploaded to %SITENAME% by users have [all metadata stripped away](https://en.wikipedia.org/wiki/Metadata_removal_tool), including potentially personally identifying information like the name of the application that saved the image, and for photos, camera model, date and time the photo was taken, and GPS location data. None of this metadata is present in uploaded copies of the images stored on the %SITENAME% server.
+
+
 ### Cookies and tracking
 
 The only personal data that the %SITENAME% website stores in your browser is an essential, anonymous session identifier for the purposes of keeping you logged in between browser restarts. These are stored entirely on the client side; the server does not maintain a list of active user logins, nor does it store a history of previous user logins.
