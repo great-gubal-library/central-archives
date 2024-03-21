@@ -19,13 +19,20 @@
             aria-label="Menu"
           >
             <q-list>
-              <q-item v-for="link in siteLinks" clickable v-close-popup :key="link.label" :href="link.to">
+              <q-item v-for="link in siteLinks" clickable v-close-popup :key="link.label" :to="link.to">
                 <q-item-section>
                   <q-item-label>{{ link.label }}</q-item-label>
                 </q-item-section>
               </q-item>
               <template v-if="$region === 'global'">
-                <q-item v-for="region in regions" clickable v-close-popup :key="region.label" :to="region.to">
+                <q-item
+                  v-for="region in regions"
+                  clickable
+                  v-close-popup
+                  :key="region.label"
+                  :href="region.to"
+                  @click="onRegionSiteNav($event, region)"
+                >
                   <q-item-section>
                     <q-item-label>{{ region.label }}</q-item-label>
                   </q-item-section>
@@ -196,15 +203,15 @@ const SITE_LINKS = [
 ];
 
 const REGION_LINKS = Object.keys(SharedConstants.regions)
-    .filter((region) => region !== SiteRegion.GLOBAL as string)
-    .map((region) => {
-      const regionConfig = SharedConstants.regions[region];
-      return {
-        region,
-        label: `${regionConfig.name} (${region.toUpperCase()})`,
-        to: getRegionOrigin(region as SiteRegion),
-      };
-    });
+  .filter((region) => region !== (SiteRegion.GLOBAL as string))
+  .map((region) => {
+    const regionConfig = SharedConstants.regions[region];
+    return {
+      region,
+      label: `${regionConfig.name} (${region.toUpperCase()})`,
+      to: getRegionOrigin(region as SiteRegion),
+    };
+  });
 
 @Options({
   components: {
