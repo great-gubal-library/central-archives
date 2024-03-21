@@ -1,6 +1,10 @@
 {
   "devDependencies": {
     "axios": "^0.27.2",
-    "quasar": "^2.7.1"
+    "quasar": "^2.14.5"
+  },
+  "dependencies": {
+    "vue": "^3.4.19",
+    "vue-class-component": "^8.0.0-rc.1"
   }
 }

@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { MainPageContentDto } from '@app/shared/dto/main-page/main-page-content.dto';
-import ThumbGallery from 'components/images/ThumbGallery.vue';
+import ThumbGallery from '@common/components/images/ThumbGallery.vue';
 import NewsTimeline from 'components/mainpage/NewsTimeline.vue';
 import NoticeboardItemList from 'components/noticeboard/NoticeboardItemList.vue';
 import StoryList from 'components/stories/StoryList.vue';

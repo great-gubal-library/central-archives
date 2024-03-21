@@ -36,7 +36,7 @@ import { useApi } from 'src/boot/axios';
 import { useSiteName } from 'src/boot/region';
 import { notifyError } from 'src/common/notify';
 import RssPageHeader from 'src/components/common/RssPageHeader.vue';
-import ThumbGallery from 'src/components/images/ThumbGallery.vue';
+import ThumbGallery from '@common/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteLocationNormalized } from 'vue-router';

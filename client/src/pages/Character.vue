@@ -32,7 +32,7 @@ import ReportViolationSection from 'src/components/common/ReportViolationSection
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
-import ThumbGallery from '../components/images/ThumbGallery.vue';
+import ThumbGallery from '@common/components/images/ThumbGallery.vue';
 
 const $api = useApi();
 const $router = useRouter();

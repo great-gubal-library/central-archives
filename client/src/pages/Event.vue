@@ -22,7 +22,7 @@ import { MetaOptions } from 'quasar/dist/types/meta';
 import { useApi } from 'src/boot/axios';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import EventView from 'src/components/event/EventView.vue';
-import ThumbGallery from 'src/components/images/ThumbGallery.vue';
+import ThumbGallery from '@common/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';

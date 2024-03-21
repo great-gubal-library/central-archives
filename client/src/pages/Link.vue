@@ -8,7 +8,7 @@
 			</li>
 		</ul>
 		<thumb-gallery v-if="images" :images="images" />
-	</q-page>	
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -18,7 +18,7 @@ import { PageType } from '@app/shared/enums/page-type.enum';
 import { useApi } from 'src/boot/axios';
 import { notifyError } from 'src/common/notify';
 import { getPageLink } from 'src/common/pagelinks';
-import ThumbGallery from 'src/components/images/ThumbGallery.vue';
+import ThumbGallery from '@common/components/images/ThumbGallery.vue';
 import { useRouter } from 'src/router';
 import { Options, Vue } from 'vue-class-component';
 import { RouteParams } from 'vue-router';
@@ -49,7 +49,7 @@ async function load(params: RouteParams): Promise<{ name: string, results: LinkR
 			void $router.replace('/');
 			return { name, results: [] };
 		}
-		
+
 		if (results.length === 1) {
 			// One page found; navigate to it
 			void $router.push(getLink(results[0]));

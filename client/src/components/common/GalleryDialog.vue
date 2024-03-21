@@ -17,7 +17,7 @@
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import SharedConstants from '@app/shared/SharedConstants';
 import { Options, prop, Vue } from 'vue-class-component';
-import ThumbGallery from '../images/ThumbGallery.vue';
+import ThumbGallery from '@common/components/images/ThumbGallery.vue';
 
 interface DialogRef {
   show(): void;
