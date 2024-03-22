@@ -1,6 +1,6 @@
 import { UserInfo } from "@app/authorization/model/user-info";
 import { User } from "@app/entity";
-import { checkPassword } from "@app/security";
+import { checkPassword } from "@app/cryptography";
 import SharedConstants from "@app/shared/SharedConstants";
 import { User2FAConfirmRequestDto } from "@app/shared/dto/user/2fa/user-2fa-confirm-request.dto";
 import { User2FAConfirmResponseDto } from "@app/shared/dto/user/2fa/user-2fa-confirm-response.dto";

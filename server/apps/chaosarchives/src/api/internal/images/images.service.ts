@@ -1,7 +1,7 @@
 import { UserInfo } from '@app/authorization/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, Community, Event, FreeCompany, Image, Venue } from '@app/entity';
-import { hashBuffer } from '@app/security';
+import { hashBuffer } from '@app/cryptography';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { BannerCheckResultDto } from '@app/shared/dto/image/banner-check-result.dto';
 import { ImageDescriptionDto } from '@app/shared/dto/image/image-desciption.dto';

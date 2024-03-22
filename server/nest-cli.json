@@ -24,6 +24,15 @@
         "tsConfigPath": "apps/chaosarchives/tsconfig.app.json"
       }
     },
+    "steward": {
+      "type": "application",
+      "root": "apps/steward",
+      "entryFile": "main",
+      "sourceRoot": "apps/steward/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/steward/tsconfig.app.json"
+      }
+    },
     "authentication": {
       "type": "library",
       "root": "libs/authentication",
@@ -51,6 +60,15 @@
         "tsConfigPath": "libs/configuration/tsconfig.lib.json"
       }
     },
+    "cryptography": {
+      "type": "library",
+      "root": "libs/cryptography",
+      "entryFile": "index",
+      "sourceRoot": "libs/cryptography/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cryptography/tsconfig.lib.json"
+      }
+    },
     "entity": {
       "type": "library",
       "root": "libs/entity",
@@ -67,24 +85,6 @@
       "sourceRoot": "libs/shared/src",
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json"
-      }
-    },
-    "security": {
-      "type": "library",
-      "root": "libs/security",
-      "entryFile": "index",
-      "sourceRoot": "libs/security/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/security/tsconfig.lib.json"
-      }
-    },
-    "steward": {
-      "type": "application",
-      "root": "apps/steward",
-      "entryFile": "main",
-      "sourceRoot": "apps/steward/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/steward/tsconfig.app.json"
       }
     }
   }

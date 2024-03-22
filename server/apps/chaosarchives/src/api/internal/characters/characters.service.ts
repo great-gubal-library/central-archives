@@ -2,7 +2,7 @@ import { AuthorizationService } from '@app/authorization/authorization.service';
 import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
 import { UserInfo } from '@app/authorization/model/user-info';
 import { Character, CommunityMembership, Image, Server, User } from '@app/entity';
-import { generateVerificationCode } from '@app/security';
+import { generateVerificationCode } from '@app/cryptography';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { BannerDto } from '@app/shared/dto/characters/banner.dto';
 import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-profile-filter.dto';

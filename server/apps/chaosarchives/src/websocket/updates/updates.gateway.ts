@@ -1,5 +1,5 @@
 import { Character } from "@app/entity";
-import { generateVerificationCode } from "@app/security";
+import { generateVerificationCode } from "@app/cryptography";
 import { Logger } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
 import { WebSocketGateway } from "@nestjs/websockets";

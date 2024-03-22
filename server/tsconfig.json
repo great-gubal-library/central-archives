@@ -50,11 +50,11 @@
       "@app/shared/*": [
         "libs/shared/src/*"
       ],
-      "@app/security": [
-        "libs/security/src"
+      "@app/cryptography": [
+        "libs/cryptography/src"
       ],
-      "@app/security/*": [
-        "libs/security/src/*"
+      "@app/cryptography/*": [
+        "libs/cryptography/src/*"
       ]
     }
   }

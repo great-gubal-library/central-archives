@@ -2,7 +2,7 @@ import { CurrentUser } from '@app/authorization/decorators/current-user.decorato
 import { UserInfo } from '@app/authorization/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, User } from '@app/entity';
-import { checkPassword, generateVerificationCode, hashPassword } from '@app/security';
+import { checkPassword, generateVerificationCode, hashPassword } from '@app/cryptography';
 import { ChangeEmailRequestDto } from '@app/shared/dto/user/change-email-request.dto';
 import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-request.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';

@@ -140,8 +140,8 @@
       "@app/entity": "<rootDir>/libs/entity/src",
       "@app/shared/(.*)": "<rootDir>/libs/shared/src/$1",
       "@app/shared": "<rootDir>/libs/shared/src",
-      "@app/security/(.*)": "<rootDir>/libs/security/src/$1",
-      "@app/security": "<rootDir>/libs/security/src"
+      "@app/cryptography/(.*)": "<rootDir>/libs/cryptography/src/$1",
+      "@app/cryptography": "<rootDir>/libs/cryptography/src"
     }
   },
   "packageManager": "yarn@4.1.0"
