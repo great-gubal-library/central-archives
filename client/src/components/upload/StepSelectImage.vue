@@ -81,7 +81,7 @@
 <script lang="ts">
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import SharedConstants from '@app/shared/SharedConstants';
-import { convertImageElementForUpload, hasTransparency, readImage } from 'src/common/images';
+import { convertImageElementForUpload, hasTransparency, readImage } from '@common/common/images';
 import { Options, prop, Vue } from 'vue-class-component';
 import { ImageSelectModel } from './image-select-model';
 
