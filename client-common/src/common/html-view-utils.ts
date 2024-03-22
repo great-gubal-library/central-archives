@@ -1,6 +1,6 @@
-import { useRouter } from 'src/router';
+import globals from './globals';
 
-const $router = useRouter();
+const $router = globals.router;
 
 export interface HtmlViewClickCaptureOptions {
   links: boolean;
@@ -12,7 +12,7 @@ export function onHtmlViewClickCapture(event: Event, options: HtmlViewClickCaptu
   if (!(target instanceof HTMLElement)) {
     return;
   }
-  
+
   if (target.tagName.toLowerCase() === 'a') {
     if (options.links) {
       // Follow internal links without reloading the page

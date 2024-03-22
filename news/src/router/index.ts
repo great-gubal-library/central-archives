@@ -9,6 +9,7 @@ import {
 } from 'vue-router';
 import { StateInterface } from '../store';
 import routes from './routes';
+import globals from '@common/common/globals';
 
 /*
  * If not building with SSR mode, you can
@@ -34,7 +35,7 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
 
       return savedPosition || { left: 0, top: 0 };
     },
-    
+
     routes,
 
     // Leave this as is and make changes in quasar.conf.js instead!
@@ -62,6 +63,7 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     }
   });
 
+  globals.router = router;
   return router;
 });
 

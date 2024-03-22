@@ -17,7 +17,7 @@
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import Editor from '@tinymce/tinymce-vue';
-import { onHtmlViewClickCapture } from 'src/common/html-view-utils';
+import { onHtmlViewClickCapture } from '@common/common/html-view-utils';
 import { TinyMceEditor } from 'tinymce';
 import { Options, prop, Vue } from 'vue-class-component';
 

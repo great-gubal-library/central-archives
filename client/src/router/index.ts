@@ -10,6 +10,7 @@ import {
 import { StateInterface } from '../store';
 import routes from './routes';
 import { useSiteName } from 'src/boot/region';
+import globals from '@common/common/globals';
 
 /*
  * If not building with SSR mode, you can
@@ -63,6 +64,7 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     }
   });
 
+  globals.router = router;
   return router;
 });
 
