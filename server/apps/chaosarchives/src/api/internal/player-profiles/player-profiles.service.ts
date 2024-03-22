@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { Character, User } from '@app/entity';
 import { PlayerProfileEditDto } from '@app/shared/dto/player-profiles/player-profile-edit.dto';
 import { PlayerProfileDto } from '@app/shared/dto/player-profiles/player-profile.dto';

@@ -1,7 +1,7 @@
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
-import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
-import { UserInfo } from '@app/auth/model/user-info';
+import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
+import { RoleRequired } from '@app/authorization/decorators/role-required.decorator';
+import { OptionalJwtAuthGuard } from '@app/authorization/guards/optional-jwt-auth.guard';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';
 import { NoticeboardItemSummaryDto } from '@app/shared/dto/noticeboard/noticeboard-item-summary.dto';
 import { NoticeboardItemDto } from '@app/shared/dto/noticeboard/noticeboard-item.dto';

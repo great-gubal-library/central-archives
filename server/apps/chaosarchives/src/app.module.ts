@@ -1,4 +1,4 @@
-import { AuthModule } from '@app/auth/auth.module';
+import { AuthorizationModule } from '@app/authorization/authorization.module';
 import { dbConfiguration, redisConfiguration } from '@app/configuration';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { Module } from '@nestjs/common';
@@ -22,7 +22,7 @@ import { CronModule } from './cron/cron.module';
     EventEmitterModule.forRoot(),
     CronModule,
     MailModule,
-    AuthModule,
+    AuthorizationModule,
     InternalApiModule,
     RppModule,
     FeedModule,

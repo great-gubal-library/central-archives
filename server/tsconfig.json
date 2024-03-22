@@ -20,11 +20,17 @@
       "jpegtran": [
         "types/jpegtran.d.ts"
       ],
-      "@app/auth": [
-        "libs/auth/src"
+      "@app/authentication": [
+        "libs/authentication/src"
       ],
-      "@app/auth/*": [
-        "libs/auth/src/*"
+      "@app/authentication/*": [
+        "libs/authentication/src/*"
+      ],
+      "@app/authorization": [
+        "libs/authorization/src"
+      ],
+      "@app/authorization/*": [
+        "libs/authorization/src/*"
       ],
       "@app/configuration": [
         "libs/configuration/src"

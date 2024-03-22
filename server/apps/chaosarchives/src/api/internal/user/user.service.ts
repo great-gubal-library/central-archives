@@ -1,5 +1,5 @@
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { UserInfo } from '@app/auth/model/user-info';
+import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, User } from '@app/entity';
 import { checkPassword, generateVerificationCode, hashPassword } from '@app/security';

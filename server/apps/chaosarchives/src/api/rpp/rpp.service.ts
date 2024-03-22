@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { Character } from '@app/entity';
 import { RppCharacterProfileDto } from '@app/shared/dto/rpp/rpp-character-profile.dto';
 import { races } from '@app/shared/enums/race.enum';

@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { Character, Community, Event, FreeCompany, Image, NoticeboardItem, Story, User, Venue, Violation, WikiPage } from '@app/entity';
 import { ViolationReportDto } from '@app/shared/dto/violations/violation-report.dto';
 import { PageType } from '@app/shared/enums/page-type.enum';
@@ -60,7 +60,7 @@ export class ViolationsService {
 			throw e;
 		}
 	}
-	
+
 	private async checkPageExists(em: EntityManager, report: ViolationReportDto) {
 		let entityCount: number;
 

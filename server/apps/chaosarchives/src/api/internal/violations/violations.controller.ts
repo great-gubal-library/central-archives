@@ -1,6 +1,6 @@
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
-import { UserInfo } from '@app/auth/model/user-info';
+import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
+import { RoleRequired } from '@app/authorization/decorators/role-required.decorator';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { ViolationReportDto } from '@app/shared/dto/violations/violation-report.dto';
 import { Role } from '@app/shared/enums/role.enum';
 import { Body, Controller, Post } from '@nestjs/common';

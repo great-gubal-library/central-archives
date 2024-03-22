@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { HsspController } from './hssp.controller';
 import { HsspService } from './hssp.service';
-import { AuthModule } from '@app/auth/auth.module';
+import { AuthorizationModule } from '@app/authorization/authorization.module';
 
 @Module({
-  imports: [ AuthModule ],
+  imports: [ AuthorizationModule ],
   controllers: [ HsspController ],
   providers: [ HsspService ],
 })

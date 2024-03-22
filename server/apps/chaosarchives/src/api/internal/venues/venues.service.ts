@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { Character, Image, Server, Venue } from '@app/entity';
 import { VenueTag } from '@app/entity/venue-tag.entity';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';

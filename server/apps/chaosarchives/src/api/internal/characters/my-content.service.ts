@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { Event, NoticeboardItem, Story, WikiPage } from '@app/entity';
 import { MyContentItemDto } from '@app/shared/dto/characters/my-content-item.dto';
 import { MyContentDto } from '@app/shared/dto/characters/my-content.dto';

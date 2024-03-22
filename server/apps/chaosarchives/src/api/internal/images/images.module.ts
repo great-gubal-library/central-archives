@@ -3,7 +3,7 @@ import SharedConstants from '@app/shared/SharedConstants';
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from '@app/auth/auth.module';
+import { AuthorizationModule } from '@app/authorization/authorization.module';
 import { ImagesController } from './images.controller';
 import { ImagesService } from './images.service';
 import { StorageService } from './storage.service';
@@ -18,7 +18,7 @@ import { StorageService } from './storage.service';
         },
       }),
     }),
-    AuthModule, 
+    AuthorizationModule,
   ],
   controllers: [ImagesController],
   providers: [ImagesService, StorageService],

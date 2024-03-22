@@ -1,7 +1,7 @@
 import { Character, CommunityMembership, Event, NoticeboardItem, Story, User, WikiPage } from '@app/entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from '@app/auth/auth.module';
+import { AuthorizationModule } from '@app/authorization/authorization.module';
 import { ImagesModule } from '../images/images.module';
 import { StoriesModule } from '../stories/stories.module';
 import { CharactersController } from './characters.controller';
@@ -14,7 +14,7 @@ import { LodestoneModule } from '../lodestone/lodestone.module';
     TypeOrmModule.forFeature([Character, CommunityMembership, Event, NoticeboardItem, Story, User, WikiPage]),
     StoriesModule,
     ImagesModule,
-    AuthModule,
+    AuthorizationModule,
     LodestoneModule,
   ],
   controllers: [CharactersController],

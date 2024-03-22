@@ -1,11 +1,11 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { AuthImplService } from "../impl/auth-impl.service";
+import { AuthorizationImplService } from "../impl/authorization-impl.service";
 import { AuthInfo } from "../model/auth-info";
 import { JwtPayload } from "../model/jwt-payload";
 
 @Injectable()
 export class JwtStrategyImpl {
-  constructor(private authService: AuthImplService) { }
+  constructor(private authService: AuthorizationImplService) { }
 
   async validate(payload: JwtPayload): Promise<AuthInfo> {
     const user = await this.authService.getUserInfo(payload.sub);

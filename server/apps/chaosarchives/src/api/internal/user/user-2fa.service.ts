@@ -1,5 +1,4 @@
-import { AuthService } from "@app/auth/auth.service";
-import { UserInfo } from "@app/auth/model/user-info";
+import { UserInfo } from "@app/authorization/model/user-info";
 import { User } from "@app/entity";
 import { checkPassword } from "@app/security";
 import SharedConstants from "@app/shared/SharedConstants";
@@ -11,6 +10,7 @@ import { SiteRegion } from "@app/shared/enums/region.enum";
 import { User2FAState } from "@app/shared/enums/user-2fa-state.dto";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { AuthenticationService } from "libs/authentication/src/authentication.service";
 import { DataSource, Repository } from "typeorm";
 
 @Injectable()
@@ -18,7 +18,7 @@ export class User2FAService {
   constructor(
     private dataSource: DataSource,
     @InjectRepository(User) private userRepo: Repository<User>,
-    private authService: AuthService,
+    private authService: AuthenticationService,
   ) {}
 
   async get2FAStatus(userInfo: UserInfo, region: SiteRegion): Promise<User2FAStatusDto> {

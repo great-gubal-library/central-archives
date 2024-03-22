@@ -1,4 +1,4 @@
-import { UserInfo } from "@app/auth/model/user-info";
+import { UserInfo } from "@app/authorization/model/user-info";
 import { Region } from "@app/shared/enums/region.enum";
 import { Role, roleImplies } from "@app/shared/enums/role.enum";
 import SharedConstants from "@app/shared/SharedConstants";

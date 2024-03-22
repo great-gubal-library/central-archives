@@ -5,7 +5,7 @@ import QRCode from 'qrcode';
 const BACKUP_CODE_REGEX = /^[0-9A-Z]{16}$/;
 
 @Injectable()
-export class TwoFactorAuthService {
+export class TwoFactorAuthenticationService {
   generateSecret(): string {
     return new TOTP().secret.base32;
   }

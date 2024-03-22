@@ -1,6 +1,6 @@
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { JwtFormAuthGuard } from '@app/auth/guards/jwt-form-auth.guard';
-import { UserInfo } from '@app/auth/model/user-info';
+import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
+import { JwtFormAuthGuard } from '@app/authorization/guards/jwt-form-auth.guard';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { HsspRequestDto } from '@app/shared/dto/hssp/hssp-request.dto';
 import { Body, Controller, ForbiddenException, Header, Headers, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { HsspService } from './hssp.service';

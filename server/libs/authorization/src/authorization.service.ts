@@ -1,25 +1,18 @@
 import { authConfiguration } from '@app/configuration';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AuthImplService } from './impl/auth-impl.service';
+import { AuthorizationImplService } from './impl/authorization-impl.service';
 import { AuthScope } from './model/auth-scope.enum';
 import { UserInfo } from './model/user-info';
 import { DateTime } from 'luxon';
 import { ExtractJwt } from 'passport-jwt';
-import { LoginCredentials } from './model/login-credentials';
-import { TwoFactorAuthService } from './impl/two-factor-auth.service';
 
 @Injectable()
-export class AuthService {
+export class AuthorizationService {
   constructor(
     private jwtService: JwtService,
-		private authService: AuthImplService,
-    private twoFactorAuthService: TwoFactorAuthService,
+		private authService: AuthorizationImplService,
   ) {}
-
-  async authenticateUser(credentials: LoginCredentials): Promise<UserInfo> {
-    return this.authService.validateUser(credentials);
-  }
 
 	createAccessToken(userId: number, scope?: AuthScope | null): string {
     if (!scope) {
@@ -77,20 +70,4 @@ export class AuthService {
 	async notifyUserChanged(userId: number): Promise<void> {
 		await this.authService.notifyUserChanged(userId);
 	}
-
-  async getQRCodeDataUrl(username: string, secret: string, issuer: string): Promise<string> {
-    return this.twoFactorAuthService.getQRCodeDataUrl(username, secret, issuer);
-  }
-
-  generate2FASecret(): string {
-    return this.twoFactorAuthService.generateSecret();
-  }
-
-  generate2FABackupCode(): string {
-    return this.twoFactorAuthService.generateBackupCode();
-  }
-
-  checkOtp(otp: string, secret: string): boolean {
-    return this.twoFactorAuthService.checkOtp(otp, secret);
-  }
 }

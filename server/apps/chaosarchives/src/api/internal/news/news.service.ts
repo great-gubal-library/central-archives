@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { s3Configuration, serverConfiguration } from '@app/configuration';
 import { Character, Image, News, NewsCategory, NewsIssue } from '@app/entity';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';

@@ -1,8 +1,8 @@
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { RoleRequired } from '@app/auth/decorators/role-required.decorator';
-import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
-import { OptionalJwtAuthGuard } from '@app/auth/guards/optional-jwt-auth.guard';
-import { UserInfo } from '@app/auth/model/user-info';
+import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
+import { RoleRequired } from '@app/authorization/decorators/role-required.decorator';
+import { JwtAuthGuard } from '@app/authorization/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '@app/authorization/guards/optional-jwt-auth.guard';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
 import { CharacterContentDto } from '@app/shared/dto/characters/character-content.dto';
 import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-profile-filter.dto';

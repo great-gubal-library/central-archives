@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, Community, Event, FreeCompany, Image, Venue } from '@app/entity';
 import { hashBuffer } from '@app/security';

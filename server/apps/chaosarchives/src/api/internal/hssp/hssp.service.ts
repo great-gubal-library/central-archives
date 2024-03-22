@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { HsspRequestDto } from '@app/shared/dto/hssp/hssp-request.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { promises } from 'fs';

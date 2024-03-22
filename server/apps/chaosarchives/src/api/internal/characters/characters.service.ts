@@ -1,6 +1,6 @@
-import { AuthService } from '@app/auth/auth.service';
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { UserInfo } from '@app/auth/model/user-info';
+import { AuthorizationService } from '@app/authorization/authorization.service';
+import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { Character, CommunityMembership, Image, Server, User } from '@app/entity';
 import { generateVerificationCode } from '@app/security';
 import { AddCharacterRequestDto } from '@app/shared/dto/characters/add-character-request.dto';
@@ -32,7 +32,7 @@ import { SiteRegion } from '@app/shared/enums/region.enum';
 @Injectable()
 export class CharactersService {
   constructor(
-    private publicAuthService: AuthService,
+    private publicAuthorizationService: AuthorizationService,
     private imagesService: ImagesService,
     private lodestoneService: LodestoneService,
     private connection: DataSource,
@@ -346,7 +346,7 @@ export class CharactersService {
       }
 
       // But that's not all! We need to invalidate the session cache, since character data is cached there.
-      await this.publicAuthService.notifyUserChanged(user.id);
+      await this.publicAuthorizationService.notifyUserChanged(user.id);
 
       return character;
 		});
@@ -391,7 +391,7 @@ export class CharactersService {
         };
       });
 
-      await this.publicAuthService.notifyUserChanged(user.id);
+      await this.publicAuthorizationService.notifyUserChanged(user.id);
       return result;
     } catch (e) {
       if (isQueryFailedError(e)) {

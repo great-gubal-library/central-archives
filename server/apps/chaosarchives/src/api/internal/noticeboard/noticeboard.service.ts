@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, NoticeboardItem } from '@app/entity';
 import { IdWrapper } from '@app/shared/dto/common/id-wrapper.dto';

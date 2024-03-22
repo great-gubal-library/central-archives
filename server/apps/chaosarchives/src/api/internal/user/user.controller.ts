@@ -1,7 +1,7 @@
-import { AuthService } from '@app/auth/auth.service';
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
-import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
-import { UserInfo } from '@app/auth/model/user-info';
+import { AuthorizationService } from '@app/authorization/authorization.service';
+import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
+import { JwtAuthGuard } from '@app/authorization/guards/jwt-auth.guard';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { ChangeEmailRequestDto } from '@app/shared/dto/user/change-email-request.dto';
 import { ChangePasswordRequestDto } from '@app/shared/dto/user/change-password-request.dto';
 import { ForgotPasswordRequestDto } from '@app/shared/dto/user/forgot-password-request.dto';
@@ -36,20 +36,22 @@ import { User2FARemoveRequestDto } from '@app/shared/dto/user/2fa/user-2fa-remov
 import { User2FAService } from './user-2fa.service';
 import { ClientRegion } from 'apps/chaosarchives/src/common/client-region.decorator';
 import { SiteRegion } from '@app/shared/enums/region.enum';
+import { AuthenticationService } from 'libs/authentication/src/authentication.service';
 
 @Controller('user')
 export class UserController {
   constructor(
     private userService: UserService,
-    private authService: AuthService,
+    private authenticationService: AuthenticationService,
+    private authorizationService: AuthorizationService,
     private user2FAService: User2FAService,
   ) {}
 
   @Post('signup')
   async signUp(@Body() signupData: UserSignUpDto, @ClientRegion() region: SiteRegion): Promise<UserSignUpResponseDto> {
     const { userId, characterVerificationCode } = await this.userService.signUp(signupData, region);
-    const accessToken = this.authService.createAccessToken(userId);
-    const userInfo = await this.authService.getUserInfo(userId);
+    const accessToken = this.authorizationService.createAccessToken(userId);
+    const userInfo = await this.authorizationService.getUserInfo(userId);
 
     return {
       characterVerificationCode,
@@ -61,7 +63,7 @@ export class UserController {
   @Post('confirm-email')
   async confirmEmail(@Body() confirmEmailData: UserConfirmEmailDto): Promise<void> {
     const userId = await this.userService.confirmEmail(confirmEmailData.code);
-    await this.authService.notifyUserChanged(userId);
+    await this.authorizationService.notifyUserChanged(userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -72,10 +74,11 @@ export class UserController {
 
   @Post('login')
   async login(@Body() request: UserLogInDto): Promise<LoginResponseDto> {
-    const user = await this.authService.authenticateUser(request);
+    const userId = await this.authenticationService.authenticateUser(request);
+    const user = await this.authorizationService.getUserInfo(userId);
 
     return {
-      accessToken: this.authService.createAccessToken(user.id),
+      accessToken: this.authorizationService.createAccessToken(userId),
       session: this.userService.toSession(user),
     };
   }
@@ -85,7 +88,7 @@ export class UserController {
   async getSession(@CurrentUser() user: UserInfo, @Req() request: any): Promise<SessionResponseDto> {
     return {
       session: this.userService.toSession(user),
-      newAccessToken: this.authService.reissueAccessTokenIfNeeded(user.id, request),
+      newAccessToken: this.authorizationService.reissueAccessTokenIfNeeded(user.id, request),
     };
   }
 
@@ -102,7 +105,7 @@ export class UserController {
   @Post('verify-character')
   async verifyCharacter(@CurrentUser() user: UserInfo, @Body() verifyData: VerifyCharacterDto): Promise<void> {
     await this.userService.verifyCharacter(user, verifyData);
-    await this.authService.notifyUserChanged(user.id);
+    await this.authorizationService.notifyUserChanged(user.id);
   }
 
   @Post('forgot-password')
@@ -136,17 +139,17 @@ export class UserController {
   @Post('confirm-new-email')
   async confirmNewEmail(@Body() confirmEmailData: UserConfirmEmailDto): Promise<void> {
     const userId = await this.userService.confirmNewEmail(confirmEmailData.code);
-    await this.authService.notifyUserChanged(userId);
+    await this.authorizationService.notifyUserChanged(userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('logout-everywhere')
   async logoutEverywhere(@CurrentUser() user: UserInfo): Promise<NewAccessTokenResponseDto> {
     await this.userService.logoutEverywhere(user);
-    await this.authService.notifyUserChanged(user.id);
+    await this.authorizationService.notifyUserChanged(user.id);
 
     return {
-      newAccessToken: this.authService.createAccessToken(user.id),
+      newAccessToken: this.authorizationService.createAccessToken(user.id),
     };
   }
 

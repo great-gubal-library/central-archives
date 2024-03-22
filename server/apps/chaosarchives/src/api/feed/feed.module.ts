@@ -1,4 +1,4 @@
-import { AuthModule } from "@app/auth/auth.module";
+import { AuthorizationModule } from "@app/authorization/authorization.module";
 import { Character, Image, Story } from "@app/entity";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -10,7 +10,7 @@ import { StorageService } from "../internal/images/storage.service";
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([ Character, Image, Story ]),
-    AuthModule,
+    AuthorizationModule,
 	],
 	controllers: [ FeedController ],
 	providers: [ FeedService, ImagesService, StorageService ],

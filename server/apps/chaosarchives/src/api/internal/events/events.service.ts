@@ -1,4 +1,4 @@
-import { UserInfo } from '@app/auth/model/user-info';
+import { UserInfo } from '@app/authorization/model/user-info';
 import { serverConfiguration } from '@app/configuration';
 import { Character, Event, EventAnnouncement, EventLocation, Image, Server } from '@app/entity';
 import SharedConstants from '@app/shared/SharedConstants';
