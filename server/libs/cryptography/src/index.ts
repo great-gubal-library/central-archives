@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { base32 } from 'rfc4648';
 
 export async function hashPassword(password: string): Promise<string> {
-	return bcrypt.hash(password, 10);
+	return bcrypt.hash(password, 12);
 }
 
 export async function checkPassword(password: string, storedHash: string): Promise<boolean> {
