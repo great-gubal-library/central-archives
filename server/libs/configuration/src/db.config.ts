@@ -1,4 +1,4 @@
-import { Character, Event, EventAnnouncement, EventLocation, FreeCompany, Image, News, NewsCategory, NewsIssue, NoticeboardItem, OAuthApp, Server, Story, StoryTag, User, Venue, Violation, WikiPage } from '@app/entity';
+import { Character, Event, EventAnnouncement, EventLocation, FreeCompany, Image, News, NewsCategory, NewsIssue, NoticeboardItem, OAuthApp, OAuthUserAppConsent, Server, Story, StoryTag, User, Venue, Violation, WikiPage } from '@app/entity';
 import { CommunityMembership } from '@app/entity/community-membership.entity';
 import { CommunityTag } from '@app/entity/community-tag.entity';
 import { Community } from '@app/entity/community.entity';
@@ -31,6 +31,7 @@ export const dbConfiguration: TypeOrmModuleOptions = {
     NewsIssue,
     NoticeboardItem,
     OAuthApp,
+    OAuthUserAppConsent,
     Server,
     Story,
     StoryTag,
