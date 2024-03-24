@@ -3,7 +3,6 @@ import { AuthorizationService } from '@app/authorization/authorization.service';
 import { CurrentUser } from '@app/authorization/decorators/current-user.decorator';
 import { RoleRequired } from '@app/authorization/decorators/role-required.decorator';
 import { Scope } from '@app/authorization/decorators/scope.decorator';
-import { AuthScope } from '@app/authorization/model/auth-scope.enum';
 import { UserInfo } from '@app/authorization/model/user-info';
 import { RppCharacterProfileDto } from '@app/shared/dto/rpp/rpp-character-profile.dto';
 import { RppLogInDto } from '@app/shared/dto/rpp/rpp-log-in.dto';
@@ -13,6 +12,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, R
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RppService } from './rpp.service';
 import { RppExtendLoginResponseDto } from '@app/shared/dto/rpp/rpp-extend-login-response.dto';
+import { AuthScope } from '@app/shared/enums/oauth/auth-scope.enum';
 
 @Controller('rpp')
 export class RppController {

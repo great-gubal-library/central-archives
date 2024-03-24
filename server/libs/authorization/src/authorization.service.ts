@@ -2,7 +2,7 @@ import { authConfiguration } from '@app/configuration';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthorizationImplService } from './impl/authorization-impl.service';
-import { AuthScope } from './model/auth-scope.enum';
+import { AuthScope } from '../../shared/src/enums/oauth/auth-scope.enum';
 import { UserInfo } from './model/user-info';
 import { DateTime } from 'luxon';
 import { ExtractJwt } from 'passport-jwt';

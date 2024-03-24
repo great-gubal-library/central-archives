@@ -1,5 +1,5 @@
 import { CustomDecorator, SetMetadata } from '@nestjs/common';
-import { AuthScope } from '../model/auth-scope.enum';
+import { AuthScope } from '@app/shared/enums/oauth/auth-scope.enum';
 
 export const SCOPE_KEY = 'authScope';
 

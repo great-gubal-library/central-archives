@@ -1,4 +1,4 @@
-import { AuthScope } from "./auth-scope.enum";
+import { AuthScope } from "../../../shared/src/enums/oauth/auth-scope.enum";
 
 export interface JwtPayload {
   sub: number;

@@ -2,7 +2,7 @@ import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { SCOPE_KEY } from '../decorators/scope.decorator';
 import { AuthInfo } from '../model/auth-info';
-import { AuthScope } from '../model/auth-scope.enum';
+import { AuthScope } from '../../../shared/src/enums/oauth/auth-scope.enum';
 
 export class JwtAuthGuardImpl {
   constructor(private reflector: Reflector) {}
