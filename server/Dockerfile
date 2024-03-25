@@ -14,13 +14,13 @@ RUN apt update \
 RUN groupmod -g 1000 node && usermod -u 1000 -g 1000 node && chown -R node.node /usr/src/app
 USER node
 
-# Build application
-
+# Download dependencies (separate step for Docker layer caching)
 COPY package.json yarn.lock .yarnrc.yml ./
 RUN yarn install && rm -rf /home/node/.cache/yarn /home/node/.npm
 
+# Build application
 COPY . .
-
 RUN nest build chaosarchives && nest build steward
 
+# Entry point
 CMD ["node", "dist/apps/chaosarchives/main.js"]
