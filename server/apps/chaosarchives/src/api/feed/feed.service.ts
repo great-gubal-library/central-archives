@@ -4,7 +4,7 @@ import { FeedApiOptions } from './feed-api-options';
 import { Feed, Item } from 'feed';
 import { serverConfiguration } from '@app/configuration';
 import { DateTime } from 'luxon';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Story } from '@app/entity';
 import { Repository } from 'typeorm';

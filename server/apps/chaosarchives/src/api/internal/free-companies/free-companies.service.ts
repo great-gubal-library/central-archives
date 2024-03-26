@@ -4,7 +4,7 @@ import { CharacterIdWrapper } from '@app/shared/dto/common/character-id-wrapper.
 import { FreeCompanySummaryDto } from '@app/shared/dto/fcs/free-company-summary.dto';
 import { FreeCompanyDto } from '@app/shared/dto/fcs/free-company.dto';
 import { MyFreeCompanySummaryDto } from '@app/shared/dto/fcs/my-free-company-summary.dto';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { BadRequestException, ForbiddenException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';

@@ -1,4 +1,4 @@
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { IsEmail, IsString, MinLength } from 'class-validator';
 
 export class ChangeEmailRequestDto {

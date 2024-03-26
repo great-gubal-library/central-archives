@@ -1,7 +1,7 @@
 import { UserInfo } from "@app/authorization/model/user-info";
 import { Region } from "@app/shared/enums/region.enum";
 import { Role, roleImplies } from "@app/shared/enums/role.enum";
-import SharedConstants from "@app/shared/SharedConstants";
+import SharedConstants from "@app/shared/shared-constants";
 import { BadRequestException, ForbiddenException } from "@nestjs/common";
 
 const DOMAIN_REGEX = /^([A-Za-z0-9-]+\.)+[A-Za-z0-9-]+$/;

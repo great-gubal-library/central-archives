@@ -6,7 +6,7 @@ import { races } from '@app/shared/enums/race.enum';
 import { Region } from '@app/shared/enums/region.enum';
 import { StoryType } from '@app/shared/enums/story-type.enum';
 import { VenueLocation } from '@app/shared/enums/venue-location.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { DateTime } from 'luxon';
 import { boot } from 'quasar/wrappers';
 

@@ -7,7 +7,7 @@ import { NewsIssueDto } from '@app/shared/dto/news/news-issue.dto';
 import { NewsDto } from '@app/shared/dto/news/news.dto';
 import { NewsRole } from '@app/shared/enums/news-role.enum';
 import { NewsStatus } from '@app/shared/enums/news-status.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';

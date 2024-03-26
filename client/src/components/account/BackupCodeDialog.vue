@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { copyToClipboard } from 'quasar';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';

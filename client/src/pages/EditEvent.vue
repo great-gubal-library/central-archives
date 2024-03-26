@@ -160,7 +160,7 @@ import { EventAnnouncementDto } from '@app/shared/dto/events/event-announcement.
 import { EventEditDto } from '@app/shared/dto/events/event-edit.dto';
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import errors from '@app/shared/errors';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { Component as QDateTimePicker } from '@toby.mosque/quasar-ui-qdatetimepicker';
 import '@toby.mosque/quasar-ui-qdatetimepicker/dist/index.css'; // Temp, move somewhere
 import HtmlEditor from 'components/common/HtmlEditor.vue';

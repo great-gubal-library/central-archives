@@ -1,4 +1,4 @@
-import SharedConstants from "./SharedConstants";
+import SharedConstants from "./shared-constants";
 import { SiteRegion } from "./enums/region.enum";
 
 export function getRegionByHostname(hostname: string): SiteRegion {

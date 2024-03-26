@@ -1,6 +1,6 @@
 import { NewsRole } from '@app/shared/enums/news-role.enum';
 import { Race } from '@app/shared/enums/race.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { Column, Entity, Index, ManyToOne, Unique } from 'typeorm';
 import { BasicEntity } from './basic.entity';
 import { FreeCompany } from './free-company.entity';

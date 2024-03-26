@@ -1,5 +1,5 @@
 import { mailConfiguration } from '@app/configuration/mail.config';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { SiteRegion } from '@app/shared/enums/region.enum';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';

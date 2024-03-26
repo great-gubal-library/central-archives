@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers';
 import {  SiteRegion } from '@app/shared/enums/region.enum';
 import { RegionConfig } from '../../../server/libs/shared/region-config';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { getRegionByHostname } from '@app/shared/http';
 
 declare module '@vue/runtime-core' {

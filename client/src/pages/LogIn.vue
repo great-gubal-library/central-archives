@@ -56,7 +56,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { notifyError, notifySuccess } from 'src/common/notify';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import errors from '@app/shared/errors';
 import { hsspRedirectToOrigin } from '../common/hssp';
 import { useRouter } from '../router';

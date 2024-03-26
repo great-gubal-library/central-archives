@@ -56,7 +56,7 @@
 import { Vue } from 'vue-class-component';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { CHAOS_ARCHIVES_ROOT } from 'src/common/interop';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import errors from '@app/shared/errors';
 
 export default class PageLogIn extends Vue {

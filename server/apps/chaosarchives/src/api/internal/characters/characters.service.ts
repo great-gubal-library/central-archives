@@ -16,7 +16,7 @@ import { SessionCharacterDto } from '@app/shared/dto/user/session-character.dto'
 import { CharacterRegistrationStatus } from '@app/shared/enums/character-registration-status.enum';
 import { MembershipStatus } from '@app/shared/enums/membership-status.enum';
 import html from '@app/shared/html';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { BadRequestException, ConflictException, GoneException, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';

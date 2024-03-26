@@ -1,6 +1,6 @@
 import { EventLocationDto } from '@app/shared/dto/events/event-location.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { decode } from 'html-entities';

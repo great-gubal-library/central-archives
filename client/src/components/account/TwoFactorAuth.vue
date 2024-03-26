@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { User2FAConfirmResponseDto } from '@app/shared/dto/user/2fa/user-2fa-confirm-response.dto';
 import { User2FAStatusDto } from '@app/shared/dto/user/2fa/user-2fa-status.dto';
 import { User2FAState } from '@app/shared/enums/user-2fa-state.dto';

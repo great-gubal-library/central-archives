@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { TwoFactorAuthenticationService } from './impl/two-factor-authentication.service';
 import { LoginCredentials } from './model/login-credentials';
 import { checkPassword } from '@app/cryptography';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@app/entity';
 import { DataSource, Repository } from 'typeorm';

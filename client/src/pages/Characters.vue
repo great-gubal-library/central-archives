@@ -71,7 +71,7 @@ import { CharacterProfileFilterDto } from '@app/shared/dto/characters/character-
 import { CharacterSummaryDto } from '@app/shared/dto/characters/character-summary.dto';
 import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { Race } from '@app/shared/enums/race.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 

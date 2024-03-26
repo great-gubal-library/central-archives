@@ -43,7 +43,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { QCalendarMonth } from '@quasar/quasar-ui-qcalendar/dist/QCalendarMonth.esm.js';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { DateTime } from 'luxon';
 import { Role } from '@app/shared/enums/role.enum';
 import { EventSummaryDto } from '@app/shared/dto/events/event-summary.dto';

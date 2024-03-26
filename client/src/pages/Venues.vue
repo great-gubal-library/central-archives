@@ -59,7 +59,7 @@ import { PagingResultDto } from '@app/shared/dto/common/paging-result.dto';
 import { VenueFilterDto } from '@app/shared/dto/venues/venue-filter.dto';
 import { VenueSummaryDto } from '@app/shared/dto/venues/venue-summary.dto';
 import { HousingArea } from '@app/shared/enums/housing-area.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { useApi } from 'src/boot/axios';
 import { Options, Vue } from 'vue-class-component';
 

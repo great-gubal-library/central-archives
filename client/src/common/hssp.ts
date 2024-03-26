@@ -1,4 +1,4 @@
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { SiteRegion } from '@app/shared/enums/region.enum';
 import { useApi } from 'src/boot/axios';
 import { useRegionConfig } from 'src/boot/region';

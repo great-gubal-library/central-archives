@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { Options, prop, Vue } from 'vue-class-component';
 import ThumbGallery from '@common/components/images/ThumbGallery.vue';
 

@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { QInput } from 'quasar';
 import { notifyError } from 'src/common/notify';
 import { Options, Vue } from 'vue-class-component';

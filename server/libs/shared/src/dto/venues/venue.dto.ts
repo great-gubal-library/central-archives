@@ -1,6 +1,6 @@
 import { HousingArea } from '@app/shared/enums/housing-area.enum';
 import { VenueLocation } from '@app/shared/enums/venue-location.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { Type } from 'class-transformer';
 import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, Max, Min, ValidateIf, ValidateNested } from 'class-validator';
 import { BannerDto } from '../characters/banner.dto';
@@ -28,7 +28,7 @@ export class VenueDto {
 
   @IsString()
   server: string;
-	
+
   @IsString()
   description: string;
 
@@ -81,7 +81,7 @@ export class VenueDto {
   @IsArray()
   @IsString({ each: true })
   tags: string[];
-	
+
 	constructor(properties?: Readonly<VenueDto>) {
     if (properties) {
       Object.assign(this, properties);

@@ -1,5 +1,5 @@
 
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { CallHandler, ExecutionContext, HttpException, HttpStatus, NestInterceptor, PayloadTooLargeException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';

@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { NewsArticleDto } from '@app/shared/dto/news/news-article.dto';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { DateTime } from 'luxon';
 import { CHAOS_ARCHIVES_ROOT } from 'src/common/interop';
 import { prop, Vue } from 'vue-class-component';

@@ -1,7 +1,7 @@
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { NewsRole } from '@app/shared/enums/news-role.enum';
 import { NewsStatus } from '@app/shared/enums/news-status.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { DateTime } from 'luxon';
 import { boot } from 'quasar/wrappers';
 
@@ -53,7 +53,7 @@ class Display {
 		}) : DateTime.fromMillis(date, {
 			zone: SharedConstants.FFXIV_SERVER_TIMEZONE
 		});
-		
+
 		const day = dateTime.day;
 		const suffix = (day === 1 || day === 21 || day === 31) ? 'st'
 			: (day === 2 || day === 22) ? 'nd'

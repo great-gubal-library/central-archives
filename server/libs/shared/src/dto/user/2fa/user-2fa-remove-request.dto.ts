@@ -1,4 +1,4 @@
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { IsString,   MinLength } from 'class-validator';
 
 export class User2FARemoveRequestDto {

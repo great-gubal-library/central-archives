@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { PlayerProfileEditDto } from '@app/shared/dto/player-profiles/player-profile-edit.dto';
 import errors from '@app/shared/errors';
 import { playerNameRegex } from '@app/shared/validation/validators';

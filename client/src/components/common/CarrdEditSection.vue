@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { QField } from 'quasar';
 import { Options, prop, Vue } from 'vue-class-component';
 
@@ -72,7 +72,7 @@ class Props {
 })
 export default class CarrdEditSection extends Vue.with(Props) {
   readonly DOMAIN_REGEX = DOMAIN_REGEX;
-  
+
   readonly domainOptions = SharedConstants.carrdDomains.map(domain => `.${domain}`);
 
   value = '';
@@ -103,7 +103,7 @@ export default class CarrdEditSection extends Vue.with(Props) {
       this.domain = domain || DEFAULT_DOMAIN;
     }
   }
-  
+
 	onCustomDomainChanged() {
 		void this.$nextTick(() => void (this.$refs.inputField as QField).validate());
 	}

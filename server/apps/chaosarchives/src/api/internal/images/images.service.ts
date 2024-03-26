@@ -13,7 +13,7 @@ import { ImagesFilterDto } from '@app/shared/dto/image/images-filter.dto';
 import { ImageCategory } from '@app/shared/enums/image-category.enum';
 import { ImageFormat } from '@app/shared/enums/image-format.enum';
 import html from '@app/shared/html';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import {
   BadRequestException,
   ConflictException,

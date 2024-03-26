@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { PageType } from '@app/shared/enums/page-type.enum';
-import SharedConstants from '@app/shared/SharedConstants';
+import SharedConstants from '@app/shared/shared-constants';
 import { notifyError, notifySuccess } from 'src/common/notify';
 import { Options, prop, Vue } from 'vue-class-component';
 

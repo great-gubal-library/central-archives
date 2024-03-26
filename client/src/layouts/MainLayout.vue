@@ -175,7 +175,7 @@ import InlineSvg from 'vue-inline-svg';
 import SiteSearchField from 'src/components/search/SiteSearchField.vue';
 import { switchCharacter } from 'src/common/switch-character';
 import { SiteRegion } from '../../../server/libs/shared/src/enums/region.enum';
-import SharedConstants from '../../../server/libs/shared/src/SharedConstants';
+import SharedConstants from '../../../server/libs/shared/src/shared-constants';
 import { getRegionOrigin, hsspRedirect } from '../common/hssp';
 
 interface RegionSite {
