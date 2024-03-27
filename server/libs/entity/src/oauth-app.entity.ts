@@ -34,10 +34,9 @@ export class OAuthApp extends BasicEntity {
 
   @Column({
     type: 'varchar',
-    length: 39,
     nullable: true,
   })
-  clientSecret: string | null;
+  clientSecretHash: string | null;
 
   @Column({
     type: 'varchar',

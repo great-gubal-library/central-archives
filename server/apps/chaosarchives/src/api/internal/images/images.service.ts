@@ -664,6 +664,10 @@ export class ImagesService {
     return this.storageService.getUrl(this.getStoragePath(image.owner.id, image.hash, image.filename));
   }
 
+  getThumbnailUrl(image: Image): string {
+    return this.storageService.getUrl(this.getThumbnailStoragePath(image.owner.id, image.hash, image.filename));
+  }
+
   private getStoragePath(characterId: number, hash: string, filename: string) {
     return `${characterId}/${hash}/${filename}`;
   }

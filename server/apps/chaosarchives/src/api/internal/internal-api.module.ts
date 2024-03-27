@@ -21,6 +21,7 @@ import { WikiModule } from "./wiki/wiki.module";
 import { PlayerProfilesModule } from "./player-profiles/player-profiles.module";
 import { LodestoneModule } from "./lodestone/lodestone.module";
 import { HsspModule } from "./hssp/hssp.module";
+import { OAuthModule } from "./oauth/oauth.module";
 
 const controllerModules = [
 	MainPageModule,
@@ -44,6 +45,7 @@ const controllerModules = [
 	PlayerProfilesModule,
   LodestoneModule,
   HsspModule,
+  OAuthModule,
 ];
 
 @Module({
