@@ -19,3 +19,7 @@ export function hashBuffer(path: Buffer): string {
   hash.update(path);
   return hash.digest('hex');
 }
+
+export function randomUuid(): `${string}-${string}-${string}-${string}-${string}` {
+  return crypto.randomUUID();
+}
