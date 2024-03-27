@@ -7,6 +7,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import config from 'config';
 import { DbConfigInterface } from './interfaces/db-config.interface';
 import { OAuthRequest } from '@app/entity/oauth-request.entity';
+import { OAuthRefreshGrant } from '@app/entity/oauth-refresh-grant.entity';
 
 const dbConfig = config.get<DbConfigInterface>('db');
 
@@ -32,6 +33,7 @@ export const dbConfiguration: TypeOrmModuleOptions = {
     NewsIssue,
     NoticeboardItem,
     OAuthApp,
+    OAuthRefreshGrant,
     OAuthRequest,
     OAuthUserAppConsent,
     Server,
