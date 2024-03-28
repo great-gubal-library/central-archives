@@ -2,18 +2,19 @@ import { UserInfo } from '@app/authorization/model/user-info';
 import { generateVerificationCode, hashPassword, randomUuid } from '@app/cryptography';
 import { Image, OAuthApp, OAuthUserAppConsent } from '@app/entity';
 import { OAuthRefreshGrant } from '@app/entity/oauth-refresh-grant.entity';
+import { OAuthRequest } from '@app/entity/oauth-request.entity';
 import { ClientSecretDto } from '@app/shared/dto/oauth/client-secret.dto';
 import { OAuthAppSaveDto } from '@app/shared/dto/oauth/oauth-app-save.dto';
 import { OAuthAppDto } from '@app/shared/dto/oauth/oauth-app.dto';
 import { AppType } from '@app/shared/enums/oauth/app-type.enum';
 import { AuthFlow } from '@app/shared/enums/oauth/auth-flow.enum';
+import { validateRedirectUri } from '@app/shared/validation/redirect-uri-validator';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import utils from 'apps/chaosarchives/src/common/utils';
 import { DateTime } from 'luxon';
 import { DataSource, Repository } from 'typeorm';
 import { ImagesService } from '../images/images.service';
-import { OAuthRequest } from '@app/entity/oauth-request.entity';
 
 @Injectable()
 export class OAuthAppService {
@@ -104,7 +105,7 @@ export class OAuthAppService {
   }
 
   private generateClientSecret(): string {
-    return 'secret:' + generateVerificationCode();
+    return 'secret_' + generateVerificationCode();
   }
 
   private async merge(app: OAuthApp, saveDto: OAuthAppSaveDto, user: UserInfo): Promise<void> {
@@ -118,6 +119,7 @@ export class OAuthAppService {
     }
 
     app.enabledFlows = saveDto.enabledFlows;
+    app.redirectUris = this.validateRedirectUris(saveDto);
 
     if (!saveDto.iconId) {
       app.icon = null;
@@ -140,6 +142,25 @@ export class OAuthAppService {
 
       app.icon = icon;
     }
+  }
+
+  private validateRedirectUris(saveDto: OAuthAppSaveDto): string[] {
+    const type = saveDto.type;
+    const redirectUris = saveDto.redirectUris;
+
+    if ((type !== AppType.NATIVE || !saveDto.enabledFlows.includes(AuthFlow.DEVICE)) && redirectUris.length === 0) {
+      throw new BadRequestException('Must set at least one redirect URI');
+    }
+
+    redirectUris.forEach((redirectUri) => {
+      const errorMessage = validateRedirectUri(redirectUri, type);
+
+      if (errorMessage) {
+        throw new BadRequestException(errorMessage);
+      }
+    });
+
+    return redirectUris;
   }
 
   private async getMyApp(repo: Repository<OAuthApp>, id: number, user: UserInfo): Promise<OAuthApp> {
@@ -170,6 +191,7 @@ export class OAuthAppService {
       clientSecret: clientSecret || null,
       type: app.type,
       enabledFlows: app.enabledFlows,
+      redirectUris: app.redirectUris,
       iconId: app.icon?.id || null,
       iconUrl: app.icon ? this.imagesService.getThumbnailUrl(app.icon) : null,
       requestableScopes: app.requestableScopes,

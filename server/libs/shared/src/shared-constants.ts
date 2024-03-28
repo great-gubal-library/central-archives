@@ -1,7 +1,7 @@
 import { RegionConfig } from "../region-config";
 import { SiteRegion } from "./enums/region.enum";
 
-export default Object.freeze({
+const SharedConstants = Object.freeze({
 	FFXIV_SERVER_TIMEZONE: 'UTC',
 	PASSWORD_MIN_LENGTH: 8,
 	MAX_UPLOAD_SIZE: 4 * 1024 * 1024,
@@ -61,3 +61,5 @@ export default Object.freeze({
     OTP_REQUIRED: 'OTP_REQUIRED',
   }),
 })
+
+export default SharedConstants;

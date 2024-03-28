@@ -30,6 +30,9 @@ export class OAuthAppSaveDto {
   @IsBoolean()
   active: boolean;
 
+  @IsString({ each: true })
+	redirectUris: string[];
+
   constructor(properties?: Readonly<OAuthAppDto>) {
     if (properties) {
       Object.assign(this, properties);

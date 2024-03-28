@@ -18,6 +18,12 @@ export class OAuthController {
     return this.appService.getMyApps(user);
   }
 
+  @Get('apps/:id')
+  @RoleRequired(Role.USER)
+  async getApp(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserInfo): Promise<OAuthAppDto> {
+    return this.appService.getApp(id, user);
+  }
+
   @Post('apps')
   @RoleRequired(Role.USER)
   async createApp(@Body() saveDto: OAuthAppSaveDto, @CurrentUser() user: UserInfo): Promise<OAuthAppDto> {

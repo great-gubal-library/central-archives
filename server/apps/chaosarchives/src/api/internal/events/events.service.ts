@@ -15,7 +15,7 @@ import { EventDto } from '@app/shared/dto/events/event.dto';
 import { ImageSummaryDto } from '@app/shared/dto/image/image-summary.dto';
 import { EventSource } from '@app/shared/enums/event-source.enum';
 import html from '@app/shared/html';
-import { isValidUrl } from '@app/shared/validation/validators';
+import { isValidHttpsUrl } from '@app/shared/validation/validators';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
@@ -206,7 +206,7 @@ export class EventsService {
       location.tags = dtoLocation.tags;
       location.link = dtoLocation.link;
 
-      if (location.link && !isValidUrl(location.link)) {
+      if (location.link && !isValidHttpsUrl(location.link)) {
         throw new BadRequestException(`Invalid location link: ${location.link}`);
       }
 
@@ -447,7 +447,7 @@ export class EventsService {
           location.tags = locationDto.tags;
           location.link = locationDto.link;
 
-          if (location.link && !isValidUrl(location.link)) {
+          if (location.link && !isValidHttpsUrl(location.link)) {
             throw new BadRequestException(`Invalid location link: ${location.link}`);
           }
 

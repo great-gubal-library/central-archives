@@ -39,11 +39,9 @@ export class OAuthApp extends BasicEntity {
   clientSecretHash: string | null;
 
   @Column({
-    type: 'varchar',
-    length: 1000,
-    nullable: true,
+    type: 'json',
   })
-  redirectUri: string | null;
+  redirectUris: string[];
 
   @Column({
     type: 'set',
