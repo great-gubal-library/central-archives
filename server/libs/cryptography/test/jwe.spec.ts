@@ -18,7 +18,7 @@ it('should roundtrip encrypted JWT', async () => {
 });
 
 it('should decode legacy signed JWT', async () => {
-  const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInNjb3BlIjoicnBwIiwiaWF0IjoxNzExNjMyNTYzLCJleHAiOjE3NDMxNjg1NjN9.2hZ8hsexhBwVI_IuEL-loHX6shjGk9lOHrkNms1SIBw';
+  const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInNjb3BlIjoicnBwIiwiaWF0IjoxNzExNjM3NjM5LCJleHAiOjE3NDMxNzM2Mzl9.7wok9yBv-U9pnuvzchiVl6PHZQFyHGQA4lQG-TUHIxg';
   const decodedJwt = await jwe.verify(jwt);
 
   expect(decodedJwt.sub).toEqual(1);

@@ -38,6 +38,7 @@ mail:
 
 auth:
   jwtSecret: 'donotusethisinproduction'
+  jweSecret: !!binary 'donotusethisinproduction+WxkDyq/R0zKjXDxMl8='
   jwtExpiry: '30d'
   scopedJwtExpiry: '365d'
 

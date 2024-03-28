@@ -13,7 +13,6 @@ it('should correctly search for character', async () => {
 
   const searchResult = (await parser.parse({ query } as any)) as PagedResult<CharacterSearchEntry>;
 
-  console.log('searchResult', searchResult);
   expect(searchResult.List.length).toEqual(1);
   expect(searchResult.List[0].ID).toEqual(37681922);
   expect(searchResult.List[0].Name).toEqual(name);
@@ -29,7 +28,6 @@ it('should retrieve character information', async () => {
     params: { characterId: lodestoneId },
   } as any)) as CharacterInfo;
 
-  console.log('characterResult', characterResult);
   expect(characterResult.World).toEqual('Omega');
   expect(characterResult.DC).toEqual('Chaos');
   expect(characterResult.FreeCompany?.ID).toEqual('9228860798900686606');
@@ -42,6 +40,5 @@ it('should retrieve Free Company information', async () => {
   const fcParser = new FreeCompany();
   const fcResult = (await fcParser.parse({ params: { fcId: lodestoneId } } as any)) as FreeCompanyInfo;
 
-  console.log('fcResult', fcResult);
   expect(fcResult.Timestamp).toEqual(1398210109);
 });
