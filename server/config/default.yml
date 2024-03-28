@@ -37,7 +37,7 @@ mail:
     global: 'Central Archives <centralarchives@localhost>'
 
 auth:
-  jwtSecret: 'secret'
+  jwtSecret: 'donotusethisinproduction'
   jwtExpiry: '30d'
   scopedJwtExpiry: '365d'
 

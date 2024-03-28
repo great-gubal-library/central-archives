@@ -54,6 +54,7 @@
     "html-entities": "^2.4.0",
     "html-to-text": "^9.0.5",
     "ioredis": "^5.3.2",
+    "jose": "^5.2.3",
     "jpegtran": "^2.0.0",
     "jsdom": "^24.0.0",
     "lodash": "^4.17.21",

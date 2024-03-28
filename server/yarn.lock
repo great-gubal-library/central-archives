@@ -5015,6 +5015,7 @@ __metadata:
     html-to-text: "npm:^9.0.5"
     ioredis: "npm:^5.3.2"
     jest: "npm:^29.7.0"
+    jose: "npm:^5.2.3"
     jpegtran: "npm:^2.0.0"
     jsdom: "npm:^24.0.0"
     lodash: "npm:^4.17.21"
@@ -9444,6 +9445,13 @@ __metadata:
   bin:
     jest: bin/jest.js
   checksum: 10c0/f40eb8171cf147c617cc6ada49d062fbb03b4da666cb8d39cdbfb739a7d75eea4c3ca150fb072d0d273dce0c753db4d0467d54906ad0293f59c54f9db4a09d8b
+  languageName: node
+  linkType: hard
+
+"jose@npm:^5.2.3":
+  version: 5.2.3
+  resolution: "jose@npm:5.2.3"
+  checksum: 10c0/7cf02e1d1d6226b6ee136fb6c53fd4dde9cfdaf1613ceaab3a5629803eaa80cbfd77cddc38a54c55c82b8f63428677660c93fc87493818a07adc9c0c77ef16ff
   languageName: node
   linkType: hard
 
