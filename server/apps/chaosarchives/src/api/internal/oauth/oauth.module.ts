@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { OAuthController } from './oauth.controller';
-import { OAuthAppService } from './oauth-app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Image, OAuthApp } from '@app/entity';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImagesModule } from '../images/images.module';
+import { OAuthAppController } from './apps/oauth-app.controller';
+import { OAuthAppService } from './apps/oauth-app.service';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { ImagesModule } from '../images/images.module';
     ]),
     ImagesModule,
   ],
-  controllers: [OAuthController],
+  controllers: [OAuthAppController],
   providers: [OAuthAppService]
 })
 export class OAuthModule {}

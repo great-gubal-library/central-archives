@@ -14,7 +14,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import utils from 'apps/chaosarchives/src/common/utils';
 import { DateTime } from 'luxon';
 import { DataSource, Repository } from 'typeorm';
-import { ImagesService } from '../images/images.service';
+import { ImagesService } from '../../images/images.service';
 
 @Injectable()
 export class OAuthAppService {

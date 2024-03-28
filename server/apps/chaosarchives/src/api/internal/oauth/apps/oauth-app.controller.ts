@@ -8,29 +8,29 @@ import { ClientSecretDto } from '@app/shared/dto/oauth/client-secret.dto';
 import { RoleRequired } from '@app/authorization/decorators/role-required.decorator';
 import { Role } from '@app/shared/enums/role.enum';
 
-@Controller('oauth')
-export class OAuthController {
+@Controller('oauth/apps')
+export class OAuthAppController {
   constructor(private appService: OAuthAppService) {}
 
-  @Get('apps')
+  @Get()
   @RoleRequired(Role.USER)
   async getMyApps(@CurrentUser() user: UserInfo): Promise<OAuthAppDto[]> {
     return this.appService.getMyApps(user);
   }
 
-  @Get('apps/:id')
+  @Get(':id')
   @RoleRequired(Role.USER)
   async getApp(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserInfo): Promise<OAuthAppDto> {
     return this.appService.getApp(id, user);
   }
 
-  @Post('apps')
+  @Post()
   @RoleRequired(Role.USER)
   async createApp(@Body() saveDto: OAuthAppSaveDto, @CurrentUser() user: UserInfo): Promise<OAuthAppDto> {
     return this.appService.createApp(saveDto, user);
   }
 
-  @Put('apps/:id')
+  @Put(':id')
   @RoleRequired(Role.USER)
   async updateApp(
     @Param('id', ParseIntPipe) id: number,
@@ -40,13 +40,13 @@ export class OAuthController {
     return this.appService.updateApp(id, saveDto, user);
   }
 
-  @Delete('apps/:id')
+  @Delete(':id')
   @RoleRequired(Role.USER)
   async deleteApp(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserInfo): Promise<void> {
     await this.appService.deleteApp(id, user);
   }
 
-  @Post('apps/:id/client-secret')
+  @Post(':id/client-secret')
   @RoleRequired(Role.USER)
   async regenerateClientSecret(
     @Param('id', ParseIntPipe) id: number,
