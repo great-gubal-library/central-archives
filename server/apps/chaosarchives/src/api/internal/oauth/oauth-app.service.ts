@@ -67,7 +67,6 @@ export class OAuthAppService {
       await appRepo.save(app);
 
       const dto = this.toAppDto(app);
-      console.log('clientSecret', clientSecret);
       dto.clientSecret = clientSecret;
       return dto;
     });
