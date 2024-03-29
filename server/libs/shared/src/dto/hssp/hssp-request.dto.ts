@@ -1,9 +1,8 @@
 import { Type } from "class-transformer";
-import { IsJWT, IsNumber, IsOptional, IsString, Matches } from "class-validator";
+import { IsNumber, IsOptional, IsString, Matches } from "class-validator";
 
 export class HsspRequestDto {
   @IsString()
-  @IsJWT()
   accessToken: string;
 
   @Type(() => Number)

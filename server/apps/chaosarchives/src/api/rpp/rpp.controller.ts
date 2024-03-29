@@ -48,7 +48,7 @@ export class RppController {
     const userId = await this.authenticationService.authenticateUser(request);
 
     return {
-      accessToken: this.authorizationService.createAccessToken(userId, AuthScope.RPP),
+      accessToken: await this.authorizationService.createAccessToken(userId, AuthScope.RPP),
     };
   }
 
@@ -72,7 +72,7 @@ export class RppController {
   @ApiBearerAuth()
   async extendLogin(@CurrentUser() user: UserInfo, @Req() request: any): Promise<RppExtendLoginResponseDto> {
     return {
-      newAccessToken: this.authorizationService.reissueAccessTokenIfNeeded(user.id, request, AuthScope.RPP),
+      newAccessToken: await this.authorizationService.reissueAccessTokenIfNeeded(user.id, request, AuthScope.RPP),
     };
   }
 

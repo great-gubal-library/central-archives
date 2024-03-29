@@ -12,6 +12,7 @@ import { RolesGuard } from './guards/role.guard';
 import { JwtFormStrategy } from './strategies/jwt-form.strategy';
 import { JwtFormAuthGuard } from './guards/jwt-form-auth.guard';
 import { JwtStrategyImpl } from './strategies/jwt-strategy.impl';
+import { JweService } from './impl/jwe.service';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { JwtStrategyImpl } from './strategies/jwt-strategy.impl';
     JwtFormStrategy,
     JwtAuthGuard,
     JwtFormAuthGuard,
+    JweService,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,

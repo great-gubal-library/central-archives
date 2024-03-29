@@ -50,7 +50,7 @@ export class UserController {
   @Post('signup')
   async signUp(@Body() signupData: UserSignUpDto, @ClientRegion() region: SiteRegion): Promise<UserSignUpResponseDto> {
     const { userId, characterVerificationCode } = await this.userService.signUp(signupData, region);
-    const accessToken = this.authorizationService.createAccessToken(userId);
+    const accessToken = await this.authorizationService.createAccessToken(userId);
     const userInfo = await this.authorizationService.getUserInfo(userId);
 
     return {
@@ -78,7 +78,7 @@ export class UserController {
     const user = await this.authorizationService.getUserInfo(userId);
 
     return {
-      accessToken: this.authorizationService.createAccessToken(userId),
+      accessToken: await this.authorizationService.createAccessToken(userId),
       session: this.userService.toSession(user),
     };
   }
@@ -88,7 +88,7 @@ export class UserController {
   async getSession(@CurrentUser() user: UserInfo, @Req() request: any): Promise<SessionResponseDto> {
     return {
       session: this.userService.toSession(user),
-      newAccessToken: this.authorizationService.reissueAccessTokenIfNeeded(user.id, request),
+      newAccessToken: await this.authorizationService.reissueAccessTokenIfNeeded(user.id, request),
     };
   }
 
@@ -149,7 +149,7 @@ export class UserController {
     await this.authorizationService.notifyUserChanged(user.id);
 
     return {
-      newAccessToken: this.authorizationService.createAccessToken(user.id),
+      newAccessToken: await this.authorizationService.createAccessToken(user.id),
     };
   }
 
