@@ -12,7 +12,7 @@ const jwe = {
       .setExpirationTime(options.expiresIn)
       .setProtectedHeader({
         alg: 'dir',
-        enc: 'A128CBC-HS256',
+        enc: 'A256GCM',
       })
       .encrypt(JWE_SECRET);
   },
