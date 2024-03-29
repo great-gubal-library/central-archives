@@ -1930,18 +1930,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/jwt@npm:^10.2.0":
-  version: 10.2.0
-  resolution: "@nestjs/jwt@npm:10.2.0"
-  dependencies:
-    "@types/jsonwebtoken": "npm:9.0.5"
-    jsonwebtoken: "npm:9.0.2"
-  peerDependencies:
-    "@nestjs/common": ^8.0.0 || ^9.0.0 || ^10.0.0
-  checksum: 10c0/81c5cbcb459122b175ad6b50dad83aab7d5dc3beb6122a56c7f985cc1c7838cd1c5eae9d630e95550b95a03e183502a183029e36ba51879c638bd0bad086c056
-  languageName: node
-  linkType: hard
-
 "@nestjs/mapped-types@npm:2.0.5":
   version: 2.0.5
   resolution: "@nestjs/mapped-types@npm:2.0.5"
@@ -3130,7 +3118,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsonwebtoken@npm:*, @types/jsonwebtoken@npm:9.0.5":
+"@types/jsonwebtoken@npm:*":
   version: 9.0.5
   resolution: "@types/jsonwebtoken@npm:9.0.5"
   dependencies:
@@ -4967,7 +4955,6 @@ __metadata:
     "@nestjs/common": "npm:^10.3.3"
     "@nestjs/core": "npm:^10.3.3"
     "@nestjs/event-emitter": "npm:^2.0.4"
-    "@nestjs/jwt": "npm:^10.2.0"
     "@nestjs/passport": "npm:^10.0.3"
     "@nestjs/platform-express": "npm:^10.3.3"
     "@nestjs/platform-socket.io": "npm:^10.3.3"
@@ -9679,7 +9666,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonwebtoken@npm:9.0.2, jsonwebtoken@npm:^9.0.0":
+"jsonwebtoken@npm:^9.0.0":
   version: 9.0.2
   resolution: "jsonwebtoken@npm:9.0.2"
   dependencies:
